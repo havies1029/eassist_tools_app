@@ -45,9 +45,9 @@ static String httpAuthority = "216.172.109.8";
 
   /*
   static bool useSSL = true;
-  static String apiDomain = "http${useSSL ? "s" : ""}://esalesapi.smartsoft-id.com/";
+  static String apiDomain = "http${useSSL ? "s" : ""}://eassisttoolsapi.smartsoft-id.com/";
   static String prefixEndPoint = "";
-  static String httpAuthority = "esalesapi.smartsoft-id.com";
+  static String httpAuthority = "eassisttoolsapi.smartsoft-id.com";
   */
 
   static Map<String, String> httpHeaders = <String, String>{
