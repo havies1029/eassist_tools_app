@@ -150,7 +150,8 @@ class PageContainer extends PageContainerBase {
         page = const SimulgitCrudMainPage();
         break;
       case PageType.simulgis:
-        page = const SimulgisCrudMainPage(viewMode: "", recordId: "",);
+        // page = const SimulgisCrudMainPage(viewMode: "", recordId: "",);
+        page = const SimulgisCrudMainPage();
         break;
       case PageType.simulbon:
         page = const SimulbonCrudMainPage(viewMode: "", recordId: "",);

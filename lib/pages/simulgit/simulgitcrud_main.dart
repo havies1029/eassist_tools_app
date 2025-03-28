@@ -1,3 +1,4 @@
+import 'package:eassist_tools_app/pages/simulgit/simulgitcrud_main2.dart';
 import 'package:flutter/material.dart';
 import 'package:eassist_tools_app/widgets/mobiledesign_widget.dart';
 import 'package:eassist_tools_app/pages/simulgit/simulgitcrud_form.dart';
@@ -12,6 +13,6 @@ class SimulgitCrudMainPage extends StatelessWidget {
 				appBar: AppBar(
 					title: Text('Calc. Premi GIT'),
 				),
-				body: SimulgitCrudFormPage(viewMode: "tambah", recordId: "")));
+				body: SimulgitCrudMain2Page(viewMode: "tambah", recordId: "")));
 	}
 }

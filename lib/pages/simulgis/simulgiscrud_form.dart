@@ -10,7 +10,6 @@ import 'package:intl/intl.dart';
 import 'package:eassist_tools_app/common/thousand_separator_input_formatter.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
-
 class SimulgisCrudFormPage extends StatefulWidget {
 	final String viewMode;
 	final String recordId;
@@ -46,35 +45,37 @@ class SimulgisCrudFormPageFormState extends State<SimulgisCrudFormPage> {
 		return BlocConsumer<SimulgisCrudBloc, SimulgisCrudState>(
 			builder: (context, state) {
 				return Dialog(
-					shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-					child: SingleChildScrollView(
-						child: Padding(
-							padding: const EdgeInsets.all(8.0),
+					child: Container(
+						padding: const EdgeInsets.all(16),
+						decoration: BoxDecoration(
+							borderRadius: BorderRadius.circular(15),
+							gradient: LinearGradient(
+								colors: [Colors.white, Colors.grey.shade50],
+								begin: Alignment.topCenter,
+								end: Alignment.bottomCenter,
+							),
+						),
+						child: SingleChildScrollView(
 							child: Form(
 								key: _formKey,
 								child: Column(
+									crossAxisAlignment: CrossAxisAlignment.stretch,
 									children: [
-										const SizedBox(height: 10),
+										// Judul halaman
 										Text(
 											"${widget.viewMode == "tambah" ? "Tambah" : "Ubah"} Premi GIS",
 											style: const TextStyle(
 												fontSize: 20.0,
 												color: Color(0xffff6101),
 												fontWeight: FontWeight.w600,
-												fontFamily: 'Hind',
-												fontStyle: FontStyle.italic,
-												decoration: TextDecoration.underline,
 											),
+											textAlign: TextAlign.center,
 										),
 										const SizedBox(height: 25),
-										TextFormField(
-											keyboardType: TextInputType.number,
-											inputFormatters: [ThousandsSeparatorInputFormatter()],
+										_buildTextFormField(
 											controller: fieldCoverBulanController,
-											decoration: const InputDecoration(
-												labelText: "coverBulan",
-												floatingLabelBehavior: FloatingLabelBehavior.always,
-											),
+											labelText: "coverBulan",
+											keyboardType: TextInputType.number,
 											onChanged: (value) {
 												if (value.isNotEmpty) {
 													removeError(error: kStringNullError);
@@ -87,38 +88,12 @@ class SimulgisCrudFormPageFormState extends State<SimulgisCrudFormPage> {
 												}
 												return null;
 											},
-											textAlign: TextAlign.right,
 										),
-										TextFormField(
-											keyboardType: TextInputType.number,
-											inputFormatters: [ThousandsSeparatorInputFormatter()],
+										const SizedBox(height: 10),
+										_buildTextFormField(
 											controller: fieldPremiController,
-											decoration: const InputDecoration(
-												labelText: "premi",
-												floatingLabelBehavior: FloatingLabelBehavior.always,
-											),
-											onChanged: (value) {
-												if (value.isNotEmpty) {
-													removeError(error: kStringNullError);
-												}
-											},
-											validator: (value) {
-												if (value == null || value.isEmpty) {
-													addError(error: kStringNullError);
-													return "";
-												}
-												return null;
-											},
-											textAlign: TextAlign.right,
-										),
-										TextFormField(
+											labelText: "Premi",
 											keyboardType: TextInputType.number,
-											inputFormatters: [ThousandsSeparatorInputFormatter()],
-											controller: fieldRateController,
-											decoration: const InputDecoration(
-												labelText: "rate",
-												floatingLabelBehavior: FloatingLabelBehavior.always,
-											),
 											onChanged: (value) {
 												if (value.isNotEmpty) {
 													removeError(error: kStringNullError);
@@ -131,16 +106,33 @@ class SimulgisCrudFormPageFormState extends State<SimulgisCrudFormPage> {
 												}
 												return null;
 											},
-											textAlign: TextAlign.right,
 										),
+										const SizedBox(height: 10),
+										_buildTextFormField(
+											controller: fieldRateController,
+											labelText: "Rate",
+											keyboardType: TextInputType.number,
+											onChanged: (value) {
+												if (value.isNotEmpty) {
+													removeError(error: kStringNullError);
+												}
+											},
+											validator: (value) {
+												if (value == null || value.isEmpty) {
+													addError(error: kStringNullError);
+													return "";
+												}
+												return null;
+											},
+										),
+										const SizedBox(height: 10),
 										buildFieldComboRMatauang(
 											comboKey: comboRMatauangKey,
-											labelText: 'rmatauangKode',
+											labelText: 'Mata Uang',
 											initItem: fieldComboRMatauang,
 											onChangedCallback: (value) {
 												if (value != null) {
-													removeError(
-														error: "Field ComboRMatauang tidak boleh kosong.");
+													removeError(error: "Field Mata Uang tidak boleh kosong.");
 													simulgisCrudBloc.add(ComboRMatauangChangedEvent(comboRMatauang: value));
 												}
 											},
@@ -151,19 +143,15 @@ class SimulgisCrudFormPageFormState extends State<SimulgisCrudFormPage> {
 											},
 											validatorCallback: (value) {
 												if (value == null) {
-													addError(
-														error: "Field ComboRMatauang tidak boleh kosong.");
+													addError(error: "Field Mata Uang tidak boleh kosong.");
 												}
 											},
 										),
-										TextFormField(
-											keyboardType: TextInputType.number,
-											inputFormatters: [ThousandsSeparatorInputFormatter()],
+										const SizedBox(height: 30),
+										_buildTextFormField(
 											controller: fieldTsiController,
-											decoration: const InputDecoration(
-												labelText: "tsi",
-												floatingLabelBehavior: FloatingLabelBehavior.always,
-											),
+											labelText: "TSI",
+											keyboardType: TextInputType.number,
 											onChanged: (value) {
 												if (value.isNotEmpty) {
 													removeError(error: kStringNullError);
@@ -176,72 +164,107 @@ class SimulgisCrudFormPageFormState extends State<SimulgisCrudFormPage> {
 												}
 												return null;
 											},
-											textAlign: TextAlign.right,
 										),
-										const SizedBox(height: 25),
-										FormError(
-											errors: errors,
-											key: null,
-										),
+										const SizedBox(height: 20),
+										FormError(errors: errors, key: null),
 										Row(
-											mainAxisAlignment: MainAxisAlignment.spaceAround,
+											mainAxisAlignment: MainAxisAlignment.spaceBetween,
 											children: [
-												SizedBox(
-													width: MediaQuery.of(context).size.width * 0.3,
-													height: 60,
-													child: Padding(
-														padding: const EdgeInsets.only(top: 30.0),
-														child: ElevatedButton(
-															onPressed: () {
-																_dismissDialog();
-															},
-															child: const Text(
-																'Close',
-																style: TextStyle(fontSize: 13.0),
-															),
-														),
-													),
+												_buildDialogButton(
+													text: 'Close',
+													onPressed: _dismissDialog,
+													isPrimary: false,
 												),
-												SizedBox(
-													width: MediaQuery.of(context).size.width * 0.3,
-													height: 60,
-													child: Padding(
-														padding: const EdgeInsets.only(top: 30.0),
-														child: ElevatedButton(
-															onPressed: () {
-																onSaveForm();
-															},
-															child: const Text(
-																'Save',
-																style: TextStyle(fontSize: 13.0),
-															),
-														),
-													),
+												_buildDialogButton(
+													text: 'Save',
+													onPressed: onSaveForm,
+													isPrimary: true,
 												),
 											],
 										),
 									],
-								)),
+								),
+							),
 						),
-					));
-				},
-				listener: (context, state) {
-					if (state.isLoaded) {
-						if (state.record != null){
-							fieldCoverBulanController.text = state.record!.coverBulan.toString();
-							fieldPremiController.text = NumberFormat("#,###").format(state.record!.premi);
-							fieldRateController.text = NumberFormat("#,###").format(state.record!.rate);
-							fieldTsiController.text = NumberFormat("#,###").format(state.record!.tsi);
-						}
-						fieldComboRMatauang = state.comboRMatauang;
+					),
+				);
+			},
+			listener: (context, state) {
+				if (state.isLoaded) {
+					if (state.record != null) {
+						fieldCoverBulanController.text = state.record!.coverBulan.toString();
+						fieldPremiController.text = NumberFormat("#,###").format(state.record!.premi);
+						fieldRateController.text = NumberFormat("#,###").format(state.record!.rate);
+						fieldTsiController.text = NumberFormat("#,###").format(state.record!.tsi);
 					}
-				},
-			);
-		}
+					fieldComboRMatauang = state.comboRMatauang;
+				}
+			},
+		);
+	}
+
+	Widget _buildTextFormField({
+		required TextEditingController controller,
+		required String labelText,
+		required TextInputType keyboardType,
+		required Function(String) onChanged,
+		required String? Function(String?) validator,
+	}) {
+		return TextFormField(
+			controller: controller,
+			keyboardType: keyboardType,
+			inputFormatters: [ThousandsSeparatorInputFormatter()],
+			decoration: InputDecoration(
+				labelText: labelText,
+				floatingLabelBehavior: FloatingLabelBehavior.always,
+				border: OutlineInputBorder(
+					borderRadius: BorderRadius.circular(10),
+					borderSide: BorderSide(color: Colors.grey.shade400),
+				),
+				enabledBorder: OutlineInputBorder(
+					borderRadius: BorderRadius.circular(10),
+					borderSide: BorderSide(color: Colors.grey.shade300),
+				),
+				focusedBorder: OutlineInputBorder(
+					borderRadius: BorderRadius.circular(10),
+					borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2),
+				),
+			),
+			onChanged: onChanged,
+			validator: validator,
+			textAlign: TextAlign.right,
+		);
+	}
+
+	Widget _buildDialogButton({
+		required String text,
+		required VoidCallback onPressed,
+		bool isPrimary = false,
+	}) {
+		return ElevatedButton(
+			onPressed: onPressed,
+			style: ElevatedButton.styleFrom(
+				backgroundColor: isPrimary ? Theme.of(context).primaryColor : Colors.grey.shade400,
+				shape: RoundedRectangleBorder(
+					borderRadius: BorderRadius.circular(10),
+				),
+				padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
+				elevation: 3,
+			),
+			child: Text(
+				text,
+				style: TextStyle(
+					fontSize: 14.0,
+					color: isPrimary ? Colors.white : Colors.black54,
+					fontWeight: FontWeight.w600,
+				),
+			),
+		);
+	}
+
 	void loadData() {
 		if (widget.viewMode == "ubah") {
-		simulgisCrudBloc.add(
-			SimulgisCrudLihatEvent(recordId: widget.recordId));
+			simulgisCrudBloc.add(SimulgisCrudLihatEvent(recordId: widget.recordId));
 		}
 	}
 
@@ -271,7 +294,7 @@ class SimulgisCrudFormPageFormState extends State<SimulgisCrudFormPage> {
 	}
 
 	void addError({required String error}) {
-		if (!errors.contains(error)){
+		if (!errors.contains(error)) {
 			setState(() {
 				errors.add(error);
 			});
@@ -279,11 +302,10 @@ class SimulgisCrudFormPageFormState extends State<SimulgisCrudFormPage> {
 	}
 
 	void removeError({required String error}) {
-		if (errors.contains(error)){
+		if (errors.contains(error)) {
 			setState(() {
 				errors.remove(error);
 			});
 		}
 	}
-
 }
