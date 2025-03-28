@@ -1,3 +1,4 @@
+import 'package:eassist_tools_app/pages/dashboard/dashboard_main.dart';
 import 'package:eassist_tools_app/pages/onboard/onboard_main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,8 +39,8 @@ class _HomePageState extends State<HomePage> {
           SizeConfig().init(context);
           debugPrint("state : $state");
           if (state is HomePageActive) {            
-            return const PageContainer(pageType: PageType.simuleei);
-            //return const OnboardMainPage();
+            return const PageContainer(pageType: PageType.home);
+            // return const OnboardMainPage();
           } else if (state is RoomCariPageActive) {            
             return const PageContainer(pageType: PageType.roomchat);
           } else if (state is ChangePasswordPageActive) {            

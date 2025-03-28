@@ -15,3 +15,6 @@ class ChangePasswordPageActiveEvent extends HomeEvent {}
 class SimulMVPageActiveEvent extends HomeEvent {}
 class SimulPARPageActiveEvent extends HomeEvent {}
 class SimulEEIPageActiveEvent extends HomeEvent {}
+class SimulbonCrudFormPageActiveEvent extends HomeEvent {}
+class SimuleeiCrudFormPageActiveEvent extends HomeEvent {}
+class SimulwpCrudFormPageActiveEvent extends HomeEvent {}

@@ -8,6 +8,8 @@ import 'package:eassist_tools_app/pages/login/change_pswd_main.dart';
 import 'package:eassist_tools_app/pages/simuleei/simuleeilist_main.dart';
 import 'package:eassist_tools_app/pages/simulmv/simulmvlist_main.dart';
 import 'package:eassist_tools_app/pages/simulpar/simulparcrud_main.dart';
+import 'package:eassist_tools_app/pages/simulpar/simulparlist_main.dart';
+import 'package:eassist_tools_app/pages/dashboard/dashboard_main.dart';
 import 'package:flutter/material.dart';
 import 'package:eassist_tools_app/pages/profile/profile_main_page.dart';
 import 'package:eassist_tools_app/repositories/user/user_repository.dart';
@@ -90,6 +92,8 @@ class PageContainer extends PageContainerBase {
   @override
   String get pageTitle {
     switch (pageType) {
+      case PageType.home:
+        return "Dashboard";
       case PageType.profile:
         return "Profile";
       case PageType.roomchat:
@@ -112,6 +116,9 @@ class PageContainer extends PageContainerBase {
     Widget? page;
 
     switch (pageType) {
+      case PageType.home:
+        page = const DashboardMain();
+        break;
       case PageType.groupchat:
         page = const ChatPage(roomId: "support");
         break;

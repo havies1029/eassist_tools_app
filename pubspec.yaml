@@ -9,6 +9,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  cupertino_icons: ^1.0.8 #baru
+  flutter_svg: ^2.0.17 #baru
+  flutter_animate: ^3.0.0 #baru
 
 dev_dependencies:
   flutter_test:
@@ -57,8 +60,22 @@ flutter:
   assets:  
     - assets/images/
     - assets/images/month/
-    - assets/icons/ 
-    
+    - assets/icons/
+    - assets/images/jps-image.png
+    - assets/images/bsi-image.png
+    - assets/images/vector-1.png
+    - assets/images/vector-2.png
+    - assets/images/vector-3.png
+    - assets/images/vector-4.png
+    - assets/images/vector-5.png
+    - assets/images/vector-6.png
+    - assets/images/vector-7.png
+    - assets/images/vector-8.png
+    - assets/images/vector-9.png
+    - assets/images/vector-10.png
+    - assets/images/vector-11.png
+    - assets/images/shape-bottom.svg
+
   fonts:
     - family: HeeboBold
       fonts:

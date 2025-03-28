@@ -59,9 +59,9 @@ class SimulparListPageState extends State<SimulparListPage> {
 					child: Column(
 						mainAxisAlignment: MainAxisAlignment.start,
 						children: [
-							ListPageFilterBarUIWidget(
-								searchController: _searchController,
-								searchButton: buildSearchButton()),
+							// ListPageFilterBarUIWidget(
+							// 	searchController: _searchController,
+							// 	searchButton: buildSearchButton()),
 							buildList()
 						],
 
