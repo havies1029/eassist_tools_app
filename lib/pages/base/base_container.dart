@@ -5,11 +5,16 @@ import 'package:eassist_tools_app/menu/app_menu_drawer.dart';
 import 'package:eassist_tools_app/pages/base/base_page.dart';
 import 'package:eassist_tools_app/common/styles.dart';
 import 'package:eassist_tools_app/pages/login/change_pswd_main.dart';
+import 'package:eassist_tools_app/pages/simulbon/simulboncrud_main.dart';
 import 'package:eassist_tools_app/pages/simuleei/simuleeicrud_main.dart';
+import 'package:eassist_tools_app/pages/simulgis/simulgiscrud_main.dart';
 import 'package:eassist_tools_app/pages/simulgit/simulgitcrud_main.dart';
-import 'package:eassist_tools_app/pages/simulmv/simulmvlist_main.dart';
+import 'package:eassist_tools_app/pages/simulmv/simulmvcrud_form_casco.dart';
+import 'package:eassist_tools_app/pages/simulmv/simulmvcrud_main.dart';
 import 'package:eassist_tools_app/pages/simulpar/simulparcrud_main.dart';
+import 'package:eassist_tools_app/pages/simulgis/simulgiscrud_form.dart';
 import 'package:eassist_tools_app/pages/dashboard/dashboard_main.dart';
+import 'package:eassist_tools_app/pages/simulwp/simulwpcrud_main.dart';
 import 'package:flutter/material.dart';
 import 'package:eassist_tools_app/pages/profile/profile_main_page.dart';
 import 'package:eassist_tools_app/repositories/user/user_repository.dart';
@@ -93,7 +98,7 @@ class PageContainer extends PageContainerBase {
   String get pageTitle {
     switch (pageType) {
       case PageType.home:
-        return "Dashboard";
+        return "";
       case PageType.profile:
         return "Profile";
       case PageType.roomchat:
@@ -108,6 +113,8 @@ class PageContainer extends PageContainerBase {
         return "Calc. Premi EEI";
       case PageType.simulgit:
         return "Calc. Premi GIT";
+          case PageType.simulgis:
+        return "Calc. Premi GIS";
       default:
         return "Login Page";
     }
@@ -131,7 +138,7 @@ class PageContainer extends PageContainerBase {
         page = const ChangePswdMainPage();
         break;
       case PageType.simulmv:
-        page = const SimulmvListMainPage();
+        page = const SimulmvCrudMainPage();
         break;
       case PageType.simulpar:
         page = const SimulparCrudMainPage();
@@ -141,6 +148,15 @@ class PageContainer extends PageContainerBase {
         break;
       case PageType.simulgit:
         page = const SimulgitCrudMainPage();
+        break;
+      case PageType.simulgis:
+        page = const SimulgisCrudMainPage(viewMode: "", recordId: "",);
+        break;
+      case PageType.simulbon:
+        page = const SimulbonCrudMainPage(viewMode: "", recordId: "",);
+        break;
+      case PageType.simulwp:
+        page = const SimulwpCrudMainPage(viewMode: "", recordId: "",);
         break;
       default:
         page = null;

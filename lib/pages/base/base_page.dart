@@ -19,7 +19,10 @@ enum PageType {
   simulmv,
   simulpar,
   simuleei,
-  simulgit
+  simulgit,
+  simulgis,
+  simulbon,
+  simulwp,
 }
 
 abstract class PageContainerBase extends StatefulWidget {
@@ -36,13 +39,16 @@ abstract class PageContainerBase extends StatefulWidget {
   PageContainerBaseState createState() => PageContainerBaseState();
 }
 
-class PageContainerBaseState extends State<PageContainerBase> {  
+class PageContainerBaseState extends State<PageContainerBase> {
   late OnBoardMenuCariBloc onBoardMenuCariBloc;
+  late HomeBloc homeBloc;
 
   @override
   Widget build(BuildContext context) {
-    
     onBoardMenuCariBloc = BlocProvider.of<OnBoardMenuCariBloc>(context);
+    homeBloc = BlocProvider.of<HomeBloc>(context);
+
+    debugPrint("homeBloc.state : ${homeBloc.state}");
 
     return MobileDesignWidget(
       child: Container(
@@ -57,7 +63,6 @@ class PageContainerBaseState extends State<PageContainerBase> {
             widget.parentModal),
       ),
     );
-
   }
 
   Widget pageContainerType(
@@ -121,7 +126,8 @@ class PageContainerBaseState extends State<PageContainerBase> {
                     BlocProvider.of<HomeBloc>(context)
                         .add(HomePageActiveEvent());
                   },
-                  child: SizedBox(
+                  child: (homeBloc.state is HomePageActive) ? Container() : 
+                  SizedBox(
                     width: 100,
                     height: 100,
                     child: Image.asset(Img.get('login_logo.png')),

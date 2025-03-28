@@ -16,7 +16,6 @@ class SimulMVPageActiveEvent extends HomeEvent {}
 class SimulPARPageActiveEvent extends HomeEvent {}
 class SimulEEIPageActiveEvent extends HomeEvent {}
 class SimulGITPageActiveEvent extends HomeEvent {}
-class SimulbonCrudFormPageActiveEvent extends HomeEvent {}
-class SimuleeiCrudFormPageActiveEvent extends HomeEvent {}
-class SimulwpCrudFormPageActiveEvent extends HomeEvent {}
-class SimulgitCrudFormPageActiveEvent extends HomeEvent {}
+class SimulGISPageActiveEvent extends HomeEvent {}
+class SimulBONPageActiveEvent extends HomeEvent {}
+class SimulWPPageActiveEvent extends HomeEvent {}

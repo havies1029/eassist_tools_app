@@ -42,6 +42,18 @@ class AppMenuState extends State<AppMenu> with RouteAware {
                         });
                       },
                     ),
+                    ListTile(
+                      leading: const Icon(Icons.home),
+                      title: const Text("Home"),
+                      //selected: _activeRoute == AppRoutes.homePage,
+                      onTap: () {
+                        SchedulerBinding.instance
+                            .addPostFrameCallback((timeStamp) {
+                          Navigator.of(context).pop();
+                          homeBloc.add(HomePageActiveEvent());
+                        });
+                      },
+                    ),
                     ExpansionTile(
                       leading: const Icon(
                         Icons.settings,
@@ -103,6 +115,60 @@ class AppMenuState extends State<AppMenu> with RouteAware {
                                   .addPostFrameCallback((timeStamp) {
                                 Navigator.of(context).pop();
                                 homeBloc.add(SimulGITPageActiveEvent());                                
+                              });
+                              
+                            },
+                          ),
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsets.only(left: 15.0),
+                          child: ListTile(
+                            leading: const Icon(Icons.person),
+                            title: const Text("Gold in Cash"),
+                            //selected: _activeRoute == AppRoutes.homePage,
+                            onTap: () {
+                              
+                              SchedulerBinding.instance
+                                  .addPostFrameCallback((timeStamp) {
+                                Navigator.of(context).pop();
+                                homeBloc.add(SimulGISPageActiveEvent());                                
+                              });
+                              
+                            },
+                          ),
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsets.only(left: 15.0),
+                          child: ListTile(
+                            leading: const Icon(Icons.person),
+                            title: const Text("BON"),
+                            //selected: _activeRoute == AppRoutes.homePage,
+                            onTap: () {
+                              
+                              SchedulerBinding.instance
+                                  .addPostFrameCallback((timeStamp) {
+                                Navigator.of(context).pop();
+                                homeBloc.add(SimulBONPageActiveEvent());                                
+                              });
+                              
+                            },
+                          ),
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsets.only(left: 15.0),
+                          child: ListTile(
+                            leading: const Icon(Icons.person),
+                            title: const Text("WP"),
+                            //selected: _activeRoute == AppRoutes.homePage,
+                            onTap: () {
+                              
+                              SchedulerBinding.instance
+                                  .addPostFrameCallback((timeStamp) {
+                                Navigator.of(context).pop();
+                                homeBloc.add(SimulWPPageActiveEvent());                                
                               });
                               
                             },

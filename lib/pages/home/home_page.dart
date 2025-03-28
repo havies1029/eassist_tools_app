@@ -53,6 +53,12 @@ class _HomePageState extends State<HomePage> {
             return const PageContainer(pageType: PageType.simuleei);  
           } else if (state is SimulGITPageActive) {            
             return const PageContainer(pageType: PageType.simulgit);  
+          } else if (state is SimulGISPageActive) {            
+            return const PageContainer(pageType: PageType.simulgis); 
+          } else if (state is SimulBONPageActive) {            
+            return const PageContainer(pageType: PageType.simulbon);  
+          } else if (state is SimulWPPageActive) {            
+            return const PageContainer(pageType: PageType.simulwp);
           } else if (state is ProfilePageActive) {
             return PageContainerWithUserRepository(
               pageType: PageType.profile,
