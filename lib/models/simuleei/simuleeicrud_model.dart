@@ -8,6 +8,7 @@ class SimuleeiCrudModel {
   String? rmatauangKode;
   double? premi;
   String? currDesc;
+  int? thnBuat;
   ComboRMatauangModel? comboRMatauang;
 
   SimuleeiCrudModel(
@@ -18,6 +19,7 @@ class SimuleeiCrudModel {
       this.rmatauangKode,
       this.premi,
       this.currDesc,
+      this.thnBuat,
       this.comboRMatauang});
 
   factory SimuleeiCrudModel.fromJson(Map<String, dynamic> data) {
@@ -34,7 +36,8 @@ class SimuleeiCrudModel {
         rmatauangKode: data['rmatauangKode'] ?? '',
         premi: double.tryParse(data['premi'].toString()) ?? 0,
         comboRMatauang: comboRMatauang,
-        currDesc: data['currDesc']??'IDR');
+        currDesc: data['currDesc'] ?? 'IDR',
+        thnBuat: int.tryParse(data['thnBuat'].toString()) ?? 0,);
   }
 
   Map<String, dynamic> toJson() => {
@@ -45,6 +48,7 @@ class SimuleeiCrudModel {
         'rmatauangKode': rmatauangKode,
         'premi': premi.toString(),
         'comboRMatauang': comboRMatauang?.toJson(),
-        'currDesc': currDesc
+        'currDesc': currDesc,
+        'thnBuat': thnBuat
       };
 }
