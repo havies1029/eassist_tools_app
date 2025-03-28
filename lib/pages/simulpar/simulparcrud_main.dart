@@ -5,10 +5,8 @@ import 'package:eassist_tools_app/widgets/mobiledesign_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SimulparCrudMainPage extends StatefulWidget {
-	final String viewMode;
-	final String recordId;
-
-	const SimulparCrudMainPage({super.key, required this.viewMode, required this.recordId});
+	
+	const SimulparCrudMainPage({super.key});
 
 	@override
   SimulparCrudMainPageState createState() =>
@@ -32,19 +30,15 @@ class SimulparCrudMainPageState extends State<SimulparCrudMainPage>{
 		return MobileDesignWidget(
 			child: Scaffold(
 				appBar: AppBar(
-					title: Text('${widget.viewMode == "tambah"?"Tambah":"Ubah"} Premi PAR'),
+					title: Text('Calculator PAR'),
 				),
-				body: SimulparCrudFormV2Page(viewMode: widget.viewMode, recordId: widget.recordId)));
+				body: SimulparCrudFormV2Page(viewMode: "tambah", recordId: "")));
 	}
 
   void loadData() {
     debugPrint("######### SimulparCrudMainPage -> loadData ############3");
-
-    if (widget.viewMode == "ubah") {
-      simulparCrudBloc.add(SimulparCrudLihatEvent(recordId: widget.recordId));
-    } else if (widget.viewMode == "tambah") {
-      simulparCrudBloc.add(SimulPARCrudInitValueEvent());
-    }
+    
+    simulparCrudBloc.add(SimulPARCrudInitValueEvent());
   }
 }
 

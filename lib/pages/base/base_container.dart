@@ -1,4 +1,3 @@
-import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:eassist_tools_app/pages/chatting/roomcari_list.dart';
 import 'package:eassist_tools_app/pages/groupchat/groupchat_page.dart';
 import 'package:eassist_tools_app/pages/home/home_page.dart';
@@ -8,7 +7,7 @@ import 'package:eassist_tools_app/common/styles.dart';
 import 'package:eassist_tools_app/pages/login/change_pswd_main.dart';
 import 'package:eassist_tools_app/pages/simuleei/simuleeilist_main.dart';
 import 'package:eassist_tools_app/pages/simulmv/simulmvlist_main.dart';
-import 'package:eassist_tools_app/pages/simulpar/simulparlist_main.dart';
+import 'package:eassist_tools_app/pages/simulpar/simulparcrud_main.dart';
 import 'package:flutter/material.dart';
 import 'package:eassist_tools_app/pages/profile/profile_main_page.dart';
 import 'package:eassist_tools_app/repositories/user/user_repository.dart';
@@ -126,7 +125,7 @@ class PageContainer extends PageContainerBase {
         page = const SimulmvListMainPage();
         break;
       case PageType.simulpar:
-        page = const SimulparListMainPage();
+        page = const SimulparCrudMainPage();
         break;
       case PageType.simuleei:
         page = const SimuleeiListMainPage();

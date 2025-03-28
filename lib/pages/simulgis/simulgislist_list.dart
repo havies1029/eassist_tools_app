@@ -1,22 +1,22 @@
-import 'package:eassist_tools_app/pages/simulpar/simulparcrud_main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/widgets/listpage_filter_bar_ui.dart';
 import 'package:eassist_tools_app/widgets/floatingmenumaster_widget.dart';
-import 'package:eassist_tools_app/blocs/simulpar/simulparlist_bloc.dart';
-import 'package:eassist_tools_app/blocs/simulpar/simulparcrud_bloc.dart';
-import 'package:eassist_tools_app/pages/simulpar/simulparlist_list_widget.dart';
+import 'package:eassist_tools_app/blocs/simulgis/simulgislist_bloc.dart';
+import 'package:eassist_tools_app/blocs/simulgis/simulgiscrud_bloc.dart';
+import 'package:eassist_tools_app/pages/simulgis/simulgiscrud_form.dart';
+import 'package:eassist_tools_app/pages/simulgis/simulgislist_list_widget.dart';
 
-class SimulparListPage extends StatefulWidget {
-	const SimulparListPage({super.key});
+class SimulgisListPage extends StatefulWidget {
+	const SimulgisListPage({super.key});
 
 	@override
-	SimulparListPageState createState() => SimulparListPageState();
+	SimulgisListPageState createState() => SimulgisListPageState();
 }
 
-class SimulparListPageState extends State<SimulparListPage> {
-	late SimulparListBloc simulparListBloc;
-	late SimulparCrudBloc simulparCrudBloc;
+class SimulgisListPageState extends State<SimulgisListPage> {
+	late SimulgisListBloc simulgisListBloc;
+	late SimulgisCrudBloc simulgisCrudBloc;
 	final TextEditingController _searchController = TextEditingController();
 	@override
 	void initState() {
@@ -28,12 +28,12 @@ class SimulparListPageState extends State<SimulparListPage> {
 
 	@override
 	Widget build(BuildContext context) {
-		simulparListBloc = BlocProvider.of<SimulparListBloc>(context);
-		simulparCrudBloc = BlocProvider.of<SimulparCrudBloc>(context);
+		simulgisListBloc = BlocProvider.of<SimulgisListBloc>(context);
+		simulgisCrudBloc = BlocProvider.of<SimulgisCrudBloc>(context);
 
 		return MultiBlocListener(
 			listeners: [
-				BlocListener<SimulparListBloc, SimulparListState>(
+				BlocListener<SimulgisListBloc, SimulgisListState>(
 					listener: (context, state) {
 						if (state.viewMode == "tambah") {
 							showDialogViewData(context, state.viewMode, "");
@@ -43,7 +43,7 @@ class SimulparListPageState extends State<SimulparListPage> {
 				}, listenWhen: (previous, current) {
 					return previous.viewMode != current.viewMode;
 				}),
-				BlocListener<SimulparCrudBloc, SimulparCrudState>(
+				BlocListener<SimulgisCrudBloc, SimulgisCrudState>(
 					listener: (context, state) {
 						if (state.isSaved) {
 							refreshData();
@@ -71,12 +71,12 @@ class SimulparListPageState extends State<SimulparListPage> {
 	}
 
 	void refreshData() {
-		simulparListBloc.add(
-			RefreshSimulparListEvent(searchText: _searchController.text, hal: 0));
+		simulgisListBloc.add(
+			RefreshSimulgisListEvent(searchText: _searchController.text, hal: 0));
 	}
 
 	void onTambahData() {
-		simulparListBloc.add(TambahSimulparListEvent());
+		simulgisListBloc.add(TambahSimulgisListEvent());
 	}
 
 	IconButton buildSearchButton() {
@@ -86,7 +86,7 @@ class SimulparListPageState extends State<SimulparListPage> {
 				size: 35.0,
 			),
 			onPressed: () {
-			simulparListBloc.add(RefreshSimulparListEvent(
+			simulgisListBloc.add(RefreshSimulgisListEvent(
 				searchText: _searchController.text, hal: 0));
 			});
 	}
@@ -95,15 +95,22 @@ class SimulparListPageState extends State<SimulparListPage> {
 		return Expanded(
 			child: Column(
 				mainAxisAlignment: MainAxisAlignment.start,
-				children: <Widget>[SimulparListListWidget(searchText: _searchController.text)],
+				children: <Widget>[SimulgisListListWidget(searchText: _searchController.text)],
 		));
 	}
 
 	void showDialogViewData(BuildContext context, String viewMode, String recordId) {
 		FocusScope.of(context).requestFocus(FocusNode());
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return SimulparCrudMainPage();
-    }));
+		showDialog(
+			context: context,
+			barrierDismissible: false,
+			builder: (BuildContext context) {
+				return SimulgisCrudFormPage(viewMode: viewMode, recordId: recordId);
+			},
+			useSafeArea: true)
+		.then((value) {
+			simulgisListBloc.add(CloseDialogSimulgisListEvent());
+		});
 	}
 
 }
