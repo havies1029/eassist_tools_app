@@ -8,6 +8,13 @@ class MyColors {
   static const Color accentDark = Color(0xFFF50057);
   static const Color accentLight = Color(0xFFFF80AB);
 
+  static const Color primaryYellow = Color(0xFFFEBA2B);
+  static const Color primaryOrange = Color(0xFFF2733D);
+  static const Color secondaryGrey = Color(0xFF757575);
+  static const Color secondaryBlue = Color(0xFF0386D0);
+  static const Color black = Color(0xFF000000);
+  static const Color white = Color(0xFFFFFFFF);
+
   static const Color grey_3 = Color(0xFFf7f7f7);
   static const Color grey_5 = Color(0xFFf2f2f2);
   static const Color grey_10 = Color(0xFFe6e6e6);
