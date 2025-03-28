@@ -19,6 +19,7 @@ enum PageType {
   simulmv,
   simulpar,
   simuleei,
+  simulgit
 }
 
 abstract class PageContainerBase extends StatefulWidget {

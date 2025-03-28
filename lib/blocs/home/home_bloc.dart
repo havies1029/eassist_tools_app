@@ -14,5 +14,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<SimulMVPageActiveEvent>((event, emit) => emit(SimulMVPageActive())); 
     on<SimulPARPageActiveEvent>((event, emit) => emit(SimulPARPageActive()));
     on<SimulEEIPageActiveEvent>((event, emit) => emit(SimulEEIPageActive()));
+    on<SimulGITPageActiveEvent>((event, emit) => emit(SimulGITPageActive()));
   }
 }

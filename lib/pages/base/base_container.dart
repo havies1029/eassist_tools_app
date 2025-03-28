@@ -5,10 +5,10 @@ import 'package:eassist_tools_app/menu/app_menu_drawer.dart';
 import 'package:eassist_tools_app/pages/base/base_page.dart';
 import 'package:eassist_tools_app/common/styles.dart';
 import 'package:eassist_tools_app/pages/login/change_pswd_main.dart';
-import 'package:eassist_tools_app/pages/simuleei/simuleeilist_main.dart';
+import 'package:eassist_tools_app/pages/simuleei/simuleeicrud_main.dart';
+import 'package:eassist_tools_app/pages/simulgit/simulgitcrud_main.dart';
 import 'package:eassist_tools_app/pages/simulmv/simulmvlist_main.dart';
 import 'package:eassist_tools_app/pages/simulpar/simulparcrud_main.dart';
-import 'package:eassist_tools_app/pages/simulpar/simulparlist_main.dart';
 import 'package:eassist_tools_app/pages/dashboard/dashboard_main.dart';
 import 'package:flutter/material.dart';
 import 'package:eassist_tools_app/pages/profile/profile_main_page.dart';
@@ -106,6 +106,8 @@ class PageContainer extends PageContainerBase {
         return "Calc. Premi PAR";
       case PageType.simuleei:
         return "Calc. Premi EEI";
+      case PageType.simulgit:
+        return "Calc. Premi GIT";
       default:
         return "Login Page";
     }
@@ -135,7 +137,10 @@ class PageContainer extends PageContainerBase {
         page = const SimulparCrudMainPage();
         break;
       case PageType.simuleei:
-        page = const SimuleeiListMainPage();
+        page = const SimuleeiCrudMainPage();
+        break;
+      case PageType.simulgit:
+        page = const SimulgitCrudMainPage();
         break;
       default:
         page = null;

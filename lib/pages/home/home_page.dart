@@ -51,6 +51,8 @@ class _HomePageState extends State<HomePage> {
             return const PageContainer(pageType: PageType.simulpar);  
           } else if (state is SimulEEIPageActive) {            
             return const PageContainer(pageType: PageType.simuleei);  
+          } else if (state is SimulGITPageActive) {            
+            return const PageContainer(pageType: PageType.simulgit);  
           } else if (state is ProfilePageActive) {
             return PageContainerWithUserRepository(
               pageType: PageType.profile,

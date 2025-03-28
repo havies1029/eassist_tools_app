@@ -14,3 +14,4 @@ class ChangePasswordPageActive extends HomeState {}
 class SimulMVPageActive extends HomeState {}
 class SimulPARPageActive extends HomeState {}
 class SimulEEIPageActive extends HomeState {}
+class SimulGITPageActive extends HomeState {}

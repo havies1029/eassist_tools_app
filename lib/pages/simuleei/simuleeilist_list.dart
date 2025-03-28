@@ -103,7 +103,7 @@ class SimuleeiListPageState extends State<SimuleeiListPage> {
 	void showDialogViewData(BuildContext context, String viewMode, String recordId) {
 		FocusScope.of(context).requestFocus(FocusNode());
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return SimuleeiCrudMainPage(viewMode: viewMode, recordId: recordId);
+      return SimuleeiCrudMainPage();
     }));
 		
 	}

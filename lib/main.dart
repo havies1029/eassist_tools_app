@@ -5,6 +5,7 @@ import 'package:eassist_tools_app/blocs/onboardmenu/onboardmenucari_bloc.dart';
 import 'package:eassist_tools_app/blocs/progressindicator/progressindicator_bloc.dart';
 import 'package:eassist_tools_app/blocs/simuleei/simuleeicrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/simuleei/simuleeilist_bloc.dart';
+import 'package:eassist_tools_app/blocs/simulgit/simulgitcrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/simulmv/simulmvcrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/simulmv/simulmvlist_bloc.dart';
 import 'package:eassist_tools_app/blocs/simulpar/simulparcrud_bloc.dart';
@@ -17,6 +18,7 @@ import 'package:eassist_tools_app/pages/login/login_page.dart';
 import 'package:eassist_tools_app/pages/splash/splash_page.dart';
 import 'package:eassist_tools_app/repositories/login/change_password_repository.dart';
 import 'package:eassist_tools_app/repositories/simuleei/simuleeicrud_repository.dart';
+import 'package:eassist_tools_app/repositories/simulgit/simulgitcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/simulmv/simulmvcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/simulpar/simulparcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/user/user_repository.dart';
@@ -76,6 +78,9 @@ class App extends StatelessWidget {
         BlocProvider<SimuleeiCrudBloc>(
           create: (context) =>
               SimuleeiCrudBloc(repository: SimuleeiCrudRepository())), 
+        BlocProvider<SimulgitCrudBloc>(
+          create: (context) =>
+              SimulgitCrudBloc(repository: SimulgitCrudRepository())),
                                   
              
       ],
