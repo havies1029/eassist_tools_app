@@ -18,5 +18,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<SimulGISPageActiveEvent>((event, emit) => emit(SimulGISPageActive()));
     on<SimulBONPageActiveEvent>((event, emit) => emit(SimulBONPageActive()));
     on<SimulWPPageActiveEvent>((event, emit) => emit(SimulWPPageActive()));
+    on<SimulCARGOPageActiveEvent>((event, emit) => emit(SimulCARGOPageActive()));
   }
 }

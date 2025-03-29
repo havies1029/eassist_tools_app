@@ -18,3 +18,4 @@ class SimulGITPageActive extends HomeState {}
 class SimulGISPageActive extends HomeState {}
 class SimulBONPageActive extends HomeState {}
 class SimulWPPageActive extends HomeState {}
+class SimulCARGOPageActive extends HomeState {}

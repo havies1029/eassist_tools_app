@@ -11,22 +11,29 @@ import 'package:eassist_tools_app/common/thousand_separator_input_formatter.dart
 import 'package:string_validator/string_validator.dart';
 import 'package:eassist_tools_app/widgets/checkbox_widget.dart';
 import 'package:dropdown_search/dropdown_search.dart';
-
+import '../../widgets/my_colors.dart';
 
 class SimulbonCrudFormPage extends StatefulWidget {
 	final String viewMode;
 	final String recordId;
 
-	const SimulbonCrudFormPage({super.key, required this.viewMode, required this.recordId});
+	const SimulbonCrudFormPage({
+		super.key,
+		required this.viewMode,
+		required this.recordId,
+	});
 
 	@override
-	SimulbonCrudFormPageFormState createState() => SimulbonCrudFormPageFormState();
+	SimulbonCrudFormPageFormState createState() =>
+			SimulbonCrudFormPageFormState();
 }
 
 class SimulbonCrudFormPageFormState extends State<SimulbonCrudFormPage> {
 	late SimulbonCrudBloc simulbonCrudBloc;
 	final _formKey = GlobalKey<FormState>();
 	final List<String> errors = [];
+
+	// Controllers
 	var fieldCarNilaiController = TextEditingController();
 	var fieldCarPersenController = TextEditingController();
 	var fieldCoverBulanController = TextEditingController();
@@ -49,10 +56,12 @@ class SimulbonCrudFormPageFormState extends State<SimulbonCrudFormPage> {
 	var fieldPremiUangmukaController = TextEditingController();
 	var fieldRateBondController = TextEditingController();
 	var fieldRateCarController = TextEditingController();
-	ComboRMatauangModel? fieldComboRMatauang;
-	final comboRMatauangKey = GlobalKey<DropdownSearchState<ComboRMatauangModel>>();
 	var fieldUangmukaNilaiController = TextEditingController();
 	var fieldUangmukaPersenController = TextEditingController();
+
+	// ComboBox
+	ComboRMatauangModel? fieldComboRMatauang;
+	final comboRMatauangKey = GlobalKey<DropdownSearchState<ComboRMatauangModel>>();
 
 	@override
 	void initState() {
@@ -68,7 +77,7 @@ class SimulbonCrudFormPageFormState extends State<SimulbonCrudFormPage> {
 		return BlocConsumer<SimulbonCrudBloc, SimulbonCrudState>(
 			builder: (context, state) {
 				return Dialog(
-					shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+					backgroundColor: Colors.white,
 					child: SingleChildScrollView(
 						child: Padding(
 							padding: const EdgeInsets.all(8.0),
@@ -76,85 +85,59 @@ class SimulbonCrudFormPageFormState extends State<SimulbonCrudFormPage> {
 								key: _formKey,
 								child: Column(
 									children: [
-										const SizedBox(height: 10),
-										Text(
-											"${widget.viewMode == "tambah" ? "Tambah" : "Ubah"} Premi Bonding",
-											style: const TextStyle(
-												fontSize: 20.0,
-												color: Color(0xffff6101),
-												fontWeight: FontWeight.w600,
-												fontFamily: 'Hind',
-												fontStyle: FontStyle.italic,
-												decoration: TextDecoration.underline,
-											),
-										),
-										const SizedBox(height: 25),
-										TextFormField(
-											keyboardType: TextInputType.number,
-											inputFormatters: [ThousandsSeparatorInputFormatter()],
+										// Field carNilai
+										_buildTextFormField(
 											controller: fieldCarNilaiController,
-											decoration: const InputDecoration(
-												labelText: "carNilai",
-												floatingLabelBehavior: FloatingLabelBehavior.always,
-											),
+											labelText: "carNilai",
+											keyboardType: TextInputType.number,
 											onChanged: (value) {
-												if (value.isNotEmpty) {
-													removeError(error: kStringNullError);
-												}
+												if (value.isNotEmpty) removeError(error: kStringNullError);
 											},
 											validator: (value) {
 												if (value == null || value.isEmpty) {
 													addError(error: kStringNullError);
-													return "";
+													return "carNilai tidak boleh kosong";
 												}
 												return null;
 											},
-											textAlign: TextAlign.right,
 										),
-										TextFormField(
-											keyboardType: TextInputType.number,
-											inputFormatters: [ThousandsSeparatorInputFormatter()],
+										const SizedBox(height: 10),
+										// Field carPersen
+										_buildTextFormField(
 											controller: fieldCarPersenController,
-											decoration: const InputDecoration(
-												labelText: "carPersen",
-												floatingLabelBehavior: FloatingLabelBehavior.always,
-											),
-											onChanged: (value) {
-												if (value.isNotEmpty) {
-													removeError(error: kStringNullError);
-												}
-											},
-											validator: (value) {
-												if (value == null || value.isEmpty) {
-													addError(error: kStringNullError);
-													return "";
-												}
-												return null;
-											},
-											textAlign: TextAlign.right,
-										),
-										TextFormField(
+											labelText: "carPersen",
 											keyboardType: TextInputType.number,
-											inputFormatters: [ThousandsSeparatorInputFormatter()],
-											controller: fieldCoverBulanController,
-											decoration: const InputDecoration(
-												labelText: "coverBulan",
-												floatingLabelBehavior: FloatingLabelBehavior.always,
-											),
 											onChanged: (value) {
-												if (value.isNotEmpty) {
-													removeError(error: kStringNullError);
-												}
+												if (value.isNotEmpty) removeError(error: kStringNullError);
 											},
 											validator: (value) {
 												if (value == null || value.isEmpty) {
 													addError(error: kStringNullError);
-													return "";
+													return "carPersen tidak boleh kosong";
 												}
 												return null;
 											},
-											textAlign: TextAlign.right,
 										),
+										const SizedBox(height: 10),
+										// Field coverBulan
+										_buildTextFormField(
+											controller: fieldCoverBulanController,
+											labelText: "coverBulan",
+											keyboardType: TextInputType.number,
+											suffixText: " bulan",
+											onChanged: (value) {
+												if (value.isNotEmpty) removeError(error: kStringNullError);
+											},
+											validator: (value) {
+												if (value == null || value.isEmpty) {
+													addError(error: kStringNullError);
+													return "coverBulan tidak boleh kosong";
+												}
+												return null;
+											},
+										),
+										const SizedBox(height: 10),
+										// Checkbox isCar
 										CheckboxWidget(
 											leftLabel: "",
 											rightLabel: "isCar",
@@ -163,8 +146,9 @@ class SimulbonCrudFormPageFormState extends State<SimulbonCrudFormPage> {
 												setState(() {
 													fieldIsCarController.text = value.toString();
 												});
-											}
+											},
 										),
+										// Checkbox isPelaksanaan
 										CheckboxWidget(
 											leftLabel: "",
 											rightLabel: "isPelaksanaan",
@@ -173,8 +157,9 @@ class SimulbonCrudFormPageFormState extends State<SimulbonCrudFormPage> {
 												setState(() {
 													fieldIsPelaksanaanController.text = value.toString();
 												});
-											}
+											},
 										),
+										// Checkbox isPemeliharaan
 										CheckboxWidget(
 											leftLabel: "",
 											rightLabel: "isPemeliharaan",
@@ -183,8 +168,9 @@ class SimulbonCrudFormPageFormState extends State<SimulbonCrudFormPage> {
 												setState(() {
 													fieldIsPemeliharaanController.text = value.toString();
 												});
-											}
+											},
 										),
+										// Checkbox isPenawaran
 										CheckboxWidget(
 											leftLabel: "",
 											rightLabel: "isPenawaran",
@@ -193,8 +179,9 @@ class SimulbonCrudFormPageFormState extends State<SimulbonCrudFormPage> {
 												setState(() {
 													fieldIsPenawaranController.text = value.toString();
 												});
-											}
+											},
 										),
+										// Checkbox isUangmuka
 										CheckboxWidget(
 											leftLabel: "",
 											rightLabel: "isUangmuka",
@@ -203,325 +190,258 @@ class SimulbonCrudFormPageFormState extends State<SimulbonCrudFormPage> {
 												setState(() {
 													fieldIsUangmukaController.text = value.toString();
 												});
-											}
+											},
 										),
-										TextFormField(
-											keyboardType: TextInputType.number,
-											inputFormatters: [ThousandsSeparatorInputFormatter()],
+										const SizedBox(height: 10),
+										// Field kontrakNilai
+										_buildTextFormField(
 											controller: fieldKontrakNilaiController,
-											decoration: const InputDecoration(
-												labelText: "kontrakNilai",
-												floatingLabelBehavior: FloatingLabelBehavior.always,
-											),
+											labelText: "kontrakNilai",
+											keyboardType: TextInputType.number,
 											onChanged: (value) {
-												if (value.isNotEmpty) {
-													removeError(error: kStringNullError);
-												}
+												if (value.isNotEmpty) removeError(error: kStringNullError);
 											},
 											validator: (value) {
 												if (value == null || value.isEmpty) {
 													addError(error: kStringNullError);
-													return "";
+													return "kontrakNilai tidak boleh kosong";
 												}
 												return null;
 											},
-											textAlign: TextAlign.right,
 										),
-										TextFormField(
-											keyboardType: TextInputType.number,
-											inputFormatters: [ThousandsSeparatorInputFormatter()],
+										const SizedBox(height: 10),
+										// Field pelaksanaanNilai
+										_buildTextFormField(
 											controller: fieldPelaksanaanNilaiController,
-											decoration: const InputDecoration(
-												labelText: "pelaksanaanNilai",
-												floatingLabelBehavior: FloatingLabelBehavior.always,
-											),
+											labelText: "pelaksanaanNilai",
+											keyboardType: TextInputType.number,
 											onChanged: (value) {
-												if (value.isNotEmpty) {
-													removeError(error: kStringNullError);
-												}
+												if (value.isNotEmpty) removeError(error: kStringNullError);
 											},
 											validator: (value) {
 												if (value == null || value.isEmpty) {
 													addError(error: kStringNullError);
-													return "";
+													return "pelaksanaanNilai tidak boleh kosong";
 												}
 												return null;
 											},
-											textAlign: TextAlign.right,
 										),
-										TextFormField(
-											keyboardType: TextInputType.number,
-											inputFormatters: [ThousandsSeparatorInputFormatter()],
+										const SizedBox(height: 10),
+										// Field pelaksanaanPersen
+										_buildTextFormField(
 											controller: fieldPelaksanaanPersenController,
-											decoration: const InputDecoration(
-												labelText: "pelaksanaanPersen",
-												floatingLabelBehavior: FloatingLabelBehavior.always,
-											),
+											labelText: "pelaksanaanPersen",
+											keyboardType: TextInputType.number,
 											onChanged: (value) {
-												if (value.isNotEmpty) {
-													removeError(error: kStringNullError);
-												}
+												if (value.isNotEmpty) removeError(error: kStringNullError);
 											},
 											validator: (value) {
 												if (value == null || value.isEmpty) {
 													addError(error: kStringNullError);
-													return "";
+													return "pelaksanaanPersen tidak boleh kosong";
 												}
 												return null;
 											},
-											textAlign: TextAlign.right,
 										),
-										TextFormField(
-											keyboardType: TextInputType.number,
-											inputFormatters: [ThousandsSeparatorInputFormatter()],
+										const SizedBox(height: 10),
+										// Field pemeliharaanNilai
+										_buildTextFormField(
 											controller: fieldPemeliharaanNilaiController,
-											decoration: const InputDecoration(
-												labelText: "pemeliharaanNilai",
-												floatingLabelBehavior: FloatingLabelBehavior.always,
-											),
+											labelText: "pemeliharaanNilai",
+											keyboardType: TextInputType.number,
 											onChanged: (value) {
-												if (value.isNotEmpty) {
-													removeError(error: kStringNullError);
-												}
+												if (value.isNotEmpty) removeError(error: kStringNullError);
 											},
 											validator: (value) {
 												if (value == null || value.isEmpty) {
 													addError(error: kStringNullError);
-													return "";
+													return "pemeliharaanNilai tidak boleh kosong";
 												}
 												return null;
 											},
-											textAlign: TextAlign.right,
 										),
-										TextFormField(
-											keyboardType: TextInputType.number,
-											inputFormatters: [ThousandsSeparatorInputFormatter()],
+										const SizedBox(height: 10),
+										// Field pemeliharaanPersen
+										_buildTextFormField(
 											controller: fieldPemeliharaanPersenController,
-											decoration: const InputDecoration(
-												labelText: "pemeliharaanPersen",
-												floatingLabelBehavior: FloatingLabelBehavior.always,
-											),
+											labelText: "pemeliharaanPersen",
+											keyboardType: TextInputType.number,
 											onChanged: (value) {
-												if (value.isNotEmpty) {
-													removeError(error: kStringNullError);
-												}
+												if (value.isNotEmpty) removeError(error: kStringNullError);
 											},
 											validator: (value) {
 												if (value == null || value.isEmpty) {
 													addError(error: kStringNullError);
-													return "";
+													return "pemeliharaanPersen tidak boleh kosong";
 												}
 												return null;
 											},
-											textAlign: TextAlign.right,
 										),
-										TextFormField(
-											keyboardType: TextInputType.number,
-											inputFormatters: [ThousandsSeparatorInputFormatter()],
+										const SizedBox(height: 10),
+										// Field penawaranNilai
+										_buildTextFormField(
 											controller: fieldPenawaranNilaiController,
-											decoration: const InputDecoration(
-												labelText: "penawaranNilai",
-												floatingLabelBehavior: FloatingLabelBehavior.always,
-											),
+											labelText: "penawaranNilai",
+											keyboardType: TextInputType.number,
 											onChanged: (value) {
-												if (value.isNotEmpty) {
-													removeError(error: kStringNullError);
-												}
+												if (value.isNotEmpty) removeError(error: kStringNullError);
 											},
 											validator: (value) {
 												if (value == null || value.isEmpty) {
 													addError(error: kStringNullError);
-													return "";
+													return "penawaranNilai tidak boleh kosong";
 												}
 												return null;
 											},
-											textAlign: TextAlign.right,
 										),
-										TextFormField(
-											keyboardType: TextInputType.number,
-											inputFormatters: [ThousandsSeparatorInputFormatter()],
+										const SizedBox(height: 10),
+										// Field penawaranPersen
+										_buildTextFormField(
 											controller: fieldPenawaranPersenController,
-											decoration: const InputDecoration(
-												labelText: "penawaranPersen",
-												floatingLabelBehavior: FloatingLabelBehavior.always,
-											),
+											labelText: "penawaranPersen",
+											keyboardType: TextInputType.number,
 											onChanged: (value) {
-												if (value.isNotEmpty) {
-													removeError(error: kStringNullError);
-												}
+												if (value.isNotEmpty) removeError(error: kStringNullError);
 											},
 											validator: (value) {
 												if (value == null || value.isEmpty) {
 													addError(error: kStringNullError);
-													return "";
+													return "penawaranPersen tidak boleh kosong";
 												}
 												return null;
 											},
-											textAlign: TextAlign.right,
 										),
-										TextFormField(
-											keyboardType: TextInputType.number,
-											inputFormatters: [ThousandsSeparatorInputFormatter()],
+										const SizedBox(height: 10),
+										// Field premiCar
+										_buildTextFormField(
 											controller: fieldPremiCarController,
-											decoration: const InputDecoration(
-												labelText: "premiCar",
-												floatingLabelBehavior: FloatingLabelBehavior.always,
-											),
+											labelText: "premiCar",
+											keyboardType: TextInputType.number,
 											onChanged: (value) {
-												if (value.isNotEmpty) {
-													removeError(error: kStringNullError);
-												}
+												if (value.isNotEmpty) removeError(error: kStringNullError);
 											},
 											validator: (value) {
 												if (value == null || value.isEmpty) {
 													addError(error: kStringNullError);
-													return "";
+													return "premiCar tidak boleh kosong";
 												}
 												return null;
 											},
-											textAlign: TextAlign.right,
 										),
-										TextFormField(
-											keyboardType: TextInputType.number,
-											inputFormatters: [ThousandsSeparatorInputFormatter()],
+										const SizedBox(height: 10),
+										// Field premiPelaksanaan
+										_buildTextFormField(
 											controller: fieldPremiPelaksanaanController,
-											decoration: const InputDecoration(
-												labelText: "premiPelaksanaan",
-												floatingLabelBehavior: FloatingLabelBehavior.always,
-											),
+											labelText: "premiPelaksanaan",
+											keyboardType: TextInputType.number,
 											onChanged: (value) {
-												if (value.isNotEmpty) {
-													removeError(error: kStringNullError);
-												}
+												if (value.isNotEmpty) removeError(error: kStringNullError);
 											},
 											validator: (value) {
 												if (value == null || value.isEmpty) {
 													addError(error: kStringNullError);
-													return "";
+													return "premiPelaksanaan tidak boleh kosong";
 												}
 												return null;
 											},
-											textAlign: TextAlign.right,
 										),
-										TextFormField(
-											keyboardType: TextInputType.number,
-											inputFormatters: [ThousandsSeparatorInputFormatter()],
+										const SizedBox(height: 10),
+										// Field premiPemeliharaan
+										_buildTextFormField(
 											controller: fieldPremiPemeliharaanController,
-											decoration: const InputDecoration(
-												labelText: "premiPemeliharaan",
-												floatingLabelBehavior: FloatingLabelBehavior.always,
-											),
+											labelText: "premiPemeliharaan",
+											keyboardType: TextInputType.number,
 											onChanged: (value) {
-												if (value.isNotEmpty) {
-													removeError(error: kStringNullError);
-												}
+												if (value.isNotEmpty) removeError(error: kStringNullError);
 											},
 											validator: (value) {
 												if (value == null || value.isEmpty) {
 													addError(error: kStringNullError);
-													return "";
+													return "premiPemeliharaan tidak boleh kosong";
 												}
 												return null;
 											},
-											textAlign: TextAlign.right,
 										),
-										TextFormField(
-											keyboardType: TextInputType.number,
-											inputFormatters: [ThousandsSeparatorInputFormatter()],
+										const SizedBox(height: 10),
+										// Field premiPenawaran
+										_buildTextFormField(
 											controller: fieldPremiPenawaranController,
-											decoration: const InputDecoration(
-												labelText: "premiPenawaran",
-												floatingLabelBehavior: FloatingLabelBehavior.always,
-											),
+											labelText: "premiPenawaran",
+											keyboardType: TextInputType.number,
 											onChanged: (value) {
-												if (value.isNotEmpty) {
-													removeError(error: kStringNullError);
-												}
+												if (value.isNotEmpty) removeError(error: kStringNullError);
 											},
 											validator: (value) {
 												if (value == null || value.isEmpty) {
 													addError(error: kStringNullError);
-													return "";
+													return "premiPenawaran tidak boleh kosong";
 												}
 												return null;
 											},
-											textAlign: TextAlign.right,
 										),
-										TextFormField(
-											keyboardType: TextInputType.number,
-											inputFormatters: [ThousandsSeparatorInputFormatter()],
+										const SizedBox(height: 10),
+										// Field premiUangmuka
+										_buildTextFormField(
 											controller: fieldPremiUangmukaController,
-											decoration: const InputDecoration(
-												labelText: "premiUangmuka",
-												floatingLabelBehavior: FloatingLabelBehavior.always,
-											),
+											labelText: "premiUangmuka",
+											keyboardType: TextInputType.number,
 											onChanged: (value) {
-												if (value.isNotEmpty) {
-													removeError(error: kStringNullError);
-												}
+												if (value.isNotEmpty) removeError(error: kStringNullError);
 											},
 											validator: (value) {
 												if (value == null || value.isEmpty) {
 													addError(error: kStringNullError);
-													return "";
+													return "premiUangmuka tidak boleh kosong";
 												}
 												return null;
 											},
-											textAlign: TextAlign.right,
 										),
-										TextFormField(
-											keyboardType: TextInputType.number,
-											inputFormatters: [ThousandsSeparatorInputFormatter()],
+										const SizedBox(height: 10),
+										// Field rateBond
+										_buildTextFormField(
 											controller: fieldRateBondController,
-											decoration: const InputDecoration(
-												labelText: "rateBond",
-												floatingLabelBehavior: FloatingLabelBehavior.always,
-											),
-											onChanged: (value) {
-												if (value.isNotEmpty) {
-													removeError(error: kStringNullError);
-												}
-											},
-											validator: (value) {
-												if (value == null || value.isEmpty) {
-													addError(error: kStringNullError);
-													return "";
-												}
-												return null;
-											},
-											textAlign: TextAlign.right,
-										),
-										TextFormField(
+											labelText: "rateBond",
 											keyboardType: TextInputType.number,
-											inputFormatters: [ThousandsSeparatorInputFormatter()],
-											controller: fieldRateCarController,
-											decoration: const InputDecoration(
-												labelText: "rateCar",
-												floatingLabelBehavior: FloatingLabelBehavior.always,
-											),
 											onChanged: (value) {
-												if (value.isNotEmpty) {
-													removeError(error: kStringNullError);
-												}
+												if (value.isNotEmpty) removeError(error: kStringNullError);
 											},
 											validator: (value) {
 												if (value == null || value.isEmpty) {
 													addError(error: kStringNullError);
-													return "";
+													return "rateBond tidak boleh kosong";
 												}
 												return null;
 											},
-											textAlign: TextAlign.right,
 										),
+										const SizedBox(height: 10),
+										// Field rateCar
+										_buildTextFormField(
+											controller: fieldRateCarController,
+											labelText: "rateCar",
+											keyboardType: TextInputType.number,
+											onChanged: (value) {
+												if (value.isNotEmpty) removeError(error: kStringNullError);
+											},
+											validator: (value) {
+												if (value == null || value.isEmpty) {
+													addError(error: kStringNullError);
+													return "rateCar tidak boleh kosong";
+												}
+												return null;
+											},
+										),
+										const SizedBox(height: 10),
+										// ComboBox rmatauangKode
 										buildFieldComboRMatauang(
 											comboKey: comboRMatauangKey,
 											labelText: 'rmatauangKode',
 											initItem: fieldComboRMatauang,
 											onChangedCallback: (value) {
 												if (value != null) {
-													removeError(
-														error: "Field ComboRMatauang tidak boleh kosong.");
-													simulbonCrudBloc.add(ComboRMatauangChangedEvent(comboRMatauang: value));
+													removeError(error: "Field ComboRMatauang tidak boleh kosong.");
+													simulbonCrudBloc.add(
+														ComboRMatauangChangedEvent(comboRMatauang: value),
+													);
 												}
 											},
 											onSaveCallback: (value) {
@@ -531,60 +451,55 @@ class SimulbonCrudFormPageFormState extends State<SimulbonCrudFormPage> {
 											},
 											validatorCallback: (value) {
 												if (value == null) {
-													addError(
-														error: "Field ComboRMatauang tidak boleh kosong.");
+													addError(error: "Field ComboRMatauang tidak boleh kosong.");
 												}
 											},
 										),
-										TextFormField(
-											keyboardType: TextInputType.number,
-											inputFormatters: [ThousandsSeparatorInputFormatter()],
+										const SizedBox(height: 10),
+										// Field uangmukaNilai
+										_buildTextFormField(
 											controller: fieldUangmukaNilaiController,
-											decoration: const InputDecoration(
-												labelText: "uangmukaNilai",
-												floatingLabelBehavior: FloatingLabelBehavior.always,
-											),
-											onChanged: (value) {
-												if (value.isNotEmpty) {
-													removeError(error: kStringNullError);
-												}
-											},
-											validator: (value) {
-												if (value == null || value.isEmpty) {
-													addError(error: kStringNullError);
-													return "";
-												}
-												return null;
-											},
-											textAlign: TextAlign.right,
-										),
-										TextFormField(
+											labelText: "uangmukaNilai",
 											keyboardType: TextInputType.number,
-											inputFormatters: [ThousandsSeparatorInputFormatter()],
-											controller: fieldUangmukaPersenController,
-											decoration: const InputDecoration(
-												labelText: "uangmukaPersen",
-												floatingLabelBehavior: FloatingLabelBehavior.always,
-											),
 											onChanged: (value) {
-												if (value.isNotEmpty) {
-													removeError(error: kStringNullError);
-												}
+												if (value.isNotEmpty) removeError(error: kStringNullError);
 											},
 											validator: (value) {
 												if (value == null || value.isEmpty) {
 													addError(error: kStringNullError);
-													return "";
+													return "uangmukaNilai tidak boleh kosong";
 												}
 												return null;
 											},
-											textAlign: TextAlign.right,
+										),
+										const SizedBox(height: 10),
+										// Field uangmukaPersen
+										_buildTextFormField(
+											controller: fieldUangmukaPersenController,
+											labelText: "uangmukaPersen",
+											keyboardType: TextInputType.number,
+											onChanged: (value) {
+												if (value.isNotEmpty) removeError(error: kStringNullError);
+											},
+											validator: (value) {
+												if (value == null || value.isEmpty) {
+													addError(error: kStringNullError);
+													return "uangmukaPersen tidak boleh kosong";
+												}
+												return null;
+											},
 										),
 										const SizedBox(height: 25),
-										FormError(
-											errors: errors,
-											key: null,
+										// Error Global (dibungkus agar tidak overflow)
+										SingleChildScrollView(
+											scrollDirection: Axis.horizontal,
+											child: FormError(
+												errors: errors,
+												key: null,
+											),
 										),
+										const SizedBox(height: 10),
+										// Tombol Aksi
 										Row(
 											mainAxisAlignment: MainAxisAlignment.spaceAround,
 											children: [
@@ -594,9 +509,7 @@ class SimulbonCrudFormPageFormState extends State<SimulbonCrudFormPage> {
 													child: Padding(
 														padding: const EdgeInsets.only(top: 30.0),
 														child: ElevatedButton(
-															onPressed: () {
-																_dismissDialog();
-															},
+															onPressed: _dismissDialog,
 															child: const Text(
 																'Close',
 																style: TextStyle(fontSize: 13.0),
@@ -610,9 +523,7 @@ class SimulbonCrudFormPageFormState extends State<SimulbonCrudFormPage> {
 													child: Padding(
 														padding: const EdgeInsets.only(top: 30.0),
 														child: ElevatedButton(
-															onPressed: () {
-																onSaveForm();
-															},
+															onPressed: onSaveForm,
 															child: const Text(
 																'Save',
 																style: TextStyle(fontSize: 13.0),
@@ -623,47 +534,116 @@ class SimulbonCrudFormPageFormState extends State<SimulbonCrudFormPage> {
 											],
 										),
 									],
-								)),
+								),
+							),
 						),
-					));
-				},
-				listener: (context, state) {
-					if (state.isLoaded) {
-						if (state.record != null){
-							fieldCarNilaiController.text = NumberFormat("#,###").format(state.record!.carNilai);
-							fieldCarPersenController.text = NumberFormat("#,###").format(state.record!.carPersen);
-							fieldCoverBulanController.text = state.record!.coverBulan.toString();
-							fieldIsCarController.text = state.record!.isCar.toString();
-							fieldIsPelaksanaanController.text = state.record!.isPelaksanaan.toString();
-							fieldIsPemeliharaanController.text = state.record!.isPemeliharaan.toString();
-							fieldIsPenawaranController.text = state.record!.isPenawaran.toString();
-							fieldIsUangmukaController.text = state.record!.isUangmuka.toString();
-							fieldKontrakNilaiController.text = NumberFormat("#,###").format(state.record!.kontrakNilai);
-							fieldPelaksanaanNilaiController.text = NumberFormat("#,###").format(state.record!.pelaksanaanNilai);
-							fieldPelaksanaanPersenController.text = NumberFormat("#,###").format(state.record!.pelaksanaanPersen);
-							fieldPemeliharaanNilaiController.text = NumberFormat("#,###").format(state.record!.pemeliharaanNilai);
-							fieldPemeliharaanPersenController.text = NumberFormat("#,###").format(state.record!.pemeliharaanPersen);
-							fieldPenawaranNilaiController.text = NumberFormat("#,###").format(state.record!.penawaranNilai);
-							fieldPenawaranPersenController.text = NumberFormat("#,###").format(state.record!.penawaranPersen);
-							fieldPremiCarController.text = NumberFormat("#,###").format(state.record!.premiCar);
-							fieldPremiPelaksanaanController.text = NumberFormat("#,###").format(state.record!.premiPelaksanaan);
-							fieldPremiPemeliharaanController.text = NumberFormat("#,###").format(state.record!.premiPemeliharaan);
-							fieldPremiPenawaranController.text = NumberFormat("#,###").format(state.record!.premiPenawaran);
-							fieldPremiUangmukaController.text = NumberFormat("#,###").format(state.record!.premiUangmuka);
-							fieldRateBondController.text = NumberFormat("#,###").format(state.record!.rateBond);
-							fieldRateCarController.text = NumberFormat("#,###").format(state.record!.rateCar);
-							fieldUangmukaNilaiController.text = NumberFormat("#,###").format(state.record!.uangmukaNilai);
-							fieldUangmukaPersenController.text = NumberFormat("#,###").format(state.record!.uangmukaPersen);
-						}
-						fieldComboRMatauang = state.comboRMatauang;
+					),
+				);
+			},
+			listener: (context, state) {
+				if (state.isLoaded) {
+					if (state.record != null) {
+						fieldCarNilaiController.text =
+								NumberFormat("#,###").format(state.record!.carNilai);
+						fieldCarPersenController.text =
+								NumberFormat("#,###").format(state.record!.carPersen);
+						fieldCoverBulanController.text = state.record!.coverBulan.toString();
+						fieldIsCarController.text = state.record!.isCar.toString();
+						fieldIsPelaksanaanController.text =
+								state.record!.isPelaksanaan.toString();
+						fieldIsPemeliharaanController.text =
+								state.record!.isPemeliharaan.toString();
+						fieldIsPenawaranController.text =
+								state.record!.isPenawaran.toString();
+						fieldIsUangmukaController.text =
+								state.record!.isUangmuka.toString();
+						fieldKontrakNilaiController.text =
+								NumberFormat("#,###").format(state.record!.kontrakNilai);
+						fieldPelaksanaanNilaiController.text =
+								NumberFormat("#,###").format(state.record!.pelaksanaanNilai);
+						fieldPelaksanaanPersenController.text =
+								NumberFormat("#,###").format(state.record!.pelaksanaanPersen);
+						fieldPemeliharaanNilaiController.text =
+								NumberFormat("#,###").format(state.record!.pemeliharaanNilai);
+						fieldPemeliharaanPersenController.text =
+								NumberFormat("#,###").format(state.record!.pemeliharaanPersen);
+						fieldPenawaranNilaiController.text =
+								NumberFormat("#,###").format(state.record!.penawaranNilai);
+						fieldPenawaranPersenController.text =
+								NumberFormat("#,###").format(state.record!.penawaranPersen);
+						fieldPremiCarController.text =
+								NumberFormat("#,###").format(state.record!.premiCar);
+						fieldPremiPelaksanaanController.text =
+								NumberFormat("#,###").format(state.record!.premiPelaksanaan);
+						fieldPremiPemeliharaanController.text =
+								NumberFormat("#,###").format(state.record!.premiPemeliharaan);
+						fieldPremiPenawaranController.text =
+								NumberFormat("#,###").format(state.record!.premiPenawaran);
+						fieldPremiUangmukaController.text =
+								NumberFormat("#,###").format(state.record!.premiUangmuka);
+						fieldRateBondController.text =
+								NumberFormat("#,###").format(state.record!.rateBond);
+						fieldRateCarController.text =
+								NumberFormat("#,###").format(state.record!.rateCar);
+						fieldUangmukaNilaiController.text =
+								NumberFormat("#,###").format(state.record!.uangmukaNilai);
+						fieldUangmukaPersenController.text =
+								NumberFormat("#,###").format(state.record!.uangmukaPersen);
 					}
-				},
-			);
-		}
+					fieldComboRMatauang = state.comboRMatauang;
+				}
+			},
+		);
+	}
+
+	// Widget pembantu untuk TextFormField dengan dekorasi validasi
+	Widget _buildTextFormField({
+		required TextEditingController controller,
+		required String labelText,
+		required TextInputType keyboardType,
+		required Function(String) onChanged,
+		required String? Function(String?) validator,
+		String? suffixText,
+	}) {
+		return SizedBox(
+			width: double.infinity,
+			child: TextFormField(
+				keyboardType: keyboardType,
+				inputFormatters: [ThousandsSeparatorInputFormatter()],
+				controller: controller,
+				decoration: InputDecoration(
+					filled: true,
+					fillColor: Colors.white,
+					labelText: labelText,
+					floatingLabelBehavior: FloatingLabelBehavior.always,
+					suffixText: suffixText,
+					border: const UnderlineInputBorder(),
+					enabledBorder: const UnderlineInputBorder(
+						borderSide: BorderSide(color: Colors.grey),
+					),
+					focusedBorder: UnderlineInputBorder(
+						borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2),
+					),
+					errorBorder: const UnderlineInputBorder(
+						borderSide: BorderSide(color: Colors.red),
+					),
+					focusedErrorBorder: const UnderlineInputBorder(
+						borderSide: BorderSide(color: Colors.red, width: 2),
+					),
+					errorStyle: const TextStyle(color: Colors.red),
+				),
+				onChanged: onChanged,
+				validator: validator,
+				textAlign: TextAlign.right,
+			),
+		);
+	}
+
 	void loadData() {
 		if (widget.viewMode == "ubah") {
-		simulbonCrudBloc.add(
-			SimulbonCrudLihatEvent(recordId: widget.recordId));
+			simulbonCrudBloc.add(
+				SimulbonCrudLihatEvent(recordId: widget.recordId),
+			);
 		}
 	}
 
@@ -713,7 +693,7 @@ class SimulbonCrudFormPageFormState extends State<SimulbonCrudFormPage> {
 	}
 
 	void addError({required String error}) {
-		if (!errors.contains(error)){
+		if (!errors.contains(error)) {
 			setState(() {
 				errors.add(error);
 			});
@@ -721,11 +701,10 @@ class SimulbonCrudFormPageFormState extends State<SimulbonCrudFormPage> {
 	}
 
 	void removeError({required String error}) {
-		if (errors.contains(error)){
+		if (errors.contains(error)) {
 			setState(() {
 				errors.remove(error);
 			});
 		}
 	}
-
 }

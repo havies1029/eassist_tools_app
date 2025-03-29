@@ -46,8 +46,8 @@ class MenuGridState extends State<MenuGrid> {
                 case 'simulcarear':
                   // homeBloc.add(Simul());
                   break;
-                case 'simulmarinecargo':
-                  // homeBloc.add(SimulMarineCargoPageActiveEvent());
+                case 'simulcargo':
+                  homeBloc.add(SimulCARGOPageActiveEvent());
                   break;
                 case 'simulmarinehull':
                   // homeBloc.add(SimulMarineHullPageActiveEvent());
@@ -55,8 +55,14 @@ class MenuGridState extends State<MenuGrid> {
                 case 'simulgit':
                   homeBloc.add(SimulGITPageActiveEvent());
                   break;
-                case 'simulgic':
-                  // homeBloc.add(SimulGICPageActiveEvent());
+                case 'simulgis':
+                  homeBloc.add(SimulGISPageActiveEvent());
+                  break;
+                case 'simulbon':
+                  homeBloc.add(SimulBONPageActiveEvent());
+                  break;
+                case 'simulwp':
+                  homeBloc.add(SimulWPPageActiveEvent());
                   break;
                 default:
                   homeBloc.add(HomePageActiveEvent());

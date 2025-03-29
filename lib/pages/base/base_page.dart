@@ -23,6 +23,7 @@ enum PageType {
   simulgis,
   simulbon,
   simulwp,
+  simulcargo,
 }
 
 abstract class PageContainerBase extends StatefulWidget {
@@ -60,7 +61,8 @@ class PageContainerBaseState extends State<PageContainerBase> {
             widget.menuDrawer,
             widget.background,
             widget.backgroundColor,
-            widget.parentModal),
+            widget.parentModal
+        ),
       ),
     );
   }

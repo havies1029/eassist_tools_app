@@ -19,6 +19,8 @@ import 'package:flutter/material.dart';
 import 'package:eassist_tools_app/pages/profile/profile_main_page.dart';
 import 'package:eassist_tools_app/repositories/user/user_repository.dart';
 
+import '../simulcargo/simulcargocrud_main.dart';
+
 class PageContainerWithUserRepository extends PageContainerBase {
   final int userid;
   final UserRepository userRepository;
@@ -113,8 +115,14 @@ class PageContainer extends PageContainerBase {
         return "Calc. Premi EEI";
       case PageType.simulgit:
         return "Calc. Premi GIT";
-          case PageType.simulgis:
+        case PageType.simulgis:
         return "Calc. Premi GIS";
+      case PageType.simulcargo:
+        return "Calc. Premi CARGO";
+      case PageType.simulbon:
+        return "Calc. Premi BON";
+      case PageType.simulwp:
+        return "Calc. Premi WP";
       default:
         return "Login Page";
     }
@@ -154,10 +162,12 @@ class PageContainer extends PageContainerBase {
         page = const SimulgisCrudMainPage();
         break;
       case PageType.simulbon:
-        page = const SimulbonCrudMainPage(viewMode: "", recordId: "",);
+        page = const SimulbonCrudMainPage();
         break;
       case PageType.simulwp:
-        page = const SimulwpCrudMainPage(viewMode: "", recordId: "",);
+        page = const SimulwpCrudMainPage();
+      case PageType.simulcargo:
+        page = const SimulcargoCrudMainPage();
         break;
       default:
         page = null;
