@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/models/responseAPI/returndataapi_model.dart';
 import 'package:eassist_tools_app/models/combobox/combormatauang_model.dart';
@@ -64,5 +65,54 @@ class SimulgisCrudBloc extends Bloc<SimulgisCrudEvents, SimulgisCrudState> {
 			isLoaded: true,
 			comboRMatauang: comboRMatauang));
 	}
+
+  Future<void> onSimulGisCrudInitValueEvent(
+      SimulGisCrudInitValueEvent event, Emitter<SimulgisCrudState> emit) async {
+    emit(state.copyWith(isLoading: true, isLoaded: false));
+
+    SimulgisCrudModel record = await repository.simulGisCrudInitValue();
+
+    emit(state.copyWith(
+        isLoading: false,
+        isLoaded: true,
+        record: record,
+        comboRMatauang: record.comboRMatauang));
+  }
+
+  Future<void> onHitungPremiGisEvent(
+      HitungPremiGisEvent event, Emitter<SimulgisCrudState> emit) async {
+    debugPrint("onHitungPremiGisEvent");
+
+    emit(state.copyWith(isLoading: true, isLoaded: false));
+
+    ReturnDataAPI returnData;
+    bool isValid = true;
+    List<String> errors = [];
+    SimulgisCrudModel record = state.record ?? SimulgisCrudModel();
+
+    if ((record.coverBulan == null) || (record.coverBulan == 0)) {
+      isValid = false;
+      errors.add("Field 'Lama Cover' harus >= 1 bulan");
+    }
+
+    if (record.tsi == null || record.tsi == 0) {
+      isValid = false;
+      errors.add("Field 'TSI' harus > 0.");
+    }
+
+    if (isValid) {
+      returnData = await repository.simulGisCrudCalcPremi(record);
+      if (returnData.success) {
+        record.premi = double.tryParse(returnData.data) ?? 0;
+      }
+    }
+
+    emit(state.copyWith(
+        isLoading: false,
+        isLoaded: true,
+        hasFailure: !isValid,
+        record: record,
+        errors: errors));
+  }
 
 }

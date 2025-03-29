@@ -72,6 +72,7 @@ class SimulbonCrudAPI {
 		}
 		return returnData.success;
 	}
+
 	Future<SimulbonCrudModel> simulbonCrudLihatAPI(String simulbon1Id) async {
 		String lihatEndpoint = "${AppData.prefixEndPoint}/api/simulbon/simulboncrud/read";
 		Map<String, String> queryParams = {'simulbon1Id': simulbon1Id};
@@ -90,4 +91,51 @@ class SimulbonCrudAPI {
 			return throw Exception("Failed to load data");
 		}
 	}
+
+  Future<SimulbonCrudModel> simulBonCrudInitValueAPI() async {
+    String initValueEndpoint =
+        "${AppData.prefixEndPoint}/api/simulbon/simulboncrud/initvalue";
+    var uri = AppData.uriHtpp(AppData.httpAuthority, initValueEndpoint);
+    final http.Response response =
+        await http.get(uri, headers: <String, String>{
+      'Content-Type': 'application/json; odata=verbos',
+      'Accept': 'application/json; odata=verbos',
+      'Authorization': 'Bearer ${AppData.userToken}'
+    });
+
+    if (response.statusCode == 200) {
+      var returnData = SimulbonCrudModel.fromJson(jsonDecode(response.body));
+      return returnData;
+    } else {
+      return throw Exception("Failed to load data");
+    }
+  }
+
+  Future<ReturnDataAPI> simulBonCrudCalcPremiAPI(
+      SimulbonCrudModel record) async {
+    String tambahEndpoint =
+        "${AppData.prefixEndPoint}/api/simulbon/simulboncrud/calcpremi";
+    Map<String, String> queryParams = {"modul_id": "simulBonCrudCalcPremiAPI"};
+    var uri =
+        AppData.uriHtpp(AppData.httpAuthority, tambahEndpoint, queryParams);
+
+    ReturnDataAPI returnData;
+    final http.Response response = await http.post(uri,
+        headers: <String, String>{
+          'Content-Type': 'application/json; odata=verbos',
+          'Accept': 'application/json; odata=verbos',
+          'Authorization': 'Bearer ${AppData.userToken}'
+        },
+        body: jsonEncode(record.toJson()));
+
+    //debugPrint("response.statusCode : ${response.statusCode}");
+    //debugPrint("response.body : ${response.body}");
+
+    if (response.statusCode == 200) {
+      returnData = ReturnDataAPI.fromDatabaseJson(jsonDecode(response.body));
+    } else {
+      returnData = ReturnDataAPI(success: false, data: "", rowcount: 0);
+    }
+    return returnData;
+  }
 }

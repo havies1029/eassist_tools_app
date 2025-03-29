@@ -43,5 +43,11 @@ class ComboRMatauangChangedEvent extends SimulwpCrudEvents{
 	final ComboRMatauangModel comboRMatauang;
 	const ComboRMatauangChangedEvent({required this.comboRMatauang});
 
-	@override	List<Object> get props => [comboRMatauang];}
+	@override	List<Object> get props => [comboRMatauang];
+}
+
+class SimulWpCrudInitValueEvent extends SimulwpCrudEvents{}
+
+class HitungPremiWpEvent extends SimulwpCrudEvents{}
+
 

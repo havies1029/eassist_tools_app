@@ -18,4 +18,12 @@ class SimulgisCrudRepository {
 	Future<SimulgisCrudModel> simulgisCrudLihat(String simulgisId) async {
 		return await api.simulgisCrudLihatAPI(simulgisId);
 	}
+
+  Future<SimulgisCrudModel> simulGisCrudInitValue() async {
+		return await api.simulGisCrudInitValueAPI();
+	}
+
+  Future<ReturnDataAPI> simulGisCrudCalcPremi(SimulgisCrudModel record) async {
+		return await api.simulGisCrudCalcPremiAPI(record);
+	}
 }

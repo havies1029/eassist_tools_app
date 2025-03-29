@@ -43,5 +43,10 @@ class ComboRMatauangChangedEvent extends SimulbonCrudEvents{
 	final ComboRMatauangModel comboRMatauang;
 	const ComboRMatauangChangedEvent({required this.comboRMatauang});
 
-	@override	List<Object> get props => [comboRMatauang];}
+	@override	List<Object> get props => [comboRMatauang];
+}
+
+class SimulBonCrudInitValueEvent extends SimulbonCrudEvents{}
+
+class HitungPremiBonEvent extends SimulbonCrudEvents{}
 

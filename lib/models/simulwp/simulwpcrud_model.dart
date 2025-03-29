@@ -1,18 +1,18 @@
 import 'package:eassist_tools_app/models/combobox/combormatauang_model.dart';
 
 class SimulwpCrudModel {
-	int coverBulan;
-	double plafond;
-	double premi;
-	double rate;
-	String simulwp1Id;
-	int usia;
+	int? coverBulan;
+	double? plafond;
+	double? premi;
+	double? rate;
+	String? simulwp1Id;
+	int? usia;
 	String? rmatauangKode;
 	ComboRMatauangModel? comboRMatauang;
 
-	SimulwpCrudModel({required this.coverBulan, required this.plafond, 
-		required this.premi, required this.rate, 
-		required this.simulwp1Id, required this.usia, 
+	SimulwpCrudModel({this.coverBulan, this.plafond, 
+		this.premi, this.rate, 
+		this.simulwp1Id, this.usia, 
 		this.rmatauangKode, this.comboRMatauang});
 
 	factory SimulwpCrudModel.fromJson(Map<String, dynamic> data) {

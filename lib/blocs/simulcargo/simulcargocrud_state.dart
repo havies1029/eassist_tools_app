@@ -10,6 +10,10 @@ class SimulcargoCrudState extends Equatable {
 	final bool hasFailure;
 	final ComboMMopModel? comboMMop;
 	final ComboMConveyDetailModel? comboMConveyDetail;
+  final ComboRMatauangModel? comboRMatauang;
+  final ComboMConveybyModel? comboMConveyBy;
+  final List<String>? errors;
+
 	const SimulcargoCrudState(
 		{this.record,
 		this.isLoading = false,
@@ -19,6 +23,9 @@ class SimulcargoCrudState extends Equatable {
 		this.hasFailure = false,
 		this.comboMMop,
 		this.comboMConveyDetail,
+    this.comboRMatauang,
+    this.comboMConveyBy,
+    this.errors
 });
 
 	SimulcargoCrudState copyWith({
@@ -30,6 +37,9 @@ class SimulcargoCrudState extends Equatable {
 		bool? hasFailure,
 		ComboMMopModel? comboMMop,
 		ComboMConveyDetailModel? comboMConveyDetail,
+    ComboRMatauangModel? comboRMatauang,
+    ComboMConveybyModel? comboMConveyBy,
+    List<String>? errors
 	}){
 		return SimulcargoCrudState(
 			record: record ?? this.record,
@@ -40,6 +50,9 @@ class SimulcargoCrudState extends Equatable {
 			hasFailure: hasFailure ?? this.hasFailure,
 			comboMMop: comboMMop?? this.comboMMop,
 			comboMConveyDetail: comboMConveyDetail?? this.comboMConveyDetail,
+      comboRMatauang: comboRMatauang?? this.comboRMatauang,
+      comboMConveyBy: comboMConveyBy?? this.comboMConveyBy,
+      errors: errors?? this.errors
 		);
 	}
 

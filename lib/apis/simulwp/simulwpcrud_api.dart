@@ -90,4 +90,52 @@ class SimulwpCrudAPI {
 			return throw Exception("Failed to load data");
 		}
 	}
+
+  Future<SimulwpCrudModel> simulWpCrudInitValueAPI() async {
+    String initValueEndpoint =
+        "${AppData.prefixEndPoint}/api/simulwp/simulwpcrud/initvalue";
+    var uri = AppData.uriHtpp(AppData.httpAuthority, initValueEndpoint);
+    final http.Response response =
+        await http.get(uri, headers: <String, String>{
+      'Content-Type': 'application/json; odata=verbos',
+      'Accept': 'application/json; odata=verbos',
+      'Authorization': 'Bearer ${AppData.userToken}'
+    });
+
+    if (response.statusCode == 200) {
+      var returnData = SimulwpCrudModel.fromJson(jsonDecode(response.body));
+      return returnData;
+    } else {
+      return throw Exception("Failed to load data");
+    }
+  }
+
+  Future<ReturnDataAPI> simulWpCrudCalcPremiAPI(
+      SimulwpCrudModel record) async {
+    String tambahEndpoint =
+        "${AppData.prefixEndPoint}/api/simulwp/simulwpcrud/calcpremi";
+    Map<String, String> queryParams = {"modul_id": "simulWpCrudCalcPremiAPI"};
+    var uri =
+        AppData.uriHtpp(AppData.httpAuthority, tambahEndpoint, queryParams);
+
+    ReturnDataAPI returnData;
+    final http.Response response = await http.post(uri,
+        headers: <String, String>{
+          'Content-Type': 'application/json; odata=verbos',
+          'Accept': 'application/json; odata=verbos',
+          'Authorization': 'Bearer ${AppData.userToken}'
+        },
+        body: jsonEncode(record.toJson()));
+
+    //debugPrint("response.statusCode : ${response.statusCode}");
+    //debugPrint("response.body : ${response.body}");
+
+    if (response.statusCode == 200) {
+      returnData = ReturnDataAPI.fromDatabaseJson(jsonDecode(response.body));
+    } else {
+      returnData = ReturnDataAPI(success: false, data: "", rowcount: 0);
+    }
+    return returnData;
+  }
+
 }

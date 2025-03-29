@@ -51,3 +51,6 @@ class ComboMConveyDetailChangedEvent extends SimulcargoCrudEvents{
 
 	@override	List<Object> get props => [comboMConveyDetail];}
 
+class SimulCargoCrudInitValueEvent extends SimulcargoCrudEvents{}
+
+class HitungPremiCargoEvent extends SimulcargoCrudEvents{}

@@ -43,5 +43,9 @@ class ComboRMatauangChangedEvent extends SimulgisCrudEvents{
 	final ComboRMatauangModel comboRMatauang;
 	const ComboRMatauangChangedEvent({required this.comboRMatauang});
 
-	@override	List<Object> get props => [comboRMatauang];}
+	@override	List<Object> get props => [comboRMatauang];
+}
 
+class SimulGisCrudInitValueEvent extends SimulgisCrudEvents{}
+
+class HitungPremiGisEvent extends SimulgisCrudEvents{}

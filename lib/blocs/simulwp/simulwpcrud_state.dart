@@ -9,6 +9,7 @@ class SimulwpCrudState extends Equatable {
 	final bool isSaved;
 	final bool hasFailure;
 	final ComboRMatauangModel? comboRMatauang;
+  final List<String>? errors;
 	const SimulwpCrudState(
 		{this.record,
 		this.isLoading = false,
@@ -17,6 +18,7 @@ class SimulwpCrudState extends Equatable {
 		this.isSaved = false,
 		this.hasFailure = false,
 		this.comboRMatauang,
+    this.errors
 });
 
 	SimulwpCrudState copyWith({
@@ -27,6 +29,7 @@ class SimulwpCrudState extends Equatable {
 		bool? isSaved,
 		bool? hasFailure,
 		ComboRMatauangModel? comboRMatauang,
+    List<String>? errors
 	}){
 		return SimulwpCrudState(
 			record: record ?? this.record,
@@ -36,6 +39,7 @@ class SimulwpCrudState extends Equatable {
 			isSaved: isSaved ?? this.isSaved,
 			hasFailure: hasFailure ?? this.hasFailure,
 			comboRMatauang: comboRMatauang?? this.comboRMatauang,
+      errors: errors?? this.errors
 		);
 	}
 

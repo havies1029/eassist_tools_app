@@ -1,4 +1,7 @@
+import 'package:eassist_tools_app/models/combobox/combomconveyby_model.dart';
+import 'package:eassist_tools_app/models/combobox/combormatauang_model.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/models/responseAPI/returndataapi_model.dart';
 import 'package:eassist_tools_app/models/combobox/combommop_model.dart';
@@ -79,5 +82,64 @@ class SimulcargoCrudBloc extends Bloc<SimulcargoCrudEvents, SimulcargoCrudState>
 			isLoaded: true,
 			comboMConveyDetail: comboMConveyDetail));
 	}
+
+  Future<void> onSimulCargoCrudInitValueEvent(
+      SimulCargoCrudInitValueEvent event, Emitter<SimulcargoCrudState> emit) async {
+    emit(state.copyWith(isLoading: true, isLoaded: false));
+
+    SimulcargoCrudModel record = await repository.simulCargoCrudInitValue();
+
+    emit(state.copyWith(
+        isLoading: false,
+        isLoaded: true,
+        record: record,
+        comboRMatauang: record.comboRMatauang));
+  }
+
+  Future<void> onHitungPremiCargoEvent(
+      HitungPremiCargoEvent event, Emitter<SimulcargoCrudState> emit) async {
+    debugPrint("onHitungPremiCargoEvent");
+
+    emit(state.copyWith(isLoading: true, isLoaded: false));
+
+    ReturnDataAPI returnData;
+    bool isValid = true;
+    List<String> errors = [];
+    SimulcargoCrudModel record = state.record ?? SimulcargoCrudModel();
+
+    if (record.tsi == null || record.tsi == 0) {
+      isValid = false;
+      errors.add("Field 'TSI' harus > 0.");
+    }
+
+    if (record.comboMMop?.mmopId == null || record.comboMMop?.mmopId == "") {
+      isValid = false;
+      errors.add("Field 'MOP' tidak boleh kosong.");
+    }
+
+    if (record.comboMConveyBy?.mconveybyId == null || record.comboMConveyBy?.mconveybyId == "") {
+      isValid = false;
+      errors.add("Field 'Convey By' tidak boleh kosong.");
+    }
+
+    if (record.comboMConveyDetail?.mconveydetailId == null || record.comboMConveyDetail?.mconveydetailId == "") {
+      isValid = false;
+      errors.add("Field 'Convey Detail' tidak boleh kosong.");
+    }
+
+    if (isValid) {
+      returnData = await repository.simulBonCrudCalcPremi(record);
+      if (returnData.success) {
+        record.premi = double.tryParse(returnData.data) ?? 0;
+      }
+    }
+
+    emit(state.copyWith(
+        isLoading: false,
+        isLoaded: true,
+        hasFailure: !isValid,
+        record: record,
+        errors: errors));
+  }
 
 }

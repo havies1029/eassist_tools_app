@@ -18,4 +18,12 @@ class SimulbonCrudRepository {
 	Future<SimulbonCrudModel> simulbonCrudLihat(String simulbon1Id) async {
 		return await api.simulbonCrudLihatAPI(simulbon1Id);
 	}
+
+  Future<SimulbonCrudModel> simulBonCrudInitValue() async {
+		return await api.simulBonCrudInitValueAPI();
+	}
+
+  Future<ReturnDataAPI> simulBonCrudCalcPremi(SimulbonCrudModel record) async {
+		return await api.simulBonCrudCalcPremiAPI(record);
+	}
 }

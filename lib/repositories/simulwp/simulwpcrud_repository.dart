@@ -18,4 +18,12 @@ class SimulwpCrudRepository {
 	Future<SimulwpCrudModel> simulwpCrudLihat(String simulwp1Id) async {
 		return await api.simulwpCrudLihatAPI(simulwp1Id);
 	}
+
+  Future<SimulwpCrudModel> simulWpCrudInitValue() async {
+		return await api.simulWpCrudInitValueAPI();
+	}
+
+  Future<ReturnDataAPI> simulWpCrudCalcPremi(SimulwpCrudModel record) async {
+		return await api.simulWpCrudCalcPremiAPI(record);
+	}
 }
