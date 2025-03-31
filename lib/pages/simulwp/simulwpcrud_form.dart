@@ -57,8 +57,8 @@ class SimulwpCrudFormPageFormState extends State<SimulwpCrudFormPage> {
 							Row(
 								mainAxisAlignment: MainAxisAlignment.spaceBetween,
 								children: [
-									_buildButton("Close", Colors.grey, _dismissDialog),
-									_buildButton("Save", Colors.orange, onSaveForm),
+									_buildButton("Reset", Colors.grey, _dismissDialog),
+									_buildButton("Hitung", Colors.orange, onSaveForm),
 								],
 							),
 						],

@@ -24,8 +24,7 @@ class SimulbonCrudFormPage extends StatefulWidget {
 	});
 
 	@override
-	SimulbonCrudFormPageFormState createState() =>
-			SimulbonCrudFormPageFormState();
+	SimulbonCrudFormPageFormState createState() => SimulbonCrudFormPageFormState();
 }
 
 class SimulbonCrudFormPageFormState extends State<SimulbonCrudFormPage> {
@@ -511,7 +510,7 @@ class SimulbonCrudFormPageFormState extends State<SimulbonCrudFormPage> {
 														child: ElevatedButton(
 															onPressed: _dismissDialog,
 															child: const Text(
-																'Close',
+																'Reset',
 																style: TextStyle(fontSize: 13.0),
 															),
 														),
@@ -525,7 +524,7 @@ class SimulbonCrudFormPageFormState extends State<SimulbonCrudFormPage> {
 														child: ElevatedButton(
 															onPressed: onSaveForm,
 															child: const Text(
-																'Save',
+																'Hitung',
 																style: TextStyle(fontSize: 13.0),
 															),
 														),
@@ -543,52 +542,49 @@ class SimulbonCrudFormPageFormState extends State<SimulbonCrudFormPage> {
 			listener: (context, state) {
 				if (state.isLoaded) {
 					if (state.record != null) {
+						// Gunakan operator null-aware untuk menghindari nilai null
 						fieldCarNilaiController.text =
-								NumberFormat("#,###").format(state.record!.carNilai);
+								NumberFormat("#,###").format(state.record?.carNilai ?? 0);
 						fieldCarPersenController.text =
-								NumberFormat("#,###").format(state.record!.carPersen);
-						fieldCoverBulanController.text = state.record!.coverBulan.toString();
-						fieldIsCarController.text = state.record!.isCar.toString();
-						fieldIsPelaksanaanController.text =
-								state.record!.isPelaksanaan.toString();
-						fieldIsPemeliharaanController.text =
-								state.record!.isPemeliharaan.toString();
-						fieldIsPenawaranController.text =
-								state.record!.isPenawaran.toString();
-						fieldIsUangmukaController.text =
-								state.record!.isUangmuka.toString();
+								NumberFormat("#,###").format(state.record?.carPersen ?? 0);
+						fieldCoverBulanController.text = (state.record?.coverBulan ?? 0).toString();
+						fieldIsCarController.text = (state.record?.isCar ?? false).toString();
+						fieldIsPelaksanaanController.text = (state.record?.isPelaksanaan ?? false).toString();
+						fieldIsPemeliharaanController.text = (state.record?.isPemeliharaan ?? false).toString();
+						fieldIsPenawaranController.text = (state.record?.isPenawaran ?? false).toString();
+						fieldIsUangmukaController.text = (state.record?.isUangmuka ?? false).toString();
 						fieldKontrakNilaiController.text =
-								NumberFormat("#,###").format(state.record!.kontrakNilai);
+								NumberFormat("#,###").format(state.record?.kontrakNilai ?? 0);
 						fieldPelaksanaanNilaiController.text =
-								NumberFormat("#,###").format(state.record!.pelaksanaanNilai);
+								NumberFormat("#,###").format(state.record?.pelaksanaanNilai ?? 0);
 						fieldPelaksanaanPersenController.text =
-								NumberFormat("#,###").format(state.record!.pelaksanaanPersen);
+								NumberFormat("#,###").format(state.record?.pelaksanaanPersen ?? 0);
 						fieldPemeliharaanNilaiController.text =
-								NumberFormat("#,###").format(state.record!.pemeliharaanNilai);
+								NumberFormat("#,###").format(state.record?.pemeliharaanNilai ?? 0);
 						fieldPemeliharaanPersenController.text =
-								NumberFormat("#,###").format(state.record!.pemeliharaanPersen);
+								NumberFormat("#,###").format(state.record?.pemeliharaanPersen ?? 0);
 						fieldPenawaranNilaiController.text =
-								NumberFormat("#,###").format(state.record!.penawaranNilai);
+								NumberFormat("#,###").format(state.record?.penawaranNilai ?? 0);
 						fieldPenawaranPersenController.text =
-								NumberFormat("#,###").format(state.record!.penawaranPersen);
+								NumberFormat("#,###").format(state.record?.penawaranPersen ?? 0);
 						fieldPremiCarController.text =
-								NumberFormat("#,###").format(state.record!.premiCar);
+								NumberFormat("#,###").format(state.record?.premiCar ?? 0);
 						fieldPremiPelaksanaanController.text =
-								NumberFormat("#,###").format(state.record!.premiPelaksanaan);
+								NumberFormat("#,###").format(state.record?.premiPelaksanaan ?? 0);
 						fieldPremiPemeliharaanController.text =
-								NumberFormat("#,###").format(state.record!.premiPemeliharaan);
+								NumberFormat("#,###").format(state.record?.premiPemeliharaan ?? 0);
 						fieldPremiPenawaranController.text =
-								NumberFormat("#,###").format(state.record!.premiPenawaran);
+								NumberFormat("#,###").format(state.record?.premiPenawaran ?? 0);
 						fieldPremiUangmukaController.text =
-								NumberFormat("#,###").format(state.record!.premiUangmuka);
+								NumberFormat("#,###").format(state.record?.premiUangmuka ?? 0);
 						fieldRateBondController.text =
-								NumberFormat("#,###").format(state.record!.rateBond);
+								NumberFormat("#,###").format(state.record?.rateBond ?? 0);
 						fieldRateCarController.text =
-								NumberFormat("#,###").format(state.record!.rateCar);
+								NumberFormat("#,###").format(state.record?.rateCar ?? 0);
 						fieldUangmukaNilaiController.text =
-								NumberFormat("#,###").format(state.record!.uangmukaNilai);
+								NumberFormat("#,###").format(state.record?.uangmukaNilai ?? 0);
 						fieldUangmukaPersenController.text =
-								NumberFormat("#,###").format(state.record!.uangmukaPersen);
+								NumberFormat("#,###").format(state.record?.uangmukaPersen ?? 0);
 					}
 					fieldComboRMatauang = state.comboRMatauang;
 				}

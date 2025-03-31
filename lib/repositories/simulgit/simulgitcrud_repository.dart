@@ -2,6 +2,8 @@ import 'package:eassist_tools_app/models/responseAPI/returndataapi_model.dart';
 import 'package:eassist_tools_app/apis/simulgit/simulgitcrud_api.dart';
 import 'package:eassist_tools_app/models/simulgit/simulgitcrud_model.dart';
 
+import '../../models/combobox/combormatauang_model.dart';
+
 class SimulgitCrudRepository {
 
 	SimulgitCrudAPI api = SimulgitCrudAPI();

@@ -2,16 +2,26 @@ import 'package:eassist_tools_app/models/combobox/combormatauang_model.dart';
 
 class SimulgitCrudModel {
 	int? coverBulan;
-	double? premi;
 	double? rate;
 	String? simulgitId;
 	double? tsi;
 	String? rmatauangKode;
+	double? premi;
+	String? currDesc;
+	int? thnBuat;
 	ComboRMatauangModel? comboRMatauang;
 
-	SimulgitCrudModel({this.coverBulan, this.premi, 
-		this.rate, this.simulgitId, 
-		this.tsi, this.rmatauangKode, this.comboRMatauang});
+	SimulgitCrudModel({
+		this.coverBulan = 0,
+		this.premi = 0,
+		this.rate = 0,
+		this.simulgitId = '',
+		this.tsi = 0,
+		this.rmatauangKode = '',
+		this.comboRMatauang,
+		this.currDesc = '',
+	});
+
 
 	factory SimulgitCrudModel.fromJson(Map<String, dynamic> data) {
 		ComboRMatauangModel? comboRMatauang;
@@ -26,6 +36,7 @@ class SimulgitCrudModel {
 			simulgitId: data['simulgitId']??'',
 			tsi: double.tryParse(data['tsi'].toString())??0,
 			rmatauangKode: data['rmatauangKode']??'',
+				currDesc: data['currDesc'] ?? 'IDR',
 			comboRMatauang: comboRMatauang
 		);
 

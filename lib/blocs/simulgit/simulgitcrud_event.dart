@@ -46,6 +46,32 @@ class ComboRMatauangChangedEvent extends SimulgitCrudEvents{
 	@override	List<Object> get props => [comboRMatauang];
 }
 
+
+class FieldBulanChangedEvent extends SimulgitCrudEvents {
+	final int bulan;
+	const FieldBulanChangedEvent({required this.bulan});
+
+	@override
+	List<Object> get props => [bulan];
+
+}
+
+class FieldTSIChangedEvent extends SimulgitCrudEvents {
+	final double tsi;
+	const FieldTSIChangedEvent({required this.tsi});
+
+	@override
+	List<Object> get props => [tsi];
+}
+
+class FieldRateChangedEvent extends SimulgitCrudEvents {
+	final double rate;
+	const FieldRateChangedEvent({required this.rate});
+
+	@override
+	List<Object> get props => [rate];
+}
+
 class SimulGitCrudInitValueEvent extends SimulgitCrudEvents{}
 
 class HitungPremiGitEvent extends SimulgitCrudEvents{}

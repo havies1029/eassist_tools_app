@@ -190,7 +190,7 @@ class SimulcargoCrudFormPageFormState extends State<SimulcargoCrudFormPage> {
 																//hitung()??
 															},
 															child: const Text(
-																'Save',
+																'Hitung',
 																style: TextStyle(fontSize: 13.0),
 															),
 														),

@@ -16,7 +16,12 @@ class SimulgitCrudBloc extends Bloc<SimulgitCrudEvents, SimulgitCrudState> {
 		on<SimulgitCrudTambahEvent>(onTambahSimulgitCrud);
 		on<SimulgitCrudHapusEvent>(onHapusSimulgitCrud);
 		on<SimulgitCrudLihatEvent>(onLihatSimulgitCrud);
+		on<FieldTSIChangedEvent>(onFieldTSIChangedEvent);
+		on<FieldBulanChangedEvent>(onFieldBulanChangedEvent);
+		on<FieldRateChangedEvent>(onFieldRateChangedEvent);
+		on<HitungPremiGitEvent>(onHitungPremiGitEvent);
 		on<ComboRMatauangChangedEvent>(onComboRMatauangChanged);
+		on<SimulGitCrudInitValueEvent>(onSimulGitCrudInitValueEvent);
 	}
 
 	Future<void> onTambahSimulgitCrud(
@@ -56,17 +61,28 @@ class SimulgitCrudBloc extends Bloc<SimulgitCrudEvents, SimulgitCrudState> {
 
 	Future<void> onComboRMatauangChanged(
 			ComboRMatauangChangedEvent event, Emitter<SimulgitCrudState> emit) async {
-
 		emit(state.copyWith(isLoading: true, isLoaded: false));
 
 		ComboRMatauangModel comboRMatauang = event.comboRMatauang;
+		SimulgitCrudModel record = state.record ?? SimulgitCrudModel();
+		record.comboRMatauang = comboRMatauang;
+		record.currDesc = comboRMatauang.rmatauangSimbol;
+
+		// Pastikan nilai numerik tidak null
+		record.tsi = record.tsi ?? 0;
+		record.premi = record.premi ?? 0;
+
 		emit(state.copyWith(
 			isLoading: false,
 			isLoaded: true,
-			comboRMatauang: comboRMatauang));
+			comboRMatauang: comboRMatauang,
+			record: record,
+		));
 	}
 
-  Future<void> onSimulGitCrudInitValueEvent(
+
+
+	Future<void> onSimulGitCrudInitValueEvent(
       SimulGitCrudInitValueEvent event, Emitter<SimulgitCrudState> emit) async {
     emit(state.copyWith(isLoading: true, isLoaded: false));
 
@@ -79,6 +95,32 @@ class SimulgitCrudBloc extends Bloc<SimulgitCrudEvents, SimulgitCrudState> {
         comboRMatauang: record.comboRMatauang));
   }
 
+	Future<void> onFieldTSIChangedEvent(
+			FieldTSIChangedEvent event, Emitter<SimulgitCrudState> emit) async {
+		SimulgitCrudModel record = state.record ?? SimulgitCrudModel();
+		record.tsi = event.tsi;
+
+		debugPrint("event.tsi : ${event.tsi}");
+
+		emit(state.copyWith(record: record));
+	}
+
+
+	Future<void> onFieldRateChangedEvent(
+			FieldRateChangedEvent event, Emitter<SimulgitCrudState> emit) async {
+		SimulgitCrudModel record = state.record ?? SimulgitCrudModel();
+		record.rate = event.rate;
+
+		emit(state.copyWith(record: record));
+	}
+
+	Future<void> onFieldBulanChangedEvent(
+			FieldBulanChangedEvent event, Emitter<SimulgitCrudState> emit) async {
+		SimulgitCrudModel record = state.record ?? SimulgitCrudModel();
+		record.coverBulan = event.bulan;
+
+		emit(state.copyWith(record: record));
+	}
 
   Future<void> onHitungPremiGitEvent(
       HitungPremiGitEvent event, Emitter<SimulgitCrudState> emit) async {
@@ -107,6 +149,8 @@ class SimulgitCrudBloc extends Bloc<SimulgitCrudEvents, SimulgitCrudState> {
         record.premi = double.tryParse(returnData.data) ?? 0;
       }
     }
+
+
 
     emit(state.copyWith(
         isLoading: false,

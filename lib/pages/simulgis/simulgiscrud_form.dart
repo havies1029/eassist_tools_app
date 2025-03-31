@@ -1,3 +1,4 @@
+import 'package:eassist_tools_app/widgets/my_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/common/constants.dart';
@@ -74,7 +75,7 @@ class SimulgisCrudFormPageFormState extends State<SimulgisCrudFormPage> {
 						decoration: BoxDecoration(
 							borderRadius: BorderRadius.circular(15),
 							gradient: LinearGradient(
-								colors: [Colors.white, Colors.grey.shade50],
+								colors: [MyColors.white, MyColors.white],
 								begin: Alignment.topCenter,
 								end: Alignment.bottomCenter,
 							),
@@ -276,12 +277,12 @@ class SimulgisCrudFormPageFormState extends State<SimulgisCrudFormPage> {
 											mainAxisAlignment: MainAxisAlignment.spaceBetween,
 											children: [
 												_buildDialogButton(
-													text: 'Close',
+													text: 'Reset',
 													onPressed: _dismissDialog,
 													isPrimary: false,
 												),
 												_buildDialogButton(
-													text: 'Save',
+													text: 'Hitung',
 													onPressed: onSaveForm,
 													isPrimary: true,
 												),
