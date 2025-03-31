@@ -26,10 +26,7 @@ class SimulcargoCrudMainPageState extends State<SimulcargoCrudMainPage> {
 	Widget build(BuildContext context) {
 		simulcargoCrudBloc = BlocProvider.of<SimulcargoCrudBloc>(context);
 		return MobileDesignWidget(
-			child: Scaffold(
-				appBar: AppBar(
-					title: const Text('Calc. Premi Cargo'),
-				),
+			child: Scaffold(				
 				body: SimulcargoCrudMain2Page(viewMode: "tambah", recordId: ""),
 			),
 		);

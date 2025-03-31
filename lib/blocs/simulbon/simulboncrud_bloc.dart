@@ -97,6 +97,7 @@ class SimulbonCrudBloc extends Bloc<SimulbonCrudEvents, SimulbonCrudState> {
       errors.add("Field 'Lama Cover' harus >= 1 bulan");
     }
 
+
     if (record.kontrakNilai == null || record.kontrakNilai == 0) {
       isValid = false;
       errors.add("Field 'Nilai Kontrak' harus > 0.");
