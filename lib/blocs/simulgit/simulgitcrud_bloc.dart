@@ -19,6 +19,7 @@ class SimulgitCrudBloc extends Bloc<SimulgitCrudEvents, SimulgitCrudState> {
 		on<ComboRMatauangChangedEvent>(onComboRMatauangChanged);
 		on<SimulGitCrudInitValueEvent>(onSimulGitCrudInitValueEvent);
 		on<HitungPremiGitEvent>(onHitungPremiGitEvent);
+
 	}
 
 	Future<void> onTambahSimulgitCrud(
