@@ -43,14 +43,30 @@ class ComboMMopChangedEvent extends SimulcargoCrudEvents{
 	final ComboMMopModel comboMMop;
 	const ComboMMopChangedEvent({required this.comboMMop});
 
-	@override	List<Object> get props => [comboMMop];}
+	@override	List<Object> get props => [comboMMop];
+}
+
+class ComboMConveyByChangedEvent extends SimulcargoCrudEvents{
+	final ComboMConveybyModel comboMConveyBy;
+	const ComboMConveyByChangedEvent({required this.comboMConveyBy});
+
+	@override	List<Object> get props => [comboMConveyBy];
+}
 
 class ComboMConveyDetailChangedEvent extends SimulcargoCrudEvents{
 	final ComboMConveyDetailModel comboMConveyDetail;
 	const ComboMConveyDetailChangedEvent({required this.comboMConveyDetail});
 
-	@override	List<Object> get props => [comboMConveyDetail];}
+	@override	List<Object> get props => [comboMConveyDetail];
+}
 
 class SimulCargoCrudInitValueEvent extends SimulcargoCrudEvents{}
 
 class HitungPremiCargoEvent extends SimulcargoCrudEvents{}
+
+class ComboRMatauangChangedEvent extends SimulcargoCrudEvents{
+	final ComboRMatauangModel comboRMatauang;
+	const ComboRMatauangChangedEvent({required this.comboRMatauang});
+
+	@override	List<Object> get props => [comboRMatauang];
+}

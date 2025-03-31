@@ -7,13 +7,14 @@ DropdownSearch<ComboMConveybyModel> buildFieldComboMConveyby({
 	required String labelText,
 	GlobalKey<DropdownSearchState<ComboMConveybyModel>>? comboKey,
 	ComboMConveybyModel? initItem,
+  required String mopId,
 	Function(ComboMConveybyModel?)? onChangedCallback,
 	required Function(ComboMConveybyModel?) onSaveCallback,
 	Function(ComboMConveybyModel?)? validatorCallback
 	}) {
 	return DropdownSearch<ComboMConveybyModel>(
-		key: comboKey,
-		selectedItem: initItem,
+		key: comboKey,    
+		selectedItem: initItem,    
 		decoratorProps: DropDownDecoratorProps(
 			decoration: InputDecoration(
 				hintText: '...',
@@ -21,7 +22,7 @@ DropdownSearch<ComboMConveybyModel> buildFieldComboMConveyby({
 			),
 		),
 			items: (filter, infiniteScrollProps) async {
-				return ComboMConveybyRepository().getComboMConveyby();
+				return ComboMConveybyRepository().getComboMConveyby(mopId);
 			},
 			suffixProps: const DropdownSuffixProps(clearButtonProps: ClearButtonProps(isVisible: false)),
 			popupProps: const PopupPropsMultiSelection.modalBottomSheet(

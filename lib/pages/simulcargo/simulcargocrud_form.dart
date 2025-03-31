@@ -81,6 +81,8 @@ class SimulcargoCrudFormPageFormState extends State<SimulcargoCrudFormPage> {
 											},											
 										),
 										buildFieldComboMConveyDetail(
+											mopId: "123",  // Sesuaikan dengan nilai yang sesuai
+											conveyById: "456",
 											comboKey: comboMConveyDetailKey,
 											labelText: 'mconveydetailId',
 											initItem: fieldComboMConveyDetail,
@@ -190,7 +192,7 @@ class SimulcargoCrudFormPageFormState extends State<SimulcargoCrudFormPage> {
 																//hitung()??
 															},
 															child: const Text(
-																'Hitung',
+																'Save',
 																style: TextStyle(fontSize: 13.0),
 															),
 														),

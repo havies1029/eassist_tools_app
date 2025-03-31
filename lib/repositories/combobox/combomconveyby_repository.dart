@@ -3,8 +3,8 @@ import 'package:eassist_tools_app/models/combobox/combomconveyby_model.dart';
 
 class ComboMConveybyRepository {
 
-	Future<List<ComboMConveybyModel>> getComboMConveyby() async {
+	Future<List<ComboMConveybyModel>> getComboMConveyby(String mopId) async {
 		ComboMConveybyAPI api = ComboMConveybyAPI();
-		return await api.getComboMConveybyAPI();
+		return await api.getComboMConveybyAPI(mopId);
 	}
 }

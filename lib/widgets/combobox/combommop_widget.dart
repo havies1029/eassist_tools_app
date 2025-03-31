@@ -21,13 +21,13 @@ DropdownSearch<ComboMMopModel> buildFieldComboMMop({
 			),
 		),
 			items: (filter, infiniteScrollProps) async {
-				return ComboMMopRepository().getComboMMop();
+				return ComboMMopRepository().getComboMMop(filter);
 			},
 			suffixProps: const DropdownSuffixProps(clearButtonProps: ClearButtonProps(isVisible: false)),
 			popupProps: const PopupPropsMultiSelection.modalBottomSheet(
 				disableFilter: false,
 				showSelectedItems: true,
-				showSearchBox: false,
+				showSearchBox: true,
 				itemBuilder: itemBuilderComboMMop,
 			),
 			compareFn: (item, sItem) => item.mmopId == sItem.mmopId,

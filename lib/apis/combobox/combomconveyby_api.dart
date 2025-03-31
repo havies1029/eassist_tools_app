@@ -5,10 +5,11 @@ import 'package:eassist_tools_app/models/combobox/combomconveyby_model.dart';
 
 class ComboMConveybyAPI {
 
-	Future<List<ComboMConveybyModel>> getComboMConveybyAPI() async {
+	Future<List<ComboMConveybyModel>> getComboMConveybyAPI(String mopId) async {
 		String urlGetComboEndPoint = "${AppData.prefixEndPoint}/api/mconveybycombobox/getlist";
 
-		var uri = AppData.uriHtpp(AppData.httpAuthority, urlGetComboEndPoint);
+    Map<String, String> queryParams = {"mopId": mopId};
+		var uri = AppData.uriHtpp(AppData.httpAuthority, urlGetComboEndPoint, queryParams);
 		final http.Response response = await http.get(uri, headers: <String, String>{
 			'Content-Type': 'application/json; odata=verbos',
 			'Accept': 'application/json; odata=verbos',

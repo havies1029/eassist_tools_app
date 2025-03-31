@@ -263,6 +263,8 @@ class _LoginFormState extends State<LoginForm>
             ));
           }
         }),
+
+        /*
         BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {
             if (state is AuthenticationUninitialized) {
@@ -441,7 +443,10 @@ class _LoginFormState extends State<LoginForm>
             }
           },
         ),
+        */
+
         BlocListener<LoginBloc, LoginState>(listener: (context, state) {
+          /*
           if (state is LoginInitial) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Row(
@@ -471,6 +476,8 @@ class _LoginFormState extends State<LoginForm>
               duration: const Duration(seconds: 3),
             ));
           }
+          */
+          /*
           if (state is LoginLoading) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Row(
@@ -500,6 +507,8 @@ class _LoginFormState extends State<LoginForm>
               duration: const Duration(seconds: 3),
             ));
           }
+          */
+          /*
           if (state is LoginPreAuthenticate) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Row(
@@ -529,6 +538,9 @@ class _LoginFormState extends State<LoginForm>
               duration: const Duration(seconds: 3),
             ));
           }
+          */
+
+          /*
           if (state is LoginPostAuthenticate) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Row(
@@ -558,6 +570,8 @@ class _LoginFormState extends State<LoginForm>
               duration: const Duration(seconds: 3),
             ));
           }
+          */
+
           if (state is LoginFailure) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Row(

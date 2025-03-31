@@ -3,8 +3,8 @@ import 'package:eassist_tools_app/models/combobox/combommop_model.dart';
 
 class ComboMMopRepository {
 
-	Future<List<ComboMMopModel>> getComboMMop() async {
+	Future<List<ComboMMopModel>> getComboMMop(String filter) async {
 		ComboMMopAPI api = ComboMMopAPI();
-		return await api.getComboMMopAPI();
+		return await api.getComboMMopAPI(filter);
 	}
 }

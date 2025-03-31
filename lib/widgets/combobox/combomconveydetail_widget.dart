@@ -7,6 +7,8 @@ DropdownSearch<ComboMConveyDetailModel> buildFieldComboMConveyDetail({
 	required String labelText,
 	GlobalKey<DropdownSearchState<ComboMConveyDetailModel>>? comboKey,
 	ComboMConveyDetailModel? initItem,
+  required String mopId,
+  required String conveyById,
 	Function(ComboMConveyDetailModel?)? onChangedCallback,
 	required Function(ComboMConveyDetailModel?) onSaveCallback,
 	Function(ComboMConveyDetailModel?)? validatorCallback
@@ -21,7 +23,7 @@ DropdownSearch<ComboMConveyDetailModel> buildFieldComboMConveyDetail({
 			),
 		),
 			items: (filter, infiniteScrollProps) async {
-				return ComboMConveyDetailRepository().getComboMConveyDetail();
+				return ComboMConveyDetailRepository().getComboMConveyDetail(mopId, conveyById);
 			},
 			suffixProps: const DropdownSuffixProps(clearButtonProps: ClearButtonProps(isVisible: false)),
 			popupProps: const PopupPropsMultiSelection.modalBottomSheet(
@@ -32,7 +34,7 @@ DropdownSearch<ComboMConveyDetailModel> buildFieldComboMConveyDetail({
 			),
 			compareFn: (item, sItem) => item.mconveydetailId == sItem.mconveydetailId,
 			itemAsString: (item) {
-				return item.mmopId;
+				return item.detailDesc;
 			},
 			onChanged: (value) {
 				if (onChangedCallback != null) {
@@ -67,7 +69,7 @@ Widget itemBuilderComboMConveyDetail(
 			),
 		child: ListTile(
 			selected: isSelected,
-			title: Text(item.mmopId),
+			title: Text(item.detailDesc),
 		),
 	);
 }
