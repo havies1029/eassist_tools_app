@@ -1,5 +1,5 @@
 const List<Map<String, String>> menuItems = [
-  {"image": "assets/images/vector-1.png", "label": "Flexas", "menuid":"simulmv"},
+  {"image": "assets/images/vector-1.png", "label": "Flexas", "menuid":"simulflexas"},
   {"image": "assets/images/vector-2.png", "label": "Growing Tree", "menuid":"simulmv"},
   {"image": "assets/images/vector-3.png", "label": "PAREQ", "menuid":"simulpar"},
   {"image": "assets/images/vector-4.png", "label": "MB", "menuid":"simulmv"},

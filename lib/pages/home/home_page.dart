@@ -49,6 +49,8 @@ class _HomePageState extends State<HomePage> {
             return const PageContainer(pageType: PageType.simulmv);  
           } else if (state is SimulPARPageActive) {            
             return const PageContainer(pageType: PageType.simulpar);  
+          } else if (state is SimulFlexasPageActive) {            
+            return const PageContainer(pageType: PageType.simulflexas);  
           } else if (state is SimulEEIPageActive) {            
             return const PageContainer(pageType: PageType.simuleei);  
           } else if (state is SimulGITPageActive) {            

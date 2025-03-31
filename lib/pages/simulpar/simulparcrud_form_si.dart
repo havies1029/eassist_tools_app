@@ -10,11 +10,12 @@ import 'package:eassist_tools_app/common/thousand_separator_input_formatter.dart
 import 'package:quick_input_formatters/quick_input_formatters.dart';
 
 class SimulparCrudFormSumInsuredPage extends StatefulWidget {
+  final String usage;
   final String viewMode;
   final String recordId;
 
   const SimulparCrudFormSumInsuredPage(
-      {super.key, required this.viewMode, required this.recordId});
+      {super.key, required this.usage, required this.viewMode, required this.recordId});
 
   @override
   SimulparCrudFormSumInsuredPageState createState() =>
@@ -123,12 +124,12 @@ class SimulparCrudFormSumInsuredPageState
                     const SizedBox(height: 10),
                     Row(
                       children: [
-                        Flexible(
+                        (widget.usage == "PAREQ") ? Flexible(
                           flex: 1,
                           child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: buildFieldSiBi()),
-                        ),
+                        ):Container(),
                         Flexible(
                           flex: 1,
                           child: Padding(

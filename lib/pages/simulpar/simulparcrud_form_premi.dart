@@ -7,11 +7,12 @@ import 'package:intl/intl.dart';
 import 'package:eassist_tools_app/common/thousand_separator_input_formatter.dart';
 
 class SimulparCrudFormPremiPage extends StatefulWidget {
+  final String usage;
   final String viewMode;
   final String recordId;
 
   const SimulparCrudFormPremiPage(
-      {super.key, required this.viewMode, required this.recordId});
+      {super.key, required this.usage, required this.viewMode, required this.recordId});
 
   @override
   SimulparCrudFormPremiPageFormState createState() =>
@@ -43,53 +44,72 @@ class SimulparCrudFormPremiPageFormState
             child: Form(
                 key: _formKey,
                 child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: FloatingActionButton(
-                                onPressed: () {
-                                  simulparCrudBloc.add(HitungPremiPAREvent());
-                                },
-                                child: Icon(
-                                  Icons.calculate,
-                                  size: 55,
-                                ),
-                              )),
-                        ),
-                        Flexible(
-                          flex: 3,
-                          child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                children: [
-                                  buildFieldPremiFlexas(),
-                                  const SizedBox(height: 10),
-                                  buildFieldPremiRsmdcc(),
-                                  const SizedBox(height: 10),
-                                  buildFieldPremiTsfwd(),
-                                  const SizedBox(height: 10),
-                                  buildFieldPremiEqvet(),
-                                  const SizedBox(height: 10),
-                                  buildFieldPremiOthers(),
-                                  const SizedBox(height: 10),
-                                  buildFieldPremiBI(),
-                                  const SizedBox(height: 10),
-                                  buildFieldPremiTotal(),
-                                ],
-                              )),
-                        ),
-                      ],
-                    ),
+                  children: [                    
+                    Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            buildFieldPremiFlexas(),                                  
+                            (widget.usage == "PAREQ") ? const SizedBox(height: 10):Container(),
+                            (widget.usage == "PAREQ") ? buildFieldPremiRsmdcc():Container(),
+                            (widget.usage == "PAREQ") ? const SizedBox(height: 10):Container(),
+                            (widget.usage == "PAREQ") ? buildFieldPremiTsfwd():Container(),
+                            (widget.usage == "PAREQ") ? const SizedBox(height: 10):Container(),
+                            (widget.usage == "PAREQ") ? buildFieldPremiEqvet():Container(),
+                            (widget.usage == "PAREQ") ? const SizedBox(height: 10):Container(),
+                            (widget.usage == "PAREQ") ? buildFieldPremiOthers():Container(),
+                            (widget.usage == "PAREQ") ? const SizedBox(height: 10):Container(),
+                            (widget.usage == "PAREQ") ? buildFieldPremiBI():Container(),
+                            (widget.usage == "PAREQ") ? const SizedBox(height: 10):Container(),
+                            (widget.usage == "PAREQ") ? buildFieldPremiTotal():Container(),
+                          ],
+                        )),
                     const SizedBox(height: 25),
                     FormError(
                       errors: state.errors ?? [],
                       key: null,
                     ),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.3,
+                          height: 60,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 30.0),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                simulparCrudBloc.add(SimulPARCrudInitValueEvent());
+                              },
+                              child: const Text(
+                                'Reset',
+                                style: TextStyle(fontSize: 13.0),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.3,
+                          height: 60,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 30.0),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                simulparCrudBloc.add(HitungPremiPAREvent());
+                              },
+                              child: const Text(
+                                'Hitung',
+                                style: TextStyle(fontSize: 13.0),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+
+
                   ],
                 )),
           ),

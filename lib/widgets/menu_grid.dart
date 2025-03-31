@@ -35,10 +35,11 @@ class MenuGridState extends State<MenuGrid> {
                 case 'simulpar':
                   homeBloc.add(SimulPARPageActiveEvent());
                   break;
+                case 'simulflexas':
+                  homeBloc.add(SimulFlexasPageActiveEvent());
+                  break;
                 case 'simulmv':
-                  SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-                    homeBloc.add(SimulMVPageActiveEvent());                                
-                  });
+                  homeBloc.add(SimulMVPageActiveEvent());                                
                   break;
                 case 'simuleei':
                   homeBloc.add(SimulEEIPageActiveEvent());

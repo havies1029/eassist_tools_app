@@ -18,6 +18,7 @@ enum PageType {
   changepswd,
   simulmv,
   simulpar,
+  simulflexas,
   simuleei,
   simulgit,
   simulgis,

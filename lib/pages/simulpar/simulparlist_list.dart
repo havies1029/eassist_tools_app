@@ -102,7 +102,7 @@ class SimulparListPageState extends State<SimulparListPage> {
 	void showDialogViewData(BuildContext context, String viewMode, String recordId) {
 		FocusScope.of(context).requestFocus(FocusNode());
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return SimulparCrudMainPage();
+      return SimulparCrudMainPage(usage: 'PAREQ',);
     }));
 	}
 
