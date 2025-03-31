@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:eassist_tools_app/models/combobox/combomconveyby_model.dart';
 import 'package:eassist_tools_app/models/combobox/combormatauang_model.dart';
 import 'package:equatable/equatable.dart';
@@ -27,6 +29,8 @@ class SimulcargoCrudBloc
     on<SimulCargoCrudInitValueEvent>(onSimulCargoCrudInitValueEvent);
     on<HitungPremiCargoEvent>(onHitungPremiCargoEvent);
     on<ComboRMatauangChangedEvent>(onComboRMatauangChanged);
+    on<FieldTSIChangedEvent>(onFieldTSIChangedEvent);
+    on<FieldUpliftPersenChangedEvent>(onFieldUpliftPersenChangedEvent);
   }
 
   Future<void> onTambahSimulcargoCrud(SimulcargoCrudTambahEvent event,
@@ -69,8 +73,14 @@ class SimulcargoCrudBloc
     emit(state.copyWith(isLoading: true, isLoaded: false));
 
     ComboMMopModel comboMMop = event.comboMMop;
-    emit(
-        state.copyWith(isLoading: false, isLoaded: true, comboMMop: comboMMop));
+    SimulcargoCrudModel record = state.record ?? SimulcargoCrudModel();
+    record.mmopId = comboMMop.mmopId;
+
+    emit(state.copyWith(
+        isLoading: false,
+        isLoaded: true,
+        comboMMop: comboMMop,
+        record: record));
   }
 
   Future<void> onComboMConveyByChangedEvent(ComboMConveyByChangedEvent event,
@@ -78,9 +88,14 @@ class SimulcargoCrudBloc
     emit(state.copyWith(isLoading: true, isLoaded: false));
 
     ComboMConveybyModel comboMConveyBy = event.comboMConveyBy;
+    SimulcargoCrudModel record = state.record ?? SimulcargoCrudModel();
+    record.mconveybyId = comboMConveyBy.mconveybyId;
 
     emit(state.copyWith(
-        isLoading: false, isLoaded: true, comboMConveyBy: comboMConveyBy));
+        isLoading: false,
+        isLoaded: true,
+        record: record,
+        comboMConveyBy: comboMConveyBy));
   }
 
   Future<void> onComboMConveyDetailChanged(ComboMConveyDetailChangedEvent event,
@@ -89,9 +104,8 @@ class SimulcargoCrudBloc
 
     ComboMConveyDetailModel comboMConveyDetail = event.comboMConveyDetail;
     SimulcargoCrudModel record = state.record ?? SimulcargoCrudModel();
+    record.mconveydetailId = comboMConveyDetail.mconveydetailId;
     record.rate = comboMConveyDetail.rate;
-
-    debugPrint("comboMConveyDetail.rate : ${comboMConveyDetail.rate}");
 
     emit(state.copyWith(
         isLoading: false,
@@ -130,19 +144,17 @@ class SimulcargoCrudBloc
       errors.add("Field 'TSI' harus > 0.");
     }
 
-    if (record.comboMMop?.mmopId == null || record.comboMMop?.mmopId == "") {
+    if (record.mmopId == null || record.mmopId == "") {
       isValid = false;
       errors.add("Field 'MOP' tidak boleh kosong.");
     }
 
-    if (record.comboMConveyBy?.mconveybyId == null ||
-        record.comboMConveyBy?.mconveybyId == "") {
+    if (record.mconveybyId == null || record.mconveybyId == "") {
       isValid = false;
       errors.add("Field 'Convey By' tidak boleh kosong.");
     }
 
-    if (record.comboMConveyDetail?.mconveydetailId == null ||
-        record.comboMConveyDetail?.mconveydetailId == "") {
+    if (record.mconveydetailId == null || record.mconveydetailId == "") {
       isValid = false;
       errors.add("Field 'Convey Detail' tidak boleh kosong.");
     }
@@ -176,5 +188,26 @@ class SimulcargoCrudBloc
         isLoaded: true,
         comboRMatauang: comboRMatauang,
         record: record));
+  }
+
+  Future<void> onFieldTSIChangedEvent(
+      FieldTSIChangedEvent event, Emitter<SimulcargoCrudState> emit) async {
+    emit(state.copyWith(isLoading: true, isLoaded: false));
+
+    SimulcargoCrudModel record = state.record ?? SimulcargoCrudModel();
+    record.tsi = event.tsi;
+
+    emit(state.copyWith(isLoading: false, isLoaded: true, record: record));
+  }
+
+  Future<void> onFieldUpliftPersenChangedEvent(
+      FieldUpliftPersenChangedEvent event,
+      Emitter<SimulcargoCrudState> emit) async {
+    emit(state.copyWith(isLoading: true, isLoaded: false));
+    SimulcargoCrudModel record = state.record ?? SimulcargoCrudModel();
+    record.upliftPersen = event.uplift;
+    
+    emit(state.copyWith(isLoading: false, isLoaded: true, record: record));
+
   }
 }

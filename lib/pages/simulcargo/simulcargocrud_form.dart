@@ -31,7 +31,6 @@ class SimulcargoCrudFormPage extends StatefulWidget {
 class SimulcargoCrudFormPageFormState extends State<SimulcargoCrudFormPage> {
   late SimulcargoCrudBloc simulcargoCrudBloc;
   final _formKey = GlobalKey<FormState>();
-  final List<String> errors = [];
   ComboRMatauangModel? fieldComboRMatauang;
   ComboMMopModel? fieldComboMMop;
   ComboMConveybyModel? fieldComboMConveyBy;
@@ -131,7 +130,7 @@ class SimulcargoCrudFormPageFormState extends State<SimulcargoCrudFormPage> {
                     buildFieldPremi(),
                     const SizedBox(height: 25),
                     FormError(
-                      errors: errors,
+                      errors: state.errors ?? [],
                       key: null,
                     ),
                     Row(
@@ -144,8 +143,7 @@ class SimulcargoCrudFormPageFormState extends State<SimulcargoCrudFormPage> {
                             padding: const EdgeInsets.only(top: 30.0),
                             child: ElevatedButton(
                               onPressed: () {
-                                simulcargoCrudBloc
-                                    .add(SimulCargoCrudInitValueEvent());
+                                loadData();
                               },
                               child: const Text(
                                 'Reset',
@@ -161,10 +159,10 @@ class SimulcargoCrudFormPageFormState extends State<SimulcargoCrudFormPage> {
                             padding: const EdgeInsets.only(top: 30.0),
                             child: ElevatedButton(
                               onPressed: () {
-                                //hitung()??
+                                simulcargoCrudBloc.add(HitungPremiCargoEvent());
                               },
                               child: const Text(
-                                'Save',
+                                'Hitung',
                                 style: TextStyle(fontSize: 13.0),
                               ),
                             ),
@@ -193,12 +191,16 @@ class SimulcargoCrudFormPageFormState extends State<SimulcargoCrudFormPage> {
           fieldComboMMop = state.comboMMop;
           fieldComboMConveyDetail = state.comboMConveyDetail;
           fieldComboMConveyBy = state.comboMConveyBy;
+          fieldComboRMatauang = state.comboRMatauang;
         }
       },
     );
   }
 
   void loadData() {
+    comboMMopKey.currentState?.clear();
+    comboMConveyByKey.currentState?.clear();
+    comboMConveyDetailKey.currentState?.clear();
     simulcargoCrudBloc.add(SimulCargoCrudInitValueEvent());
   }
 
@@ -243,7 +245,8 @@ class SimulcargoCrudFormPageFormState extends State<SimulcargoCrudFormPage> {
       conveyById: fieldComboMConveyBy?.mconveybyId ?? "",
       onChangedCallback: (value) {
         if (value != null) {
-          simulcargoCrudBloc.add(ComboMConveyDetailChangedEvent(comboMConveyDetail: value));
+          simulcargoCrudBloc
+              .add(ComboMConveyDetailChangedEvent(comboMConveyDetail: value));
         }
       },
       onSaveCallback: (value) {
@@ -299,7 +302,12 @@ class SimulcargoCrudFormPageFormState extends State<SimulcargoCrudFormPage> {
         floatingLabelBehavior: FloatingLabelBehavior.always,
         prefixText: currDesc,
       ),
-      onChanged: (value) {},
+      onChanged: (value) {
+        value = value.replaceAll(",", "");
+        debugPrint("buildFieldTSI : $value");
+        simulcargoCrudBloc
+            .add(FieldTSIChangedEvent(tsi: double.tryParse(value) ?? 0));
+      },
       textAlign: TextAlign.right,
     );
   }
@@ -317,7 +325,9 @@ class SimulcargoCrudFormPageFormState extends State<SimulcargoCrudFormPage> {
         floatingLabelBehavior: FloatingLabelBehavior.always,
         suffixText: " %",
       ),
-      onChanged: (value) {},
+      onChanged: (value) {
+        simulcargoCrudBloc.add(FieldUpliftPersenChangedEvent(uplift: double.tryParse(value)??0));
+      },
       textAlign: TextAlign.right,
     );
   }
