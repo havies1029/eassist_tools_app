@@ -22,6 +22,7 @@ class SimuleeiCrudBloc extends Bloc<SimuleeiCrudEvents, SimuleeiCrudState> {
     on<FieldTSIChangedEvent>(onFieldTSIChangedEvent);
     on<FieldBulanChangedEvent>(onFieldBulanChangedEvent);
     on<FieldRateChangedEvent>(onFieldRateChangedEvent);
+    on<FieldTahunChangedEvent>(onFieldTahunChangedEvent);
     on<HitungPremiEEIEvent>(onHitungPremiEEIEvent);
   }
 
@@ -75,6 +76,8 @@ class SimuleeiCrudBloc extends Bloc<SimuleeiCrudEvents, SimuleeiCrudState> {
         comboRMatauang: comboRMatauang,
         record: record));
   }
+
+
 
   Future<void> onSimuleeiCrudInitValueEvent(
       SimuleeiCrudInitValueEvent event, Emitter<SimuleeiCrudState> emit) async {
@@ -149,5 +152,15 @@ class SimuleeiCrudBloc extends Bloc<SimuleeiCrudEvents, SimuleeiCrudState> {
         hasFailure: !isValid,
         record: record,
         errors: errors));
+  }
+
+  Future<void> onFieldTahunChangedEvent(
+      FieldTahunChangedEvent event, Emitter<SimuleeiCrudState> emit) async {
+    emit(state.copyWith(isFieldCascoChanged: false));
+
+    SimuleeiCrudModel? record = state.record ?? SimuleeiCrudModel();
+    record.thnBuat = event.tahun;
+
+    emit(state.copyWith(isFieldCascoChanged: true, record: record));
   }
 }

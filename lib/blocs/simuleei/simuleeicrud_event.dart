@@ -74,4 +74,12 @@ class FieldRateChangedEvent extends SimuleeiCrudEvents {
 }
 
 
+class FieldTahunChangedEvent extends SimuleeiCrudEvents {
+	final int tahun;
+	const FieldTahunChangedEvent({required this.tahun});
+
+	@override
+	List<Object> get props => [tahun];
+}
+
 class HitungPremiEEIEvent extends SimuleeiCrudEvents{}

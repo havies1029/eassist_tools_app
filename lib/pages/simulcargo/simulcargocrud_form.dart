@@ -29,6 +29,7 @@ class SimulcargoCrudFormPageFormState extends State<SimulcargoCrudFormPage> {
 	final List<String> errors = [];
 	ComboMMopModel? fieldComboMMop;
 	final comboMMopKey = GlobalKey<DropdownSearchState<ComboMMopModel>>();
+	final comboMMopKey2 = GlobalKey<DropdownSearchState<ComboMMopModel>>();
 	ComboMConveyDetailModel? fieldComboMConveyDetail;
 	final comboMConveyDetailKey = GlobalKey<DropdownSearchState<ComboMConveyDetailModel>>();
 	var fieldPremiController = TextEditingController();
@@ -97,7 +98,7 @@ class SimulcargoCrudFormPageFormState extends State<SimulcargoCrudFormPage> {
 											
 										),
 										buildFieldComboMMop(
-											comboKey: comboMMopKey,
+											comboKey: comboMMopKey2,
 											labelText: 'mmopId',
 											initItem: fieldComboMMop,
 											onChangedCallback: (value) {												
