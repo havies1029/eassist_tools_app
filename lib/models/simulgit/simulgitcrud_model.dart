@@ -30,25 +30,25 @@ class SimulgitCrudModel {
 		}
 
 		return SimulgitCrudModel(
-			coverBulan: int.tryParse(data['coverBulan'].toString())??0,
-			premi: double.tryParse(data['premi'].toString())??0,
-			rate: double.tryParse(data['rate'].toString())??0,
-			simulgitId: data['simulgitId']??'',
-			tsi: double.tryParse(data['tsi'].toString())??0,
-			rmatauangKode: data['rmatauangKode']??'',
+				coverBulan: int.tryParse(data['coverBulan'].toString())??0,
+				premi: double.tryParse(data['premi'].toString())??0,
+				rate: double.tryParse(data['rate'].toString())??0,
+				simulgitId: data['simulgitId']??'',
+				tsi: double.tryParse(data['tsi'].toString())??0,
+				rmatauangKode: data['rmatauangKode']??'',
 				currDesc: data['currDesc'] ?? 'IDR',
-			comboRMatauang: comboRMatauang
+				comboRMatauang: comboRMatauang
 		);
 
 	}
 
 	Map<String, dynamic> toJson() =>
-		{'coverBulan': coverBulan.toString(),
-		'premi': premi.toString(),
-		'rate': rate.toString(),
-		'simulgitId': simulgitId,
-		'tsi': tsi.toString(),
-		'rmatauangKode': rmatauangKode,
-		'comboRMatauang': comboRMatauang?.toJson()};
+			{'coverBulan': coverBulan.toString(),
+				'premi': premi.toString(),
+				'rate': rate.toString(),
+				'simulgitId': simulgitId,
+				'tsi': tsi.toString(),
+				'rmatauangKode': rmatauangKode,
+				'comboRMatauang': comboRMatauang?.toJson()};
 
 }
