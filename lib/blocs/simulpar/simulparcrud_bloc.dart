@@ -181,6 +181,7 @@ class SimulparCrudBloc extends Bloc<SimulparCrudEvents, SimulparCrudState> {
         isLoading: false,
         isLoaded: true,
         record: record,
+        errors: [],
         comboROkupasi: record.comboROkupasi,
         comboMWilayah: record.comboMWilayah,
         comboRKonstruksiojk: record.comboRKonstruksiojk,

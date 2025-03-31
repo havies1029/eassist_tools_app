@@ -20,3 +20,4 @@ class SimulGISPageActiveEvent extends HomeEvent {}
 class SimulBONPageActiveEvent extends HomeEvent {}
 class SimulWPPageActiveEvent extends HomeEvent {}
 class SimulCARGOPageActiveEvent extends HomeEvent {}
+class SimulFlexasPageActiveEvent extends HomeEvent {}

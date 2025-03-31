@@ -5,18 +5,17 @@ import 'package:eassist_tools_app/widgets/mobiledesign_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SimulparCrudMainPage extends StatefulWidget {
-	
-	const SimulparCrudMainPage({super.key});
+  final String usage;
+  const SimulparCrudMainPage({super.key, required this.usage});
 
-	@override
-  SimulparCrudMainPageState createState() =>
-      SimulparCrudMainPageState();
+  @override
+  SimulparCrudMainPageState createState() => SimulparCrudMainPageState();
 }
 
-class SimulparCrudMainPageState extends State<SimulparCrudMainPage>{
+class SimulparCrudMainPageState extends State<SimulparCrudMainPage> {
   late SimulparCrudBloc simulparCrudBloc;
 
-    @override
+  @override
   void initState() {
     super.initState();
     Future.delayed(const Duration(milliseconds: 500), () {
@@ -25,20 +24,16 @@ class SimulparCrudMainPageState extends State<SimulparCrudMainPage>{
   }
 
   @override
-	Widget build(BuildContext context) {
+  Widget build(BuildContext context) {
     simulparCrudBloc = BlocProvider.of<SimulparCrudBloc>(context);
-		return MobileDesignWidget(
-			child: Scaffold(
-				appBar: AppBar(
-					title: Text('Calculator PAR'),
-				),
-				body: SimulparCrudFormV2Page(viewMode: "tambah", recordId: "")));
-	}
+    return MobileDesignWidget(
+        child: Scaffold(            
+            body: SimulparCrudFormV2Page(usage: widget.usage, viewMode: "tambah", recordId: "")));
+  }
 
   void loadData() {
     debugPrint("######### SimulparCrudMainPage -> loadData ############3");
-    
+
     simulparCrudBloc.add(SimulPARCrudInitValueEvent());
   }
 }
-

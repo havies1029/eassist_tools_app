@@ -1,4 +1,3 @@
-import 'package:eassist_tools_app/blocs/simuleei/simuleeicrud_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,7 +11,6 @@ import 'package:intl/intl.dart';
 import 'package:eassist_tools_app/common/thousand_separator_input_formatter.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:quick_input_formatters/quick_input_formatters.dart';
-
 
 class SimuleeiCrudFormPage extends StatefulWidget {
   final String viewMode;
@@ -38,27 +36,6 @@ class SimuleeiCrudFormPageFormState extends State<SimuleeiCrudFormPage> {
   var fieldPremiController = TextEditingController();
   String currDesc = "IDR";
 
-
-  var fieldThnBuatController =
-  TextEditingController(text: DateTime.now().year.toString());
-  final dropDownKeyTahun = GlobalKey<DropdownSearchState>();
-  final List<String> _yearList = [];
-  String selectedYear = "";
-
-  void initState() {
-    super.initState();
-    Future.delayed(const Duration(milliseconds: 500), () {
-      loadData();
-      int startYear = DateTime.now().year;
-      int endYear = startYear - 10;
-      selectedYear = startYear.toString();
-      for (int i = startYear; i >= endYear; i--) {
-        debugPrint("Tahun : $i");
-        _yearList.add(i.toString());
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     simuleeiCrudBloc = BlocProvider.of<SimuleeiCrudBloc>(context);
@@ -71,25 +48,6 @@ class SimuleeiCrudFormPageFormState extends State<SimuleeiCrudFormPage> {
                 key: _formKey,
                 child: Column(
                   children: [
-                    Row(
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: buildFieldComboTahun()),
-                        ),
-                        Flexible(
-                          flex: 1,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(),
-                          ),
-                        ),
-                      ],
-                    ),
-                    //buildFieldCoverBulan(),
-                    const SizedBox(height: 10),
                     Row(
                       children: [
                         Flexible(
@@ -212,57 +170,6 @@ class SimuleeiCrudFormPageFormState extends State<SimuleeiCrudFormPage> {
           fieldComboRMatauang = state.comboRMatauang;
         }
       },
-    );
-  }
-
-
-  void loadData() {
-    if (widget.viewMode == "ubah") {
-      simuleeiCrudBloc.add(SimuleeiCrudLihatEvent(recordId: widget.recordId));
-    } else if (widget.viewMode == "tambah") {
-      simuleeiCrudBloc.add(SimuleeiCrudInitValueEvent());
-    }
-  }
-
-  Widget buildFieldComboTahun() {
-    return DropdownSearch<String>(
-      key: dropDownKeyTahun,
-      selectedItem: selectedYear,
-      items: (filter, infiniteScrollProps) => _yearList,
-      decoratorProps: DropDownDecoratorProps(
-        decoration: InputDecoration(
-          labelText: 'Tahun Pembuatan',
-          border: OutlineInputBorder(),
-        ),
-      ),
-      popupProps: PopupPropsMultiSelection.modalBottomSheet(
-        disableFilter: false,
-        showSelectedItems: true,
-        showSearchBox: false,
-        itemBuilder: itemBuilderComboTahun,
-      ),
-      onChanged: (value) {
-        simuleeiCrudBloc
-            .add(FieldTahunChangedEvent(tahun: int.parse(value ?? "0")));
-      },
-    );
-  }
-
-  Widget itemBuilderComboTahun(
-      BuildContext context, String item, bool isSelected, bool isDisabled) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8),
-      decoration: !isSelected
-          ? null
-          : BoxDecoration(
-        border: Border.all(color: Theme.of(context).primaryColor),
-        borderRadius: BorderRadius.circular(5),
-        color: Colors.white,
-      ),
-      child: ListTile(
-        selected: isSelected,
-        title: Text(item),
-      ),
     );
   }
 

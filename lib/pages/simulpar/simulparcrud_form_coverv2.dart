@@ -13,12 +13,13 @@ import 'package:eassist_tools_app/common/thousand_separator_input_formatter.dart
 import 'package:quick_input_formatters/quick_input_formatters.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
-class SimulparCrudFormCoverV2Page extends StatefulWidget {
+class SimulparCrudFormCoverV2Page extends StatefulWidget {  
+  final String usage;
   final String viewMode;
   final String recordId;
 
   const SimulparCrudFormCoverV2Page(
-      {super.key, required this.viewMode, required this.recordId});
+      {super.key, required this.usage, required this.viewMode, required this.recordId});
 
   @override
   SimulparCrudFormCoverV2PageFormState createState() =>
@@ -88,21 +89,21 @@ class SimulparCrudFormCoverV2PageFormState
                           child: Padding(
                             padding: const EdgeInsets.all(1.0),
                             child: SizedBox(
-                              child: InputDecorator(
+                              child: (widget.usage == "PAREQ") ? InputDecorator(
                                   decoration: InputDecoration(
                                     labelText: 'RSMDCC',
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10.0),
                                     ),
                                   ),
-                                  child: buildFieldRateRSMDCC()),
+                                  child: buildFieldRateRSMDCC()): Container(),
                             ),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 20),
-                    SizedBox(
+                    (widget.usage == "PAREQ") ? const SizedBox(height: 20):Container(),
+                    (widget.usage == "PAREQ") ? SizedBox(
                       child: InputDecorator(
                         decoration: InputDecoration(
                           labelText: 'TSFWD',
@@ -134,9 +135,9 @@ class SimulparCrudFormCoverV2PageFormState
                           ],
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 20),
-                    SizedBox(
+                    ):Container(),
+                    (widget.usage == "PAREQ") ? const SizedBox(height: 20) : Container(),
+                    (widget.usage == "PAREQ") ? SizedBox(
                       child: InputDecorator(
                         decoration: InputDecoration(
                           labelText: 'EQVET',
@@ -169,9 +170,9 @@ class SimulparCrudFormCoverV2PageFormState
                           ],
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 20),
-                    SizedBox(
+                    ):Container(),
+                    (widget.usage == "PAREQ") ? const SizedBox(height: 20):Container(),
+                    (widget.usage == "PAREQ") ? SizedBox(
                       child: InputDecorator(
                         decoration: InputDecoration(
                           labelText: 'BI',
@@ -204,9 +205,9 @@ class SimulparCrudFormCoverV2PageFormState
                           ],
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
+                    ):Container(),
+                    (widget.usage == "PAREQ") ? const SizedBox(height: 20) : Container(),
+                    (widget.usage == "PAREQ") ? Row(
                       children: [
                         Flexible(
                           flex: 1,
@@ -244,7 +245,7 @@ class SimulparCrudFormCoverV2PageFormState
                           ),
                         ),
                       ],
-                    ),
+                    ):Container(),
                   ],
                 )),
           ),

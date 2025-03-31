@@ -111,6 +111,8 @@ class PageContainer extends PageContainerBase {
         return "Calc. Premi MV";
       case PageType.simulpar:
         return "Calc. Premi PAR";
+      case PageType.simulflexas:
+        return "Calc. Premi FLEXAS";
       case PageType.simuleei:
         return "Calc. Premi EEI";
       case PageType.simulgit:
@@ -149,7 +151,10 @@ class PageContainer extends PageContainerBase {
         page = const SimulmvCrudMainPage();
         break;
       case PageType.simulpar:
-        page = const SimulparCrudMainPage();
+        page = const SimulparCrudMainPage(usage: 'PAREQ',);
+        break;
+      case PageType.simulflexas:
+        page = const SimulparCrudMainPage(usage: 'FLEXAS',);
         break;
       case PageType.simuleei:
         page = const SimuleeiCrudMainPage();

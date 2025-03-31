@@ -19,5 +19,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<SimulBONPageActiveEvent>((event, emit) => emit(SimulBONPageActive()));
     on<SimulWPPageActiveEvent>((event, emit) => emit(SimulWPPageActive()));
     on<SimulCARGOPageActiveEvent>((event, emit) => emit(SimulCARGOPageActive()));
+    on<SimulFlexasPageActiveEvent>((event, emit) => emit(SimulFlexasPageActive()));
   }
 }
