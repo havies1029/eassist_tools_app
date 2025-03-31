@@ -17,6 +17,7 @@ class SimulcargoCrudModel {
   String? rmatauangKode;
   ComboRMatauangModel? comboRMatauang;
   ComboMConveybyModel? comboMConveyBy;
+  String? currDesc;
 
   SimulcargoCrudModel(
       {this.premi,
@@ -31,7 +32,8 @@ class SimulcargoCrudModel {
       this.mmopId,
       this.rmatauangKode,
       this.comboRMatauang,
-      this.comboMConveyBy});
+      this.comboMConveyBy,
+      this.currDesc});
 
   factory SimulcargoCrudModel.fromJson(Map<String, dynamic> data) {
     ComboMMopModel? comboMMop;
@@ -68,7 +70,8 @@ class SimulcargoCrudModel {
         mmopId: data['mmopId'] ?? '',
         rmatauangKode: data['rmatauangKode'] ?? '',
         comboRMatauang: comboRMatauang,
-        comboMConveyBy: comboMConveyBy);
+        comboMConveyBy: comboMConveyBy,        
+        currDesc: data['currDesc'] ?? 'IDR',);
   }
 
   Map<String, dynamic> toJson() => {
@@ -84,6 +87,7 @@ class SimulcargoCrudModel {
         'mmopId': mmopId,
         'rmatauangKode': rmatauangKode,
         'comboRMatauang': comboRMatauang?.toJson(),
-        'comboMConveyBy': comboMConveyBy?.toJson()
+        'comboMConveyBy': comboMConveyBy?.toJson(),
+        'currDesc': currDesc
       };
 }

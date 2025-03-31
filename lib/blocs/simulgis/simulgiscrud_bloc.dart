@@ -17,6 +17,8 @@ class SimulgisCrudBloc extends Bloc<SimulgisCrudEvents, SimulgisCrudState> {
 		on<SimulgisCrudHapusEvent>(onHapusSimulgisCrud);
 		on<SimulgisCrudLihatEvent>(onLihatSimulgisCrud);
 		on<ComboRMatauangChangedEvent>(onComboRMatauangChanged);
+    on<SimulGisCrudInitValueEvent>(onSimulGisCrudInitValueEvent);
+    on<HitungPremiGisEvent>(onHitungPremiGisEvent);
 	}
 
 	Future<void> onTambahSimulgisCrud(

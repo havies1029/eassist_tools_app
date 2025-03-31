@@ -12,79 +12,97 @@ import 'package:eassist_tools_app/repositories/simulcargo/simulcargocrud_reposit
 part 'simulcargocrud_event.dart';
 part 'simulcargocrud_state.dart';
 
-class SimulcargoCrudBloc extends Bloc<SimulcargoCrudEvents, SimulcargoCrudState> {
-	final SimulcargoCrudRepository repository;
-	SimulcargoCrudBloc({required this.repository}) : super(const SimulcargoCrudState()) {
-		on<SimulcargoCrudUbahEvent>(onUbahSimulcargoCrud);
-		on<SimulcargoCrudTambahEvent>(onTambahSimulcargoCrud);
-		on<SimulcargoCrudHapusEvent>(onHapusSimulcargoCrud);
-		on<SimulcargoCrudLihatEvent>(onLihatSimulcargoCrud);
-		on<ComboMMopChangedEvent>(onComboMMopChanged);
-		on<ComboMMopChangedEvent>(onComboMMopChanged);
-		on<ComboMConveyDetailChangedEvent>(onComboMConveyDetailChanged);
-	}
+class SimulcargoCrudBloc
+    extends Bloc<SimulcargoCrudEvents, SimulcargoCrudState> {
+  final SimulcargoCrudRepository repository;
+  SimulcargoCrudBloc({required this.repository})
+      : super(const SimulcargoCrudState()) {
+    on<SimulcargoCrudUbahEvent>(onUbahSimulcargoCrud);
+    on<SimulcargoCrudTambahEvent>(onTambahSimulcargoCrud);
+    on<SimulcargoCrudHapusEvent>(onHapusSimulcargoCrud);
+    on<SimulcargoCrudLihatEvent>(onLihatSimulcargoCrud);
+    on<ComboMMopChangedEvent>(onComboMMopChanged);
+    on<ComboMConveyByChangedEvent>(onComboMConveyByChangedEvent);
+    on<ComboMConveyDetailChangedEvent>(onComboMConveyDetailChanged);
+    on<SimulCargoCrudInitValueEvent>(onSimulCargoCrudInitValueEvent);
+    on<HitungPremiCargoEvent>(onHitungPremiCargoEvent);
+    on<ComboRMatauangChangedEvent>(onComboRMatauangChanged);
+  }
 
-	Future<void> onTambahSimulcargoCrud(
-		SimulcargoCrudTambahEvent event, Emitter<SimulcargoCrudState> emit) async {
+  Future<void> onTambahSimulcargoCrud(SimulcargoCrudTambahEvent event,
+      Emitter<SimulcargoCrudState> emit) async {
+    ReturnDataAPI returnData;
+    bool hasFailure = true;
+    emit(state.copyWith(isSaving: true, isSaved: false));
+    returnData = await repository.simulcargoCrudTambah(event.record);
+    hasFailure = !returnData.success;
+    emit(
+        state.copyWith(isSaving: false, isSaved: true, hasFailure: hasFailure));
+  }
 
-		ReturnDataAPI returnData;
-		bool hasFailure = true;
-		emit(state.copyWith(isSaving: true, isSaved: false));
-		returnData = await repository.simulcargoCrudTambah(event.record);
-		hasFailure = !returnData.success;
-		emit(state.copyWith(
-			isSaving: false,
-			isSaved: true,
-			hasFailure: hasFailure));
-	}
+  Future<void> onUbahSimulcargoCrud(
+      SimulcargoCrudUbahEvent event, Emitter<SimulcargoCrudState> emit) async {
+    emit(state.copyWith(isSaving: true, isSaved: false));
+    bool hasFailure = !await repository.simulcargoCrudUbah(event.record);
+    emit(
+        state.copyWith(isSaving: false, isSaved: true, hasFailure: hasFailure));
+  }
 
-	Future<void> onUbahSimulcargoCrud(
-		SimulcargoCrudUbahEvent event, Emitter<SimulcargoCrudState> emit) async {
-		emit(state.copyWith(isSaving: true, isSaved: false));
-		bool hasFailure = !await repository.simulcargoCrudUbah(event.record);
-		emit(state.copyWith(isSaving: false, isSaved: true, hasFailure: hasFailure));
-	}
+  Future<void> onHapusSimulcargoCrud(
+      SimulcargoCrudHapusEvent event, Emitter<SimulcargoCrudState> emit) async {
+    emit(state.copyWith(isSaving: true, isSaved: false));
+    bool hasFailure = !await repository.simulcargoCrudHapus(event.recordId);
+    emit(
+        state.copyWith(isSaving: false, isSaved: true, hasFailure: hasFailure));
+  }
 
-	Future<void> onHapusSimulcargoCrud(
-		SimulcargoCrudHapusEvent event, Emitter<SimulcargoCrudState> emit) async {
-		emit(state.copyWith(isSaving: true, isSaved: false));
-		bool hasFailure = !await repository.simulcargoCrudHapus(event.recordId);
-		emit(state.copyWith(isSaving: false, isSaved: true, hasFailure: hasFailure));
-	}
+  Future<void> onLihatSimulcargoCrud(
+      SimulcargoCrudLihatEvent event, Emitter<SimulcargoCrudState> emit) async {
+    emit(state.copyWith(isLoading: true, isLoaded: false));
+    SimulcargoCrudModel record =
+        await repository.simulcargoCrudLihat(event.recordId);
+    emit(state.copyWith(isLoading: false, isLoaded: true, record: record));
+  }
 
-	Future<void> onLihatSimulcargoCrud(
-		SimulcargoCrudLihatEvent event, Emitter<SimulcargoCrudState> emit) async {
-		emit(state.copyWith(isLoading: true, isLoaded: false));
-		SimulcargoCrudModel record = await repository.simulcargoCrudLihat(event.recordId);
-		emit(state.copyWith(isLoading: false, isLoaded: true, record: record));
-	}
+  Future<void> onComboMMopChanged(
+      ComboMMopChangedEvent event, Emitter<SimulcargoCrudState> emit) async {
+    emit(state.copyWith(isLoading: true, isLoaded: false));
 
-	Future<void> onComboMMopChanged(
-			ComboMMopChangedEvent event, Emitter<SimulcargoCrudState> emit) async {
+    ComboMMopModel comboMMop = event.comboMMop;
+    emit(
+        state.copyWith(isLoading: false, isLoaded: true, comboMMop: comboMMop));
+  }
 
-		emit(state.copyWith(isLoading: true, isLoaded: false));
+  Future<void> onComboMConveyByChangedEvent(ComboMConveyByChangedEvent event,
+      Emitter<SimulcargoCrudState> emit) async {
+    emit(state.copyWith(isLoading: true, isLoaded: false));
 
-		ComboMMopModel comboMMop = event.comboMMop;
-		emit(state.copyWith(
-			isLoading: false,
-			isLoaded: true,
-			comboMMop: comboMMop));
-	}
+    ComboMConveybyModel comboMConveyBy = event.comboMConveyBy;
 
-	Future<void> onComboMConveyDetailChanged(
-			ComboMConveyDetailChangedEvent event, Emitter<SimulcargoCrudState> emit) async {
+    emit(state.copyWith(
+        isLoading: false, isLoaded: true, comboMConveyBy: comboMConveyBy));
+  }
 
-		emit(state.copyWith(isLoading: true, isLoaded: false));
+  Future<void> onComboMConveyDetailChanged(ComboMConveyDetailChangedEvent event,
+      Emitter<SimulcargoCrudState> emit) async {
+    emit(state.copyWith(isLoading: true, isLoaded: false));
 
-		ComboMConveyDetailModel comboMConveyDetail = event.comboMConveyDetail;
-		emit(state.copyWith(
-			isLoading: false,
-			isLoaded: true,
-			comboMConveyDetail: comboMConveyDetail));
-	}
+    ComboMConveyDetailModel comboMConveyDetail = event.comboMConveyDetail;
+    SimulcargoCrudModel record = state.record ?? SimulcargoCrudModel();
+    record.rate = comboMConveyDetail.rate;
+
+    debugPrint("comboMConveyDetail.rate : ${comboMConveyDetail.rate}");
+
+    emit(state.copyWith(
+        isLoading: false,
+        isLoaded: true,
+        comboMConveyDetail: comboMConveyDetail,
+        record: record));
+  }
 
   Future<void> onSimulCargoCrudInitValueEvent(
-      SimulCargoCrudInitValueEvent event, Emitter<SimulcargoCrudState> emit) async {
+      SimulCargoCrudInitValueEvent event,
+      Emitter<SimulcargoCrudState> emit) async {
     emit(state.copyWith(isLoading: true, isLoaded: false));
 
     SimulcargoCrudModel record = await repository.simulCargoCrudInitValue();
@@ -117,12 +135,14 @@ class SimulcargoCrudBloc extends Bloc<SimulcargoCrudEvents, SimulcargoCrudState>
       errors.add("Field 'MOP' tidak boleh kosong.");
     }
 
-    if (record.comboMConveyBy?.mconveybyId == null || record.comboMConveyBy?.mconveybyId == "") {
+    if (record.comboMConveyBy?.mconveybyId == null ||
+        record.comboMConveyBy?.mconveybyId == "") {
       isValid = false;
       errors.add("Field 'Convey By' tidak boleh kosong.");
     }
 
-    if (record.comboMConveyDetail?.mconveydetailId == null || record.comboMConveyDetail?.mconveydetailId == "") {
+    if (record.comboMConveyDetail?.mconveydetailId == null ||
+        record.comboMConveyDetail?.mconveydetailId == "") {
       isValid = false;
       errors.add("Field 'Convey Detail' tidak boleh kosong.");
     }
@@ -142,4 +162,19 @@ class SimulcargoCrudBloc extends Bloc<SimulcargoCrudEvents, SimulcargoCrudState>
         errors: errors));
   }
 
+  Future<void> onComboRMatauangChanged(ComboRMatauangChangedEvent event,
+      Emitter<SimulcargoCrudState> emit) async {
+    emit(state.copyWith(isLoading: true, isLoaded: false));
+
+    ComboRMatauangModel comboRMatauang = event.comboRMatauang;
+    SimulcargoCrudModel record = state.record ?? SimulcargoCrudModel();
+    record.comboRMatauang = comboRMatauang;
+    record.currDesc = comboRMatauang.rmatauangSimbol;
+
+    emit(state.copyWith(
+        isLoading: false,
+        isLoaded: true,
+        comboRMatauang: comboRMatauang,
+        record: record));
+  }
 }

@@ -17,6 +17,8 @@ class SimulwpCrudBloc extends Bloc<SimulwpCrudEvents, SimulwpCrudState> {
 		on<SimulwpCrudHapusEvent>(onHapusSimulwpCrud);
 		on<SimulwpCrudLihatEvent>(onLihatSimulwpCrud);
 		on<ComboRMatauangChangedEvent>(onComboRMatauangChanged);
+		on<SimulWpCrudInitValueEvent>(onSimulWpCrudInitValueEvent);
+		on<HitungPremiWpEvent>(onHitungPremiWpEvent);
 	}
 
 	Future<void> onTambahSimulwpCrud(

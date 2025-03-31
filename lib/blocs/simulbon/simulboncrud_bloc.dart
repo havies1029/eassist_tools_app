@@ -16,7 +16,9 @@ class SimulbonCrudBloc extends Bloc<SimulbonCrudEvents, SimulbonCrudState> {
 		on<SimulbonCrudTambahEvent>(onTambahSimulbonCrud);
 		on<SimulbonCrudHapusEvent>(onHapusSimulbonCrud);
 		on<SimulbonCrudLihatEvent>(onLihatSimulbonCrud);
-		on<ComboRMatauangChangedEvent>(onComboRMatauangChanged);
+		on<ComboRMatauangChangedEvent>(onComboRMatauangChanged);    
+    on<SimulBonCrudInitValueEvent>(onSimulBonCrudInitValueEvent);
+    on<HitungPremiBonEvent>(onHitungPremiBonEvent);
 	}
 
 	Future<void> onTambahSimulbonCrud(
