@@ -6,12 +6,13 @@ class SimulgisCrudModel {
 	double? rate;
 	String? simulgisId;
 	double? tsi;
+	String? currDesc;
 	String? rmatauangKode;
 	ComboRMatauangModel? comboRMatauang;
 
 	SimulgisCrudModel({this.coverBulan, this.premi, 
 		this.rate, this.simulgisId, 
-		this.tsi, this.rmatauangKode, this.comboRMatauang});
+		this.tsi, this.rmatauangKode, this.comboRMatauang, this.currDesc = '',});
 
 	factory SimulgisCrudModel.fromJson(Map<String, dynamic> data) {
 		ComboRMatauangModel? comboRMatauang;
@@ -26,6 +27,7 @@ class SimulgisCrudModel {
 			simulgisId: data['simulgisId']??'',
 			tsi: double.tryParse(data['tsi'].toString())??0,
 			rmatauangKode: data['rmatauangKode']??'',
+				currDesc: data['currDesc'] ?? 'IDR',
 			comboRMatauang: comboRMatauang
 		);
 
@@ -38,6 +40,7 @@ class SimulgisCrudModel {
 		'simulgisId': simulgisId,
 		'tsi': tsi.toString(),
 		'rmatauangKode': rmatauangKode,
+			'currDesc': currDesc,
 		'comboRMatauang': comboRMatauang?.toJson()};
 
 }

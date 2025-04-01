@@ -57,7 +57,7 @@ class SimuleeiCrudBloc extends Bloc<SimuleeiCrudEvents, SimuleeiCrudState> {
       SimuleeiCrudLihatEvent event, Emitter<SimuleeiCrudState> emit) async {
     emit(state.copyWith(isLoading: true, isLoaded: false));
     SimuleeiCrudModel record =
-        await repository.simuleeiCrudLihat(event.recordId);
+    await repository.simuleeiCrudLihat(event.recordId);
     emit(state.copyWith(isLoading: false, isLoaded: true, record: record));
   }
 

@@ -15,10 +15,10 @@ class AppData {
   static String version = "1.0.2";
 
 
-  static bool useSSL = false;
-  static String apiDomain = "http://10.0.2.2/eAssistToolsAPI/";
-  static String prefixEndPoint = "/eAssistToolsAPI";
-  static String httpAuthority = "10.0.2.2";
+  // static bool useSSL = false;
+  // static String apiDomain = "http://10.0.2.2/eAssistToolsAPI/";
+  // static String prefixEndPoint = "/eAssistToolsAPI";
+  // static String httpAuthority = "10.0.2.2";
 
 /*
   static bool useSSL = true;
@@ -50,7 +50,7 @@ static String httpAuthority = "216.172.109.8";
   static String prefixEndPoint = "";
   static String httpAuthority = "eassisttoolsapi.smartsoft-id.com";
 */
-  
+
   static Map<String, String> httpHeaders = <String, String>{
     'Content-Type': 'application/json; odata=verbos',
     'Accept': 'application/json; odata=verbos',

@@ -43,34 +43,34 @@ class ComboRMatauangChangedEvent extends SimuleeiCrudEvents{
 	final ComboRMatauangModel comboRMatauang;
 	const ComboRMatauangChangedEvent({required this.comboRMatauang});
 
-	@override	List<Object> get props => [comboRMatauang];
+	@override List<Object> get props => [comboRMatauang];
 }
 
 class SimuleeiCrudInitValueEvent extends SimuleeiCrudEvents {}
 
 class FieldBulanChangedEvent extends SimuleeiCrudEvents {
-  final int bulan;
-  const FieldBulanChangedEvent({required this.bulan});
+	final int bulan;
+	const FieldBulanChangedEvent({required this.bulan});
 
-  @override
-  List<Object> get props => [bulan];
+	@override
+	List<Object> get props => [bulan];
 
 }
 
 class FieldTSIChangedEvent extends SimuleeiCrudEvents {
-  final double tsi;
-  const FieldTSIChangedEvent({required this.tsi});
+	final double tsi;
+	const FieldTSIChangedEvent({required this.tsi});
 
-  @override
-  List<Object> get props => [tsi];
+	@override
+	List<Object> get props => [tsi];
 }
 
 class FieldRateChangedEvent extends SimuleeiCrudEvents {
-  final double rate;
-  const FieldRateChangedEvent({required this.rate});
+	final double rate;
+	const FieldRateChangedEvent({required this.rate});
 
-  @override
-  List<Object> get props => [rate];
+	@override
+	List<Object> get props => [rate];
 }
 
 
