@@ -307,8 +307,7 @@ class SimulcargoCrudFormPageFormState extends State<SimulcargoCrudFormPage> {
         prefixText: currDesc,
       ),
       onChanged: (value) {
-        value = value.replaceAll(",", "");
-        debugPrint("buildFieldTSI : $value");
+        value = value.replaceAll(",", "");        
         simulcargoCrudBloc
             .add(FieldTSIChangedEvent(tsi: double.tryParse(value) ?? 0));
       },

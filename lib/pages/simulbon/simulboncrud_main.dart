@@ -26,10 +26,7 @@ class SimulbonCrudMainPageState extends State<SimulbonCrudMainPage> {
 	Widget build(BuildContext context) {
 		simulbonCrudBloc = BlocProvider.of<SimulbonCrudBloc>(context);
 		return MobileDesignWidget(
-			child: Scaffold(
-				appBar: AppBar(
-					title: const Text('Calc. Premi Bon'),
-				),
+			child: Scaffold(				
 				body: SimulbonCrudMain2Page(viewMode: "tambah", recordId: ""),
 			),
 		);

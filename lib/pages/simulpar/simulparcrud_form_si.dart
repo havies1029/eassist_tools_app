@@ -310,7 +310,7 @@ class SimulparCrudFormSumInsuredPageState
 
   Widget buildFieldCurr() {
     return buildFieldComboRMatauang(
-      labelText: 'Currency',
+      labelText: 'Mata Uang',
       initItem: fieldComboRMatauang,
       onChangedCallback: (value) {
         if (value != null) {

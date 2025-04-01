@@ -29,6 +29,7 @@ class SimulbonCrudModel {
   double? uangmukaPersen;
   String? rmatauangKode;
   ComboRMatauangModel? comboRMatauang;
+  String? currDesc;
 
   SimulbonCrudModel(
       {this.carNilai,
@@ -58,7 +59,8 @@ class SimulbonCrudModel {
       this.uangmukaNilai,
       this.uangmukaPersen,
       this.rmatauangKode,
-      this.comboRMatauang});
+      this.comboRMatauang,
+      this.currDesc});
 
   factory SimulbonCrudModel.fromJson(Map<String, dynamic> data) {
     ComboRMatauangModel? comboRMatauang;
@@ -101,7 +103,8 @@ class SimulbonCrudModel {
         uangmukaNilai: double.tryParse(data['uangmukaNilai'].toString()) ?? 0,
         uangmukaPersen: double.tryParse(data['uangmukaPersen'].toString()) ?? 0,
         rmatauangKode: data['rmatauangKode'] ?? '',
-        comboRMatauang: comboRMatauang);
+        comboRMatauang: comboRMatauang,        
+        currDesc: data['currDesc'] ?? 'IDR');
   }
 
   Map<String, dynamic> toJson() => {
@@ -132,6 +135,7 @@ class SimulbonCrudModel {
         'uangmukaNilai': uangmukaNilai.toString(),
         'uangmukaPersen': uangmukaPersen.toString(),
         'rmatauangKode': rmatauangKode,
-        'comboRMatauang': comboRMatauang?.toJson()
+        'comboRMatauang': comboRMatauang?.toJson(),
+        'currDesc': currDesc
       };
 }
