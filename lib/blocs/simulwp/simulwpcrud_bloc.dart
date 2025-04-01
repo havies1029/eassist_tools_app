@@ -22,6 +22,9 @@ class SimulwpCrudBloc extends Bloc<SimulwpCrudEvents, SimulwpCrudState> {
     on<ComboRMatauangChangedEvent>(onComboRMatauangChanged);
     on<SimulWpCrudInitValueEvent>(onSimulWpCrudInitValueEvent);
     on<HitungPremiWpEvent>(onHitungPremiWpEvent);
+    on<FieldBulanChangedEvent>(onFieldBulanChangedEvent);
+    on<FieldPlafondChangedEvent>(onFieldPlafondChangedEvent);
+    on<FieldUsiaChangedEvent>(onFieldUsiaChangedEvent);
   }
 
   Future<void> onTambahSimulwpCrud(
@@ -120,4 +123,29 @@ class SimulwpCrudBloc extends Bloc<SimulwpCrudEvents, SimulwpCrudState> {
         record: record,
         errors: errors));
   }
+
+  Future<void> onFieldBulanChangedEvent(
+      FieldBulanChangedEvent event, Emitter<SimulwpCrudState> emit) async {
+    SimulwpCrudModel record = state.record ?? SimulwpCrudModel();
+    record.coverBulan = event.bulan;
+
+    emit(state.copyWith(record: record));
+  }
+
+  Future<void> onFieldPlafondChangedEvent(
+      FieldPlafondChangedEvent event, Emitter<SimulwpCrudState> emit) async {
+    SimulwpCrudModel record = state.record ?? SimulwpCrudModel();
+    record.plafond = event.plafond;
+
+    emit(state.copyWith(record: record));
+  }
+
+  Future<void> onFieldUsiaChangedEvent(FieldUsiaChangedEvent event, Emitter<SimulwpCrudState> emit) async {
+
+    SimulwpCrudModel record = state.record ?? SimulwpCrudModel();
+    record.usia = event.usia;
+
+    emit(state.copyWith(record: record));
+  }
+
 }

@@ -72,7 +72,7 @@ class SimulwpCrudFormPageFormState extends State<SimulwpCrudFormPage> {
                           ),
                         ),
                       ],
-                    ),                    
+                    ),
                     const SizedBox(height: 10),
                     Row(
                       children: [
@@ -90,7 +90,7 @@ class SimulwpCrudFormPageFormState extends State<SimulwpCrudFormPage> {
                           ),
                         ),
                       ],
-                    ),   
+                    ),
                     const SizedBox(height: 10),
                     Row(
                       children: [
@@ -108,7 +108,7 @@ class SimulwpCrudFormPageFormState extends State<SimulwpCrudFormPage> {
                           ),
                         ),
                       ],
-                    ),   
+                    ),
                     const SizedBox(height: 10),
                     Row(
                       children: [
@@ -126,7 +126,7 @@ class SimulwpCrudFormPageFormState extends State<SimulwpCrudFormPage> {
                           ),
                         ),
                       ],
-                    ),   
+                    ),
                     const SizedBox(height: 25),
                     FormError(
                       errors: state.errors ?? [],
@@ -142,9 +142,10 @@ class SimulwpCrudFormPageFormState extends State<SimulwpCrudFormPage> {
                             padding: const EdgeInsets.only(top: 30.0),
                             child: ElevatedButton(
                               onPressed: () {
+                                loadData();
                               },
                               child: const Text(
-                                'Close',
+                                'Reset',
                                 style: TextStyle(fontSize: 13.0),
                               ),
                             ),
@@ -157,9 +158,10 @@ class SimulwpCrudFormPageFormState extends State<SimulwpCrudFormPage> {
                             padding: const EdgeInsets.only(top: 30.0),
                             child: ElevatedButton(
                               onPressed: () {
+                                simulwpCrudBloc.add(HitungPremiWpEvent());
                               },
                               child: const Text(
-                                'Save',
+                                'Hitung',
                                 style: TextStyle(fontSize: 13.0),
                               ),
                             ),
@@ -207,7 +209,8 @@ class SimulwpCrudFormPageFormState extends State<SimulwpCrudFormPage> {
         suffixText: " bulan",
       ),
       onChanged: (value) {
-        
+        simulwpCrudBloc
+            .add(FieldBulanChangedEvent(bulan: int.tryParse(value) ?? 0));
       },
       textAlign: TextAlign.right,
     );
@@ -231,13 +234,14 @@ class SimulwpCrudFormPageFormState extends State<SimulwpCrudFormPage> {
       inputFormatters: [ThousandsSeparatorInputFormatter()],
       controller: fieldPlafondController,
       decoration: InputDecoration(
-        labelText: "Plafond",
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        prefixText: currDesc,
-        suffixText: ",000,000"
-      ),
+          labelText: "Plafond",
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          prefixText: currDesc,
+          suffixText: ",000,000"),
       onChanged: (value) {
-        value = value.replaceAll(",", ""); 
+        value = value.replaceAll(",", "");
+        simulwpCrudBloc.add(
+            FieldPlafondChangedEvent(plafond: double.tryParse(value) ?? 0));
       },
       textAlign: TextAlign.right,
     );
@@ -257,8 +261,7 @@ class SimulwpCrudFormPageFormState extends State<SimulwpCrudFormPage> {
         floatingLabelBehavior: FloatingLabelBehavior.always,
         suffixText: " %",
       ),
-      onChanged: (value) {
-      },
+      onChanged: (value) {},
       textAlign: TextAlign.right,
     );
   }
@@ -284,11 +287,12 @@ class SimulwpCrudFormPageFormState extends State<SimulwpCrudFormPage> {
       inputFormatters: [ThousandsSeparatorInputFormatter()],
       controller: fieldUsiaController,
       decoration: InputDecoration(
-        labelText: "Usia",
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        suffixText: " tahun"
-      ),
+          labelText: "Usia",
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          suffixText: " tahun"),
       onChanged: (value) {
+        simulwpCrudBloc
+            .add(FieldUsiaChangedEvent(usia: int.tryParse(value) ?? 0));
       },
       textAlign: TextAlign.right,
     );

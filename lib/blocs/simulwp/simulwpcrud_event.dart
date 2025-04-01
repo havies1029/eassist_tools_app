@@ -50,4 +50,27 @@ class SimulWpCrudInitValueEvent extends SimulwpCrudEvents{}
 
 class HitungPremiWpEvent extends SimulwpCrudEvents{}
 
+class FieldBulanChangedEvent extends SimulwpCrudEvents {
+	final int bulan;
+	const FieldBulanChangedEvent({required this.bulan});
 
+	@override
+	List<Object> get props => [bulan];
+
+}
+
+class FieldPlafondChangedEvent extends SimulwpCrudEvents {
+	final double plafond;
+	const FieldPlafondChangedEvent({required this.plafond});
+
+	@override
+	List<Object> get props => [plafond];
+}
+
+class FieldUsiaChangedEvent extends SimulwpCrudEvents {
+	final int usia;
+	const FieldUsiaChangedEvent({required this.usia});
+
+	@override
+	List<Object> get props => [usia];
+}

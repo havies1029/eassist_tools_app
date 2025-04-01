@@ -137,8 +137,8 @@ class SimulwpCrudAPI {
         },
         body: jsonEncode(record.toJson()));
 
-    //debugPrint("response.statusCode : ${response.statusCode}");
-    //debugPrint("response.body : ${response.body}");
+    debugPrint("response.statusCode : ${response.statusCode}");
+    debugPrint("response.body : ${response.body}");
 
     if (response.statusCode == 200) {
       returnData = ReturnDataAPI.fromDatabaseJson(jsonDecode(response.body));
