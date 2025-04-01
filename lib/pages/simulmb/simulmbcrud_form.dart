@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/common/constants.dart';
 import 'package:eassist_tools_app/widgets/form_error.dart';
-import 'package:eassist_tools_app/blocs/simultree/simultreecrud_bloc.dart';
-import 'package:eassist_tools_app/models/simultree/simultreecrud_model.dart';
+import 'package:eassist_tools_app/blocs/simulmb/simulmbcrud_bloc.dart';
+import 'package:eassist_tools_app/models/simulmb/simulmbcrud_model.dart';
 import 'package:eassist_tools_app/models/combobox/combormatauang_model.dart';
 import 'package:eassist_tools_app/widgets/combobox/combormatauang_widget.dart';
 import 'package:intl/intl.dart';
@@ -11,18 +11,18 @@ import 'package:eassist_tools_app/common/thousand_separator_input_formatter.dart
 import 'package:dropdown_search/dropdown_search.dart';
 
 
-class SimultreeCrudFormPage extends StatefulWidget {
+class SimulmbCrudFormPage extends StatefulWidget {
 	final String viewMode;
 	final String recordId;
 
-	const SimultreeCrudFormPage({super.key, required this.viewMode, required this.recordId});
+	const SimulmbCrudFormPage({super.key, required this.viewMode, required this.recordId});
 
 	@override
-	SimultreeCrudFormPageFormState createState() => SimultreeCrudFormPageFormState();
+	SimulmbCrudFormPageFormState createState() => SimulmbCrudFormPageFormState();
 }
 
-class SimultreeCrudFormPageFormState extends State<SimultreeCrudFormPage> {
-	late SimultreeCrudBloc simultreeCrudBloc;
+class SimulmbCrudFormPageFormState extends State<SimulmbCrudFormPage> {
+	late SimulmbCrudBloc simulmbCrudBloc;
 	final _formKey = GlobalKey<FormState>();
 	final List<String> errors = [];
 	var fieldCoverBulanController = TextEditingController();
@@ -42,8 +42,8 @@ class SimultreeCrudFormPageFormState extends State<SimultreeCrudFormPage> {
 
 	@override
 	Widget build(BuildContext context) {
-		simultreeCrudBloc = BlocProvider.of<SimultreeCrudBloc>(context);
-		return BlocConsumer<SimultreeCrudBloc, SimultreeCrudState>(
+		simulmbCrudBloc = BlocProvider.of<SimulmbCrudBloc>(context);
+		return BlocConsumer<SimulmbCrudBloc, SimulmbCrudState>(
 			builder: (context, state) {
 				return Dialog(
 					shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -56,7 +56,7 @@ class SimultreeCrudFormPageFormState extends State<SimultreeCrudFormPage> {
 									children: [
 										const SizedBox(height: 10),
 										Text(
-											"${widget.viewMode == "tambah" ? "Tambah" : "Ubah"} Premi Growing Tree",
+											"${widget.viewMode == "tambah" ? "Tambah" : "Ubah"} Machinery Breakdown",
 											style: const TextStyle(
 												fontSize: 20.0,
 												color: Color(0xffff6101),
@@ -141,7 +141,7 @@ class SimultreeCrudFormPageFormState extends State<SimultreeCrudFormPage> {
 												if (value != null) {
 													removeError(
 														error: "Field ComboRMatauang tidak boleh kosong.");
-													simultreeCrudBloc.add(ComboRMatauangChangedEvent(comboRMatauang: value));
+													simulmbCrudBloc.add(ComboRMatauangChangedEvent(comboRMatauang: value));
 												}
 											},
 											onSaveCallback: (value) {
@@ -240,8 +240,8 @@ class SimultreeCrudFormPageFormState extends State<SimultreeCrudFormPage> {
 		}
 	void loadData() {
 		if (widget.viewMode == "ubah") {
-		simultreeCrudBloc.add(
-			SimultreeCrudLihatEvent(recordId: widget.recordId));
+		simulmbCrudBloc.add(
+			SimulmbCrudLihatEvent(recordId: widget.recordId));
 		}
 	}
 
@@ -252,19 +252,19 @@ class SimultreeCrudFormPageFormState extends State<SimultreeCrudFormPage> {
 	void onSaveForm() {
 		if (_formKey.currentState!.validate()) {
 			_formKey.currentState!.save();
-			SimultreeCrudModel record = SimultreeCrudModel(
+			SimulmbCrudModel record = SimulmbCrudModel(
 				coverBulan: int.parse(fieldCoverBulanController.text),
 				premi: double.parse(fieldPremiController.text.replaceAll(',', '')),
 				rate: double.parse(fieldRateController.text.replaceAll(',', '')),
 				rmatauangKode: fieldComboRMatauang?.rmatauangKode,
-				simultreeId: '',
+				simulmbId: '',
 				tsi: double.parse(fieldTsiController.text.replaceAll(',', '')),
 			);
 			if (widget.viewMode == "tambah") {
-				simultreeCrudBloc.add(SimultreeCrudTambahEvent(record: record));
+				simulmbCrudBloc.add(SimulmbCrudTambahEvent(record: record));
 			} else if (widget.viewMode == "ubah") {
-				record.simultreeId = simultreeCrudBloc.state.record!.simultreeId;
-				simultreeCrudBloc.add(SimultreeCrudUbahEvent(record: record));
+				record.simulmbId = simulmbCrudBloc.state.record!.simulmbId;
+				simulmbCrudBloc.add(SimulmbCrudUbahEvent(record: record));
 			}
 			_dismissDialog();
 		}

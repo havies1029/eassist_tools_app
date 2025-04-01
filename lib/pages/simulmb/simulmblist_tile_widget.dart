@@ -3,21 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:eassist_tools_app/widgets/my_colors.dart';
 import 'package:eassist_tools_app/widgets/my_text.dart';
 
-class SimultreeListTileWidget extends StatelessWidget {
+class SimulmbListTileWidget extends StatelessWidget {
 	final int coverBulan;
 	final double premi;
 	final double rate;
 	final String rMATAUANGNAMA;
-	final String simultreeId;
+	final String simulmbId;
 	final double tsi;
 
-	const SimultreeListTileWidget(
+	const SimulmbListTileWidget(
 		{super.key,
 		required this.coverBulan, 
 		required this.premi, 
 		required this.rate, 
 		required this.rMATAUANGNAMA, 
-		required this.simultreeId, 
+		required this.simulmbId, 
 		required this.tsi});
 
 	@override
@@ -72,12 +72,12 @@ class SimultreeListTileWidget extends StatelessWidget {
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
-						Text("simultreeId",
+						Text("simulmbId",
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_40)),
 						Container(height: 5),
 						Text(
-							simultreeId,
+							simulmbId,
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),

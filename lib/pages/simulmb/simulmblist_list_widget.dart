@@ -3,21 +3,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:eassist_tools_app/common/constants.dart';
 import 'package:eassist_tools_app/widgets/showdialoghapus_widget.dart';
-import 'package:eassist_tools_app/blocs/simultree/simultreelist_bloc.dart';
-import 'package:eassist_tools_app/blocs/simultree/simultreecrud_bloc.dart';
-import 'package:eassist_tools_app/pages/simultree/simultreelist_tile_widget.dart';
+import 'package:eassist_tools_app/blocs/simulmb/simulmblist_bloc.dart';
+import 'package:eassist_tools_app/blocs/simulmb/simulmbcrud_bloc.dart';
+import 'package:eassist_tools_app/pages/simulmb/simulmblist_tile_widget.dart';
 
-class SimultreeListListWidget extends StatefulWidget {
+class SimulmbListListWidget extends StatefulWidget {
 	final String searchText;
-	const SimultreeListListWidget({super.key, required this.searchText});
+	const SimulmbListListWidget({super.key, required this.searchText});
 
 	@override
-	SimultreeListListWidgetState createState() => SimultreeListListWidgetState();
+	SimulmbListListWidgetState createState() => SimulmbListListWidgetState();
 }
 
-class SimultreeListListWidgetState extends State<SimultreeListListWidget> {
-	late SimultreeListBloc simultreeListBloc;
-	late SimultreeCrudBloc simultreeCrudBloc;
+class SimulmbListListWidgetState extends State<SimulmbListListWidget> {
+	late SimulmbListBloc simulmbListBloc;
+	late SimulmbCrudBloc simulmbCrudBloc;
 	final ScrollController _scrollController = ScrollController();
 
 	@override
@@ -36,9 +36,9 @@ class SimultreeListListWidgetState extends State<SimultreeListListWidget> {
 
 	@override
 	Widget build(BuildContext context) {
-		simultreeListBloc = BlocProvider.of<SimultreeListBloc>(context);
-		simultreeCrudBloc = BlocProvider.of<SimultreeCrudBloc>(context);
-		return BlocConsumer<SimultreeListBloc, SimultreeListState>(
+		simulmbListBloc = BlocProvider.of<SimulmbListBloc>(context);
+		simulmbCrudBloc = BlocProvider.of<SimulmbCrudBloc>(context);
+		return BlocConsumer<SimulmbListBloc, SimulmbListState>(
 			builder: (context, state) {
 			if (state.status == ListStatus.success) {
 			return state.items.isNotEmpty
@@ -60,11 +60,11 @@ class SimultreeListListWidgetState extends State<SimultreeListListWidget> {
 												children: [
 													SlidableAction(
 														onPressed: (context) {
-															simultreeListBloc.add(
-																UbahSimultreeListEvent(
+															simulmbListBloc.add(
+																UbahSimulmbListEvent(
 																	recordId: state
 																		.items[index]
-																		.simultreeId));
+																		.simulmbId));
 														},
 														backgroundColor: Colors.green,
 														icon: Icons.edit,
@@ -73,19 +73,19 @@ class SimultreeListListWidgetState extends State<SimultreeListListWidget> {
 													SlidableAction(
 														onPressed: (context) {
 															showDialogHapus(
-																state.items[index].simultreeId);
+																state.items[index].simulmbId);
 														},
 														backgroundColor: Colors.red,
 														icon: Icons.delete,
 														label: "Delete",
 													),
 												]),
-											child: SimultreeListTileWidget(
+											child: SimulmbListTileWidget(
 												coverBulan: state.items[index].coverBulan,
 												premi: state.items[index].premi,
 												rate: state.items[index].rate,
 												rMATAUANGNAMA: state.items[index].rMATAUANGNAMA,
-												simultreeId: state.items[index].simultreeId,
+												simulmbId: state.items[index].simulmbId,
 												tsi: state.items[index].tsi,
 											)),
 							],
@@ -124,12 +124,12 @@ class SimultreeListListWidgetState extends State<SimultreeListListWidget> {
 		if (!_scrollController.hasClients) return;
 		if (_scrollController.position.pixels ==
 				_scrollController.position.maxScrollExtent) {
-			simultreeListBloc.add(FetchSimultreeListEvent());
+			simulmbListBloc.add(FetchSimulmbListEvent());
 		}
 	}
 
 	onHapusFunction(String recordId) {
-		simultreeCrudBloc.add(SimultreeCrudHapusEvent(recordId: recordId));
+		simulmbCrudBloc.add(SimulmbCrudHapusEvent(recordId: recordId));
 	}
 
 	void showDialogHapus(String recordId) {
@@ -140,7 +140,7 @@ class SimultreeListListWidgetState extends State<SimultreeListListWidget> {
 				return ShowDialogHapusWidget(onHapusFunction: onHapusFunction, recordId: recordId);
 			}
 		).then((value) {
-			simultreeListBloc.add(CloseDialogSimultreeListEvent());
+			simulmbListBloc.add(CloseDialogSimulmbListEvent());
 		});
 	}
 

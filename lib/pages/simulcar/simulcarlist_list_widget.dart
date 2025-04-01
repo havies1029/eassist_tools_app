@@ -3,21 +3,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:eassist_tools_app/common/constants.dart';
 import 'package:eassist_tools_app/widgets/showdialoghapus_widget.dart';
-import 'package:eassist_tools_app/blocs/simultree/simultreelist_bloc.dart';
-import 'package:eassist_tools_app/blocs/simultree/simultreecrud_bloc.dart';
-import 'package:eassist_tools_app/pages/simultree/simultreelist_tile_widget.dart';
+import 'package:eassist_tools_app/blocs/simulcar/simulcarlist_bloc.dart';
+import 'package:eassist_tools_app/blocs/simulcar/simulcarcrud_bloc.dart';
+import 'package:eassist_tools_app/pages/simulcar/simulcarlist_tile_widget.dart';
 
-class SimultreeListListWidget extends StatefulWidget {
+class SimulcarListListWidget extends StatefulWidget {
 	final String searchText;
-	const SimultreeListListWidget({super.key, required this.searchText});
+	const SimulcarListListWidget({super.key, required this.searchText});
 
 	@override
-	SimultreeListListWidgetState createState() => SimultreeListListWidgetState();
+	SimulcarListListWidgetState createState() => SimulcarListListWidgetState();
 }
 
-class SimultreeListListWidgetState extends State<SimultreeListListWidget> {
-	late SimultreeListBloc simultreeListBloc;
-	late SimultreeCrudBloc simultreeCrudBloc;
+class SimulcarListListWidgetState extends State<SimulcarListListWidget> {
+	late SimulcarListBloc simulcarListBloc;
+	late SimulcarCrudBloc simulcarCrudBloc;
 	final ScrollController _scrollController = ScrollController();
 
 	@override
@@ -36,9 +36,9 @@ class SimultreeListListWidgetState extends State<SimultreeListListWidget> {
 
 	@override
 	Widget build(BuildContext context) {
-		simultreeListBloc = BlocProvider.of<SimultreeListBloc>(context);
-		simultreeCrudBloc = BlocProvider.of<SimultreeCrudBloc>(context);
-		return BlocConsumer<SimultreeListBloc, SimultreeListState>(
+		simulcarListBloc = BlocProvider.of<SimulcarListBloc>(context);
+		simulcarCrudBloc = BlocProvider.of<SimulcarCrudBloc>(context);
+		return BlocConsumer<SimulcarListBloc, SimulcarListState>(
 			builder: (context, state) {
 			if (state.status == ListStatus.success) {
 			return state.items.isNotEmpty
@@ -60,11 +60,11 @@ class SimultreeListListWidgetState extends State<SimultreeListListWidget> {
 												children: [
 													SlidableAction(
 														onPressed: (context) {
-															simultreeListBloc.add(
-																UbahSimultreeListEvent(
+															simulcarListBloc.add(
+																UbahSimulcarListEvent(
 																	recordId: state
 																		.items[index]
-																		.simultreeId));
+																		.simulcarId));
 														},
 														backgroundColor: Colors.green,
 														icon: Icons.edit,
@@ -73,19 +73,19 @@ class SimultreeListListWidgetState extends State<SimultreeListListWidget> {
 													SlidableAction(
 														onPressed: (context) {
 															showDialogHapus(
-																state.items[index].simultreeId);
+																state.items[index].simulcarId);
 														},
 														backgroundColor: Colors.red,
 														icon: Icons.delete,
 														label: "Delete",
 													),
 												]),
-											child: SimultreeListTileWidget(
+											child: SimulcarListTileWidget(
 												coverBulan: state.items[index].coverBulan,
 												premi: state.items[index].premi,
 												rate: state.items[index].rate,
 												rMATAUANGNAMA: state.items[index].rMATAUANGNAMA,
-												simultreeId: state.items[index].simultreeId,
+												simulcarId: state.items[index].simulcarId,
 												tsi: state.items[index].tsi,
 											)),
 							],
@@ -124,12 +124,12 @@ class SimultreeListListWidgetState extends State<SimultreeListListWidget> {
 		if (!_scrollController.hasClients) return;
 		if (_scrollController.position.pixels ==
 				_scrollController.position.maxScrollExtent) {
-			simultreeListBloc.add(FetchSimultreeListEvent());
+			simulcarListBloc.add(FetchSimulcarListEvent());
 		}
 	}
 
 	onHapusFunction(String recordId) {
-		simultreeCrudBloc.add(SimultreeCrudHapusEvent(recordId: recordId));
+		simulcarCrudBloc.add(SimulcarCrudHapusEvent(recordId: recordId));
 	}
 
 	void showDialogHapus(String recordId) {
@@ -140,7 +140,7 @@ class SimultreeListListWidgetState extends State<SimultreeListListWidget> {
 				return ShowDialogHapusWidget(onHapusFunction: onHapusFunction, recordId: recordId);
 			}
 		).then((value) {
-			simultreeListBloc.add(CloseDialogSimultreeListEvent());
+			simulcarListBloc.add(CloseDialogSimulcarListEvent());
 		});
 	}
 

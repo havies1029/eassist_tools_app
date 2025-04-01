@@ -1,25 +1,25 @@
 
-class SimultreeListModel {
+class SimulmbListModel {
 	int coverBulan;
 	double premi;
 	double rate;
 	String rmatauangKode;
-	String simultreeId;
+	String simulmbId;
 	double tsi;
 	String rMATAUANGNAMA;
 
-	SimultreeListModel({required this.coverBulan, required this.premi, 
+	SimulmbListModel({required this.coverBulan, required this.premi, 
 		required this.rate, required this.rmatauangKode, 
-		required this.simultreeId, required this.tsi, 
+		required this.simulmbId, required this.tsi, 
 		required this.rMATAUANGNAMA});
 
-	factory SimultreeListModel.fromJson(Map<String, dynamic> data) {
-		return SimultreeListModel(
+	factory SimulmbListModel.fromJson(Map<String, dynamic> data) {
+		return SimulmbListModel(
 			coverBulan: int.tryParse(data['coverBulan'].toString())??0,
 			premi: double.tryParse(data['premi'].toString())??0,
 			rate: double.tryParse(data['rate'].toString())??0,
 			rmatauangKode: data['rmatauangKode']??'',
-			simultreeId: data['simultreeId']??'',
+			simulmbId: data['simulmbId']??'',
 			tsi: double.tryParse(data['tsi'].toString())??0,
 			rMATAUANGNAMA: data['rMATAUANGNAMA']??''
 		);
@@ -31,7 +31,7 @@ class SimultreeListModel {
 		'premi': premi.toString(),
 		'rate': rate.toString(),
 		'rmatauangKode': rmatauangKode,
-		'simultreeId': simultreeId,
+		'simulmbId': simulmbId,
 		'tsi': tsi.toString(),
 		'rMATAUANGNAMA': rMATAUANGNAMA};
 

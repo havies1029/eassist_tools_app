@@ -1,29 +1,29 @@
 import 'package:eassist_tools_app/models/combobox/combormatauang_model.dart';
 
-class SimultreeCrudModel {
+class SimulcarCrudModel {
 	int coverBulan;
 	double premi;
 	double rate;
-	String simultreeId;
+	String simulcarId;
 	double tsi;
 	String? rmatauangKode;
 	ComboRMatauangModel? comboRMatauang;
 
-	SimultreeCrudModel({required this.coverBulan, required this.premi, 
-		required this.rate, required this.simultreeId, 
+	SimulcarCrudModel({required this.coverBulan, required this.premi, 
+		required this.rate, required this.simulcarId, 
 		required this.tsi, this.rmatauangKode, this.comboRMatauang});
 
-	factory SimultreeCrudModel.fromJson(Map<String, dynamic> data) {
+	factory SimulcarCrudModel.fromJson(Map<String, dynamic> data) {
 		ComboRMatauangModel? comboRMatauang;
 		if (data['comboRMatauang'] != null) {
 			comboRMatauang = ComboRMatauangModel.fromJson(data['comboRMatauang']);
 		}
 
-		return SimultreeCrudModel(
+		return SimulcarCrudModel(
 			coverBulan: int.tryParse(data['coverBulan'].toString())??0,
 			premi: double.tryParse(data['premi'].toString())??0,
 			rate: double.tryParse(data['rate'].toString())??0,
-			simultreeId: data['simultreeId']??'',
+			simulcarId: data['simulcarId']??'',
 			tsi: double.tryParse(data['tsi'].toString())??0,
 			rmatauangKode: data['rmatauangKode']??'',
 			comboRMatauang: comboRMatauang
@@ -35,7 +35,7 @@ class SimultreeCrudModel {
 		{'coverBulan': coverBulan.toString(),
 		'premi': premi.toString(),
 		'rate': rate.toString(),
-		'simultreeId': simultreeId,
+		'simulcarId': simulcarId,
 		'tsi': tsi.toString(),
 		'rmatauangKode': rmatauangKode,
 		'comboRMatauang': comboRMatauang?.toJson()};
