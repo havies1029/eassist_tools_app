@@ -8,12 +8,14 @@ class SimulwpCrudModel {
 	String? simulwp1Id;
 	int? usia;
 	String? rmatauangKode;
-	ComboRMatauangModel? comboRMatauang;
+	ComboRMatauangModel? comboRMatauang;  
+  String? currDesc;
 
 	SimulwpCrudModel({this.coverBulan, this.plafond, 
 		this.premi, this.rate, 
 		this.simulwp1Id, this.usia, 
-		this.rmatauangKode, this.comboRMatauang});
+		this.rmatauangKode, this.comboRMatauang,
+    this.currDesc});
 
 	factory SimulwpCrudModel.fromJson(Map<String, dynamic> data) {
 		ComboRMatauangModel? comboRMatauang;
@@ -29,7 +31,8 @@ class SimulwpCrudModel {
 			simulwp1Id: data['simulwp1Id']??'',
 			usia: int.tryParse(data['usia'].toString())??0,
 			rmatauangKode: data['rmatauangKode']??'',
-			comboRMatauang: comboRMatauang
+			comboRMatauang: comboRMatauang,
+      currDesc: data['currDesc']??'IDR',
 		);
 
 	}
@@ -42,6 +45,8 @@ class SimulwpCrudModel {
 		'simulwp1Id': simulwp1Id,
 		'usia': usia.toString(),
 		'rmatauangKode': rmatauangKode,
-		'comboRMatauang': comboRMatauang?.toJson()};
+		'comboRMatauang': comboRMatauang?.toJson(),
+    'currDesc': currDesc
+  };
 
 }

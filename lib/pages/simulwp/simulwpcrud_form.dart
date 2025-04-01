@@ -1,166 +1,296 @@
-import 'package:eassist_tools_app/widgets/my_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/common/constants.dart';
 import 'package:eassist_tools_app/widgets/form_error.dart';
 import 'package:eassist_tools_app/blocs/simulwp/simulwpcrud_bloc.dart';
 import 'package:eassist_tools_app/models/simulwp/simulwpcrud_model.dart';
 import 'package:eassist_tools_app/models/combobox/combormatauang_model.dart';
+import 'package:eassist_tools_app/widgets/combobox/combormatauang_widget.dart';
+import 'package:intl/intl.dart';
 import 'package:eassist_tools_app/common/thousand_separator_input_formatter.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:quick_input_formatters/quick_input_formatters.dart';
 
 class SimulwpCrudFormPage extends StatefulWidget {
-	final String viewMode;
-	final String recordId;
+  final String viewMode;
+  final String recordId;
 
-	const SimulwpCrudFormPage({super.key, required this.viewMode, required this.recordId});
+  const SimulwpCrudFormPage(
+      {super.key, required this.viewMode, required this.recordId});
 
-	@override
-	SimulwpCrudFormPageFormState createState() => SimulwpCrudFormPageFormState();
+  @override
+  SimulwpCrudFormPageFormState createState() => SimulwpCrudFormPageFormState();
 }
 
 class SimulwpCrudFormPageFormState extends State<SimulwpCrudFormPage> {
-	late SimulwpCrudBloc simulwpCrudBloc;
-	final _formKey = GlobalKey<FormState>();
-	final List<String> errors = [];
-	final Map<String, bool> fieldErrors = {};
+  late SimulwpCrudBloc simulwpCrudBloc;
+  final _formKey = GlobalKey<FormState>();
+  var fieldCoverBulanController = TextEditingController();
+  var fieldPlafondController = TextEditingController();
+  var fieldPremiController = TextEditingController();
+  var fieldRateController = TextEditingController();
+  ComboRMatauangModel? fieldComboRMatauang;
+  final comboRMatauangKey =
+      GlobalKey<DropdownSearchState<ComboRMatauangModel>>();
+  var fieldUsiaController = TextEditingController();
+  String currDesc = "IDR";
 
-	var fieldCoverBulanController = TextEditingController();
-	var fieldPlafondController = TextEditingController();
-	var fieldPremiController = TextEditingController();
-	var fieldRateController = TextEditingController();
-	var fieldUsiaController = TextEditingController();
-	ComboRMatauangModel? fieldComboRMatauang;
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(milliseconds: 500), () {
+      loadData();
+    });
+  }
 
-	@override
-	Widget build(BuildContext context) {
-		simulwpCrudBloc = BlocProvider.of<SimulwpCrudBloc>(context);
-		return Dialog(
-			backgroundColor: MyColors.white,
-			shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-			child: SingleChildScrollView(
-				padding: const EdgeInsets.all(16.0),
-				child: Form(
-					key: _formKey,
-					child: Column(
-						mainAxisSize: MainAxisSize.min,
-						children: [
-							const SizedBox(height: 20),
-							_buildTextField(fieldCoverBulanController, "Cover Bulan"),
-							_buildTextField(fieldPlafondController, "Plafond"),
-							_buildTextField(fieldPremiController, "Premi"),
-							_buildTextField(fieldRateController, "Rate"),
-							_buildTextField(fieldUsiaController, "Usia"),
-							const SizedBox(height: 25),
-							FormError(errors: errors, key: null,),
-							const SizedBox(height: 15),
-							Row(
-								mainAxisAlignment: MainAxisAlignment.spaceBetween,
-								children: [
-									_buildButton("Reset", Colors.grey, _dismissDialog),
-									_buildButton("Hitung", Colors.orange, onSaveForm),
-								],
-							),
-						],
-					),
-				),
-			),
-		);
-	}
+  @override
+  Widget build(BuildContext context) {
+    simulwpCrudBloc = BlocProvider.of<SimulwpCrudBloc>(context);
+    return BlocConsumer<SimulwpCrudBloc, SimulwpCrudState>(
+      builder: (context, state) {
+        return SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Flexible(
+                          flex: 1,
+                          child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: buildFieldCoverBulan()),
+                        ),
+                        Flexible(
+                          flex: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: buildFieldMataUang(),
+                          ),
+                        ),
+                      ],
+                    ),                    
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Flexible(
+                          flex: 1,
+                          child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: buildFieldUsia()),
+                        ),
+                        Flexible(
+                          flex: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(),
+                          ),
+                        ),
+                      ],
+                    ),   
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Flexible(
+                          flex: 3,
+                          child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: buildFieldPlafond()),
+                        ),
+                        Flexible(
+                          flex: 2,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(),
+                          ),
+                        ),
+                      ],
+                    ),   
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Flexible(
+                          flex: 2,
+                          child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: buildFieldRate()),
+                        ),
+                        Flexible(
+                          flex: 5,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: buildFieldPremi(),
+                          ),
+                        ),
+                      ],
+                    ),   
+                    const SizedBox(height: 25),
+                    FormError(
+                      errors: state.errors ?? [],
+                      key: null,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.3,
+                          height: 60,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 30.0),
+                            child: ElevatedButton(
+                              onPressed: () {
+                              },
+                              child: const Text(
+                                'Close',
+                                style: TextStyle(fontSize: 13.0),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.3,
+                          height: 60,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 30.0),
+                            child: ElevatedButton(
+                              onPressed: () {
+                              },
+                              child: const Text(
+                                'Save',
+                                style: TextStyle(fontSize: 13.0),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                )),
+          ),
+        );
+      },
+      listener: (context, state) {
+        if (state.isLoaded) {
+          if (state.record != null) {
+            fieldCoverBulanController.text =
+                state.record!.coverBulan.toString();
+            fieldPlafondController.text =
+                NumberFormat("#,###").format(state.record!.plafond);
+            fieldPremiController.text =
+                NumberFormat("#,###").format(state.record!.premi);
+            fieldRateController.text =
+                NumberFormat("###.00").format(state.record!.rate);
+            fieldUsiaController.text = state.record!.usia.toString();
+            currDesc = state.record!.currDesc ?? "IDR";
+          }
+          fieldComboRMatauang = state.comboRMatauang;
+        }
+      },
+    );
+  }
 
-	Widget _buildTextField(TextEditingController controller, String label) {
-		return Padding(
-			padding: const EdgeInsets.symmetric(vertical: 8.0),
-			child: Column(
-				crossAxisAlignment: CrossAxisAlignment.start,
-				children: [
-					TextFormField(
-						controller: controller,
-						keyboardType: TextInputType.number,
-						inputFormatters: [ThousandsSeparatorInputFormatter()],
-						decoration: InputDecoration(
-							labelText: label,
-							labelStyle: TextStyle(color: fieldErrors[label] == true ? Colors.red : Colors.black54),
-							enabledBorder: UnderlineInputBorder(
-								borderSide: BorderSide(color: fieldErrors[label] == true ? Colors.red : Colors.black38),
-							),
-							focusedBorder: UnderlineInputBorder(
-								borderSide: BorderSide(color: fieldErrors[label] == true ? Colors.red : Colors.orange),
-							),
-							filled: true,
-							fillColor: Colors.white,
-						),
-						validator: (value) {
-							if (value == null || value.isEmpty) {
-								setState(() => fieldErrors[label] = true);
-								addError(error: "$label tidak boleh kosong");
-								return "";
-							}
-							setState(() => fieldErrors[label] = false);
-							return null;
-						},
-						textAlign: TextAlign.right,
-					),
-					if (fieldErrors[label] == true)
-						Padding(
-							padding: const EdgeInsets.only(top: 4.0),
-							child: Text(
-								"$label wajib diisi",
-								style: const TextStyle(color: Colors.red, fontSize: 12),
-							),
-						),
-				],
-			),
-		);
-	}
+  void loadData() {
+    simulwpCrudBloc.add(SimulWpCrudInitValueEvent());
+  }
 
-	Widget _buildButton(String text, Color color, VoidCallback onPressed) {
-		return ElevatedButton(
-			onPressed: onPressed,
-			style: ElevatedButton.styleFrom(
-				backgroundColor: color,
-				shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-				minimumSize: const Size(120, 45),
-			),
-			child: Text(
-				text,
-				style: const TextStyle(color: Colors.white, fontSize: 16),
-			),
-		);
-	}
+  Widget buildFieldCoverBulan() {
+    return TextFormField(
+      keyboardType: TextInputType.number,
+      inputFormatters: [ThousandsSeparatorInputFormatter()],
+      controller: fieldCoverBulanController,
+      decoration: const InputDecoration(
+        labelText: "Lama Cover",
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        suffixText: " bulan",
+      ),
+      onChanged: (value) {
+        
+      },
+      textAlign: TextAlign.right,
+    );
+  }
 
-	void _dismissDialog() {
-		Navigator.pop(context);
-	}
+  Widget buildFieldMataUang() {
+    return buildFieldComboRMatauang(
+      comboKey: comboRMatauangKey,
+      labelText: 'Mata Uang',
+      initItem: fieldComboRMatauang,
+      onChangedCallback: (value) {
+        if (value != null) {}
+      },
+      onSaveCallback: (value) {},
+    );
+  }
 
-	void onSaveForm() {
-		setState(() => fieldErrors.clear());
-		if (_formKey.currentState!.validate()) {
-			_formKey.currentState!.save();
-			SimulwpCrudModel record = SimulwpCrudModel(
-				coverBulan: int.parse(fieldCoverBulanController.text),
-				plafond: double.parse(fieldPlafondController.text.replaceAll(',', '')),
-				premi: double.parse(fieldPremiController.text.replaceAll(',', '')),
-				rate: double.parse(fieldRateController.text.replaceAll(',', '')),
-				rmatauangKode: fieldComboRMatauang?.rmatauangKode,
-				simulwp1Id: '',
-				usia: int.parse(fieldUsiaController.text),
-			);
-			if (widget.viewMode == "tambah") {
-				simulwpCrudBloc.add(SimulwpCrudTambahEvent(record: record));
-			} else if (widget.viewMode == "ubah") {
-				record.simulwp1Id = simulwpCrudBloc.state.record!.simulwp1Id;
-				simulwpCrudBloc.add(SimulwpCrudUbahEvent(record: record));
-			}
-			_dismissDialog();
-		}
-	}
+  Widget buildFieldPlafond() {
+    return TextFormField(
+      keyboardType: TextInputType.number,
+      inputFormatters: [ThousandsSeparatorInputFormatter()],
+      controller: fieldPlafondController,
+      decoration: InputDecoration(
+        labelText: "Plafond",
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        prefixText: currDesc,
+        suffixText: ",000,000"
+      ),
+      onChanged: (value) {
+        value = value.replaceAll(",", ""); 
+      },
+      textAlign: TextAlign.right,
+    );
+  }
 
-	void addError({required String error}) {
-		if (!errors.contains(error)) {
-			setState(() {
-				errors.add(error);
-			});
-		}
-	}
+  Widget buildFieldRate() {
+    return TextFormField(
+      readOnly: true,
+      keyboardType: TextInputType.number,
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+        DecimalTextInputFormatter(2)
+      ],
+      controller: fieldRateController,
+      decoration: const InputDecoration(
+        labelText: "Rate",
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        suffixText: " %",
+      ),
+      onChanged: (value) {
+      },
+      textAlign: TextAlign.right,
+    );
+  }
+
+  Widget buildFieldPremi() {
+    return TextFormField(
+      readOnly: true,
+      keyboardType: TextInputType.number,
+      inputFormatters: [ThousandsSeparatorInputFormatter()],
+      controller: fieldPremiController,
+      decoration: InputDecoration(
+          labelText: "Premi",
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          prefixText: currDesc),
+      onChanged: (value) {},
+      textAlign: TextAlign.right,
+    );
+  }
+
+  Widget buildFieldUsia() {
+    return TextFormField(
+      keyboardType: TextInputType.number,
+      inputFormatters: [ThousandsSeparatorInputFormatter()],
+      controller: fieldUsiaController,
+      decoration: InputDecoration(
+        labelText: "Usia",
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        suffixText: " tahun"
+      ),
+      onChanged: (value) {
+      },
+      textAlign: TextAlign.right,
+    );
+  }
 }

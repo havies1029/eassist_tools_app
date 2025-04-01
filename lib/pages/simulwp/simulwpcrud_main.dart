@@ -27,10 +27,7 @@ class SimulwpCrudMainPageState extends State<SimulwpCrudMainPage> {
 	Widget build(BuildContext context) {
 		simulwpCrudBloc = BlocProvider.of<SimulwpCrudBloc>(context);
 		return MobileDesignWidget(
-			child: Scaffold(
-				appBar: AppBar(
-					title: const Text('Calc. Premi Wanprestasi'),
-				),
+			child: Scaffold(				
 				body: const SimulwpCrudMain2Page(viewMode: "tambah", recordId: ""),
 			),
 		);
