@@ -19,6 +19,9 @@ class SimulgisCrudBloc extends Bloc<SimulgisCrudEvents, SimulgisCrudState> {
 		on<ComboRMatauangChangedEvent>(onComboRMatauangChanged);
     on<SimulGisCrudInitValueEvent>(onSimulGisCrudInitValueEvent);
     on<HitungPremiGisEvent>(onHitungPremiGisEvent);
+		on<FieldTSIChangedEvent>(onFieldTSIChangedEvent);
+		on<FieldBulanChangedEvent>(onFieldBulanChangedEvent);
+		on<FieldRateChangedEvent>(onFieldRateChangedEvent);
 	}
 
 	Future<void> onTambahSimulgisCrud(
@@ -62,12 +65,43 @@ class SimulgisCrudBloc extends Bloc<SimulgisCrudEvents, SimulgisCrudState> {
 		emit(state.copyWith(isLoading: true, isLoaded: false));
 
 		ComboRMatauangModel comboRMatauang = event.comboRMatauang;
+		SimulgisCrudModel record = state.record ?? SimulgisCrudModel();
+		record.comboRMatauang = comboRMatauang;
+		record.currDesc = comboRMatauang.rmatauangSimbol;
+
 		emit(state.copyWith(
 			isLoading: false,
 			isLoaded: true,
 			comboRMatauang: comboRMatauang));
 	}
 
+
+	Future<void> onFieldTSIChangedEvent(
+			FieldTSIChangedEvent event, Emitter<SimulgisCrudState> emit) async {
+		SimulgisCrudModel record = state.record ?? SimulgisCrudModel();
+		record.tsi = event.tsi;
+
+		debugPrint("event.tsi : ${event.tsi}");
+
+		emit(state.copyWith(record: record));
+	}
+
+	Future<void> onFieldRateChangedEvent(
+			FieldRateChangedEvent event, Emitter<SimulgisCrudState> emit) async {
+		SimulgisCrudModel record = state.record ?? SimulgisCrudModel();
+		record.rate = event.rate;
+
+		emit(state.copyWith(record: record));
+	}
+
+	Future<void> onFieldBulanChangedEvent(
+			FieldBulanChangedEvent event, Emitter<SimulgisCrudState> emit) async {
+		SimulgisCrudModel record = state.record ?? SimulgisCrudModel();
+		record.coverBulan = event.bulan;
+
+		emit(state.copyWith(record: record));
+	}
+	
   Future<void> onSimulGisCrudInitValueEvent(
       SimulGisCrudInitValueEvent event, Emitter<SimulgisCrudState> emit) async {
     emit(state.copyWith(isLoading: true, isLoaded: false));

@@ -49,6 +49,7 @@ class SimulgitCrudModel {
 				'simulgitId': simulgitId,
 				'tsi': tsi.toString(),
 				'rmatauangKode': rmatauangKode,
+				'currDesc': currDesc,
 				'comboRMatauang': comboRMatauang?.toJson()};
 
 }

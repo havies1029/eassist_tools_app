@@ -1,33 +1,36 @@
 import 'package:eassist_tools_app/models/combobox/combormatauang_model.dart';
 
-class SimulgisCrudModel {
-	int? coverBulan;
-	double? premi;
-	double? rate;
-	String? simulgisId;
-	double? tsi;
-	String? currDesc;
+class SimultreeCrudModel {
+	int coverBulan;
+	double premi;
+	double rate;
+	double si1;
+	double si2;
+	String simultreeId;
+	double tsi;
 	String? rmatauangKode;
 	ComboRMatauangModel? comboRMatauang;
 
-	SimulgisCrudModel({this.coverBulan, this.premi, 
-		this.rate, this.simulgisId, 
-		this.tsi, this.rmatauangKode, this.comboRMatauang, this.currDesc = '',});
+	SimultreeCrudModel({required this.coverBulan, required this.premi, 
+		required this.rate, required this.si1, 
+		required this.si2, required this.simultreeId, 
+		required this.tsi, this.rmatauangKode, this.comboRMatauang});
 
-	factory SimulgisCrudModel.fromJson(Map<String, dynamic> data) {
+	factory SimultreeCrudModel.fromJson(Map<String, dynamic> data) {
 		ComboRMatauangModel? comboRMatauang;
 		if (data['comboRMatauang'] != null) {
 			comboRMatauang = ComboRMatauangModel.fromJson(data['comboRMatauang']);
 		}
 
-		return SimulgisCrudModel(
+		return SimultreeCrudModel(
 			coverBulan: int.tryParse(data['coverBulan'].toString())??0,
 			premi: double.tryParse(data['premi'].toString())??0,
 			rate: double.tryParse(data['rate'].toString())??0,
-			simulgisId: data['simulgisId']??'',
+			si1: double.tryParse(data['si1'].toString())??0,
+			si2: double.tryParse(data['si2'].toString())??0,
+			simultreeId: data['simultreeId']??'',
 			tsi: double.tryParse(data['tsi'].toString())??0,
 			rmatauangKode: data['rmatauangKode']??'',
-				currDesc: data['currDesc'] ?? 'IDR',
 			comboRMatauang: comboRMatauang
 		);
 
@@ -37,10 +40,11 @@ class SimulgisCrudModel {
 		{'coverBulan': coverBulan.toString(),
 		'premi': premi.toString(),
 		'rate': rate.toString(),
-		'simulgisId': simulgisId,
+		'si1': si1.toString(),
+		'si2': si2.toString(),
+		'simultreeId': simultreeId,
 		'tsi': tsi.toString(),
 		'rmatauangKode': rmatauangKode,
-			'currDesc': currDesc,
 		'comboRMatauang': comboRMatauang?.toJson()};
 
 }
