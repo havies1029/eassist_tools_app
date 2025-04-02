@@ -21,6 +21,7 @@ import 'package:eassist_tools_app/pages/login/login_page.dart';
 import 'package:eassist_tools_app/pages/splash/splash_page.dart';
 import 'package:eassist_tools_app/repositories/login/change_password_repository.dart';
 import 'package:eassist_tools_app/repositories/simulbon/simulboncrud_repository.dart';
+import 'package:eassist_tools_app/repositories/simulcar/simulcarcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/simulcargo/simulcargocrud_repository.dart';
 import 'package:eassist_tools_app/repositories/simuleei/simuleeicrud_repository.dart';
 import 'package:eassist_tools_app/repositories/simulgis/simulgiscrud_repository.dart';
@@ -34,6 +35,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 
+import 'blocs/simulcar/simulcarcrud_bloc.dart';
 import 'blocs/simulcargo/simulcargocrud_bloc.dart';
 
 Future<void> main() async {
@@ -100,8 +102,11 @@ class App extends StatelessWidget {
           create: (context) =>
               SimulwpCrudBloc(repository: SimulwpCrudRepository())),
         BlocProvider<SimulcargoCrudBloc>(
+          create: (context) =>
+              SimulcargoCrudBloc(repository: SimulcargoCrudRepository())),
+        BlocProvider<SimulcarCrudBloc>(
             create: (context) =>
-                SimulcargoCrudBloc(repository: SimulcargoCrudRepository())),
+              SimulcarCrudBloc(repository: SimulcarCrudRepository())),
 
       ],
       child: MaterialApp(

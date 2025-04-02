@@ -18,4 +18,12 @@ class SimulcarCrudRepository {
 	Future<SimulcarCrudModel> simulcarCrudLihat(String simulcarId) async {
 		return await api.simulcarCrudLihatAPI(simulcarId);
 	}
+
+	Future<SimulcarCrudModel> simulCARCrudInitValue() async {
+		return await api.simulCARCrudInitValueAPI();
+	}
+
+	Future<ReturnDataAPI> simulcarCrudCalcPremi(SimulcarCrudModel record) async {
+		return await api.simulcarCrudCalcPremiAPI(record);
+	}
 }

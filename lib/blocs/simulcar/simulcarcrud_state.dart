@@ -8,6 +8,9 @@ class SimulcarCrudState extends Equatable {
 	final bool isSaving;
 	final bool isSaved;
 	final bool hasFailure;
+	final bool isFieldOpsiChanged;
+	final bool isFieldCascoChanged;
+	final List<String> errors;
 	final ComboRMatauangModel? comboRMatauang;
 	const SimulcarCrudState(
 		{this.record,
@@ -16,6 +19,9 @@ class SimulcarCrudState extends Equatable {
 		this.isSaving = false,
 		this.isSaved = false,
 		this.hasFailure = false,
+		this.isFieldOpsiChanged = false,
+		this.isFieldCascoChanged = false,
+			this.errors = const [],
 		this.comboRMatauang,
 });
 
@@ -26,6 +32,8 @@ class SimulcarCrudState extends Equatable {
 		bool? isSaving,
 		bool? isSaved,
 		bool? hasFailure,
+		bool? isFieldCascoChanged,
+		List<String>? errors,
 		ComboRMatauangModel? comboRMatauang,
 	}){
 		return SimulcarCrudState(
@@ -34,11 +42,13 @@ class SimulcarCrudState extends Equatable {
 			isLoaded: isLoaded ?? this.isLoaded,
 			isSaving: isSaving ?? this.isSaving,
 			isSaved: isSaved ?? this.isSaved,
+			isFieldCascoChanged: isFieldCascoChanged ?? this.isFieldCascoChanged,
 			hasFailure: hasFailure ?? this.hasFailure,
+			errors: errors ?? this.errors,
 			comboRMatauang: comboRMatauang?? this.comboRMatauang,
 		);
 	}
 
 	@override
-	List<Object> get props => [isLoading, isLoaded, isSaving, isSaved, hasFailure];
+	List<Object> get props => [isLoading, isLoaded, isSaving, isSaved, hasFailure, isFieldCascoChanged, errors];
 }

@@ -1,4 +1,6 @@
+import 'package:eassist_tools_app/blocs/simulcar/simulcarcrud_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/common/constants.dart';
 import 'package:eassist_tools_app/widgets/form_error.dart';
@@ -9,34 +11,51 @@ import 'package:eassist_tools_app/widgets/combobox/combormatauang_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:eassist_tools_app/common/thousand_separator_input_formatter.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:quick_input_formatters/quick_input_formatters.dart';
 
 
 class SimulcarCrudFormPage extends StatefulWidget {
 	final String viewMode;
 	final String recordId;
 
-	const SimulcarCrudFormPage({super.key, required this.viewMode, required this.recordId});
+	const SimulcarCrudFormPage(
+			{super.key, required this.viewMode, required this.recordId});
 
 	@override
-	SimulcarCrudFormPageFormState createState() => SimulcarCrudFormPageFormState();
+	SimulcarCrudFormPageFormState createState() =>
+			SimulcarCrudFormPageFormState();
 }
 
 class SimulcarCrudFormPageFormState extends State<SimulcarCrudFormPage> {
 	late SimulcarCrudBloc simulcarCrudBloc;
 	final _formKey = GlobalKey<FormState>();
-	final List<String> errors = [];
 	var fieldCoverBulanController = TextEditingController();
-	var fieldPremiController = TextEditingController();
 	var fieldRateController = TextEditingController();
 	ComboRMatauangModel? fieldComboRMatauang;
-	final comboRMatauangKey = GlobalKey<DropdownSearchState<ComboRMatauangModel>>();
+	final comboRMatauangKey =
+	GlobalKey<DropdownSearchState<ComboRMatauangModel>>();
 	var fieldTsiController = TextEditingController();
+	var fieldPremiController = TextEditingController();
+	String currDesc = "IDR";
 
-	@override
+
+	var fieldThnBuatController =
+	TextEditingController(text: DateTime.now().year.toString());
+	final dropDownKeyTahun = GlobalKey<DropdownSearchState>();
+	final List<String> _yearList = [];
+	String selectedYear = "";
+
 	void initState() {
 		super.initState();
 		Future.delayed(const Duration(milliseconds: 500), () {
 			loadData();
+			int startYear = DateTime.now().year;
+			int endYear = startYear - 10;
+			selectedYear = startYear.toString();
+			for (int i = startYear; i >= endYear; i--) {
+				debugPrint("Tahun : $i");
+				_yearList.add(i.toString());
+			}
 		});
 	}
 
@@ -45,142 +64,93 @@ class SimulcarCrudFormPageFormState extends State<SimulcarCrudFormPage> {
 		simulcarCrudBloc = BlocProvider.of<SimulcarCrudBloc>(context);
 		return BlocConsumer<SimulcarCrudBloc, SimulcarCrudState>(
 			builder: (context, state) {
-				return Dialog(
-					shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-					child: SingleChildScrollView(
-						child: Padding(
-							padding: const EdgeInsets.all(8.0),
-							child: Form(
+				return SingleChildScrollView(
+					child: Padding(
+						padding: const EdgeInsets.only(left: 40.0, right: 40.0, top: 8.0),
+						child: Form(
 								key: _formKey,
 								child: Column(
 									children: [
+										Row(
+											children: [
+												Flexible(
+													flex: 1,
+													child: Padding(
+															padding: const EdgeInsets.all(8.0),
+															child: buildFieldComboTahun()),
+												),
+												Flexible(
+													flex: 1,
+													child: Padding(
+														padding: const EdgeInsets.all(8.0),
+														child: Container(),
+													),
+												),
+											],
+										),
+//buildFieldCoverBulan(),
 										const SizedBox(height: 10),
-										Text(
-											"${widget.viewMode == "tambah" ? "Tambah" : "Ubah"} CAR / EAR",
-											style: const TextStyle(
-												fontSize: 20.0,
-												color: Color(0xffff6101),
-												fontWeight: FontWeight.w600,
-												fontFamily: 'Hind',
-												fontStyle: FontStyle.italic,
-												decoration: TextDecoration.underline,
-											),
+										Row(
+											children: [
+												Flexible(
+													flex: 1,
+													child: Padding(
+															padding: const EdgeInsets.all(8.0),
+															child: buildFieldCoverBulan()),
+												),
+												Flexible(
+													flex: 1,
+													child: Padding(
+														padding: const EdgeInsets.all(8.0),
+														child: Container(),
+													),
+												),
+											],
 										),
-										const SizedBox(height: 25),
-										TextFormField(
-											keyboardType: TextInputType.number,
-											inputFormatters: [ThousandsSeparatorInputFormatter()],
-											controller: fieldCoverBulanController,
-											decoration: const InputDecoration(
-												labelText: "coverBulan",
-												floatingLabelBehavior: FloatingLabelBehavior.always,
-											),
-											onChanged: (value) {
-												if (value.isNotEmpty) {
-													removeError(error: kStringNullError);
-												}
-											},
-											validator: (value) {
-												if (value == null || value.isEmpty) {
-													addError(error: kStringNullError);
-													return "";
-												}
-												return null;
-											},
-											textAlign: TextAlign.right,
+//buildFieldCoverBulan(),
+										const SizedBox(height: 10),
+										Row(
+											children: [
+												Flexible(
+													flex: 1,
+													child: Padding(
+															padding: const EdgeInsets.all(8.0),
+															child: buildFieldCurrency()),
+												),
+												Flexible(
+													flex: 1,
+													child: Padding(
+														padding: const EdgeInsets.all(8.0),
+														child: Container(),
+													),
+												),
+											],
 										),
-										TextFormField(
-											keyboardType: TextInputType.number,
-											inputFormatters: [ThousandsSeparatorInputFormatter()],
-											controller: fieldPremiController,
-											decoration: const InputDecoration(
-												labelText: "premi",
-												floatingLabelBehavior: FloatingLabelBehavior.always,
-											),
-											onChanged: (value) {
-												if (value.isNotEmpty) {
-													removeError(error: kStringNullError);
-												}
-											},
-											validator: (value) {
-												if (value == null || value.isEmpty) {
-													addError(error: kStringNullError);
-													return "";
-												}
-												return null;
-											},
-											textAlign: TextAlign.right,
+										const SizedBox(height: 10),
+										buildFieldTSI(),
+										const SizedBox(height: 10),
+										Row(
+											children: [
+												Flexible(
+													flex: 1,
+													child: Padding(
+															padding: const EdgeInsets.all(8.0),
+															child: buildFieldRate()),
+												),
+												Flexible(
+													flex: 1,
+													child: Padding(
+														padding: const EdgeInsets.all(8.0),
+														child: Container(),
+													),
+												),
+											],
 										),
-										TextFormField(
-											keyboardType: TextInputType.number,
-											inputFormatters: [ThousandsSeparatorInputFormatter()],
-											controller: fieldRateController,
-											decoration: const InputDecoration(
-												labelText: "rate",
-												floatingLabelBehavior: FloatingLabelBehavior.always,
-											),
-											onChanged: (value) {
-												if (value.isNotEmpty) {
-													removeError(error: kStringNullError);
-												}
-											},
-											validator: (value) {
-												if (value == null || value.isEmpty) {
-													addError(error: kStringNullError);
-													return "";
-												}
-												return null;
-											},
-											textAlign: TextAlign.right,
-										),
-										buildFieldComboRMatauang(
-											comboKey: comboRMatauangKey,
-											labelText: 'rmatauangKode',
-											initItem: fieldComboRMatauang,
-											onChangedCallback: (value) {
-												if (value != null) {
-													removeError(
-														error: "Field ComboRMatauang tidak boleh kosong.");
-													simulcarCrudBloc.add(ComboRMatauangChangedEvent(comboRMatauang: value));
-												}
-											},
-											onSaveCallback: (value) {
-												if (value != null) {
-													fieldComboRMatauang = value;
-												}
-											},
-											validatorCallback: (value) {
-												if (value == null) {
-													addError(
-														error: "Field ComboRMatauang tidak boleh kosong.");
-												}
-											},
-										),
-										TextFormField(
-											keyboardType: TextInputType.number,
-											inputFormatters: [ThousandsSeparatorInputFormatter()],
-											controller: fieldTsiController,
-											decoration: const InputDecoration(
-												labelText: "tsi",
-												floatingLabelBehavior: FloatingLabelBehavior.always,
-											),
-											onChanged: (value) {
-												if (value.isNotEmpty) {
-													removeError(error: kStringNullError);
-												}
-											},
-											validator: (value) {
-												if (value == null || value.isEmpty) {
-													addError(error: kStringNullError);
-													return "";
-												}
-												return null;
-											},
-											textAlign: TextAlign.right,
-										),
+										const SizedBox(height: 10),
+										buildFieldPremi(),
 										const SizedBox(height: 25),
 										FormError(
-											errors: errors,
+											errors: state.errors ?? [],
 											key: null,
 										),
 										Row(
@@ -193,10 +163,11 @@ class SimulcarCrudFormPageFormState extends State<SimulcarCrudFormPage> {
 														padding: const EdgeInsets.only(top: 30.0),
 														child: ElevatedButton(
 															onPressed: () {
-																_dismissDialog();
+																simulcarCrudBloc
+																		.add(SimulcarCrudInitValueEvent());
 															},
 															child: const Text(
-																'Close',
+																'Reset',
 																style: TextStyle(fontSize: 13.0),
 															),
 														),
@@ -209,10 +180,10 @@ class SimulcarCrudFormPageFormState extends State<SimulcarCrudFormPage> {
 														padding: const EdgeInsets.only(top: 30.0),
 														child: ElevatedButton(
 															onPressed: () {
-																onSaveForm();
+																simulcarCrudBloc.add(HitungPremicarEvent());
 															},
 															child: const Text(
-																'Save',
+																'Hitung',
 																style: TextStyle(fontSize: 13.0),
 															),
 														),
@@ -222,68 +193,165 @@ class SimulcarCrudFormPageFormState extends State<SimulcarCrudFormPage> {
 										),
 									],
 								)),
-						),
-					));
-				},
-				listener: (context, state) {
-					if (state.isLoaded) {
-						if (state.record != null){
-							fieldCoverBulanController.text = state.record!.coverBulan.toString();
-							fieldPremiController.text = NumberFormat("#,###").format(state.record!.premi);
-							fieldRateController.text = NumberFormat("#,###").format(state.record!.rate);
-							fieldTsiController.text = NumberFormat("#,###").format(state.record!.tsi);
-						}
-						fieldComboRMatauang = state.comboRMatauang;
+					),
+				);
+			},
+			listener: (context, state) {
+				if (state.isLoaded) {
+					if (state.record != null) {
+						fieldCoverBulanController.text =
+								state.record!.coverBulan.toString();
+						fieldRateController.text =
+								NumberFormat("###.00").format(state.record!.rate);
+						fieldTsiController.text =
+								NumberFormat("#,###").format(state.record!.tsi);
+						currDesc = state.record!.currDesc ?? "IDR";
+						fieldPremiController.text =
+								NumberFormat("#,###").format(state.record!.premi);
 					}
-				},
-			);
-		}
+					fieldComboRMatauang = state.comboRMatauang;
+				}
+			},
+		);
+	}
+
+
 	void loadData() {
 		if (widget.viewMode == "ubah") {
-		simulcarCrudBloc.add(
-			SimulcarCrudLihatEvent(recordId: widget.recordId));
+			simulcarCrudBloc.add(SimulcarCrudLihatEvent(recordId: widget.recordId));
+		} else if (widget.viewMode == "tambah") {
+			simulcarCrudBloc.add(SimulcarCrudInitValueEvent());
 		}
 	}
 
-	void _dismissDialog() {
-		Navigator.pop(context);
+	Widget buildFieldComboTahun() {
+		return DropdownSearch<String>(
+			key: dropDownKeyTahun,
+			selectedItem: selectedYear,
+			items: (filter, infiniteScrollProps) => _yearList,
+			decoratorProps: DropDownDecoratorProps(
+				decoration: InputDecoration(
+					labelText: 'Tahun Pembuatan',
+					border: OutlineInputBorder(),
+				),
+			),
+			popupProps: PopupPropsMultiSelection.modalBottomSheet(
+				disableFilter: false,
+				showSelectedItems: true,
+				showSearchBox: false,
+				itemBuilder: itemBuilderComboTahun,
+			),
+			onChanged: (value) {
+				simulcarCrudBloc
+						.add(FieldTahunChangedEvent(tahun: int.parse(value ?? "0")));
+			},
+		);
 	}
 
-	void onSaveForm() {
-		if (_formKey.currentState!.validate()) {
-			_formKey.currentState!.save();
-			SimulcarCrudModel record = SimulcarCrudModel(
-				coverBulan: int.parse(fieldCoverBulanController.text),
-				premi: double.parse(fieldPremiController.text.replaceAll(',', '')),
-				rate: double.parse(fieldRateController.text.replaceAll(',', '')),
-				rmatauangKode: fieldComboRMatauang?.rmatauangKode,
-				simulcarId: '',
-				tsi: double.parse(fieldTsiController.text.replaceAll(',', '')),
-			);
-			if (widget.viewMode == "tambah") {
-				simulcarCrudBloc.add(SimulcarCrudTambahEvent(record: record));
-			} else if (widget.viewMode == "ubah") {
-				record.simulcarId = simulcarCrudBloc.state.record!.simulcarId;
-				simulcarCrudBloc.add(SimulcarCrudUbahEvent(record: record));
-			}
-			_dismissDialog();
-		}
+	Widget itemBuilderComboTahun(
+			BuildContext context, String item, bool isSelected, bool isDisabled) {
+		return Container(
+			margin: const EdgeInsets.symmetric(horizontal: 8),
+			decoration: !isSelected
+					? null
+					: BoxDecoration(
+				border: Border.all(color: Theme.of(context).primaryColor),
+				borderRadius: BorderRadius.circular(5),
+				color: Colors.white,
+			),
+			child: ListTile(
+				selected: isSelected,
+				title: Text(item),
+			),
+		);
 	}
 
-	void addError({required String error}) {
-		if (!errors.contains(error)){
-			setState(() {
-				errors.add(error);
-			});
-		}
+	Widget buildFieldCoverBulan() {
+		return TextFormField(
+			keyboardType: TextInputType.number,
+			inputFormatters: [ThousandsSeparatorInputFormatter()],
+			controller: fieldCoverBulanController,
+			decoration: const InputDecoration(
+				labelText: "Lama Cover",
+				floatingLabelBehavior: FloatingLabelBehavior.always,
+				suffixText: " bulan",
+			),
+			onChanged: (value) {
+				simulcarCrudBloc
+						.add(FieldBulanChangedEvent(bulan: int.tryParse(value) ?? 0));
+			},
+			textAlign: TextAlign.right,
+		);
 	}
 
-	void removeError({required String error}) {
-		if (errors.contains(error)){
-			setState(() {
-				errors.remove(error);
-			});
-		}
+	Widget buildFieldCurrency() {
+		return buildFieldComboRMatauang(
+			comboKey: comboRMatauangKey,
+			labelText: 'Curr',
+			initItem: fieldComboRMatauang,
+			onChangedCallback: (value) {
+				if (value != null) {
+					simulcarCrudBloc
+							.add(ComboRMatauangChangedEvent(comboRMatauang: value));
+				}
+			},
+			onSaveCallback: (value) {},
+		);
 	}
 
+	Widget buildFieldTSI() {
+		return TextFormField(
+			keyboardType: TextInputType.number,
+			inputFormatters: [ThousandsSeparatorInputFormatter()],
+			controller: fieldTsiController,
+			decoration: InputDecoration(
+					labelText: "TSI",
+					floatingLabelBehavior: FloatingLabelBehavior.always,
+					prefixText: currDesc),
+			onChanged: (value) {
+				value = value.replaceAll(",", "");
+				debugPrint("buildFieldTSI : $value");
+				simulcarCrudBloc
+						.add(FieldTSIChangedEvent(tsi: double.tryParse(value) ?? 0));
+			},
+			textAlign: TextAlign.right,
+		);
+	}
+
+	Widget buildFieldRate() {
+		return TextFormField(
+			readOnly: true,
+			keyboardType: TextInputType.number,
+			inputFormatters: [
+				FilteringTextInputFormatter.digitsOnly,
+				DecimalTextInputFormatter(2)
+			],
+			controller: fieldRateController,
+			decoration: const InputDecoration(
+				labelText: "Rate",
+				floatingLabelBehavior: FloatingLabelBehavior.always,
+				suffixText: " %",
+			),
+			onChanged: (value) {
+				simulcarCrudBloc
+						.add(FieldRateChangedEvent(rate: double.tryParse(value) ?? 0));
+			},
+			textAlign: TextAlign.right,
+		);
+	}
+
+	Widget buildFieldPremi() {
+		return TextFormField(
+			readOnly: true,
+			keyboardType: TextInputType.number,
+			inputFormatters: [ThousandsSeparatorInputFormatter()],
+			controller: fieldPremiController,
+			decoration: InputDecoration(
+					labelText: "Premi",
+					floatingLabelBehavior: FloatingLabelBehavior.always,
+					prefixText: currDesc),
+			onChanged: (value) {},
+			textAlign: TextAlign.right,
+		);
+	}
 }

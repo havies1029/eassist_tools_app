@@ -19,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:eassist_tools_app/pages/profile/profile_main_page.dart';
 import 'package:eassist_tools_app/repositories/user/user_repository.dart';
 
+import '../simulcar/simulcarcrud_main.dart';
 import '../simulcargo/simulcargocrud_main.dart';
 
 class PageContainerWithUserRepository extends PageContainerBase {
@@ -125,6 +126,8 @@ class PageContainer extends PageContainerBase {
         return "Calc. Premi BON";
       case PageType.simulwp:
         return "Calc. Premi WP";
+      case PageType.simulcar:
+        return "Calc. Premi CAR";
       default:
         return "Login Page";
     }
@@ -173,6 +176,9 @@ class PageContainer extends PageContainerBase {
         page = const SimulwpCrudMainPage();
       case PageType.simulcargo:
         page = const SimulcargoCrudMainPage();
+        break;
+      case PageType.simulcar:
+        page = const SimulcarCrudMainPage();
         break;
       default:
         page = null;

@@ -21,3 +21,5 @@ class SimulBONPageActiveEvent extends HomeEvent {}
 class SimulWPPageActiveEvent extends HomeEvent {}
 class SimulCARGOPageActiveEvent extends HomeEvent {}
 class SimulFlexasPageActiveEvent extends HomeEvent {}
+
+class SimulCARPageActiveEvent extends HomeEvent {}

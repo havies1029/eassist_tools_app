@@ -1,17 +1,26 @@
 import 'package:eassist_tools_app/models/combobox/combormatauang_model.dart';
 
 class SimulcarCrudModel {
-	int coverBulan;
-	double premi;
-	double rate;
-	String simulcarId;
-	double tsi;
+	int? coverBulan;
+	double? rate;
+	String? simuleei1Id;
+	double? tsi;
 	String? rmatauangKode;
+	double? premi;
+	String? currDesc;
+	int? thnBuat;
 	ComboRMatauangModel? comboRMatauang;
 
-	SimulcarCrudModel({required this.coverBulan, required this.premi, 
-		required this.rate, required this.simulcarId, 
-		required this.tsi, this.rmatauangKode, this.comboRMatauang});
+	SimulcarCrudModel(
+			{this.coverBulan,
+				this.rate,
+				this.simuleei1Id,
+				this.tsi,
+				this.rmatauangKode,
+				this.premi,
+				this.currDesc,
+				this.thnBuat,
+				this.comboRMatauang});
 
 	factory SimulcarCrudModel.fromJson(Map<String, dynamic> data) {
 		ComboRMatauangModel? comboRMatauang;
@@ -20,24 +29,28 @@ class SimulcarCrudModel {
 		}
 
 		return SimulcarCrudModel(
-			coverBulan: int.tryParse(data['coverBulan'].toString())??0,
-			premi: double.tryParse(data['premi'].toString())??0,
-			rate: double.tryParse(data['rate'].toString())??0,
-			simulcarId: data['simulcarId']??'',
-			tsi: double.tryParse(data['tsi'].toString())??0,
-			rmatauangKode: data['rmatauangKode']??'',
-			comboRMatauang: comboRMatauang
-		);
-
+			coverBulan: int.tryParse(data['coverBulan'].toString()) ?? 0,
+			rate: double.tryParse(data['rate'].toString()) ?? 0,
+			simuleei1Id: data['simuleei1Id'] ?? '',
+			tsi: double.tryParse(data['tsi'].toString()) ?? 0,
+			rmatauangKode: data['rmatauangKode'] ?? '',
+			premi: double.tryParse(data['premi'].toString()) ?? 0,
+			comboRMatauang: comboRMatauang,
+			currDesc: data['currDesc'] ?? 'IDR',
+			thnBuat: int.tryParse(data['thnBuat'].toString()) ?? 0,);
 	}
 
-	Map<String, dynamic> toJson() =>
-		{'coverBulan': coverBulan.toString(),
-		'premi': premi.toString(),
+	Map<String, dynamic> toJson() => {
+		'coverBulan': coverBulan.toString(),
 		'rate': rate.toString(),
-		'simulcarId': simulcarId,
+		'simuleei1Id': simuleei1Id,
 		'tsi': tsi.toString(),
 		'rmatauangKode': rmatauangKode,
-		'comboRMatauang': comboRMatauang?.toJson()};
-
+		'premi': premi.toString(),
+		'comboRMatauang': comboRMatauang?.toJson(),
+		'currDesc': currDesc,
+		'thnBuat': thnBuat
+	};
 }
+
+
