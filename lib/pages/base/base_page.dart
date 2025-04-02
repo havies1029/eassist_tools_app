@@ -26,6 +26,8 @@ enum PageType {
   simulwp,
   simulcargo,
   simulcar,
+  simulmb,
+  simultree,
 }
 
 abstract class PageContainerBase extends StatefulWidget {

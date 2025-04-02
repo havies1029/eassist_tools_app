@@ -1,23 +1,23 @@
-import 'package:eassist_tools_app/blocs/simulcar/simulcarcrud_bloc.dart';
+import 'package:eassist_tools_app/blocs/simultree/simultreecrud_bloc.dart';
 import 'package:eassist_tools_app/widgets/my_text.dart';
 import 'package:flutter/material.dart';
 import 'package:eassist_tools_app/widgets/mobiledesign_widget.dart';
-import 'package:eassist_tools_app/pages/simulcar/simulcarcrud_form.dart';
+import 'package:eassist_tools_app/pages/simultree/simultreecrud_form.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:accordion/accordion.dart';
 import 'package:accordion/controllers.dart';
 
-class SimulcarCrudMain2Page extends StatefulWidget {
+class SimultreeCrudMain2Page extends StatefulWidget {
   final String viewMode;
   final String recordId;
-  const SimulcarCrudMain2Page({super.key, required this.viewMode, required this.recordId});
+  const SimultreeCrudMain2Page({super.key, required this.viewMode, required this.recordId});
 
   @override
-  SimulcarCrudMain2PageState createState() => SimulcarCrudMain2PageState();
+  SimultreeCrudMain2PageState createState() => SimultreeCrudMain2PageState();
 }
 
-class SimulcarCrudMain2PageState extends State<SimulcarCrudMain2Page> {
-  late SimulcarCrudBloc simulcarCrudBloc;
+class SimultreeCrudMain2PageState extends State<SimultreeCrudMain2Page> {
+  late SimultreeCrudBloc simultreeCrudBloc;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class SimulcarCrudMain2PageState extends State<SimulcarCrudMain2Page> {
           contentVerticalPadding: 15,
           leftIcon: const Icon(Icons.electric_bolt, color: Colors.white),
           header: Text('Perhitungan Premi', style: MyText.headerStyle()),
-          content: SimulcarCrudFormPage(
+          content: SimultreeCrudFormPage(
             viewMode: widget.viewMode,
             recordId: widget.recordId,
           ),

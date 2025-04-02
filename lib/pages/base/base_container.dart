@@ -21,6 +21,8 @@ import 'package:eassist_tools_app/repositories/user/user_repository.dart';
 
 import '../simulcar/simulcarcrud_main.dart';
 import '../simulcargo/simulcargocrud_main.dart';
+import '../simulmb/simulmbcrud_main.dart';
+import '../simultree/simultreecrud_main.dart';
 
 class PageContainerWithUserRepository extends PageContainerBase {
   final int userid;
@@ -128,6 +130,10 @@ class PageContainer extends PageContainerBase {
         return "Calc. Premi WP";
       case PageType.simulcar:
         return "Calc. Premi CAR";
+      case PageType.simulmb:
+        return "Calc. Premi MB";
+      case PageType.simultree:
+        return "Calc. Premi TREE";
       default:
         return "Login Page";
     }
@@ -179,6 +185,12 @@ class PageContainer extends PageContainerBase {
         break;
       case PageType.simulcar:
         page = const SimulcarCrudMainPage();
+        break;
+      case PageType.simulmb:
+        page = const SimulmbCrudMainPage();
+        break;
+      case PageType.simultree:
+        page = const SimultreeCrudMainPage();
         break;
       default:
         page = null;

@@ -21,7 +21,7 @@ class SimulcarCrudState extends Equatable {
 		this.hasFailure = false,
 		this.isFieldOpsiChanged = false,
 		this.isFieldCascoChanged = false,
-			this.errors = const [],
+		this.errors = const [],
 		this.comboRMatauang,
 });
 
@@ -50,5 +50,5 @@ class SimulcarCrudState extends Equatable {
 	}
 
 	@override
-	List<Object> get props => [isLoading, isLoaded, isSaving, isSaved, hasFailure, isFieldCascoChanged, errors];
+	List<Object> get props => [isLoading, isLoaded, isSaving, isSaved, hasFailure, isFieldCascoChanged];
 }

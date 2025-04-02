@@ -6,8 +6,6 @@ import 'package:eassist_tools_app/models/combobox/combormatauang_model.dart';
 import 'package:eassist_tools_app/models/simulcar/simulcarcrud_model.dart';
 import 'package:eassist_tools_app/repositories/simulcar/simulcarcrud_repository.dart';
 
-import '../simulcar/simulcarcrud_bloc.dart';
-
 part 'simulcarcrud_event.dart';
 part 'simulcarcrud_state.dart';
 
@@ -24,8 +22,7 @@ class SimulcarCrudBloc extends Bloc<SimulcarCrudEvents, SimulcarCrudState> {
 		on<FieldTSIChangedEvent>(onFieldTSIChangedEvent);
 		on<FieldBulanChangedEvent>(onFieldBulanChangedEvent);
 		on<FieldRateChangedEvent>(onFieldRateChangedEvent);
-		on<FieldTahunChangedEvent>(onFieldTahunChangedEvent);
-		on<HitungPremicarEvent>(onHitungPremicarEvent);
+		on<HitungPremicarEvent>(onHitungPremiCAREvent);
 	}
 
 	Future<void> onTambahSimulcarCrud(
@@ -85,7 +82,7 @@ class SimulcarCrudBloc extends Bloc<SimulcarCrudEvents, SimulcarCrudState> {
 			SimulcarCrudInitValueEvent event, Emitter<SimulcarCrudState> emit) async {
 		emit(state.copyWith(isLoading: true, isLoaded: false));
 
-		SimulcarCrudModel record = await repository.simulCARCrudInitValue();
+		SimulcarCrudModel record = await repository.simulcarCrudInitValue();
 
 		emit(state.copyWith(
 				isLoading: false,
@@ -120,7 +117,8 @@ class SimulcarCrudBloc extends Bloc<SimulcarCrudEvents, SimulcarCrudState> {
 		emit(state.copyWith(record: record));
 	}
 
-	Future<void> onHitungPremicarEvent(
+
+	Future<void> onHitungPremiCAREvent(
 			HitungPremicarEvent event, Emitter<SimulcarCrudState> emit) async {
 		debugPrint("onHitungPremicarEvent");
 
@@ -148,6 +146,8 @@ class SimulcarCrudBloc extends Bloc<SimulcarCrudEvents, SimulcarCrudState> {
 			}
 		}
 
+
+
 		emit(state.copyWith(
 				isLoading: false,
 				isLoaded: true,
@@ -156,13 +156,4 @@ class SimulcarCrudBloc extends Bloc<SimulcarCrudEvents, SimulcarCrudState> {
 				errors: errors));
 	}
 
-	Future<void> onFieldTahunChangedEvent(
-			FieldTahunChangedEvent event, Emitter<SimulcarCrudState> emit) async {
-		emit(state.copyWith(isFieldCascoChanged: false));
-
-		SimulcarCrudModel? record = state.record ?? SimulcarCrudModel();
-		record.thnBuat = event.tahun;
-
-		emit(state.copyWith(isFieldCascoChanged: true, record: record));
-	}
 }

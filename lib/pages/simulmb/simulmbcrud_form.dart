@@ -1,4 +1,6 @@
+import 'package:eassist_tools_app/blocs/simulmv/simulmvcrud_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/common/constants.dart';
 import 'package:eassist_tools_app/widgets/form_error.dart';
@@ -9,178 +11,105 @@ import 'package:eassist_tools_app/widgets/combobox/combormatauang_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:eassist_tools_app/common/thousand_separator_input_formatter.dart';
 import 'package:dropdown_search/dropdown_search.dart';
-
+import 'package:quick_input_formatters/quick_input_formatters.dart';
 
 class SimulmbCrudFormPage extends StatefulWidget {
 	final String viewMode;
 	final String recordId;
 
-	const SimulmbCrudFormPage({super.key, required this.viewMode, required this.recordId});
+	const SimulmbCrudFormPage(
+			{super.key, required this.viewMode, required this.recordId});
 
 	@override
-	SimulmbCrudFormPageFormState createState() => SimulmbCrudFormPageFormState();
+	SimulmbCrudFormPageFormState createState() =>
+			SimulmbCrudFormPageFormState();
 }
 
 class SimulmbCrudFormPageFormState extends State<SimulmbCrudFormPage> {
 	late SimulmbCrudBloc simulmbCrudBloc;
 	final _formKey = GlobalKey<FormState>();
-	final List<String> errors = [];
 	var fieldCoverBulanController = TextEditingController();
-	var fieldPremiController = TextEditingController();
 	var fieldRateController = TextEditingController();
 	ComboRMatauangModel? fieldComboRMatauang;
-	final comboRMatauangKey = GlobalKey<DropdownSearchState<ComboRMatauangModel>>();
+	final comboRMatauangKey =
+	GlobalKey<DropdownSearchState<ComboRMatauangModel>>();
 	var fieldTsiController = TextEditingController();
-
-	@override
-	void initState() {
-		super.initState();
-		Future.delayed(const Duration(milliseconds: 500), () {
-			loadData();
-		});
-	}
+	var fieldPremiController = TextEditingController();
+	String currDesc = "IDR";
 
 	@override
 	Widget build(BuildContext context) {
 		simulmbCrudBloc = BlocProvider.of<SimulmbCrudBloc>(context);
 		return BlocConsumer<SimulmbCrudBloc, SimulmbCrudState>(
 			builder: (context, state) {
-				return Dialog(
-					shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-					child: SingleChildScrollView(
-						child: Padding(
-							padding: const EdgeInsets.all(8.0),
-							child: Form(
+				return SingleChildScrollView(
+					child: Padding(
+						padding: const EdgeInsets.only(left: 40.0, right: 40.0, top: 8.0),
+						child: Form(
 								key: _formKey,
 								child: Column(
 									children: [
+										Row(
+											children: [
+												Flexible(
+													flex: 1,
+													child: Padding(
+															padding: const EdgeInsets.all(8.0),
+															child: buildFieldCoverBulan()),
+												),
+												Flexible(
+													flex: 1,
+													child: Padding(
+														padding: const EdgeInsets.all(8.0),
+														child: Container(),
+													),
+												),
+											],
+										),
+//buildFieldCoverBulan(),
 										const SizedBox(height: 10),
-										Text(
-											"${widget.viewMode == "tambah" ? "Tambah" : "Ubah"} Machinery Breakdown",
-											style: const TextStyle(
-												fontSize: 20.0,
-												color: Color(0xffff6101),
-												fontWeight: FontWeight.w600,
-												fontFamily: 'Hind',
-												fontStyle: FontStyle.italic,
-												decoration: TextDecoration.underline,
-											),
+										Row(
+											children: [
+												Flexible(
+													flex: 1,
+													child: Padding(
+															padding: const EdgeInsets.all(8.0),
+															child: buildFieldCurrency()),
+												),
+												Flexible(
+													flex: 1,
+													child: Padding(
+														padding: const EdgeInsets.all(8.0),
+														child: Container(),
+													),
+												),
+											],
 										),
-										const SizedBox(height: 25),
-										TextFormField(
-											keyboardType: TextInputType.number,
-											inputFormatters: [ThousandsSeparatorInputFormatter()],
-											controller: fieldCoverBulanController,
-											decoration: const InputDecoration(
-												labelText: "coverBulan",
-												floatingLabelBehavior: FloatingLabelBehavior.always,
-											),
-											onChanged: (value) {
-												if (value.isNotEmpty) {
-													removeError(error: kStringNullError);
-												}
-											},
-											validator: (value) {
-												if (value == null || value.isEmpty) {
-													addError(error: kStringNullError);
-													return "";
-												}
-												return null;
-											},
-											textAlign: TextAlign.right,
+										const SizedBox(height: 10),
+										buildFieldTSI(),
+										const SizedBox(height: 10),
+										Row(
+											children: [
+												Flexible(
+													flex: 1,
+													child: Padding(
+															padding: const EdgeInsets.all(8.0),
+															child: buildFieldRate()),
+												),
+												Flexible(
+													flex: 1,
+													child: Padding(
+														padding: const EdgeInsets.all(8.0),
+														child: Container(),
+													),
+												),
+											],
 										),
-										TextFormField(
-											keyboardType: TextInputType.number,
-											inputFormatters: [ThousandsSeparatorInputFormatter()],
-											controller: fieldPremiController,
-											decoration: const InputDecoration(
-												labelText: "premi",
-												floatingLabelBehavior: FloatingLabelBehavior.always,
-											),
-											onChanged: (value) {
-												if (value.isNotEmpty) {
-													removeError(error: kStringNullError);
-												}
-											},
-											validator: (value) {
-												if (value == null || value.isEmpty) {
-													addError(error: kStringNullError);
-													return "";
-												}
-												return null;
-											},
-											textAlign: TextAlign.right,
-										),
-										TextFormField(
-											keyboardType: TextInputType.number,
-											inputFormatters: [ThousandsSeparatorInputFormatter()],
-											controller: fieldRateController,
-											decoration: const InputDecoration(
-												labelText: "rate",
-												floatingLabelBehavior: FloatingLabelBehavior.always,
-											),
-											onChanged: (value) {
-												if (value.isNotEmpty) {
-													removeError(error: kStringNullError);
-												}
-											},
-											validator: (value) {
-												if (value == null || value.isEmpty) {
-													addError(error: kStringNullError);
-													return "";
-												}
-												return null;
-											},
-											textAlign: TextAlign.right,
-										),
-										buildFieldComboRMatauang(
-											comboKey: comboRMatauangKey,
-											labelText: 'rmatauangKode',
-											initItem: fieldComboRMatauang,
-											onChangedCallback: (value) {
-												if (value != null) {
-													removeError(
-														error: "Field ComboRMatauang tidak boleh kosong.");
-													simulmbCrudBloc.add(ComboRMatauangChangedEvent(comboRMatauang: value));
-												}
-											},
-											onSaveCallback: (value) {
-												if (value != null) {
-													fieldComboRMatauang = value;
-												}
-											},
-											validatorCallback: (value) {
-												if (value == null) {
-													addError(
-														error: "Field ComboRMatauang tidak boleh kosong.");
-												}
-											},
-										),
-										TextFormField(
-											keyboardType: TextInputType.number,
-											inputFormatters: [ThousandsSeparatorInputFormatter()],
-											controller: fieldTsiController,
-											decoration: const InputDecoration(
-												labelText: "tsi",
-												floatingLabelBehavior: FloatingLabelBehavior.always,
-											),
-											onChanged: (value) {
-												if (value.isNotEmpty) {
-													removeError(error: kStringNullError);
-												}
-											},
-											validator: (value) {
-												if (value == null || value.isEmpty) {
-													addError(error: kStringNullError);
-													return "";
-												}
-												return null;
-											},
-											textAlign: TextAlign.right,
-										),
+										const SizedBox(height: 10),
+										buildFieldPremi(),
 										const SizedBox(height: 25),
 										FormError(
-											errors: errors,
+											errors: state.errors ?? [],
 											key: null,
 										),
 										Row(
@@ -193,10 +122,11 @@ class SimulmbCrudFormPageFormState extends State<SimulmbCrudFormPage> {
 														padding: const EdgeInsets.only(top: 30.0),
 														child: ElevatedButton(
 															onPressed: () {
-																_dismissDialog();
+																simulmbCrudBloc
+																		.add(SimulMbCrudInitValueEvent());
 															},
 															child: const Text(
-																'Close',
+																'Reset',
 																style: TextStyle(fontSize: 13.0),
 															),
 														),
@@ -209,10 +139,10 @@ class SimulmbCrudFormPageFormState extends State<SimulmbCrudFormPage> {
 														padding: const EdgeInsets.only(top: 30.0),
 														child: ElevatedButton(
 															onPressed: () {
-																onSaveForm();
+																simulmbCrudBloc.add(HitungPremiMbEvent());
 															},
 															child: const Text(
-																'Save',
+																'Hitung',
 																style: TextStyle(fontSize: 13.0),
 															),
 														),
@@ -222,68 +152,114 @@ class SimulmbCrudFormPageFormState extends State<SimulmbCrudFormPage> {
 										),
 									],
 								)),
-						),
-					));
-				},
-				listener: (context, state) {
-					if (state.isLoaded) {
-						if (state.record != null){
-							fieldCoverBulanController.text = state.record!.coverBulan.toString();
-							fieldPremiController.text = NumberFormat("#,###").format(state.record!.premi);
-							fieldRateController.text = NumberFormat("#,###").format(state.record!.rate);
-							fieldTsiController.text = NumberFormat("#,###").format(state.record!.tsi);
-						}
-						fieldComboRMatauang = state.comboRMatauang;
+					),
+				);
+			},
+			listener: (context, state) {
+				if (state.isLoaded) {
+					if (state.record != null) {
+						fieldCoverBulanController.text =
+								state.record!.coverBulan.toString();
+						fieldRateController.text =
+								NumberFormat("###.00").format(state.record!.rate);
+						fieldTsiController.text =
+								NumberFormat("#,###").format(state.record!.tsi);
+						currDesc = state.record!.currDesc ?? "IDR";
+						fieldPremiController.text =
+								NumberFormat("#,###").format(state.record!.premi);
 					}
-				},
-			);
-		}
-	void loadData() {
-		if (widget.viewMode == "ubah") {
-		simulmbCrudBloc.add(
-			SimulmbCrudLihatEvent(recordId: widget.recordId));
-		}
+					fieldComboRMatauang = state.comboRMatauang;
+				}
+			},
+		);
 	}
 
-	void _dismissDialog() {
-		Navigator.pop(context);
+	Widget buildFieldCoverBulan() {
+		return TextFormField(
+			keyboardType: TextInputType.number,
+			inputFormatters: [ThousandsSeparatorInputFormatter()],
+			controller: fieldCoverBulanController,
+			decoration: const InputDecoration(
+				labelText: "Lama Cover",
+				floatingLabelBehavior: FloatingLabelBehavior.always,
+				suffixText: " bulan",
+			),
+			onChanged: (value) {
+				simulmbCrudBloc
+						.add(FieldBulanChangedEvent(bulan: int.tryParse(value) ?? 0));
+			},
+			textAlign: TextAlign.right,
+		);
 	}
 
-	void onSaveForm() {
-		if (_formKey.currentState!.validate()) {
-			_formKey.currentState!.save();
-			SimulmbCrudModel record = SimulmbCrudModel(
-				coverBulan: int.parse(fieldCoverBulanController.text),
-				premi: double.parse(fieldPremiController.text.replaceAll(',', '')),
-				rate: double.parse(fieldRateController.text.replaceAll(',', '')),
-				rmatauangKode: fieldComboRMatauang?.rmatauangKode,
-				simulmbId: '',
-				tsi: double.parse(fieldTsiController.text.replaceAll(',', '')),
-			);
-			if (widget.viewMode == "tambah") {
-				simulmbCrudBloc.add(SimulmbCrudTambahEvent(record: record));
-			} else if (widget.viewMode == "ubah") {
-				record.simulmbId = simulmbCrudBloc.state.record!.simulmbId;
-				simulmbCrudBloc.add(SimulmbCrudUbahEvent(record: record));
-			}
-			_dismissDialog();
-		}
+	Widget buildFieldCurrency() {
+		return buildFieldComboRMatauang(
+			comboKey: comboRMatauangKey,
+			labelText: 'Curr',
+			initItem: fieldComboRMatauang,
+			onChangedCallback: (value) {
+				if (value != null) {
+					simulmbCrudBloc
+							.add(ComboRMatauangChangedEvent(comboRMatauang: value));
+				}
+			},
+			onSaveCallback: (value) {},
+		);
 	}
 
-	void addError({required String error}) {
-		if (!errors.contains(error)){
-			setState(() {
-				errors.add(error);
-			});
-		}
+	Widget buildFieldTSI() {
+		return TextFormField(
+			keyboardType: TextInputType.number,
+			inputFormatters: [ThousandsSeparatorInputFormatter()],
+			controller: fieldTsiController,
+			decoration: InputDecoration(
+					labelText: "TSI",
+					floatingLabelBehavior: FloatingLabelBehavior.always,
+					prefixText: currDesc),
+			onChanged: (value) {
+				value = value.replaceAll(",", "");
+				debugPrint("buildFieldTSI : $value");
+				simulmbCrudBloc
+						.add(FieldTSIChangedEvent(tsi: double.tryParse(value) ?? 0));
+			},
+			textAlign: TextAlign.right,
+		);
 	}
 
-	void removeError({required String error}) {
-		if (errors.contains(error)){
-			setState(() {
-				errors.remove(error);
-			});
-		}
+	Widget buildFieldRate() {
+		return TextFormField(
+			readOnly: true,
+			keyboardType: TextInputType.number,
+			inputFormatters: [
+				FilteringTextInputFormatter.digitsOnly,
+				DecimalTextInputFormatter(2)
+			],
+			controller: fieldRateController,
+			decoration: const InputDecoration(
+				labelText: "Rate",
+				floatingLabelBehavior: FloatingLabelBehavior.always,
+				suffixText: " %",
+			),
+			onChanged: (value) {
+				simulmbCrudBloc
+						.add(FieldRateChangedEvent(rate: double.tryParse(value) ?? 0));
+			},
+			textAlign: TextAlign.right,
+		);
 	}
 
+	Widget buildFieldPremi() {
+		return TextFormField(
+			readOnly: true,
+			keyboardType: TextInputType.number,
+			inputFormatters: [ThousandsSeparatorInputFormatter()],
+			controller: fieldPremiController,
+			decoration: InputDecoration(
+					labelText: "Premi",
+					floatingLabelBehavior: FloatingLabelBehavior.always,
+					prefixText: currDesc),
+			onChanged: (value) {},
+			textAlign: TextAlign.right,
+		);
+	}
 }

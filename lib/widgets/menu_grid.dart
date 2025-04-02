@@ -1,6 +1,5 @@
 import 'package:eassist_tools_app/blocs/home/home_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'constants.dart';
 import 'menu_item_button.dart' as customWidgets;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,66 +16,92 @@ class MenuGridState extends State<MenuGrid> {
   Widget build(BuildContext context) {
     final HomeBloc homeBloc = BlocProvider.of<HomeBloc>(context);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: GridView.builder(
-        itemCount: menuItems.length,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          crossAxisSpacing: 4,
-          mainAxisSpacing: 4,
-          childAspectRatio: 1,
-        ),
-        itemBuilder: (context, index) {
-          return InkWell(
-            onTap: () {
-              var menuid = menuItems[index]["menuid"];
-              switch (menuid) {
-                case 'simulpar':
-                  homeBloc.add(SimulPARPageActiveEvent());
-                  break;
-                case 'simulflexas':
-                  homeBloc.add(SimulFlexasPageActiveEvent());
-                  break;
-                case 'simulmv':
-                  homeBloc.add(SimulMVPageActiveEvent());                                
-                  break;
-                case 'simuleei':
-                  homeBloc.add(SimulEEIPageActiveEvent());
-                  break;
-                case 'simulcarear':
-                  // homeBloc.add(Simul());
-                  break;
-                case 'simulcargo':
-                  homeBloc.add(SimulCARGOPageActiveEvent());
-                  break;
-                case 'simulmarinehull':
-                  // homeBloc.add(SimulMarineHullPageActiveEvent());
-                  break;
-                case 'simulgit':
-                  homeBloc.add(SimulGITPageActiveEvent());
-                  break;
-                case 'simulgis':
-                  homeBloc.add(SimulGISPageActiveEvent());
-                  break;
-                case 'simulbon':
-                  homeBloc.add(SimulBONPageActiveEvent());
-                  break;
-                case 'simulwp':
-                  homeBloc.add(SimulWPPageActiveEvent());
-                  break;
-                default:
-                  homeBloc.add(HomePageActiveEvent());
-                  break;
-              }
-            },
-            child: customWidgets.MenuItemButton(
-              imagePath: menuItems[index]["image"]!,
-              label: menuItems[index]["label"]!,
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Main Menu',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-          );
-        },
+            _buildMenuGrid(menuItems, homeBloc),
+            const SizedBox(height: 16.0),
+            const Text(
+              'Claim Services',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            _buildMenuGrid(claimServices, homeBloc),
+          ],
+        ),
       ),
+    );
+  }
+
+  Widget _buildMenuGrid(List<Map<String, String>> items, HomeBloc homeBloc) {
+    return GridView.builder(
+      physics: const NeverScrollableScrollPhysics(), // Menonaktifkan scroll internal
+      shrinkWrap: true, // Menyesuaikan ukuran grid dengan jumlah item
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        crossAxisSpacing: 4,
+        mainAxisSpacing: 4,
+        childAspectRatio: 1,
+      ),
+      itemCount: items.length,
+      itemBuilder: (context, index) {
+        return InkWell(
+          onTap: () {
+            var menuid = items[index]["menuid"];
+            switch (menuid) {
+              case 'simulpar':
+                homeBloc.add(SimulPARPageActiveEvent());
+                break;
+              case 'simulflexas':
+                homeBloc.add(SimulFlexasPageActiveEvent());
+                break;
+              case 'simulmv':
+                homeBloc.add(SimulMVPageActiveEvent());
+                break;
+              case 'simuleei':
+                homeBloc.add(SimulEEIPageActiveEvent());
+                break;
+              case 'simulcargo':
+                homeBloc.add(SimulCARGOPageActiveEvent());
+                break;
+              case 'simulgit':
+                homeBloc.add(SimulGITPageActiveEvent());
+                break;
+              case 'simulgis':
+                homeBloc.add(SimulGISPageActiveEvent());
+                break;
+              case 'simulbon':
+                homeBloc.add(SimulBONPageActiveEvent());
+                break;
+              case 'simulwp':
+                homeBloc.add(SimulWPPageActiveEvent());
+                break;
+              case 'simulcar':
+                homeBloc.add(SimulCARPageActiveEvent());
+                break;
+              case 'simultree':
+                homeBloc.add(SimulTREEPageActiveEvent());
+                break;
+              case 'simulmb':
+                homeBloc.add(SimulMBPageActiveEvent());
+                break;
+              default:
+                homeBloc.add(HomePageActiveEvent());
+                break;
+            }
+          },
+          child: customWidgets.MenuItemButton(
+            imagePath: items[index]["image"]!,
+            label: items[index]["label"]!,
+          ),
+        );
+      },
     );
   }
 }

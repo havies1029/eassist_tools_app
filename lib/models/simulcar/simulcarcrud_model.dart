@@ -3,7 +3,7 @@ import 'package:eassist_tools_app/models/combobox/combormatauang_model.dart';
 class SimulcarCrudModel {
 	int? coverBulan;
 	double? rate;
-	String? simuleei1Id;
+	String? simulcarId;
 	double? tsi;
 	String? rmatauangKode;
 	double? premi;
@@ -14,7 +14,7 @@ class SimulcarCrudModel {
 	SimulcarCrudModel(
 			{this.coverBulan,
 				this.rate,
-				this.simuleei1Id,
+				this.simulcarId,
 				this.tsi,
 				this.rmatauangKode,
 				this.premi,
@@ -31,7 +31,7 @@ class SimulcarCrudModel {
 		return SimulcarCrudModel(
 			coverBulan: int.tryParse(data['coverBulan'].toString()) ?? 0,
 			rate: double.tryParse(data['rate'].toString()) ?? 0,
-			simuleei1Id: data['simuleei1Id'] ?? '',
+			simulcarId: data['simulcarId'] ?? '',
 			tsi: double.tryParse(data['tsi'].toString()) ?? 0,
 			rmatauangKode: data['rmatauangKode'] ?? '',
 			premi: double.tryParse(data['premi'].toString()) ?? 0,
@@ -43,7 +43,7 @@ class SimulcarCrudModel {
 	Map<String, dynamic> toJson() => {
 		'coverBulan': coverBulan.toString(),
 		'rate': rate.toString(),
-		'simuleei1Id': simuleei1Id,
+		'simulcarId': simulcarId,
 		'tsi': tsi.toString(),
 		'rmatauangKode': rmatauangKode,
 		'premi': premi.toString(),

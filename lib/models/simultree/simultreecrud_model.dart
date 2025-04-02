@@ -1,17 +1,27 @@
 import 'package:eassist_tools_app/models/combobox/combormatauang_model.dart';
 
 class SimultreeCrudModel {
-	int coverBulan;
-	double premi;
-	double rate;
-	String simultreeId;
-	double tsi;
+	int? coverBulan;
+	double? rate;
+	String? simultreeId;
+	double? tsi;
 	String? rmatauangKode;
+	double? premi;
+	String? currDesc;
+	int? thnBuat;
 	ComboRMatauangModel? comboRMatauang;
 
-	SimultreeCrudModel({required this.coverBulan, required this.premi, 
-		required this.rate, required this.simultreeId, 
-		required this.tsi, this.rmatauangKode, this.comboRMatauang});
+	SimultreeCrudModel({
+		this.coverBulan = 0,
+		this.premi = 0,
+		this.rate = 0,
+		this.simultreeId = '',
+		this.tsi = 0,
+		this.rmatauangKode = '',
+		this.comboRMatauang,
+		this.currDesc = '',
+	});
+
 
 	factory SimultreeCrudModel.fromJson(Map<String, dynamic> data) {
 		ComboRMatauangModel? comboRMatauang;
@@ -20,24 +30,26 @@ class SimultreeCrudModel {
 		}
 
 		return SimultreeCrudModel(
-			coverBulan: int.tryParse(data['coverBulan'].toString())??0,
-			premi: double.tryParse(data['premi'].toString())??0,
-			rate: double.tryParse(data['rate'].toString())??0,
-			simultreeId: data['simultreeId']??'',
-			tsi: double.tryParse(data['tsi'].toString())??0,
-			rmatauangKode: data['rmatauangKode']??'',
-			comboRMatauang: comboRMatauang
+				coverBulan: int.tryParse(data['coverBulan'].toString())??0,
+				premi: double.tryParse(data['premi'].toString())??0,
+				rate: double.tryParse(data['rate'].toString())??0,
+				simultreeId: data['simultreeId']??'',
+				tsi: double.tryParse(data['tsi'].toString())??0,
+				rmatauangKode: data['rmatauangKode']??'',
+				currDesc: data['currDesc'] ?? 'IDR',
+				comboRMatauang: comboRMatauang
 		);
 
 	}
 
 	Map<String, dynamic> toJson() =>
-		{'coverBulan': coverBulan.toString(),
-		'premi': premi.toString(),
-		'rate': rate.toString(),
-		'simultreeId': simultreeId,
-		'tsi': tsi.toString(),
-		'rmatauangKode': rmatauangKode,
-		'comboRMatauang': comboRMatauang?.toJson()};
+			{'coverBulan': coverBulan.toString(),
+				'premi': premi.toString(),
+				'rate': rate.toString(),
+				'simultreeId': simultreeId,
+				'tsi': tsi.toString(),
+				'rmatauangKode': rmatauangKode,
+				'currDesc': currDesc,
+				'comboRMatauang': comboRMatauang?.toJson()};
 
 }

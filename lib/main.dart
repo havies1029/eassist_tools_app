@@ -26,8 +26,10 @@ import 'package:eassist_tools_app/repositories/simulcargo/simulcargocrud_reposit
 import 'package:eassist_tools_app/repositories/simuleei/simuleeicrud_repository.dart';
 import 'package:eassist_tools_app/repositories/simulgis/simulgiscrud_repository.dart';
 import 'package:eassist_tools_app/repositories/simulgit/simulgitcrud_repository.dart';
+import 'package:eassist_tools_app/repositories/simulmb/simulmbcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/simulmv/simulmvcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/simulpar/simulparcrud_repository.dart';
+import 'package:eassist_tools_app/repositories/simultree/simultreecrud_repository.dart';
 import 'package:eassist_tools_app/repositories/simulwp/simulwpcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/user/user_repository.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -37,6 +39,8 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 
 import 'blocs/simulcar/simulcarcrud_bloc.dart';
 import 'blocs/simulcargo/simulcargocrud_bloc.dart';
+import 'blocs/simulmb/simulmbcrud_bloc.dart';
+import 'blocs/simultree/simultreecrud_bloc.dart';
 
 Future<void> main() async {
   
@@ -107,7 +111,12 @@ class App extends StatelessWidget {
         BlocProvider<SimulcarCrudBloc>(
             create: (context) =>
               SimulcarCrudBloc(repository: SimulcarCrudRepository())),
-
+        BlocProvider<SimulmbCrudBloc>(
+            create: (context) =>
+              SimulmbCrudBloc(repository: SimulmbCrudRepository())),
+        BlocProvider<SimultreeCrudBloc>(
+            create: (context) =>
+                SimultreeCrudBloc(repository: SimultreeCrudRepository())),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

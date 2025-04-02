@@ -18,4 +18,12 @@ class SimultreeCrudRepository {
 	Future<SimultreeCrudModel> simultreeCrudLihat(String simultreeId) async {
 		return await api.simultreeCrudLihatAPI(simultreeId);
 	}
+	
+	Future<SimultreeCrudModel> simultreeCrudInitValue() async {
+		return await api.simultreeCrudInitValueAPI();
+	}
+
+	Future<ReturnDataAPI> simultreeCrudCalcPremi(SimultreeCrudModel record) async {
+		return await api.simultreeCrudCalcPremiAPI(record);
+	}
 }

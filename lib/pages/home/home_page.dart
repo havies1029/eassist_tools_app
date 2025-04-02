@@ -65,6 +65,10 @@ class _HomePageState extends State<HomePage> {
             return const PageContainer(pageType: PageType.simulcargo);
           } else if (state is SimulCARPageActive) {
             return const PageContainer(pageType: PageType.simulcar);
+          } else if (state is SimulMBPageActive) {
+            return const PageContainer(pageType: PageType.simulmb);
+          } else if (state is SimulTREEPageActive) {
+            return const PageContainer(pageType: PageType.simultree);
           } else if (state is ProfilePageActive) {
             return PageContainerWithUserRepository(
               pageType: PageType.profile,

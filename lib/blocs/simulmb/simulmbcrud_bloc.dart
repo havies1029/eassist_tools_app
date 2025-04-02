@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/models/responseAPI/returndataapi_model.dart';
 import 'package:eassist_tools_app/models/combobox/combormatauang_model.dart';
@@ -16,6 +17,11 @@ class SimulmbCrudBloc extends Bloc<SimulmbCrudEvents, SimulmbCrudState> {
 		on<SimulmbCrudHapusEvent>(onHapusSimulmbCrud);
 		on<SimulmbCrudLihatEvent>(onLihatSimulmbCrud);
 		on<ComboRMatauangChangedEvent>(onComboRMatauangChanged);
+		on<SimulMbCrudInitValueEvent>(onSimulMbCrudInitValueEvent);
+		on<FieldTSIChangedEvent>(onFieldTSIChangedEvent);
+		on<FieldBulanChangedEvent>(onFieldBulanChangedEvent);
+		on<FieldRateChangedEvent>(onFieldRateChangedEvent);
+		on<HitungPremiMbEvent>(onHitungPremiMbEvent);
 	}
 
 	Future<void> onTambahSimulmbCrud(
@@ -55,14 +61,100 @@ class SimulmbCrudBloc extends Bloc<SimulmbCrudEvents, SimulmbCrudState> {
 
 	Future<void> onComboRMatauangChanged(
 			ComboRMatauangChangedEvent event, Emitter<SimulmbCrudState> emit) async {
-
 		emit(state.copyWith(isLoading: true, isLoaded: false));
 
 		ComboRMatauangModel comboRMatauang = event.comboRMatauang;
+		SimulmbCrudModel record = state.record ?? SimulmbCrudModel();
+		record.comboRMatauang = comboRMatauang;
+		record.currDesc = comboRMatauang.rmatauangSimbol;
+
+		record.tsi = record.tsi ?? 0;
+		record.premi = record.premi ?? 0;
+
 		emit(state.copyWith(
 			isLoading: false,
 			isLoaded: true,
-			comboRMatauang: comboRMatauang));
+			comboRMatauang: comboRMatauang,
+			record: record,
+		));
 	}
 
+
+	Future<void> onSimulMbCrudInitValueEvent(
+			SimulMbCrudInitValueEvent event, Emitter<SimulmbCrudState> emit) async {
+		emit(state.copyWith(isLoading: true, isLoaded: false));
+
+		SimulmbCrudModel record = await repository.simulMbCrudInitValue();
+
+		emit(state.copyWith(
+				isLoading: false,
+				isLoaded: true,
+				record: record,
+				comboRMatauang: record.comboRMatauang));
+	}
+
+	Future<void> onFieldTSIChangedEvent(
+			FieldTSIChangedEvent event, Emitter<SimulmbCrudState> emit) async {
+		SimulmbCrudModel record = state.record ?? SimulmbCrudModel();
+		record.tsi = event.tsi;
+
+		debugPrint("event.tsi : ${event.tsi}");
+
+		emit(state.copyWith(record: record));
+	}
+
+
+	Future<void> onFieldRateChangedEvent(
+			FieldRateChangedEvent event, Emitter<SimulmbCrudState> emit) async {
+		SimulmbCrudModel record = state.record ?? SimulmbCrudModel();
+		record.rate = event.rate;
+
+		emit(state.copyWith(record: record));
+	}
+
+	Future<void> onFieldBulanChangedEvent(
+			FieldBulanChangedEvent event, Emitter<SimulmbCrudState> emit) async {
+		SimulmbCrudModel record = state.record ?? SimulmbCrudModel();
+		record.coverBulan = event.bulan;
+
+		emit(state.copyWith(record: record));
+	}
+
+	Future<void> onHitungPremiMbEvent(
+			HitungPremiMbEvent event, Emitter<SimulmbCrudState> emit) async {
+		debugPrint("onHitungPremimbEvent");
+
+		emit(state.copyWith(isLoading: true, isLoaded: false));
+
+		ReturnDataAPI returnData;
+		bool isValid = true;
+		List<String> errors = [];
+		SimulmbCrudModel record = state.record ?? SimulmbCrudModel();
+
+		if ((record.coverBulan == null) || (record.coverBulan == 0)) {
+			isValid = false;
+			errors.add("Field 'Lama Cover' harus >= 1 bulan");
+		}
+
+		if (record.tsi == null || record.tsi == 0) {
+			isValid = false;
+			errors.add("Field 'TSI' harus > 0.");
+		}
+
+		if (isValid) {
+			returnData = await repository.simulMbCrudCalcPremi(record);
+			if (returnData.success) {
+				record.premi = double.tryParse(returnData.data) ?? 0;
+			}
+		}
+
+
+
+		emit(state.copyWith(
+				isLoading: false,
+				isLoaded: true,
+				hasFailure: !isValid,
+				record: record,
+				errors: errors));
+	}
 }

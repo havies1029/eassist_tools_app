@@ -19,7 +19,13 @@ class SimulGITPageActiveEvent extends HomeEvent {}
 class SimulGISPageActiveEvent extends HomeEvent {}
 class SimulBONPageActiveEvent extends HomeEvent {}
 class SimulWPPageActiveEvent extends HomeEvent {}
+
 class SimulCARGOPageActiveEvent extends HomeEvent {}
+
 class SimulFlexasPageActiveEvent extends HomeEvent {}
 
+class SimulTREEPageActiveEvent extends HomeEvent {}
+
 class SimulCARPageActiveEvent extends HomeEvent {}
+
+class SimulMBPageActiveEvent extends HomeEvent {}

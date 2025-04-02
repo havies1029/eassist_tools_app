@@ -19,8 +19,8 @@ class SimulcarCrudRepository {
 		return await api.simulcarCrudLihatAPI(simulcarId);
 	}
 
-	Future<SimulcarCrudModel> simulCARCrudInitValue() async {
-		return await api.simulCARCrudInitValueAPI();
+	Future<SimulcarCrudModel> simulcarCrudInitValue() async {
+		return await api.simulcarCrudInitValueAPI();
 	}
 
 	Future<ReturnDataAPI> simulcarCrudCalcPremi(SimulcarCrudModel record) async {

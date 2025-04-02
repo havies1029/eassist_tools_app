@@ -8,6 +8,7 @@ class SimultreeCrudState extends Equatable {
 	final bool isSaving;
 	final bool isSaved;
 	final bool hasFailure;
+	final List<String>? errors;
 	final ComboRMatauangModel? comboRMatauang;
 	const SimultreeCrudState(
 		{this.record,
@@ -17,6 +18,7 @@ class SimultreeCrudState extends Equatable {
 		this.isSaved = false,
 		this.hasFailure = false,
 		this.comboRMatauang,
+		this.errors
 });
 
 	SimultreeCrudState copyWith({
@@ -27,6 +29,7 @@ class SimultreeCrudState extends Equatable {
 		bool? isSaved,
 		bool? hasFailure,
 		ComboRMatauangModel? comboRMatauang,
+		List<String>? errors
 	}){
 		return SimultreeCrudState(
 			record: record ?? this.record,
@@ -36,6 +39,7 @@ class SimultreeCrudState extends Equatable {
 			isSaved: isSaved ?? this.isSaved,
 			hasFailure: hasFailure ?? this.hasFailure,
 			comboRMatauang: comboRMatauang?? this.comboRMatauang,
+			errors: errors?? this.errors
 		);
 	}
 

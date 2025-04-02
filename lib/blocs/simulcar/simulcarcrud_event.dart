@@ -46,7 +46,6 @@ class ComboRMatauangChangedEvent extends SimulcarCrudEvents{
 	@override List<Object> get props => [comboRMatauang];
 }
 
-class SimulcarCrudInitValueEvent extends SimulcarCrudEvents {}
 
 class FieldBulanChangedEvent extends SimulcarCrudEvents {
 	final int bulan;
@@ -73,13 +72,7 @@ class FieldRateChangedEvent extends SimulcarCrudEvents {
 	List<Object> get props => [rate];
 }
 
-
-class FieldTahunChangedEvent extends SimulcarCrudEvents {
-	final int tahun;
-	const FieldTahunChangedEvent({required this.tahun});
-
-	@override
-	List<Object> get props => [tahun];
-}
+class SimulcarCrudInitValueEvent extends SimulcarCrudEvents{}
 
 class HitungPremicarEvent extends SimulcarCrudEvents{}
+

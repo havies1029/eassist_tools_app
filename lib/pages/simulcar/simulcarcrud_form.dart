@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/common/constants.dart';
 import 'package:eassist_tools_app/widgets/form_error.dart';
-import 'package:eassist_tools_app/blocs/simulcar/simulcarcrud_bloc.dart';
 import 'package:eassist_tools_app/models/simulcar/simulcarcrud_model.dart';
 import 'package:eassist_tools_app/models/combobox/combormatauang_model.dart';
 import 'package:eassist_tools_app/widgets/combobox/combormatauang_widget.dart';
@@ -12,7 +11,6 @@ import 'package:intl/intl.dart';
 import 'package:eassist_tools_app/common/thousand_separator_input_formatter.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:quick_input_formatters/quick_input_formatters.dart';
-
 
 class SimulcarCrudFormPage extends StatefulWidget {
 	final String viewMode;
@@ -38,13 +36,13 @@ class SimulcarCrudFormPageFormState extends State<SimulcarCrudFormPage> {
 	var fieldPremiController = TextEditingController();
 	String currDesc = "IDR";
 
-
 	var fieldThnBuatController =
 	TextEditingController(text: DateTime.now().year.toString());
 	final dropDownKeyTahun = GlobalKey<DropdownSearchState>();
 	final List<String> _yearList = [];
 	String selectedYear = "";
 
+	@override
 	void initState() {
 		super.initState();
 		Future.delayed(const Duration(milliseconds: 500), () {
@@ -68,131 +66,116 @@ class SimulcarCrudFormPageFormState extends State<SimulcarCrudFormPage> {
 					child: Padding(
 						padding: const EdgeInsets.only(left: 40.0, right: 40.0, top: 8.0),
 						child: Form(
-								key: _formKey,
-								child: Column(
-									children: [
-										Row(
-											children: [
-												Flexible(
-													flex: 1,
-													child: Padding(
-															padding: const EdgeInsets.all(8.0),
-															child: buildFieldComboTahun()),
+							key: _formKey,
+							child: Column(
+								children: [
+									const SizedBox(height: 10),
+									Row(
+										children: [
+											Flexible(
+												flex: 1,
+												child: Padding(
+													padding: const EdgeInsets.all(8.0),
+													child: buildFieldCoverBulan(),
 												),
-												Flexible(
-													flex: 1,
-													child: Padding(
-														padding: const EdgeInsets.all(8.0),
-														child: Container(),
-													),
+											),
+											Flexible(
+												flex: 1,
+												child: Padding(
+													padding: const EdgeInsets.all(8.0),
+													child: Container(),
 												),
-											],
-										),
-//buildFieldCoverBulan(),
-										const SizedBox(height: 10),
-										Row(
-											children: [
-												Flexible(
-													flex: 1,
-													child: Padding(
-															padding: const EdgeInsets.all(8.0),
-															child: buildFieldCoverBulan()),
+											),
+										],
+									),
+									const SizedBox(height: 10),
+									Row(
+										children: [
+											Flexible(
+												flex: 1,
+												child: Padding(
+													padding: const EdgeInsets.all(8.0),
+													child: buildFieldCurrency(),
 												),
-												Flexible(
-													flex: 1,
-													child: Padding(
-														padding: const EdgeInsets.all(8.0),
-														child: Container(),
-													),
+											),
+											Flexible(
+												flex: 1,
+												child: Padding(
+													padding: const EdgeInsets.all(8.0),
+													child: Container(),
 												),
-											],
-										),
-//buildFieldCoverBulan(),
-										const SizedBox(height: 10),
-										Row(
-											children: [
-												Flexible(
-													flex: 1,
-													child: Padding(
-															padding: const EdgeInsets.all(8.0),
-															child: buildFieldCurrency()),
+											),
+										],
+									),
+									const SizedBox(height: 10),
+									buildFieldTSI(),
+									const SizedBox(height: 10),
+									Row(
+										children: [
+											Flexible(
+												flex: 1,
+												child: Padding(
+													padding: const EdgeInsets.all(8.0),
+													child: buildFieldRate(),
 												),
-												Flexible(
-													flex: 1,
-													child: Padding(
-														padding: const EdgeInsets.all(8.0),
-														child: Container(),
-													),
+											),
+											Flexible(
+												flex: 1,
+												child: Padding(
+													padding: const EdgeInsets.all(8.0),
+													child: Container(),
 												),
-											],
-										),
-										const SizedBox(height: 10),
-										buildFieldTSI(),
-										const SizedBox(height: 10),
-										Row(
-											children: [
-												Flexible(
-													flex: 1,
-													child: Padding(
-															padding: const EdgeInsets.all(8.0),
-															child: buildFieldRate()),
-												),
-												Flexible(
-													flex: 1,
-													child: Padding(
-														padding: const EdgeInsets.all(8.0),
-														child: Container(),
-													),
-												),
-											],
-										),
-										const SizedBox(height: 10),
-										buildFieldPremi(),
-										const SizedBox(height: 25),
-										FormError(
-											errors: state.errors ?? [],
-											key: null,
-										),
-										Row(
-											mainAxisAlignment: MainAxisAlignment.spaceAround,
-											children: [
-												SizedBox(
-													width: MediaQuery.of(context).size.width * 0.3,
-													height: 60,
-													child: Padding(
-														padding: const EdgeInsets.only(top: 30.0),
-														child: ElevatedButton(
-															onPressed: () {
-																simulcarCrudBloc
-																		.add(SimulcarCrudInitValueEvent());
-															},
-															child: const Text(
-																'Reset',
-																style: TextStyle(fontSize: 13.0),
-															),
+											),
+										],
+									),
+									const SizedBox(height: 10),
+									buildFieldPremi(),
+									const SizedBox(height: 25),
+									FormError(
+										errors: state.errors ?? [],
+										key: null,
+									),
+									Row(
+										mainAxisAlignment: MainAxisAlignment.spaceAround,
+										children: [
+											SizedBox(
+												width: MediaQuery.of(context).size.width * 0.3,
+												height: 60,
+												child: Padding(
+													padding: const EdgeInsets.only(top: 30.0),
+													child: ElevatedButton(
+														onPressed: () {
+															simulcarCrudBloc
+																	.add(SimulcarCrudInitValueEvent());
+														},
+														child: const Text(
+															'Reset',
+															style: TextStyle(fontSize: 13.0),
 														),
 													),
 												),
-												SizedBox(
-													width: MediaQuery.of(context).size.width * 0.3,
-													height: 60,
-													child: Padding(
-														padding: const EdgeInsets.only(top: 30.0),
-														child: ElevatedButton(
-															onPressed: () {
-																simulcarCrudBloc.add(HitungPremicarEvent());
-															},
-															child: const Text(
-																'Hitung',
-																style: TextStyle(fontSize: 13.0),
-															),
+											),
+											SizedBox(
+												width: MediaQuery.of(context).size.width * 0.3,
+												height: 60,
+												child: Padding(
+													padding: const EdgeInsets.only(top: 30.0),
+													child: ElevatedButton(
+														onPressed: () {
+															simulcarCrudBloc.add(HitungPremicarEvent());
+														},
+														child: const Text(
+															'Hitung',
+															style: TextStyle(fontSize: 13.0),
 														),
 													),
 												),
-											],
-										),
-									],
-								)),
+											),
+										],
+									),
+								],
+							),
+						),
 					),
 				);
 			},
@@ -215,37 +198,13 @@ class SimulcarCrudFormPageFormState extends State<SimulcarCrudFormPage> {
 		);
 	}
 
-
 	void loadData() {
 		if (widget.viewMode == "ubah") {
-			simulcarCrudBloc.add(SimulcarCrudLihatEvent(recordId: widget.recordId));
+			simulcarCrudBloc.add(
+					SimulcarCrudLihatEvent(recordId: widget.recordId));
 		} else if (widget.viewMode == "tambah") {
 			simulcarCrudBloc.add(SimulcarCrudInitValueEvent());
 		}
-	}
-
-	Widget buildFieldComboTahun() {
-		return DropdownSearch<String>(
-			key: dropDownKeyTahun,
-			selectedItem: selectedYear,
-			items: (filter, infiniteScrollProps) => _yearList,
-			decoratorProps: DropDownDecoratorProps(
-				decoration: InputDecoration(
-					labelText: 'Tahun Pembuatan',
-					border: OutlineInputBorder(),
-				),
-			),
-			popupProps: PopupPropsMultiSelection.modalBottomSheet(
-				disableFilter: false,
-				showSelectedItems: true,
-				showSearchBox: false,
-				itemBuilder: itemBuilderComboTahun,
-			),
-			onChanged: (value) {
-				simulcarCrudBloc
-						.add(FieldTahunChangedEvent(tahun: int.parse(value ?? "0")));
-			},
-		);
 	}
 
 	Widget itemBuilderComboTahun(
@@ -305,9 +264,10 @@ class SimulcarCrudFormPageFormState extends State<SimulcarCrudFormPage> {
 			inputFormatters: [ThousandsSeparatorInputFormatter()],
 			controller: fieldTsiController,
 			decoration: InputDecoration(
-					labelText: "TSI",
-					floatingLabelBehavior: FloatingLabelBehavior.always,
-					prefixText: currDesc),
+				labelText: "TSI",
+				floatingLabelBehavior: FloatingLabelBehavior.always,
+				prefixText: currDesc,
+			),
 			onChanged: (value) {
 				value = value.replaceAll(",", "");
 				debugPrint("buildFieldTSI : $value");
@@ -347,9 +307,10 @@ class SimulcarCrudFormPageFormState extends State<SimulcarCrudFormPage> {
 			inputFormatters: [ThousandsSeparatorInputFormatter()],
 			controller: fieldPremiController,
 			decoration: InputDecoration(
-					labelText: "Premi",
-					floatingLabelBehavior: FloatingLabelBehavior.always,
-					prefixText: currDesc),
+				labelText: "Premi",
+				floatingLabelBehavior: FloatingLabelBehavior.always,
+				prefixText: currDesc,
+			),
 			onChanged: (value) {},
 			textAlign: TextAlign.right,
 		);

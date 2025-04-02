@@ -92,7 +92,7 @@ class SimulcarCrudAPI {
 	}
 
 
-	Future<SimulcarCrudModel> simulCARCrudInitValueAPI() async {
+	Future<SimulcarCrudModel> simulcarCrudInitValueAPI() async {
 		String initValueEndpoint =
 				"${AppData.prefixEndPoint}/api/simulcar/simulcarcrud/initvalue";
 		var uri = AppData.uriHtpp(AppData.httpAuthority, initValueEndpoint);
@@ -115,7 +115,7 @@ class SimulcarCrudAPI {
 	Future<ReturnDataAPI> simulcarCrudCalcPremiAPI(
 			SimulcarCrudModel record) async {
 		String tambahEndpoint =
-				"${AppData.prefixEndPoint}/api/simulcar/simulcarcrud/calcpremicar";
+				"${AppData.prefixEndPoint}/api/simulcar/simulcarcrud/calcpremi";
 		Map<String, String> queryParams = {"modul_id": "simulcarCrudCalcPremiAPI"};
 		var uri =
 		AppData.uriHtpp(AppData.httpAuthority, tambahEndpoint, queryParams);

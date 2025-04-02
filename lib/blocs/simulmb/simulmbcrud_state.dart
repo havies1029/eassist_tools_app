@@ -8,6 +8,7 @@ class SimulmbCrudState extends Equatable {
 	final bool isSaving;
 	final bool isSaved;
 	final bool hasFailure;
+	final List<String>? errors;
 	final ComboRMatauangModel? comboRMatauang;
 	const SimulmbCrudState(
 		{this.record,
@@ -17,6 +18,7 @@ class SimulmbCrudState extends Equatable {
 		this.isSaved = false,
 		this.hasFailure = false,
 		this.comboRMatauang,
+		this.errors
 });
 
 	SimulmbCrudState copyWith({
@@ -26,6 +28,7 @@ class SimulmbCrudState extends Equatable {
 		bool? isSaving,
 		bool? isSaved,
 		bool? hasFailure,
+		List<String>? errors,
 		ComboRMatauangModel? comboRMatauang,
 	}){
 		return SimulmbCrudState(
@@ -36,6 +39,7 @@ class SimulmbCrudState extends Equatable {
 			isSaved: isSaved ?? this.isSaved,
 			hasFailure: hasFailure ?? this.hasFailure,
 			comboRMatauang: comboRMatauang?? this.comboRMatauang,
+			errors: errors?? this.errors
 		);
 	}
 

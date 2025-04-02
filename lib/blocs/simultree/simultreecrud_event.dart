@@ -45,3 +45,34 @@ class ComboRMatauangChangedEvent extends SimultreeCrudEvents{
 
 	@override	List<Object> get props => [comboRMatauang];}
 
+class FieldBulanChangedEvent extends SimultreeCrudEvents {
+	final int bulan;
+	const FieldBulanChangedEvent({required this.bulan});
+
+	@override
+	List<Object> get props => [bulan];
+
+}
+
+class FieldTSIChangedEvent extends SimultreeCrudEvents {
+	final double tsi;
+	const FieldTSIChangedEvent({required this.tsi});
+
+	@override
+	List<Object> get props => [tsi];
+}
+
+class FieldRateChangedEvent extends SimultreeCrudEvents {
+	final double rate;
+	const FieldRateChangedEvent({required this.rate});
+
+	@override
+	List<Object> get props => [rate];
+}
+
+class SimultreeCrudInitValueEvent extends SimultreeCrudEvents{}
+
+class HitungPremitreeEvent extends SimultreeCrudEvents{}
+
+
+

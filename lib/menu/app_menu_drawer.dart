@@ -215,7 +215,7 @@ class AppMenuState extends State<AppMenu> with RouteAware {
                           padding: const EdgeInsets.only(left: 15.0),
                           child: ListTile(
                             leading: const Icon(Icons.person),
-                            title: const Text("Car"),
+                            title: const Text("CAR"),
                             //selected: _activeRoute == AppRoutes.homePage,
                             onTap: () {
 
@@ -228,7 +228,41 @@ class AppMenuState extends State<AppMenu> with RouteAware {
                             },
                           ),
                         ),
-                        
+
+                        Padding(
+                          padding: const EdgeInsets.only(left: 15.0),
+                          child: ListTile(
+                            leading: const Icon(Icons.person),
+                            title: const Text("MB"),
+                            //selected: _activeRoute == AppRoutes.homePage,
+                            onTap: () {
+
+                              SchedulerBinding.instance
+                                  .addPostFrameCallback((timeStamptimeStamp) {
+                                Navigator.of(context).pop();
+                                homeBloc.add(SimulMBPageActiveEvent());
+                              });
+
+                            },
+                          ),
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsets.only(left: 15.0),
+                          child: ListTile(
+                            leading: const Icon(Icons.person),
+                            title: const Text("TREE"),
+                            //selected: _activeRoute == AppRoutes.homePage,
+                            onTap: () {
+                              SchedulerBinding.instance
+                                  .addPostFrameCallback((timeStamp) {
+                                Navigator.of(context).pop();
+                                homeBloc.add(SimulTREEPageActiveEvent());
+                              });
+
+                            },
+                          ),
+                        ),
                       ],
                     ),
                     

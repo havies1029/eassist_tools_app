@@ -17,26 +17,20 @@ class SimulcarCrudMainPageState extends State<SimulcarCrudMainPage> {
 	@override
 	void initState() {
 		super.initState();
-		simulcarCrudBloc = BlocProvider.of<SimulcarCrudBloc>(context);
-		if (!simulcarCrudBloc.state.isLoaded) {
-			Future.delayed(const Duration(milliseconds: 500), () {
-				loadData();
-			});
-		}
+		Future.delayed(const Duration(milliseconds: 500), () {
+			loadData();
+		});
 	}
 
 	@override
 	Widget build(BuildContext context) {
+		simulcarCrudBloc = BlocProvider.of<SimulcarCrudBloc>(context);
 		return MobileDesignWidget(
 			child: Scaffold(
 				appBar: AppBar(
-					title: Text('Calc. Premi Car'),
+					title: const Text('Calc. Premi car'),
 				),
-				body: BlocBuilder<SimulcarCrudBloc, SimulcarCrudState>(
-					builder: (context, state) {
-						return SimulcarCrudMain2Page(viewMode: "tambah", recordId: "");
-					},
-				),
+				body: const SimulcarCrudMain2Page(viewMode: "tambah", recordId: ""),
 			),
 		);
 	}

@@ -7,11 +7,19 @@ class SimulmbCrudModel {
 	String simulmbId;
 	double tsi;
 	String? rmatauangKode;
+	String? currDesc;
+	int? thnBuat;
 	ComboRMatauangModel? comboRMatauang;
 
-	SimulmbCrudModel({required this.coverBulan, required this.premi, 
-		required this.rate, required this.simulmbId, 
-		required this.tsi, this.rmatauangKode, this.comboRMatauang});
+	SimulmbCrudModel({
+		this.coverBulan = 0,
+		this.premi = 0,
+		this.rate = 0,
+		this.simulmbId = '',
+		this.tsi = 0,
+		this.rmatauangKode = '',
+		this.comboRMatauang,
+		this.currDesc = '',});
 
 	factory SimulmbCrudModel.fromJson(Map<String, dynamic> data) {
 		ComboRMatauangModel? comboRMatauang;
@@ -26,7 +34,9 @@ class SimulmbCrudModel {
 			simulmbId: data['simulmbId']??'',
 			tsi: double.tryParse(data['tsi'].toString())??0,
 			rmatauangKode: data['rmatauangKode']??'',
-			comboRMatauang: comboRMatauang
+			// currDesc: data['currDesc'] ?? 'IDR',
+				currDesc: data['currDesc'] ?? 'IDR',
+				comboRMatauang: comboRMatauang
 		);
 
 	}
@@ -38,6 +48,7 @@ class SimulmbCrudModel {
 		'simulmbId': simulmbId,
 		'tsi': tsi.toString(),
 		'rmatauangKode': rmatauangKode,
+		'currDesc': currDesc,
 		'comboRMatauang': comboRMatauang?.toJson()};
 
 }

@@ -21,5 +21,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<SimulCARGOPageActiveEvent>((event, emit) => emit(SimulCARGOPageActive()));
     on<SimulFlexasPageActiveEvent>((event, emit) => emit(SimulFlexasPageActive()));
     on<SimulCARPageActiveEvent>((event, emit) => emit(SimulCARPageActive()));
+    on<SimulMBPageActiveEvent>((event, emit) => emit(SimulMBPageActive()));
+    on<SimulTREEPageActiveEvent>((event, emit) => emit(SimulTREEPageActive()));
   }
 }
