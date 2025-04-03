@@ -22,6 +22,7 @@ class AppData {
    static String httpAuthority = "10.0.2.2";
 */
 
+
   static bool useSSL = true;
   static String apiDomain =
       "http${useSSL ? "s" : ""}://eassisttoolsapi.smartsoft-id.com/";

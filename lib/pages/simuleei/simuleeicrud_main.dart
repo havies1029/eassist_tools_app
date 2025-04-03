@@ -26,10 +26,7 @@ class SimuleeiCrudMainPageState extends State<SimuleeiCrudMainPage>{
 	Widget build(BuildContext context) {
     simuleeiCrudBloc = BlocProvider.of<SimuleeiCrudBloc>(context);
 		return MobileDesignWidget(
-			child: Scaffold(
-				appBar: AppBar(
-					title: Text('Calc. Premi EEI'),
-				),
+			child: Scaffold(				
 				body: SimuleeiCrudMain2Page(viewMode: "tambah", recordId: "")));
 	}
 

@@ -57,7 +57,7 @@ class SimuleeiCrudBloc extends Bloc<SimuleeiCrudEvents, SimuleeiCrudState> {
       SimuleeiCrudLihatEvent event, Emitter<SimuleeiCrudState> emit) async {
     emit(state.copyWith(isLoading: true, isLoaded: false));
     SimuleeiCrudModel record =
-    await repository.simuleeiCrudLihat(event.recordId);
+        await repository.simuleeiCrudLihat(event.recordId);
     emit(state.copyWith(isLoading: false, isLoaded: true, record: record));
   }
 
@@ -76,8 +76,6 @@ class SimuleeiCrudBloc extends Bloc<SimuleeiCrudEvents, SimuleeiCrudState> {
         comboRMatauang: comboRMatauang,
         record: record));
   }
-
-
 
   Future<void> onSimuleeiCrudInitValueEvent(
       SimuleeiCrudInitValueEvent event, Emitter<SimuleeiCrudState> emit) async {
@@ -143,6 +141,7 @@ class SimuleeiCrudBloc extends Bloc<SimuleeiCrudEvents, SimuleeiCrudState> {
       returnData = await repository.simuleeiCrudCalcPremi(record);
       if (returnData.success) {
         record.premi = double.tryParse(returnData.data) ?? 0;
+        debugPrint("record.premi : ${record.premi}");
       }
     }
 

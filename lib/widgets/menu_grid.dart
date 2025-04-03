@@ -23,13 +23,13 @@ class MenuGridState extends State<MenuGrid> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Main Menu',
+              'Simulasi Premi',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             _buildMenuGrid(menuItems, homeBloc),
             const SizedBox(height: 16.0),
             const Text(
-              'Claim Services',
+              'Pelayanan Klaim',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             _buildMenuGrid(claimServices, homeBloc),
