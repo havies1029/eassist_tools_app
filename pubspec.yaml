@@ -12,6 +12,8 @@ dependencies:
   cupertino_icons: ^1.0.8 #baru
   flutter_svg: ^2.0.17 #baru
   flutter_animate: ^3.0.0 #baru
+  google_fonts: ^6.1.0 #baru
+  flutter_staggered_animations: ^1.1.1 #baru
 
 dev_dependencies:
   flutter_test:
