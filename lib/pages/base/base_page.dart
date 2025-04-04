@@ -28,6 +28,7 @@ enum PageType {
   simulcar,
   simulmb,
   simultree,
+  klaimtrack
 }
 
 abstract class PageContainerBase extends StatefulWidget {
@@ -65,8 +66,7 @@ class PageContainerBaseState extends State<PageContainerBase> {
             widget.menuDrawer,
             widget.background,
             widget.backgroundColor,
-            widget.parentModal
-        ),
+            widget.parentModal),
       ),
     );
   }
@@ -132,12 +132,13 @@ class PageContainerBaseState extends State<PageContainerBase> {
                     BlocProvider.of<HomeBloc>(context)
                         .add(HomePageActiveEvent());
                   },
-                  child: (homeBloc.state is HomePageActive) ? Container() : 
-                  SizedBox(
-                    width: 100,
-                    height: 100,
-                    child: Image.asset(Img.get('login_logo.png')),
-                  ),
+                  child: (homeBloc.state is HomePageActive)
+                      ? Container()
+                      : SizedBox(
+                          width: 100,
+                          height: 100,
+                          child: Image.asset(Img.get('login_logo.png')),
+                        ),
                 )
               ],
               systemOverlayStyle: SystemUiOverlayStyle.dark,

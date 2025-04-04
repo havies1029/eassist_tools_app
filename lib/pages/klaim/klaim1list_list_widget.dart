@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:eassist_tools_app/common/constants.dart';
-import 'package:eassist_tools_app/widgets/showdialoghapus_widget.dart';
 import 'package:eassist_tools_app/blocs/klaim/klaim1list_bloc.dart';
-import 'package:eassist_tools_app/blocs/klaim/klaim1crud_bloc.dart';
 import 'package:eassist_tools_app/pages/klaim/klaim1list_tile_widget.dart';
 
 class Klaim1ListListWidget extends StatefulWidget {
@@ -17,7 +15,6 @@ class Klaim1ListListWidget extends StatefulWidget {
 
 class Klaim1ListListWidgetState extends State<Klaim1ListListWidget> {
 	late Klaim1ListBloc klaim1ListBloc;
-	late Klaim1CrudBloc klaim1CrudBloc;
 	final ScrollController _scrollController = ScrollController();
 
 	@override
@@ -37,7 +34,6 @@ class Klaim1ListListWidgetState extends State<Klaim1ListListWidget> {
 	@override
 	Widget build(BuildContext context) {
 		klaim1ListBloc = BlocProvider.of<Klaim1ListBloc>(context);
-		klaim1CrudBloc = BlocProvider.of<Klaim1CrudBloc>(context);
 		return BlocConsumer<Klaim1ListBloc, Klaim1ListState>(
 			builder: (context, state) {
 			if (state.status == ListStatus.success) {
@@ -61,24 +57,15 @@ class Klaim1ListListWidgetState extends State<Klaim1ListListWidget> {
 													SlidableAction(
 														onPressed: (context) {
 															klaim1ListBloc.add(
-																UbahKlaim1ListEvent(
-																	recordId: state
+																TrackKlaim1ListEvent(
+																	klaim1Id: state
 																		.items[index]
 																		.klaim1Id));
 														},
 														backgroundColor: Colors.green,
 														icon: Icons.edit,
-														label: "Edit",
-													),
-													SlidableAction(
-														onPressed: (context) {
-															showDialogHapus(
-																state.items[index].klaim1Id);
-														},
-														backgroundColor: Colors.red,
-														icon: Icons.delete,
-														label: "Delete",
-													),
+														label: "View Progress",
+													),													
 												]),
 											child: Klaim1ListTileWidget(
 												insuranceName: state.items[index].insuranceName,
@@ -87,7 +74,7 @@ class Klaim1ListListWidgetState extends State<Klaim1ListListWidget> {
 												kejadianTgl: state.items[index].kejadianTgl,
 												klaimAmount: state.items[index].klaimAmount,
 												klaim1Id: state.items[index].klaim1Id,
-												rMATAUANGNAMA: state.items[index].rMATAUANGNAMA,
+												currDesc: state.items[index].currDesc,
 												rugiDesc: state.items[index].rugiDesc,
 												statusNama: state.items[index].statusNama,
 											)),
@@ -130,21 +117,4 @@ class Klaim1ListListWidgetState extends State<Klaim1ListListWidget> {
 			klaim1ListBloc.add(FetchKlaim1ListEvent());
 		}
 	}
-
-	onHapusFunction(String recordId) {
-		klaim1CrudBloc.add(Klaim1CrudHapusEvent(recordId: recordId));
-	}
-
-	void showDialogHapus(String recordId) {
-		showDialog(
-			context: context,
-			barrierDismissible: false,
-			builder: (BuildContext context) {
-				return ShowDialogHapusWidget(onHapusFunction: onHapusFunction, recordId: recordId);
-			}
-		).then((value) {
-			klaim1ListBloc.add(CloseDialogKlaim1ListEvent());
-		});
-	}
-
 }

@@ -10,7 +10,7 @@ class Klaim1ListTileWidget extends StatelessWidget {
 	final DateTime kejadianTgl;
 	final double klaimAmount;
 	final String klaim1Id;
-	final String rMATAUANGNAMA;
+	final String currDesc;
 	final String rugiDesc;
 	final String statusNama;
 
@@ -22,7 +22,7 @@ class Klaim1ListTileWidget extends StatelessWidget {
 		required this.kejadianTgl, 
 		required this.klaimAmount, 
 		required this.klaim1Id, 
-		required this.rMATAUANGNAMA, 
+		required this.currDesc, 
 		required this.rugiDesc, 
 		required this.statusNama});
 
@@ -42,7 +42,44 @@ class Klaim1ListTileWidget extends StatelessWidget {
 				child: Column(
 					crossAxisAlignment: CrossAxisAlignment.start,
 					children: [
-						Text("insuranceName",
+            Row(
+              children: [
+                Flexible(
+                  flex: 1,
+                  child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Klaim Id",
+                        style: MyText.bodyLarge(context)!
+                          .copyWith(color: MyColors.grey_40)),
+                      Container(height: 5),
+                      Text(
+                        klaim1Id,
+                        style: MyText.bodyLarge(context)!
+                          .copyWith(color: MyColors.grey_80)),
+                    ],
+                  ),
+                ),
+                Flexible(
+                  flex: 1,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Tanggal",
+                        style: MyText.bodyLarge(context)!
+                          .copyWith(color: MyColors.grey_40)),
+                      Container(height: 5),
+                      Text(
+                        DateFormat("dd/MM/yyyy").format(kejadianTgl),
+                        style: MyText.bodyLarge(context)!
+                          .copyWith(color: MyColors.grey_80)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 13),            
+						Text("Jenis Asuransi",
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_40)),
 						Container(height: 5),
@@ -50,8 +87,8 @@ class Klaim1ListTileWidget extends StatelessWidget {
 							insuranceName,
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
-						Container(height: 10),
-						Text("insuredName",
+            const SizedBox(height: 13), 
+						Text("Nama Tertanggung",
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_40)),
 						Container(height: 5),
@@ -59,8 +96,8 @@ class Klaim1ListTileWidget extends StatelessWidget {
 							insuredName,
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
-						Container(height: 10),
-						Text("kejadianLokasi",
+            const SizedBox(height: 13), 
+						Text("Lokasi Kejadian",
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_40)),
 						Container(height: 5),
@@ -68,53 +105,44 @@ class Klaim1ListTileWidget extends StatelessWidget {
 							kejadianLokasi,
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
-						Container(height: 10),
-						Text("kejadianTgl",
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_40)),
-						Container(height: 5),
-						Text(
-							DateFormat("dd/MM/yyyy").format(kejadianTgl),
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_80)),
-						Container(height: 10),
-						Text("klaimAmount",
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_40)),
-						Container(height: 5),
-						Text(
-							NumberFormat("#,###").format(klaimAmount),
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_80)),
-						Container(height: 10),
-						Text("klaim1Id",
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_40)),
-						Container(height: 5),
-						Text(
-							klaim1Id,
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_80)),
-						Container(height: 10),
-						Text("rMATAUANGNAMA",
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_40)),
-						Container(height: 5),
-						Text(
-							rMATAUANGNAMA,
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_80)),
-						Container(height: 10),
-						Text("rugiDesc",
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_40)),
-						Container(height: 5),
-						Text(
-							rugiDesc,
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_80)),
-						Container(height: 10),
-						Text("statusNama",
+            const SizedBox(height: 13), 
+            Row(
+              children: [
+                Flexible(
+                  flex: 1,
+                  child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Nilai Klaim",
+                        style: MyText.bodyLarge(context)!
+                          .copyWith(color: MyColors.grey_40)),
+                      Container(height: 5),
+                      Text('$currDesc ${NumberFormat("#,###").format(klaimAmount)}',
+                        style: MyText.bodyLarge(context)!
+                          .copyWith(color: MyColors.grey_80)),
+                    ],
+                  ),
+                ),
+                Flexible(
+                  flex: 1,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Jenis Kerugian",
+                        style: MyText.bodyLarge(context)!
+                          .copyWith(color: MyColors.grey_40)),
+                      Container(height: 5),
+                      Text(
+                        rugiDesc,
+                        style: MyText.bodyLarge(context)!
+                          .copyWith(color: MyColors.grey_80)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 13), 
+						Text("Status Klaim",
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_40)),
 						Container(height: 5),
@@ -122,7 +150,7 @@ class Klaim1ListTileWidget extends StatelessWidget {
 							statusNama,
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
-						Container(height: 10),
+            const SizedBox(height: 10), 
 				]),
 			)
 		);

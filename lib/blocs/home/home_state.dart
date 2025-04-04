@@ -30,3 +30,5 @@ class  SimulTREEPageActive extends HomeState {}
 class SimulWPPageActive extends HomeState {}
 
 class SimulFlexasPageActive extends HomeState {}
+
+class TrackKlaimPageActive extends HomeState {}

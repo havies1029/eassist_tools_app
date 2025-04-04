@@ -1,4 +1,6 @@
 import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
+import 'package:eassist_tools_app/blocs/klaim/klaim1list_bloc.dart';
+import 'package:eassist_tools_app/blocs/klaim/klaim2list_bloc.dart';
 import 'package:eassist_tools_app/blocs/login/change_password_bloc.dart';
 import 'package:eassist_tools_app/blocs/networkconnection/network_bloc.dart';
 import 'package:eassist_tools_app/blocs/onboardmenu/onboardmenucari_bloc.dart';
@@ -117,6 +119,12 @@ class App extends StatelessWidget {
         BlocProvider<SimultreeCrudBloc>(
             create: (context) =>
                 SimultreeCrudBloc(repository: SimultreeCrudRepository())),
+        BlocProvider<Klaim1ListBloc>(
+              create: (context) =>
+                Klaim1ListBloc()),
+          BlocProvider<Klaim2ListBloc>(
+              create: (context) =>
+                  Klaim2ListBloc()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

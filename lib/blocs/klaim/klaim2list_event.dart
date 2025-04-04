@@ -9,14 +9,13 @@ abstract class Klaim2ListEvents extends Equatable {
 
 class FetchKlaim2ListEvent extends Klaim2ListEvents {}
 
-class RefreshKlaim2ListEvent extends Klaim2ListEvents {
-	final int hal;
-	final String searchText;
+class RefreshKlaim2ListEvent extends Klaim2ListEvents {	
+	final String klaim1Id;
 
-	const RefreshKlaim2ListEvent({required this.hal, required this.searchText});
+	const RefreshKlaim2ListEvent({required this.klaim1Id});
 
 	@override
-	List<Object> get props => [hal, searchText];
+	List<Object> get props => [klaim1Id];
 }
 
 class UbahKlaim2ListEvent extends Klaim2ListEvents {

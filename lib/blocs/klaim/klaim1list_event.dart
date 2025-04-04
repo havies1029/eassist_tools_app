@@ -19,13 +19,13 @@ class RefreshKlaim1ListEvent extends Klaim1ListEvents {
 	List<Object> get props => [hal, searchText];
 }
 
-class UbahKlaim1ListEvent extends Klaim1ListEvents {
-	final String recordId;
+class TrackKlaim1ListEvent extends Klaim1ListEvents {
+	final String klaim1Id;
 
-	const UbahKlaim1ListEvent({required this.recordId});
+	const TrackKlaim1ListEvent({required this.klaim1Id});
 
 	@override
-	List<Object> get props => [recordId];
+	List<Object> get props => [klaim1Id];
 }
 
 class TambahKlaim1ListEvent extends Klaim1ListEvents{}

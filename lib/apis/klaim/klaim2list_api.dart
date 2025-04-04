@@ -4,10 +4,10 @@ import 'package:http/http.dart' as http;
 import 'package:eassist_tools_app/models/klaim/klaim2list_model.dart';
 
 class Klaim2ListAPI{
-	Future<List<Klaim2ListModel>> getKlaim2ListAPI(String searchText, int hal) async {
+	Future<List<Klaim2ListModel>> getKlaim2ListAPI(String klaim1Id) async {
 		String urlGetListEndPoint = "${AppData.prefixEndPoint}/api/klaim/klaim2list/getlist";
 
-		Map<String, String> queryParams = {"searchText": searchText, "hal": hal.toString()};
+		Map<String, String> queryParams = {"klaim1Id": klaim1Id};
 		var uri = AppData.uriHtpp(AppData.httpAuthority, urlGetListEndPoint, queryParams);
 		final http.Response response = await http.get(uri, headers: <String, String>{
 			'Content-Type': 'application/json; odata=verbos',

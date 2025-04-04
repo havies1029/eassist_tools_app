@@ -4,15 +4,14 @@ import 'package:eassist_tools_app/pages/home/home_page.dart';
 import 'package:eassist_tools_app/menu/app_menu_drawer.dart';
 import 'package:eassist_tools_app/pages/base/base_page.dart';
 import 'package:eassist_tools_app/common/styles.dart';
+import 'package:eassist_tools_app/pages/klaim/klaim1list_main.dart';
 import 'package:eassist_tools_app/pages/login/change_pswd_main.dart';
 import 'package:eassist_tools_app/pages/simulbon/simulboncrud_main.dart';
 import 'package:eassist_tools_app/pages/simuleei/simuleeicrud_main.dart';
 import 'package:eassist_tools_app/pages/simulgis/simulgiscrud_main.dart';
 import 'package:eassist_tools_app/pages/simulgit/simulgitcrud_main.dart';
-import 'package:eassist_tools_app/pages/simulmv/simulmvcrud_form_casco.dart';
 import 'package:eassist_tools_app/pages/simulmv/simulmvcrud_main.dart';
 import 'package:eassist_tools_app/pages/simulpar/simulparcrud_main.dart';
-import 'package:eassist_tools_app/pages/simulgis/simulgiscrud_form.dart';
 import 'package:eassist_tools_app/pages/dashboard/dashboard_main.dart';
 import 'package:eassist_tools_app/pages/simulwp/simulwpcrud_main.dart';
 import 'package:flutter/material.dart';
@@ -134,6 +133,8 @@ class PageContainer extends PageContainerBase {
         return "Calc. Premi MB";
       case PageType.simultree:
         return "Calc. Premi TREE";
+      case PageType.klaimtrack:
+        return "Lacak Klaim";
       default:
         return "Login Page";
     }
@@ -191,6 +192,9 @@ class PageContainer extends PageContainerBase {
         break;
       case PageType.simultree:
         page = const SimultreeCrudMainPage();
+        break;
+      case PageType.klaimtrack:
+        page = const Klaim1ListMainPage();
         break;
       default:
         page = null;

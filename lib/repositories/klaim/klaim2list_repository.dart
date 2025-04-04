@@ -3,8 +3,8 @@ import 'package:eassist_tools_app/models/klaim/klaim2list_model.dart';
 
 class Klaim2ListRepository {
 
-	Future<List<Klaim2ListModel>> getKlaim2List(String searchText, int hal) async {
+	Future<List<Klaim2ListModel>> getKlaim2List(String klaim1Id) async {
 		Klaim2ListAPI api = Klaim2ListAPI();
-		return await api.getKlaim2ListAPI(searchText, hal);
+		return await api.getKlaim2ListAPI(klaim1Id);
 	}
 }

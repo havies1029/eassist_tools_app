@@ -29,3 +29,5 @@ class SimulTREEPageActiveEvent extends HomeEvent {}
 class SimulCARPageActiveEvent extends HomeEvent {}
 
 class SimulMBPageActiveEvent extends HomeEvent {}
+
+class TrackKlaimPageActiveEvent extends HomeEvent {}

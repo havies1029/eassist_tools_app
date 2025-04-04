@@ -12,7 +12,7 @@ class Klaim1ListBloc extends Bloc<Klaim1ListEvents, Klaim1ListState> {
 	Klaim1ListBloc() : super(const Klaim1ListState()) {
 		on<FetchKlaim1ListEvent>(onFetchKlaim1List);
 		on<RefreshKlaim1ListEvent>(onRefreshKlaim1List);
-		on<UbahKlaim1ListEvent>(onUbahKlaim1List);
+		on<TrackKlaim1ListEvent>(onTrackKlaim1List);
 		on<TambahKlaim1ListEvent>(onTambahKlaim1List);
 		on<HapusKlaim1ListEvent>(onHapusKlaim1List);
 		on<CloseDialogKlaim1ListEvent>(onCloseDialogKlaim1List);
@@ -76,10 +76,10 @@ class Klaim1ListBloc extends Bloc<Klaim1ListEvents, Klaim1ListState> {
 		emit(state.copyWith(viewMode: "tambah"));
 	}
 
-	Future<void> onUbahKlaim1List(
-		UbahKlaim1ListEvent event, Emitter<Klaim1ListState> emit) async {
+	Future<void> onTrackKlaim1List(
+		TrackKlaim1ListEvent event, Emitter<Klaim1ListState> emit) async {
 		emit(state.copyWith(viewMode: ""));
-		emit(state.copyWith(viewMode: "ubah", recordId: event.recordId));
+		emit(state.copyWith(viewMode: "track", recordId: event.klaim1Id));
 	}
 
 }

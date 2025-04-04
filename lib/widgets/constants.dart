@@ -16,11 +16,5 @@ const List<Map<String, String>> menuItems = [
 ];
 
 const List<Map<String, String>> claimServices = [
-  {"image": "assets/images/vector-11.png", "label": "Submit Claim", "menuid": "submitClaim"},
-  {"image": "assets/images/vector-11.png", "label": "Track Claim", "menuid": "trackClaim"},
-  {"image": "assets/images/vector-11.png", "label": "Claim History", "menuid": "claimHistory"},
-  {"image": "assets/images/vector-11.png", "label": "Claim Assistance", "menuid": "claimAssistance"},
-  {"image": "assets/images/vector-11.png", "label": "Policy Lookup", "menuid": "policyLookup"},
-  {"image": "assets/images/vector-11.png", "label": "Fraud Report", "menuid": "fraudReport"},
-  {"image": "assets/images/vector-11.png", "label": "Claim FAQ", "menuid": "claimFAQ"},
+  {"image": "assets/images/vector-11.png", "label": "Track Claim", "menuid": "klaimtrack"},
 ];

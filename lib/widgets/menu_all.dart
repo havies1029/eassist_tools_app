@@ -115,6 +115,9 @@ class MenuGridState extends State<MenuGrid> {
               case 'simulmb':
                 homeBloc.add(SimulMBPageActiveEvent());
                 break;
+              case 'klaimtrack':
+                homeBloc.add(TrackKlaimPageActiveEvent());
+                break;
               default:
                 homeBloc.add(HomePageActiveEvent());
                 break;

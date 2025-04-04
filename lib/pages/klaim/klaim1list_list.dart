@@ -1,10 +1,9 @@
+import 'package:eassist_tools_app/pages/klaim/klaim2list_main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/widgets/listpage_filter_bar_ui.dart';
 import 'package:eassist_tools_app/widgets/floatingmenumaster_widget.dart';
 import 'package:eassist_tools_app/blocs/klaim/klaim1list_bloc.dart';
-import 'package:eassist_tools_app/blocs/klaim/klaim1crud_bloc.dart';
-import 'package:eassist_tools_app/pages/klaim/klaim1crud_form.dart';
 import 'package:eassist_tools_app/pages/klaim/klaim1list_list_widget.dart';
 
 class Klaim1ListPage extends StatefulWidget {
@@ -16,7 +15,6 @@ class Klaim1ListPage extends StatefulWidget {
 
 class Klaim1ListPageState extends State<Klaim1ListPage> {
 	late Klaim1ListBloc klaim1ListBloc;
-	late Klaim1CrudBloc klaim1CrudBloc;
 	final TextEditingController _searchController = TextEditingController();
 	@override
 	void initState() {
@@ -29,28 +27,17 @@ class Klaim1ListPageState extends State<Klaim1ListPage> {
 	@override
 	Widget build(BuildContext context) {
 		klaim1ListBloc = BlocProvider.of<Klaim1ListBloc>(context);
-		klaim1CrudBloc = BlocProvider.of<Klaim1CrudBloc>(context);
 
 		return MultiBlocListener(
 			listeners: [
 				BlocListener<Klaim1ListBloc, Klaim1ListState>(
 					listener: (context, state) {
-						if (state.viewMode == "tambah") {
-							showDialogViewData(context, state.viewMode, "");
-						} else if (state.viewMode == "ubah") {
-							showDialogViewData(context, state.viewMode, state.recordId);
-						}
+						if (state.viewMode == "track") {
+							showDialogViewData(context, state.recordId);
+						} 
 				}, listenWhen: (previous, current) {
 					return previous.viewMode != current.viewMode;
-				}),
-				BlocListener<Klaim1CrudBloc, Klaim1CrudState>(
-					listener: (context, state) {
-						if (state.isSaved) {
-							refreshData();
-						}
-				}, listenWhen: (previous, current) {
-					return previous.isSaved != current.isSaved;
-				}),
+				}),				
 			],
 			child: Scaffold(
 				floatingActionButton: FloatingMenuMasterWidget(
@@ -99,18 +86,13 @@ class Klaim1ListPageState extends State<Klaim1ListPage> {
 		));
 	}
 
-	void showDialogViewData(BuildContext context, String viewMode, String recordId) {
+	void showDialogViewData(BuildContext context, String klaim1Id) {
 		FocusScope.of(context).requestFocus(FocusNode());
-		showDialog(
-			context: context,
-			barrierDismissible: false,
-			builder: (BuildContext context) {
-				return Klaim1CrudFormPage(viewMode: viewMode, recordId: recordId);
-			},
-			useSafeArea: true)
-		.then((value) {
-			klaim1ListBloc.add(CloseDialogKlaim1ListEvent());
-		});
+
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      //return Klaim2ListTimeline(klaim1Id: klaim1Id);
+      return Klaim2ListMainPage(klaim1Id: klaim1Id);
+    }));
 	}
 
 }

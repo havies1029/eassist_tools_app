@@ -17,10 +17,10 @@ Future<User> validateUserLogin(UserLogin userLogin) async {
 
   debugPrint("validateUserLogin #10");
 
-  //debugPrint(_tokenURL);
-  //debugPrint(jsonEncode(userinfo.toJson()));
+  debugPrint(_tokenURL);
+  debugPrint(jsonEncode(userinfo.toJson()));
 
-  /*
+  
   try {
     await http.post(Uri.parse(_tokenURL),
         headers: <String, String>{
@@ -34,7 +34,6 @@ Future<User> validateUserLogin(UserLogin userLogin) async {
   } catch (e) {
     debugPrint("error : ${e.toString()}");
   }
-  */
 
   final http.Response response = await http.post(Uri.parse(_tokenURL),
       headers: <String, String>{
