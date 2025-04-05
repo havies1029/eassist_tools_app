@@ -22,7 +22,7 @@ class MenuAllWidget extends StatelessWidget {
             children: const [
               HeaderSection(),
               SizedBox(height: 24),
-              HorizontalDivider(),
+              Divider(thickness: 1, color: MyColors.grey_10),
               SizedBox(height: 32),
               MenuGrid(),
             ],

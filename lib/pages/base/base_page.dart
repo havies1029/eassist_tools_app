@@ -137,8 +137,13 @@ class PageContainerBaseState extends State<PageContainerBase> {
                       : SizedBox(
                           width: 100,
                           height: 100,
-                          child: Image.asset(Img.get('login_logo.png')),
-                        ),
+                          // child: Image.asset(Img.get('login_logo.png')),
+                    child: Icon(
+                      Icons.home,  // Ikon rumah
+                      color: Colors.black,  // Mengatur warna ikon menjadi hitam
+                      size: 38.0,  // Ukuran ikon (bisa disesuaikan)
+                    ),
+                  ),
                 )
               ],
               systemOverlayStyle: SystemUiOverlayStyle.dark,

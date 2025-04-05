@@ -9,11 +9,11 @@
     {"image": "assets/images/vector-8.png", "label": "Marine Hull", "menuid":"simulmv"},
     {"image": "assets/images/vector-9.png", "label": "Gold In Transit", "menuid":"simulgit"},
     {"image": "assets/images/vector-10.png", "label": "Gold In Cash", "menuid":"simulgis"},
-    {"image": "assets/images/vector-11.png", "label": "Motor Vehicle", "menuid":"simulmv"},
-    {"image": "assets/images/vector-11.png", "label": "Surety Bond", "menuid":"simulbon"},
-    {"image": "assets/images/vector-11.png", "label": "Wanprestasi", "menuid":"simulwp"},
+    {"image": "assets/images/vector-12.png", "label": "Motor Vehicle", "menuid":"simulmv"},
+    {"image": "assets/images/vector-13.png", "label": "Surety Bond", "menuid":"simulbon"},
+    {"image": "assets/images/vector-14.png", "label": "Wanprestasi", "menuid":"simulwp"},
   ];
 
   const List<Map<String, String>> claimServices = [
-    {"image": "assets/images/vector-11.png", "label": "Track Claim", "menuid": "klaimtrack"},
+    {"image": "assets/images/vector-15.png", "label": "Track Claim", "menuid": "klaimtrack"},
   ];

@@ -22,9 +22,9 @@ class HeaderSection extends StatelessWidget {
             ),
           ),
           Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16.0),
+            margin: const EdgeInsets.symmetric(horizontal: 32.0),
             width: 5,
-            height: 80,
+            height: 90,
             decoration: BoxDecoration(
               color: const Color(0xFFFEBA2B),
               borderRadius: BorderRadius.circular(4),

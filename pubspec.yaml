@@ -76,6 +76,11 @@ flutter:
     - assets/images/vector-10.png
     - assets/images/vector-11.png
     - assets/images/shape-bottom.svg
+    - assets/images/vector-home.png
+    - assets/images/vector-12.png
+    - assets/images/vector-13.png
+    - assets/images/vector-14.png
+    - assets/images/vector-15.png
 
   fonts:
     - family: HeeboBold
