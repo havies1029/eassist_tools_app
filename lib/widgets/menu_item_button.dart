@@ -12,6 +12,9 @@ class MenuItemButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Jika label mengandung newline, maka tampilkan 2 baris; jika tidak, 1 baris.
+    final bool hasNewLine = label.contains('\n');
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -44,7 +47,7 @@ class MenuItemButton extends StatelessWidget {
           label,
           style: const TextStyle(fontSize: 12, color: Colors.black87),
           textAlign: TextAlign.center,
-          maxLines: 1,
+          maxLines: hasNewLine ? 2 : 1,
           overflow: TextOverflow.ellipsis,
         ),
       ],

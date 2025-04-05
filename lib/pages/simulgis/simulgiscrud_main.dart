@@ -27,9 +27,9 @@ class SimulgisCrudMainPageState extends State<SimulgisCrudMainPage> {
 		simulgisCrudBloc = BlocProvider.of<SimulgisCrudBloc>(context);
 		return MobileDesignWidget(
 			child: Scaffold(
-				appBar: AppBar(
-					title: const Text('Calc. Premi GIS'),
-				),
+				// appBar: AppBar(
+				// 	title: const Text('Calc. Premi GIS'),
+				// ),
 				body: const SimulgisCrudMain2Page(viewMode: "tambah", recordId: ""),
 			),
 		);

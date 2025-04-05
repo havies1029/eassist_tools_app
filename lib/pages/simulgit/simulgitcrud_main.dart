@@ -27,9 +27,9 @@ class SimulgitCrudMainPageState extends State<SimulgitCrudMainPage> {
 		simulgitCrudBloc = BlocProvider.of<SimulgitCrudBloc>(context);
 		return MobileDesignWidget(
 			child: Scaffold(
-				appBar: AppBar(
-					title: const Text('Calc. Premi GIT'),
-				),
+				// appBar: AppBar(
+				// 	title: const Text('Calc. Premi GIT'),
+				// ),
 				body: const SimulgitCrudMain2Page(viewMode: "tambah", recordId: ""),
 			),
 		);

@@ -27,9 +27,9 @@ class SimulmbCrudMainPageState extends State<SimulmbCrudMainPage> {
 		simulmbCrudBloc = BlocProvider.of<SimulmbCrudBloc>(context);
 		return MobileDesignWidget(
 			child: Scaffold(
-				appBar: AppBar(
-					title: const Text('Calc. Premi mb'),
-				),
+				// appBar: AppBar(
+				// 	title: const Text('Calc. Premi mb'),
+				// ),
 				body: const SimulmbCrudMain2Page(viewMode: "tambah", recordId: ""),
 			),
 		);

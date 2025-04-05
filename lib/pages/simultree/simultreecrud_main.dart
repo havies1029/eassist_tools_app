@@ -27,9 +27,9 @@ class SimultreeCrudMainPageState extends State<SimultreeCrudMainPage> {
 		simultreeCrudBloc = BlocProvider.of<SimultreeCrudBloc>(context);
 		return MobileDesignWidget(
 			child: Scaffold(
-				appBar: AppBar(
-					title: const Text('Calc. Premi tree'),
-				),
+				// appBar: AppBar(
+				// 	title: const Text('Calc. Premi tree'),
+				// ),
 				body: const SimultreeCrudMain2Page(viewMode: "tambah", recordId: ""),
 			),
 		);

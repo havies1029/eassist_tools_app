@@ -27,9 +27,9 @@ class SimulcarCrudMainPageState extends State<SimulcarCrudMainPage> {
 		simulcarCrudBloc = BlocProvider.of<SimulcarCrudBloc>(context);
 		return MobileDesignWidget(
 			child: Scaffold(
-				appBar: AppBar(
-					title: const Text('Calc. Premi car'),
-				),
+				// appBar: AppBar(
+				// 	title: const Text('Calc. Premi car'),
+				// ),
 				body: const SimulcarCrudMain2Page(viewMode: "tambah", recordId: ""),
 			),
 		);

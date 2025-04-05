@@ -65,7 +65,7 @@ class MenuGridState extends State<MenuGrid> {
     final rest = words.sublist(1).join(' ');
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12.0),
+      padding: const EdgeInsets.only(bottom: 16.0, left: 16.0),
       child: RichText(
         text: TextSpan(
           children: [
@@ -96,16 +96,27 @@ class MenuGridState extends State<MenuGrid> {
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: items.length,
-      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 160,
-        mainAxisExtent: 110,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        // Menyesuaikan jumlah kolom dan aspect ratio agar cell lebih tinggi
+        crossAxisCount: MediaQuery.of(context).size.width > 600 ? 4 : 3,
         crossAxisSpacing: 12,
         mainAxisSpacing: 16,
+        childAspectRatio: 0.8,
       ),
       itemBuilder: (context, index) {
+        final menuid = items[index]["menuid"]!;
+        String label = items[index]["label"]!;
+
+        // Sisipkan newline sebelum kata terakhir untuk tiga item khusus
+        if (menuid == "simulmb" || menuid == "simuleei" || menuid == "simulcar") {
+          int lastSpace = label.lastIndexOf(" ");
+          if (lastSpace != -1) {
+            label = label.substring(0, lastSpace) + "\n" + label.substring(lastSpace + 1);
+          }
+        }
+
         return InkWell(
           onTap: () {
-            var menuid = items[index]["menuid"];
             switch (menuid) {
               case 'simulpar':
                 homeBloc.add(SimulPARPageActiveEvent());
@@ -153,55 +164,11 @@ class MenuGridState extends State<MenuGrid> {
           },
           child: customWidgets.MenuItemButton(
             imagePath: items[index]["image"]!,
-            label: items[index]["label"]!,
+            label: label,
           ),
         );
       },
     );
-  }
-
-  void _handleTap(String? menuid, HomeBloc bloc) {
-    switch (menuid) {
-      case 'simulpar':
-        bloc.add(SimulPARPageActiveEvent());
-        break;
-      case 'simulflexas':
-        bloc.add(SimulFlexasPageActiveEvent());
-        break;
-      case 'simulmv':
-        bloc.add(SimulMVPageActiveEvent());
-        break;
-      case 'simuleei':
-        bloc.add(SimulEEIPageActiveEvent());
-        break;
-      case 'simulcargo':
-        bloc.add(SimulCARGOPageActiveEvent());
-        break;
-      case 'simulgit':
-        bloc.add(SimulGITPageActiveEvent());
-        break;
-      case 'simulgis':
-        bloc.add(SimulGISPageActiveEvent());
-        break;
-      case 'simulbon':
-        bloc.add(SimulBONPageActiveEvent());
-        break;
-      case 'simulwp':
-        bloc.add(SimulWPPageActiveEvent());
-        break;
-      case 'simulcar':
-        bloc.add(SimulCARPageActiveEvent());
-        break;
-      case 'simultree':
-        bloc.add(SimulTREEPageActiveEvent());
-        break;
-      case 'simulmb':
-        bloc.add(SimulMBPageActiveEvent());
-        break;
-      default:
-        bloc.add(HomePageActiveEvent());
-        break;
-    }
   }
 }
 
@@ -221,7 +188,8 @@ class _AnimatedTile extends StatefulWidget {
   State<_AnimatedTile> createState() => _AnimatedTileState();
 }
 
-class _AnimatedTileState extends State<_AnimatedTile> with SingleTickerProviderStateMixin {
+class _AnimatedTileState extends State<_AnimatedTile>
+    with SingleTickerProviderStateMixin {
   double _scale = 1.0;
 
   void _onTapDown(_) => setState(() => _scale = 0.95);
@@ -264,9 +232,8 @@ class _AnimatedTileState extends State<_AnimatedTile> with SingleTickerProviderS
                     color: Colors.black87,
                   ),
                   textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
                   softWrap: true,
+                  overflow: TextOverflow.visible,
                 ),
               ],
             ),
