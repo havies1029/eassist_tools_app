@@ -163,8 +163,10 @@ class App extends StatelessWidget {
         
             if (state is AuthenticationUnauthenticated) {
               debugPrint("AuthenticationUnauthenticated #30");
-              return LoginPage(
+              return HomePage(
                 userRepository: userRepository,
+                userid: 0,
+                key: null,
               );
             }
         

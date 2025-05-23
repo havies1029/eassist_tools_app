@@ -81,6 +81,38 @@ flutter:
     - assets/images/vector-13.png
     - assets/images/vector-14.png
     - assets/images/vector-15.png
+    - assets/images/human.png
+    - assets/images/jps_logo.png
+    - assets/images/home_2.png
+    - assets/images/poster_1.png
+    - assets/images/poster_2.png
+    - assets/images/poster_3.png
+    - assets/images/t1.png
+    - assets/images/t2.png
+    - assets/images/t3.png
+    - assets/images/t4.png
+    - assets/images/t5.png
+    - assets/images/client_1.png
+    - assets/images/client_2.png
+    - assets/images/client_3.png
+    - assets/images/client_4.png
+    - assets/images/client_5.png
+    - assets/images/client_6.png
+    - assets/images/client_7.png
+    - assets/images/client_8.png
+    - assets/images/client_9.png
+    - assets/images/client_10.png
+    - assets/images/client_11.png
+    - assets/images/client_12.png
+    - assets/images/client_13.png
+    - assets/images/client_14.png
+    - assets/images/client_15.png
+    - assets/images/client_16.png
+    - assets/images/client_17.png
+    - assets/images/client_18.png
+    - assets/images/client_19.png
+    - assets/images/client_20.png
+    - assets/images/bg-home.jpg
 
   fonts:
     - family: HeeboBold
@@ -97,7 +129,23 @@ flutter:
         - asset: assets/fonts/Roboto-Medium.ttf
     - family: Roboto-Regular
       fonts:
-        - asset: assets/fonts/Roboto-Regular.ttf  
+        - asset: assets/fonts/Roboto-Regular.ttf
+    - family: Satoshi-Variable
+      fonts:
+        - asset: assets/fonts/Satoshi-Variable.ttf
+    - family: Satoshi-VariableItalic
+      fonts:
+        - asset: assets/fonts/Satoshi-VariableItalic.ttf
+    - family: Satoshi-Bold
+      fonts:
+        - asset: assets/fonts/Satoshi-Bold.otf
+    - family: Satoshi-Medium
+      fonts:
+        - asset: assets/fonts/Satoshi-Medium.otf
+    - family: Satoshi-Regular
+      fonts:
+        - asset: assets/fonts/Satoshi-Regular.otf
+
 
 flutter_launcher_icons:
   image_path: "assets/images/logo_launcher.png"
