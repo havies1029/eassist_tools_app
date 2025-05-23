@@ -1,3 +1,4 @@
+import 'package:eassist_tools_app/pages/chatting/guestscrud_main.dart';
 import 'package:eassist_tools_app/pages/chatting/roomcari_list.dart';
 import 'package:eassist_tools_app/pages/groupchat/groupchat_page.dart';
 import 'package:eassist_tools_app/pages/home/home_page.dart';
@@ -135,6 +136,8 @@ class PageContainer extends PageContainerBase {
         return "Calc. Premi TREE";
       case PageType.klaimtrack:
         return "Lacak Klaim";
+      case PageType.startchat:
+        return "Start Chat";
       default:
         return "Login Page";
     }
@@ -195,6 +198,9 @@ class PageContainer extends PageContainerBase {
         break;
       case PageType.klaimtrack:
         page = const Klaim1ListMainPage();
+        break;
+      case PageType.startchat:
+        page = const GuestsCrudMainPage();
         break;
       default:
         page = null;

@@ -31,3 +31,5 @@ class SimulCARPageActiveEvent extends HomeEvent {}
 class SimulMBPageActiveEvent extends HomeEvent {}
 
 class TrackKlaimPageActiveEvent extends HomeEvent {}
+
+class StartChatPageActiveEvent extends HomeEvent {}

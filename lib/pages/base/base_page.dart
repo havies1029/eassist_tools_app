@@ -28,7 +28,8 @@ enum PageType {
   simulcar,
   simulmb,
   simultree,
-  klaimtrack
+  klaimtrack,
+  startchat
 }
 
 abstract class PageContainerBase extends StatefulWidget {

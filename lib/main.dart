@@ -1,4 +1,5 @@
 import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
+import 'package:eassist_tools_app/blocs/chatting/guestscrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaim/klaim1list_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaim/klaim2list_bloc.dart';
 import 'package:eassist_tools_app/blocs/login/change_password_bloc.dart';
@@ -21,6 +22,7 @@ import 'package:eassist_tools_app/common/loading_indicator.dart';
 import 'package:eassist_tools_app/pages/home/home_page.dart';
 import 'package:eassist_tools_app/pages/login/login_page.dart';
 import 'package:eassist_tools_app/pages/splash/splash_page.dart';
+import 'package:eassist_tools_app/repositories/chatting/guestscrud_repository.dart';
 import 'package:eassist_tools_app/repositories/login/change_password_repository.dart';
 import 'package:eassist_tools_app/repositories/simulbon/simulboncrud_repository.dart';
 import 'package:eassist_tools_app/repositories/simulcar/simulcarcrud_repository.dart';
@@ -111,20 +113,23 @@ class App extends StatelessWidget {
           create: (context) =>
               SimulcargoCrudBloc(repository: SimulcargoCrudRepository())),
         BlocProvider<SimulcarCrudBloc>(
-            create: (context) =>
-              SimulcarCrudBloc(repository: SimulcarCrudRepository())),
+          create: (context) =>
+            SimulcarCrudBloc(repository: SimulcarCrudRepository())),
         BlocProvider<SimulmbCrudBloc>(
-            create: (context) =>
-              SimulmbCrudBloc(repository: SimulmbCrudRepository())),
+          create: (context) =>
+            SimulmbCrudBloc(repository: SimulmbCrudRepository())),
         BlocProvider<SimultreeCrudBloc>(
-            create: (context) =>
-                SimultreeCrudBloc(repository: SimultreeCrudRepository())),
+          create: (context) =>
+              SimultreeCrudBloc(repository: SimultreeCrudRepository())),
         BlocProvider<Klaim1ListBloc>(
-              create: (context) =>
-                Klaim1ListBloc()),
-          BlocProvider<Klaim2ListBloc>(
-              create: (context) =>
-                  Klaim2ListBloc()),
+          create: (context) =>
+            Klaim1ListBloc()),
+        BlocProvider<Klaim2ListBloc>(
+          create: (context) =>
+              Klaim2ListBloc()),        
+        BlocProvider<GuestsCrudBloc>(
+          create: (context) =>
+              GuestsCrudBloc(repository: GuestsCrudRepository())),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -164,6 +169,7 @@ class App extends StatelessWidget {
             }
         
             if (AppData.kIsWeb) {
+              debugPrint("AppData.kIsWeb #40");
               return LoginPage(
                 userRepository: userRepository,
               );
