@@ -42,63 +42,65 @@ class TestimonialSection extends StatelessWidget {
     return Container(
       width: double.infinity,
       color: Colors.white,
-      padding: const EdgeInsets.symmetric(vertical: 60.0),
-      child: Center(
-        child: Container(
-          width: maxWidth,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Judul
-              RichText(
-                textAlign: TextAlign.center,
-                text: const TextSpan(
-                  style: TextStyle(
-                    fontFamily: 'Satoshi-Regular',
-                    fontSize: 25.0,
-                    color: Colors.black,
-                  ),
-                  children: [
-                    TextSpan(text: 'Testimoni Nasabah '),
-                    TextSpan(
-                      text: 'JPS',
-                      style: TextStyle(color: Color(0xFF79AB43)),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 50.0),
-
-              // Grid Testimoni
-              Wrap(
-                alignment: WrapAlignment.center,
-                spacing: 32.0,
-                runSpacing: 40.0,
-                children: testimonials
-                    .take(5)
-                    .map((t) => _buildTestimonialItem(t, constraints))
-                    .toList(),
-              ),
-
-              const SizedBox(height: 40.0),
-
-              // Tombol "Tampilkan semua" di kanan
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () {},
-                  child: const Text(
-                    'Tampilkan semua',
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: constraints.maxWidth > 1200 ? 64.0 : 32.0,
+        ),
+        child: Center(
+          child: Container(
+            width: maxWidth,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 70),
+                RichText(
+                  textAlign: TextAlign.center,
+                  text: const TextSpan(
                     style: TextStyle(
                       fontFamily: 'Satoshi-Regular',
-                      fontSize: 16.0,
-                      color: Color(0xFF79AB43),
-                      fontWeight: FontWeight.w500,
+                      fontSize: 25.0,
+                      color: Colors.black,
+                    ),
+                    children: [
+                      TextSpan(text: 'Testimoni Nasabah '),
+                      TextSpan(
+                        text: 'JPS',
+                        style: TextStyle(
+                          color: Color(0xFF79AB43),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 50.0),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 32.0,
+                  runSpacing: 40.0,
+                  children: testimonials
+                      .take(5)
+                      .map((t) => _buildTestimonialItem(t, constraints))
+                      .toList(),
+                ),
+                const SizedBox(height: 40.0),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () {},
+                    child: const Text(
+                      'Tampilkan semua',
+                      style: TextStyle(
+                        fontFamily: 'Satoshi-Regular',
+                        fontSize: 16.0,
+                        color: Color(0xFF79AB43),
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -121,30 +123,29 @@ class TestimonialSection extends StatelessWidget {
             alignment: Alignment.center,
             children: [
               Container(
-                width: 120,
-                height: 120,
+                width: 160,
+                height: 160,
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.white,
                 ),
                 child: CustomPaint(
                   painter: CircularBorderPainter(
-                    color: const Color(0xFF79AB43),
-                    strokeWidth: 3.0,
-                    gapPercentage: 0.25,
+                    strokeWidthBase: 1.5,
+                    strokeWidthAccent: 6.0,
+                    baseColor: const Color(0xFFB9E2A1),
+                    accentColor: const Color(0xFF79AB43),
+                    accentLengthAngle: pi * 0.8,
                   ),
                 ),
               ),
-              ClipOval(
-                child: Container(
-                  width: 110,
-                  height: 110,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white,
-                  ),
+              Positioned(
+                bottom: 6,
+                child: ClipOval(
                   child: Image.asset(
                     testimonial['image']!,
+                    width: 150,
+                    height: 150,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -156,7 +157,7 @@ class TestimonialSection extends StatelessWidget {
             testimonial['name']!,
             style: const TextStyle(
               fontFamily: 'Satoshi-Regular',
-              fontSize: 16.0,
+              fontSize: 18.0,
               fontWeight: FontWeight.bold,
               color: Colors.black,
             ),
@@ -168,7 +169,7 @@ class TestimonialSection extends StatelessWidget {
             textAlign: TextAlign.center,
             style: const TextStyle(
               fontFamily: 'Satoshi-Regular',
-              fontSize: 14.0,
+              fontSize: 16.0,
               color: Colors.black54,
               height: 1.4,
             ),
@@ -180,37 +181,50 @@ class TestimonialSection extends StatelessWidget {
 }
 
 class CircularBorderPainter extends CustomPainter {
-  final Color color;
-  final double strokeWidth;
-  final double gapPercentage;
+  final double strokeWidthBase;
+  final double strokeWidthAccent;
+  final Color baseColor;
+  final Color accentColor;
+  final double accentLengthAngle;
 
   CircularBorderPainter({
-    required this.color,
-    required this.strokeWidth,
-    required this.gapPercentage,
+    required this.strokeWidthBase,
+    required this.strokeWidthAccent,
+    required this.baseColor,
+    required this.accentColor,
+    required this.accentLengthAngle,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
-    final Paint paint = Paint()
-      ..color = color
-      ..strokeWidth = strokeWidth
-      ..style = PaintingStyle.stroke;
-
-    final double radius = size.width / 2;
     final Offset center = Offset(size.width / 2, size.height / 2);
+    final double radius = size.width / 2;
 
-    final double startAngle = -0.5 * pi + (pi * gapPercentage / 2);
-    final double sweepAngle = 2 * pi - (pi * gapPercentage);
+    // Lingkaran dasar (hijau muda)
+    final Paint basePaint = Paint()
+      ..color = baseColor
+      ..strokeWidth = strokeWidthBase
+      ..style = PaintingStyle.stroke;
+    canvas.drawCircle(center, radius - strokeWidthBase / 2, basePaint);
 
+    // Arc bawah (hijau tebal)
+    final Paint accentPaint = Paint()
+      ..color = accentColor
+      ..strokeWidth = strokeWidthAccent
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+
+    // ⬇️ START dari 90° - separuh panjang arc
+    final double startAngle = pi / 2 - (accentLengthAngle / 2);
     canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius - strokeWidth / 2),
+      Rect.fromCircle(center: center, radius: radius - strokeWidthAccent / 2),
       startAngle,
-      sweepAngle,
+      accentLengthAngle,
       false,
-      paint,
+      accentPaint,
     );
   }
+
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => false;

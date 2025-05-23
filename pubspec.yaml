@@ -112,6 +112,7 @@ flutter:
     - assets/images/client_18.png
     - assets/images/client_19.png
     - assets/images/client_20.png
+    - assets/images/bg-home.jpg
 
   fonts:
     - family: HeeboBold

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +16,7 @@ class _CarouselSectionState extends State<CarouselSection>
     with TickerProviderStateMixin {
   final PageController _carouselController = PageController(
     initialPage: 1000,
-    viewportFraction: 0.92, // 🔥 memberi jarak antar slide
+    viewportFraction: 0.7, // 🔥 Diperkecil agar gambar samping terlihat lebih blur
   );
 
   int _currentCarouselPage = 0;
@@ -23,6 +24,7 @@ class _CarouselSectionState extends State<CarouselSection>
   bool _isHovering = false;
   late AnimationController _hoverAnimationController;
   late Animation<double> _hoverAnimation;
+  double _currentPageValue = 1000.0;
 
   final List<String> _carouselImages = [
     'assets/images/poster_1.png',
@@ -44,6 +46,14 @@ class _CarouselSectionState extends State<CarouselSection>
       parent: _hoverAnimationController,
       curve: Curves.easeInOut,
     ));
+
+    // 🔥 Listener untuk mendapatkan posisi page yang tepat
+    _carouselController.addListener(() {
+      setState(() {
+        _currentPageValue = _carouselController.page ?? 1000.0;
+      });
+    });
+
     _startCarouselTimer();
   }
 
@@ -81,6 +91,23 @@ class _CarouselSectionState extends State<CarouselSection>
     setState(() => _isHovering = false);
     _hoverAnimationController.reverse();
     _resumeTimer();
+  }
+
+  // 🔥 Function untuk menghitung scale dan opacity berdasarkan posisi
+  double _getScale(int index) {
+    final distance = (_currentPageValue - index).abs();
+    if (distance <= 1.0) {
+      return 1.0 - (distance * 0.15); // Scale dari 1.0 ke 0.85
+    }
+    return 0.85;
+  }
+
+  double _getOpacity(int index) {
+    final distance = (_currentPageValue - index).abs();
+    if (distance <= 1.0) {
+      return 1.0 - (distance * 0.4); // Opacity dari 1.0 ke 0.6
+    }
+    return 0.6;
   }
 
   @override
@@ -139,7 +166,7 @@ class _CarouselSectionState extends State<CarouselSection>
                 ),
               ),
 
-              // Carousel with AspectRatio and padding
+              // Carousel dengan efek blur dan scale
               MouseRegion(
                 onEnter: (_) => _onHoverEnter(),
                 onExit: (_) => _onHoverExit(),
@@ -168,58 +195,87 @@ class _CarouselSectionState extends State<CarouselSection>
                     builder: (context, child) {
                       return Transform.scale(
                         scale: _hoverAnimation.value,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(16.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
-                                  spreadRadius: 2,
-                                  blurRadius: 12,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
+                        child: Container(
+                          height: isMobile ? 200 : (isTablet ? 280 : 320), // 🔥 Fixed height
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16.0),
+                          ),
+                          child: ScrollConfiguration(
+                            behavior: ScrollConfiguration.of(context).copyWith(
+                              dragDevices: {
+                                PointerDeviceKind.touch,
+                                PointerDeviceKind.mouse,
+                              },
                             ),
-                            child: AspectRatio(
-                              aspectRatio: 16 / 9,
-                              child: ScrollConfiguration(
-                                behavior: ScrollConfiguration.of(context).copyWith(
-                                  dragDevices: {
-                                    PointerDeviceKind.touch,
-                                    PointerDeviceKind.mouse,
-                                  },
-                                ),
-                                child: PageView.builder(
-                                  controller: _carouselController,
-                                  onPageChanged: (index) {
-                                    setState(() {
-                                      _currentCarouselPage = index % _carouselImages.length;
-                                    });
-                                  },
-                                  itemBuilder: (context, index) {
-                                    final realIndex = index % _carouselImages.length;
-                                    return Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 6.0), // 💡 Spacing antar slide
+                            child: PageView.builder(
+                              controller: _carouselController,
+                              onPageChanged: (index) {
+                                setState(() {
+                                  _currentCarouselPage = index % _carouselImages.length;
+                                });
+                              },
+                              itemBuilder: (context, index) {
+                                final realIndex = index % _carouselImages.length;
+                                final scale = _getScale(index);
+                                final opacity = _getOpacity(index);
+                                final isCenter = (_currentPageValue - index).abs() < 0.5;
+
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                  child: Transform.scale(
+                                    scale: scale,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(16.0),
+                                        boxShadow: isCenter ? [
+                                          BoxShadow(
+                                            color: Colors.black.withOpacity(0.15),
+                                            spreadRadius: 3,
+                                            blurRadius: 15,
+                                            offset: const Offset(0, 6),
+                                          ),
+                                        ] : null,
+                                      ),
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(16.0),
-                                        child: Image.asset(
-                                          _carouselImages[realIndex],
-                                          fit: BoxFit.cover,
-                                          errorBuilder: (context, error, stackTrace) {
-                                            return Container(
-                                              color: const Color(0xFF79AB43).withOpacity(0.1),
-                                              child: const Center(
-                                                child: Icon(Icons.image_not_supported, size: 48),
+                                        child: Stack(
+                                          fit: StackFit.expand,
+                                          children: [
+                                            // Background image
+                                            Image.asset(
+                                              _carouselImages[realIndex],
+                                              fit: BoxFit.cover,
+                                              errorBuilder: (context, error, stackTrace) {
+                                                return Container(
+                                                  color: const Color(0xFF79AB43).withOpacity(0.1),
+                                                  child: const Center(
+                                                    child: Icon(Icons.image_not_supported, size: 48),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                            // 🔥 Blur effect untuk gambar yang tidak aktif
+                                            if (!isCenter)
+                                              BackdropFilter(
+                                                filter: ImageFilter.blur(
+                                                  sigmaX: 3.0,
+                                                  sigmaY: 3.0,
+                                                ),
+                                                child: Container(
+                                                  color: Colors.black.withOpacity(0.1),
+                                                ),
                                               ),
-                                            );
-                                          },
+                                            // 🔥 Opacity overlay
+                                            Container(
+                                              color: Colors.black.withOpacity(1.0 - opacity),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    );
-                                  },
-                                ),
-                              ),
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
                           ),
                         ),
@@ -229,7 +285,7 @@ class _CarouselSectionState extends State<CarouselSection>
                 ),
               ),
 
-              const SizedBox(height: 16.0),
+              const SizedBox(height: 20.0),
 
               // Page Indicator
               Row(

@@ -20,7 +20,7 @@ class HeroMain extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: const Color(0xFF79AB43),
-        scaffoldBackgroundColor: const Color(0xFFD5F4B4), // Changed to light green
+        scaffoldBackgroundColor: const Color(0xFFD5F4B4),
         fontFamily: 'Satoshi-Regular',
         textTheme: const TextTheme(
           bodyMedium: TextStyle(
@@ -63,7 +63,6 @@ class _HeroPageState extends State<HeroPage> {
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,30 +70,40 @@ class _HeroPageState extends State<HeroPage> {
       drawer: _buildSideMenu(),
       body: LayoutBuilder(
         builder: (context, constraints) {
-          return SingleChildScrollView(
-            child: Container(
-              color: const Color(0xFFD5F4B4), // Light green background
-              child: Column(
-                children: [
-                  _buildNavBar(constraints),
-                  HeroSection(constraints: constraints),
-                  FloatingButtons(constraints: constraints),
-                  ActionSection(constraints: constraints),
-                  FeatureSection(constraints: constraints),
-                  CarouselSection(constraints: constraints),
-                  TestimonialSection(constraints: constraints),
-                  ClientSection(constraints: constraints),
-                  FooterSection(constraints: constraints),
-                ],
+          return Stack(
+            children: [
+              // 🔽 Background Image (full fill)
+              Positioned.fill(
+                child: Image.asset(
+                  'assets/images/bg-home.jpg',
+                  fit: BoxFit.cover,
+                  alignment: Alignment.topCenter,
+                ),
               ),
-            ),
+
+              // 🔽 Konten Utama di atas background
+              SingleChildScrollView(
+                child: Column(
+                  children: [
+                    _buildNavBar(constraints),
+                    HeroSection(constraints: constraints),
+                    FloatingButtons(constraints: constraints),
+                    ActionSection(constraints: constraints),
+                    FeatureSection(constraints: constraints),
+                    CarouselSection(constraints: constraints),
+                    TestimonialSection(constraints: constraints),
+                    ClientSection(constraints: constraints),
+                    FooterSection(constraints: constraints),
+                  ],
+                ),
+              ),
+            ],
           );
         },
       ),
     );
   }
 
-  // New carousel section method
 
   Widget _buildSideMenu() {
     return Drawer(
@@ -105,7 +114,14 @@ class _HeroPageState extends State<HeroPage> {
           children: [
             DrawerHeader(
               decoration: const BoxDecoration(
-                color: Color(0xFF79AB43),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color(0xFF79AB43),
+                    Color(0xFF8BBD54),
+                  ],
+                ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,34 +143,176 @@ class _HeroPageState extends State<HeroPage> {
                 ],
               ),
             ),
-            _buildDrawerItem(Icons.assignment, 'Management Polis'),
-            _buildDrawerItem(Icons.assessment, 'Management Asset'),
-            _buildDrawerItem(Icons.attach_money, 'Tagihan Dan Pembayaran'),
-            _buildDrawerItem(Icons.check_circle, 'Klaim'),
-            _buildDrawerItem(Icons.people, 'Customers Services'),
-            _buildDrawerItem(Icons.article, 'Artikel'),
+            ExpandableDrawerItem(
+              icon: Icons.assignment,
+              title: 'Management Polis',
+              subItems: [
+                SubMenuItem(
+                  icon: Icons.add_circle_outline,
+                  title: 'Buat Polis Baru',
+                  onTap: () => _handleMenuTap('Buat Polis Baru'),
+                ),
+                SubMenuItem(
+                  icon: Icons.list_alt,
+                  title: 'Daftar Polis Aktif',
+                  onTap: () => _handleMenuTap('Daftar Polis Aktif'),
+                ),
+                SubMenuItem(
+                  icon: Icons.edit,
+                  title: 'Edit Polis',
+                  onTap: () => _handleMenuTap('Edit Polis'),
+                ),
+                SubMenuItem(
+                  icon: Icons.history,
+                  title: 'Riwayat Polis',
+                  onTap: () => _handleMenuTap('Riwayat Polis'),
+                ),
+              ],
+            ),
+            ExpandableDrawerItem(
+              icon: Icons.assessment,
+              title: 'Management Asset',
+              subItems: [
+                SubMenuItem(
+                  icon: Icons.home,
+                  title: 'Properti',
+                  onTap: () => _handleMenuTap('Properti'),
+                ),
+                SubMenuItem(
+                  icon: Icons.directions_car,
+                  title: 'Kendaraan',
+                  onTap: () => _handleMenuTap('Kendaraan'),
+                ),
+                SubMenuItem(
+                  icon: Icons.favorite,
+                  title: 'Kesehatan',
+                  onTap: () => _handleMenuTap('Kesehatan'),
+                ),
+                SubMenuItem(
+                  icon: Icons.business,
+                  title: 'Bisnis',
+                  onTap: () => _handleMenuTap('Bisnis'),
+                ),
+              ],
+            ),
+            ExpandableDrawerItem(
+              icon: Icons.attach_money,
+              title: 'Tagihan Dan Pembayaran',
+              subItems: [
+                SubMenuItem(
+                  icon: Icons.receipt_long,
+                  title: 'Lihat Tagihan',
+                  onTap: () => _handleMenuTap('Lihat Tagihan'),
+                ),
+                SubMenuItem(
+                  icon: Icons.payment,
+                  title: 'Bayar Premi',
+                  onTap: () => _handleMenuTap('Bayar Premi'),
+                ),
+                SubMenuItem(
+                  icon: Icons.account_balance_wallet,
+                  title: 'Metode Pembayaran',
+                  onTap: () => _handleMenuTap('Metode Pembayaran'),
+                ),
+                SubMenuItem(
+                  icon: Icons.notifications,
+                  title: 'Pengingat Tagihan',
+                  onTap: () => _handleMenuTap('Pengingat Tagihan'),
+                ),
+              ],
+            ),
+            ExpandableDrawerItem(
+              icon: Icons.check_circle,
+              title: 'Klaim',
+              subItems: [
+                SubMenuItem(
+                  icon: Icons.add_box,
+                  title: 'Ajukan Klaim',
+                  onTap: () => _handleMenuTap('Ajukan Klaim'),
+                ),
+                SubMenuItem(
+                  icon: Icons.track_changes,
+                  title: 'Status Klaim',
+                  onTap: () => _handleMenuTap('Status Klaim'),
+                ),
+                SubMenuItem(
+                  icon: Icons.upload_file,
+                  title: 'Upload Dokumen',
+                  onTap: () => _handleMenuTap('Upload Dokumen'),
+                ),
+                SubMenuItem(
+                  icon: Icons.help_outline,
+                  title: 'Panduan Klaim',
+                  onTap: () => _handleMenuTap('Panduan Klaim'),
+                ),
+              ],
+            ),
+            ExpandableDrawerItem(
+              icon: Icons.people,
+              title: 'Customer Services',
+              subItems: [
+                SubMenuItem(
+                  icon: Icons.chat,
+                  title: 'Live Chat',
+                  onTap: () => _handleMenuTap('Live Chat'),
+                ),
+                SubMenuItem(
+                  icon: Icons.phone,
+                  title: 'Hubungi Kami',
+                  onTap: () => _handleMenuTap('Hubungi Kami'),
+                ),
+                SubMenuItem(
+                  icon: Icons.email,
+                  title: 'Kirim Email',
+                  onTap: () => _handleMenuTap('Kirim Email'),
+                ),
+                SubMenuItem(
+                  icon: Icons.location_on,
+                  title: 'Lokasi Kantor',
+                  onTap: () => _handleMenuTap('Lokasi Kantor'),
+                ),
+              ],
+            ),
+            ExpandableDrawerItem(
+              icon: Icons.article,
+              title: 'Artikel',
+              subItems: [
+                SubMenuItem(
+                  icon: Icons.trending_up,
+                  title: 'Tips Investasi',
+                  onTap: () => _handleMenuTap('Tips Investasi'),
+                ),
+                SubMenuItem(
+                  icon: Icons.security,
+                  title: 'Panduan Asuransi',
+                  onTap: () => _handleMenuTap('Panduan Asuransi'),
+                ),
+                SubMenuItem(
+                  icon: Icons.health_and_safety,
+                  title: 'Kesehatan & Gaya Hidup',
+                  onTap: () => _handleMenuTap('Kesehatan & Gaya Hidup'),
+                ),
+                SubMenuItem(
+                  icon: Icons.new_releases,
+                  title: 'Berita Terkini',
+                  onTap: () => _handleMenuTap('Berita Terkini'),
+                ),
+              ],
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildDrawerItem(IconData icon, String title) {
-    return ListTile(
-      leading: Icon(
-        icon,
-        color: const Color(0xFF79AB43),
+  void _handleMenuTap(String menuName) {
+    Navigator.pop(context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Navigasi ke: $menuName'),
+        backgroundColor: const Color(0xFF79AB43),
+        duration: const Duration(seconds: 2),
       ),
-      title: Text(
-        title,
-        style: const TextStyle(
-          fontFamily: 'Satoshi-Regular',
-          fontSize: 16.0,
-        ),
-      ),
-      onTap: () {
-        Navigator.pop(context);
-      },
     );
   }
 
@@ -173,13 +331,10 @@ class _HeroPageState extends State<HeroPage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // Logo (tanpa shadow agar flat)
             Image.asset(
               'assets/images/jps_logo.png',
               height: 60.0,
             ),
-
-            // Menu icon (tanpa background, shadow, atau borderRadius)
             IconButton(
               icon: const Icon(
                 Icons.menu,
@@ -196,7 +351,6 @@ class _HeroPageState extends State<HeroPage> {
       ),
     );
   }
-
 
   Widget _buildHoverButtonOutlined({
     required IconData icon,
@@ -277,7 +431,220 @@ class _HeroPageState extends State<HeroPage> {
       ),
     );
   }
+}
 
+// Model untuk submenu items
+class SubMenuItem {
+  final IconData icon;
+  final String title;
+  final VoidCallback onTap;
+
+  SubMenuItem({
+    required this.icon,
+    required this.title,
+    required this.onTap,
+  });
+}
+
+// Widget untuk expandable drawer item dengan submenu
+class ExpandableDrawerItem extends StatefulWidget {
+  final IconData icon;
+  final String title;
+  final List<SubMenuItem> subItems;
+
+  const ExpandableDrawerItem({
+    super.key,
+    required this.icon,
+    required this.title,
+    required this.subItems,
+  });
+
+  @override
+  State<ExpandableDrawerItem> createState() => _ExpandableDrawerItemState();
+}
+
+class _ExpandableDrawerItemState extends State<ExpandableDrawerItem>
+    with SingleTickerProviderStateMixin {
+  bool _isExpanded = false;
+  bool _isHovered = false;
+  late AnimationController _animationController;
+  late Animation<double> _expandAnimation;
+  late Animation<double> _rotateAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _expandAnimation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    );
+    _rotateAnimation = Tween<double>(
+      begin: 0.0,
+      end: 0.5,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  void _toggleExpanded() {
+    setState(() {
+      _isExpanded = !_isExpanded;
+      if (_isExpanded) {
+        _animationController.forward();
+      } else {
+        _animationController.reverse();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        MouseRegion(
+          onEnter: (_) => setState(() => _isHovered = true),
+          onExit: (_) => setState(() => _isHovered = false),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            decoration: BoxDecoration(
+              color: _isHovered
+                  ? const Color(0xFF79AB43).withOpacity(0.08)
+                  : Colors.transparent,
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+            child: ListTile(
+              leading: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                child: Icon(
+                  widget.icon,
+                  color: _isHovered
+                      ? const Color(0xFF79AB43)
+                      : const Color(0xFF79AB43).withOpacity(0.8),
+                  size: _isHovered ? 22.0 : 22.0,
+                ),
+              ),
+              title: AnimatedDefaultTextStyle(
+                duration: const Duration(milliseconds: 200),
+                style: TextStyle(
+                  fontFamily: 'Satoshi-Regular',
+                  fontSize: 16.0,
+                  fontWeight: _isHovered ? FontWeight.w600 : FontWeight.w500,
+                  color: _isHovered ? const Color(0xFF2D5016) : Colors.black87,
+                ),
+                child: Text(widget.title),
+              ),
+              trailing: AnimatedBuilder(
+                animation: _rotateAnimation,
+                builder: (context, child) {
+                  return Transform.rotate(
+                    angle: _rotateAnimation.value * 2 * pi,
+                    child: Icon(
+                      Icons.keyboard_arrow_down,
+                      color: _isHovered
+                          ? const Color(0xFF79AB43)
+                          : Colors.grey.shade600,
+                    ),
+                  );
+                },
+              ),
+              onTap: _toggleExpanded,
+            ),
+          ),
+        ),
+        SizeTransition(
+          sizeFactor: _expandAnimation,
+          child: Container(
+            margin: const EdgeInsets.only(left: 16.0),
+            child: Column(
+              children: widget.subItems.map((subItem) {
+                return SubMenuTile(subItem: subItem);
+              }).toList(),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// Widget untuk sub menu tile dengan animasi hover
+class SubMenuTile extends StatefulWidget {
+  final SubMenuItem subItem;
+
+  const SubMenuTile({
+    super.key,
+    required this.subItem,
+  });
+
+  @override
+  State<SubMenuTile> createState() => _SubMenuTileState();
+}
+
+class _SubMenuTileState extends State<SubMenuTile> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
+        decoration: BoxDecoration(
+          color: _isHovered
+              ? const Color(0xFF8BBD54).withOpacity(0.12)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(6.0),
+          border: _isHovered
+              ? Border.all(
+            color: const Color(0xFF8BBD54).withOpacity(0.3),
+            width: 1.0,
+          )
+              : null,
+        ),
+        child: ListTile(
+          dense: true,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+          leading: AnimatedContainer(
+            duration: const Duration(milliseconds: 150),
+            child: Icon(
+              widget.subItem.icon,
+              size: _isHovered ? 20.0 : 18.0,
+              color: _isHovered
+                  ? const Color(0xFF8BBD54)
+                  : const Color(0xFF79AB43).withOpacity(0.7),
+            ),
+          ),
+          title: AnimatedDefaultTextStyle(
+            duration: const Duration(milliseconds: 150),
+            style: TextStyle(
+              fontFamily: 'Satoshi-Regular',
+              fontSize: _isHovered ? 14.5 : 14.0,
+              fontWeight: _isHovered ? FontWeight.w600 : FontWeight.w500,
+              color: _isHovered
+                  ? const Color(0xFF2D5016)
+                  : Colors.black.withOpacity(0.8),
+            ),
+            child: Text(widget.subItem.title),
+          ),
+          onTap: widget.subItem.onTap,
+        ),
+      ),
+    );
+  }
 }
 
 // Custom painter for curved border
@@ -302,8 +669,6 @@ class CircularBorderPainter extends CustomPainter {
     final double radius = size.width / 2;
     final Offset center = Offset(size.width / 2, size.height / 2);
 
-    // Calculate start and end angles for the arc
-    // The gap will be at the bottom
     final double startAngle = -0.5 * pi + (pi * gapPercentage / 2);
     final double endAngle = 2 * pi - (pi * gapPercentage / 2);
 
@@ -319,8 +684,8 @@ class CircularBorderPainter extends CustomPainter {
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
-// Custom Widgets for Animation and Interactivity
 
+// Custom Widgets for Animation and Interactivity
 class HoverAnimatedContainer extends StatefulWidget {
   final Widget child;
   final EdgeInsetsGeometry padding;
@@ -358,7 +723,6 @@ class _HoverAnimatedContainerState extends State<HoverAnimatedContainer> {
       ),
     );
   }
-
 }
 
 class HoverButton extends StatefulWidget {
@@ -431,7 +795,6 @@ class _HoverButtonState extends State<HoverButton> {
     );
   }
 }
-
 
 class HoverActionButton extends StatefulWidget {
   final VoidCallback onPressed;

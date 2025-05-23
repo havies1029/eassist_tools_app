@@ -17,7 +17,7 @@ class HeroSection extends StatelessWidget {
       child: Center(
         child: Container(
           width: maxWidth,
-          margin: const EdgeInsets.only(top: 30),
+          margin: const EdgeInsets.only(top: 50),
           decoration: const BoxDecoration(
             color: Color(0xFF79AB43),
             borderRadius: BorderRadius.only(
@@ -47,7 +47,10 @@ class HeroSection extends StatelessWidget {
                   flex: 1,
                   child: Padding(
                     padding: const EdgeInsets.only(right: 40.0),
-                    child: _buildHeroText(TextAlign.left),
+                    child: Transform.translate(
+                      offset: const Offset(0, -20), // ✅ Teks naik 20px
+                      child: _buildHeroText(TextAlign.left),
+                    ),
                   ),
                 ),
 

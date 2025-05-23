@@ -1,187 +1,361 @@
-import 'package:flutter/material.dart';
-import '../../pages/heropage/hero_main.dart';
+  import 'package:flutter/material.dart';
 
-class FloatingButtons extends StatelessWidget {
-  final BoxConstraints constraints;
-  const FloatingButtons({super.key, required this.constraints});
+  class FloatingButtons extends StatefulWidget {
+    final BoxConstraints constraints;
+    const FloatingButtons({super.key, required this.constraints});
 
-  bool get isMobile => constraints.maxWidth < 768;
-  double get maxWidth => constraints.maxWidth > 1200 ? 1200 : constraints.maxWidth * 0.9;
-  double get sidePadding => constraints.maxWidth > 1200 ? 64.0 : 32.0;
-  double get innerPadding => isMobile ? 16.0 : 40.0;
+    @override
+    State<FloatingButtons> createState() => _FloatingButtonsState();
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Transform.translate(
-      offset: const Offset(0, -70), // ⬅️ Geser sedikit ke atas (misal -10 px)
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: sidePadding),
-        child: Center(
-          child: Container(
-            width: maxWidth,
-            margin: const EdgeInsets.symmetric(vertical: 20.0),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(24.0),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: innerPadding, vertical: 20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  HoverButton(
-                    onPressed: () {},
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-                      child: Row(
-                        children: const [
-                          Icon(Icons.login, color: Color(0xFF79AB43)),
-                          SizedBox(width: 8.0),
-                          Text(
-                            'Masuk',
-                            style: TextStyle(
-                              fontFamily: 'Satoshi-Regular',
-                              color: Color(0xFF79AB43),
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16.0,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+  class _FloatingButtonsState extends State<FloatingButtons>
+      with TickerProviderStateMixin {
+    late AnimationController _buttonsController;
+    late Animation<double> _buttonsStaggerAnimation;
+
+    bool get isMobile => widget.constraints.maxWidth < 768;
+    double get maxWidth =>
+        widget.constraints.maxWidth > 1200 ? 1200 : widget.constraints.maxWidth * 0.9;
+    double get sidePadding => widget.constraints.maxWidth > 1200 ? 64.0 : 32.0;
+    double get innerPadding => isMobile ? 16.0 : 40.0;
+
+    @override
+    void initState() {
+      super.initState();
+
+      _buttonsController = AnimationController(
+        duration: const Duration(milliseconds: 800),
+        vsync: this,
+      );
+
+      _buttonsStaggerAnimation = Tween<double>(
+        begin: 0.0,
+        end: 1.0,
+      ).animate(CurvedAnimation(
+        parent: _buttonsController,
+        curve: Curves.easeOutCubic,
+      ));
+
+      _startAnimations();
+    }
+
+    void _startAnimations() async {
+      await Future.delayed(const Duration(milliseconds: 300));
+      _buttonsController.forward();
+    }
+
+    @override
+    void dispose() {
+      _buttonsController.dispose();
+      super.dispose();
+    }
+
+    @override
+    Widget build(BuildContext context) {
+      return Transform.translate(
+        offset: const Offset(0, -70),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: sidePadding),
+          child: Center(
+            child: Container(
+              width: maxWidth,
+              margin: const EdgeInsets.symmetric(vertical: 20.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(24.0),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.08),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
                   ),
-                  const SizedBox(width: 16.0),
-                  HoverButton(
-                    onPressed: () {},
-                    color: Color(0xFF79AB43),
-                    textColor: Colors.white,
-                    isRounded: true,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 4.0),
-                      child: Row(
-                        children: const [
-                          Icon(Icons.person_add, color: Colors.white),
-                          SizedBox(width: 8.0),
-                          Text(
-                            'Daftar Klien',
-                            style: TextStyle(
-                              fontFamily: 'Satoshi-Regular',
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16.0,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                  BoxShadow(
+                    color: const Color(0xFF79AB43).withOpacity(0.1),
+                    blurRadius: 40,
+                    offset: const Offset(0, 16),
                   ),
                 ],
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: innerPadding,
+                  vertical: 20.0,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 42.0), // ⬅️ Geser sedikit ke tengah
+                      child: Row(
+                        children: [
+                          _buildAnimatedButton(
+                            isLogin: true,
+                            delay: const Duration(milliseconds: 0),
+                          ),
+                          const SizedBox(width: 16.0),
+                          _buildAnimatedButton(
+                            isLogin: false,
+                            delay: const Duration(milliseconds: 200),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
         ),
-      ),
-    );
-  }
-}
+      );
+    }
 
-// import 'package:flutter/material.dart';
-// import '../../pages/heropage/hero_main.dart';
-//
-// class FloatingButtons extends StatelessWidget {
-//   final BoxConstraints constraints;
-//   const FloatingButtons({super.key, required this.constraints});
-//
-//   bool get isMobile => constraints.maxWidth < 768;
-//   double get maxWidth => constraints.maxWidth > 1200 ? 1200 : constraints.maxWidth * 0.9;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return SizedBox(
-//       width: maxWidth,
-//       height: 0,
-//       child: OverflowBox(
-//         maxHeight: double.infinity,
-//         alignment: Alignment.topCenter,
-//         child: Transform.translate(
-//           offset: const Offset(0, -50),
-//           child: Material(
-//             elevation: 20,
-//             borderRadius: BorderRadius.circular(24),
-//             child: Container(
-//               padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 19.0),
-//               decoration: BoxDecoration(
-//                 color: Colors.white,
-//                 borderRadius: BorderRadius.circular(24.0),
-//               ),
-//               child: _buildActionButtons(),
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-//
-//   Widget _buildActionButtons() {
-//     return Container(
-//       width: isMobile ? double.infinity : null,
-//       padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
-//       decoration: BoxDecoration(
-//         color: Colors.white,
-//         borderRadius: BorderRadius.circular(30.0),
-//       ),
-//       child: Row(
-//         mainAxisAlignment: isMobile ? MainAxisAlignment.center : MainAxisAlignment.start,
-//         children: [
-//           HoverButton(
-//             onPressed: () {},
-//             child: Row(
-//               children: const [
-//                 Icon(Icons.login, color: Color(0xFF79AB43)),
-//                 SizedBox(width: 8.0),
-//                 Text(
-//                   'Masuk',
-//                   style: TextStyle(
-//                     fontFamily: 'Satoshi-Regular',
-//                     color: Color(0xFF79AB43),
-//                     fontWeight: FontWeight.w500,
-//                     fontSize: 16.0,
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//           const SizedBox(width: 16.0),
-//           HoverButton(
-//             onPressed: () {},
-//             color: const Color(0xFF79AB43),
-//             textColor: Colors.white,
-//             isRounded: true,
-//             child: Row(
-//               children: const [
-//                 Icon(Icons.person_add, color: Colors.white),
-//                 SizedBox(width: 8.0),
-//                 Text(
-//                   'Daftar Klien',
-//                   style: TextStyle(
-//                     fontFamily: 'Satoshi-Regular',
-//                     color: Colors.white,
-//                     fontWeight: FontWeight.w500,
-//                     fontSize: 16.0,
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
+    Widget _buildAnimatedButton({
+      required bool isLogin,
+      required Duration delay,
+    }) {
+      return AnimatedBuilder(
+        animation: _buttonsController,
+        builder: (context, child) {
+          return TweenAnimationBuilder<double>(
+            duration: const Duration(milliseconds: 600),
+            tween: Tween(begin: 0.0, end: _buttonsStaggerAnimation.value),
+            curve: Curves.easeOutBack,
+            builder: (context, value, child) {
+              return Transform.translate(
+                offset: Offset(30 * (1 - value), 0),
+                child: Opacity(
+                  opacity: value.clamp(0.0, 1.0),
+                  child: EnhancedHoverButton(
+                    onPressed: () {},
+                    isLogin: isLogin,
+                    delay: delay,
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      );
+    }
+  }
+
+  class EnhancedHoverButton extends StatefulWidget {
+    final VoidCallback onPressed;
+    final bool isLogin;
+    final Duration delay;
+
+    const EnhancedHoverButton({
+      super.key,
+      required this.onPressed,
+      required this.isLogin,
+      this.delay = Duration.zero,
+    });
+
+    @override
+    State<EnhancedHoverButton> createState() => _EnhancedHoverButtonState();
+  }
+
+  class _EnhancedHoverButtonState extends State<EnhancedHoverButton>
+      with TickerProviderStateMixin {
+    late AnimationController _hoverController;
+    late AnimationController _pressController;
+    late AnimationController _pulseController;
+
+    late Animation<double> _scaleAnimation;
+    late Animation<double> _elevationAnimation;
+    late Animation<Color?> _backgroundAnimation;
+    late Animation<Color?> _borderAnimation;
+    late Animation<double> _iconScaleAnimation;
+    late Animation<double> _iconRotationAnimation;
+    late Animation<double> _pulseAnimation;
+
+    bool _isHovered = false;
+
+    @override
+    void initState() {
+      super.initState();
+
+      _hoverController = AnimationController(
+        duration: const Duration(milliseconds: 250),
+        vsync: this,
+      );
+
+      _pressController = AnimationController(
+        duration: const Duration(milliseconds: 100),
+        vsync: this,
+      );
+
+      _pulseController = AnimationController(
+        duration: const Duration(milliseconds: 1500),
+        vsync: this,
+      );
+
+      _scaleAnimation = Tween<double>(
+        begin: 1.0,
+        end: 1.05,
+      ).animate(CurvedAnimation(
+        parent: _hoverController,
+        curve: Curves.easeInOut,
+      ));
+
+      _elevationAnimation = Tween<double>(
+        begin: 0.0,
+        end: 8.0,
+      ).animate(CurvedAnimation(
+        parent: _hoverController,
+        curve: Curves.easeInOut,
+      ));
+
+      if (widget.isLogin) {
+        _backgroundAnimation = AlwaysStoppedAnimation(Colors.white);
+        _borderAnimation = AlwaysStoppedAnimation(const Color(0xFF79AB43));
+      } else {
+        _backgroundAnimation = ColorTween(
+          begin: const Color(0xFF79AB43),
+          end: const Color(0xFF5D8B32),
+        ).animate(_hoverController);
+
+        _borderAnimation = ColorTween(
+          begin: const Color(0xFF79AB43),
+          end: const Color(0xFF5D8B32),
+        ).animate(_hoverController);
+      }
+
+      _iconScaleAnimation = Tween<double>(
+        begin: 1.0,
+        end: 1.2,
+      ).animate(CurvedAnimation(
+        parent: _hoverController,
+        curve: Curves.elasticOut,
+      ));
+
+      _iconRotationAnimation = Tween<double>(
+        begin: 0.0,
+        end: widget.isLogin ? 0.1 : -0.1,
+      ).animate(CurvedAnimation(
+        parent: _hoverController,
+        curve: Curves.easeInOut,
+      ));
+
+      _pulseAnimation = Tween<double>(
+        begin: 1.0,
+        end: 1.03,
+      ).animate(CurvedAnimation(
+        parent: _pulseController,
+        curve: Curves.easeInOut,
+      ));
+
+      if (!widget.isLogin) {
+        Future.delayed(widget.delay + const Duration(milliseconds: 1000), () {
+          if (mounted) _pulseController.repeat(reverse: true);
+        });
+      }
+    }
+
+    @override
+    void dispose() {
+      _hoverController.dispose();
+      _pressController.dispose();
+      _pulseController.dispose();
+      super.dispose();
+    }
+
+    @override
+    Widget build(BuildContext context) {
+      return AnimatedBuilder(
+        animation: Listenable.merge([
+          _hoverController,
+          _pressController,
+          _pulseController,
+        ]),
+        builder: (context, child) {
+          return MouseRegion(
+            onEnter: (_) => _onHover(true),
+            onExit: (_) => _onHover(false),
+            child: GestureDetector(
+              onTapDown: (_) => _pressController.forward(),
+              onTapUp: (_) => _pressController.reverse(),
+              onTapCancel: () => _pressController.reverse(),
+              onTap: widget.onPressed,
+              child: Transform.scale(
+                scale: _scaleAnimation.value *
+                    _pulseAnimation.value *
+                    (1.0 - _pressController.value * 0.05),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                  decoration: BoxDecoration(
+                    color: _backgroundAnimation.value,
+                    borderRadius: BorderRadius.circular(24.0),
+                    border: Border.all(
+                      color: _borderAnimation.value ?? Colors.transparent,
+                      width: 1.5,
+                    ),
+                    boxShadow: [
+                      if (_isHovered || !widget.isLogin)
+                        BoxShadow(
+                          color: const Color(0xFF79AB43).withOpacity(0.3),
+                          spreadRadius: 0,
+                          blurRadius: _elevationAnimation.value + 4,
+                          offset: Offset(0, _elevationAnimation.value / 2),
+                        ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Transform.scale(
+                        scale: _iconScaleAnimation.value,
+                        child: Transform.rotate(
+                          angle: _iconRotationAnimation.value,
+                          child: Icon(
+                            widget.isLogin ? Icons.login : Icons.person_add,
+                            color: widget.isLogin
+                                ? const Color(0xFF79AB43)
+                                : Colors.white,
+                            size: 18.0,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8.0),
+                      Flexible(
+                        child: Text(
+                          widget.isLogin ? 'Masuk' : 'Daftar Klien',
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontFamily: 'Satoshi-Regular',
+                            color: widget.isLogin
+                                ? const Color(0xFF79AB43)
+                                : Colors.white,
+                            fontWeight:
+                            _isHovered ? FontWeight.w600 : FontWeight.w500,
+                            fontSize: 16.0,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    }
+
+    void _onHover(bool isHovered) {
+      setState(() {
+        _isHovered = isHovered;
+      });
+
+      if (isHovered) {
+        _hoverController.forward();
+        if (!widget.isLogin) _pulseController.stop();
+      } else {
+        _hoverController.reverse();
+        if (!widget.isLogin && mounted) {
+          _pulseController.repeat(reverse: true);
+        }
+      }
+    }
+  }

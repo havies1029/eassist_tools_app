@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:math' show pi;
 
 class ClientSection extends StatelessWidget {
   final BoxConstraints constraints;
@@ -8,68 +7,72 @@ class ClientSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isMobile = constraints.maxWidth < 768;
-    final double maxWidth = constraints.maxWidth > 1200 ? 1200 : constraints.maxWidth * 0.9;
+    final double maxWidth = constraints.maxWidth > 1200
+        ? 1200
+        : constraints.maxWidth * 0.9;
 
     final List<String> clientLogos = List.generate(
       20,
           (index) => 'assets/images/client_${index + 1}.png',
     );
 
-    int crossAxisCount = 2;
-    if (constraints.maxWidth >= 1024) {
-      crossAxisCount = 5;
-    } else if (constraints.maxWidth >= 768) {
-      crossAxisCount = 3;
-    }
+    // Tetapkan 5 kolom dan atur aspect ratio agar baris sesuai
+    final int crossAxisCount = 5;
+    final double childAspectRatio = 1.6;
 
     return Container(
       width: double.infinity,
       color: Colors.white,
-      padding: const EdgeInsets.symmetric(vertical: 50.0),
+      padding: EdgeInsets.symmetric(
+        vertical: isMobile ? 40.0 : 60.0,
+        horizontal: 20.0,
+      ),
       child: Center(
         child: Container(
           width: maxWidth,
-          padding: EdgeInsets.zero,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Judul
               RichText(
                 textAlign: TextAlign.center,
-                text: const TextSpan(
+                text: TextSpan(
                   style: TextStyle(
                     fontFamily: 'Satoshi-Regular',
-                    fontSize: 25.0,
+                    fontSize: isMobile ? 22.0 : 28.0,
                     color: Colors.black,
+                    height: 1.2,
                   ),
-                  children: [
+                  children: const [
                     TextSpan(text: 'Menampilkan '),
                     TextSpan(
                       text: 'Klien',
-                      style: TextStyle(color: Color(0xFF79AB43)),
+                      style: TextStyle(
+                        color: Color(0xFF79AB43),
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     TextSpan(text: ' Terpercaya Kami'),
                   ],
                 ),
               ),
-              const SizedBox(height: 40.0),
+              SizedBox(height: isMobile ? 30.0 : 40.0),
 
-              // Grid Logo Klien
-              LayoutBuilder(
-                builder: (context, box) {
-                  return GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: clientLogos.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: crossAxisCount,
-                      crossAxisSpacing: 16.0,
-                      mainAxisSpacing: 16.0,
-                      childAspectRatio: 1.5,
-                    ),
-                    itemBuilder: (context, index) {
-                      return ClientLogoCard(imagePath: clientLogos[index]);
-                    },
+              // Grid Klien
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: clientLogos.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: crossAxisCount,
+                  crossAxisSpacing: isMobile ? 8.0 : 12.0,
+                  mainAxisSpacing: isMobile ? 8.0 : 12.0,
+                  childAspectRatio: childAspectRatio,
+                ),
+                itemBuilder: (context, index) {
+                  return ClientLogoCard(
+                    imagePath: clientLogos[index],
+                    isMobile: isMobile,
                   );
                 },
               ),
@@ -83,7 +86,13 @@ class ClientSection extends StatelessWidget {
 
 class ClientLogoCard extends StatefulWidget {
   final String imagePath;
-  const ClientLogoCard({super.key, required this.imagePath});
+  final bool isMobile;
+
+  const ClientLogoCard({
+    super.key,
+    required this.imagePath,
+    this.isMobile = false,
+  });
 
   @override
   State<ClientLogoCard> createState() => _ClientLogoCardState();
@@ -98,33 +107,52 @@ class _ClientLogoCardState extends State<ClientLogoCard> {
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       child: AnimatedScale(
-        scale: _isHovered ? 1.05 : 1.0,
-        duration: const Duration(milliseconds: 250),
+        scale: _isHovered ? 1.03 : 1.0,
+        duration: const Duration(milliseconds: 100),
         curve: Curves.easeInOut,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 120),
           curve: Curves.easeInOut,
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius: BorderRadius.circular(8.0),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(_isHovered ? 0.15 : 0.08),
-                blurRadius: _isHovered ? 10.0 : 5.0,
-                offset: Offset(0, _isHovered ? 4 : 2),
+                color: Colors.black.withOpacity(_isHovered ? 0.12 : 0.06),
+                blurRadius: _isHovered ? 8.0 : 4.0,
+                offset: Offset(0, _isHovered ? 3 : 1),
               ),
             ],
             border: Border.all(
-              color: Colors.grey.shade200,
-              width: 1.0,
+              color: _isHovered
+                  ? const Color(0xFF79AB43)
+                  : Colors.grey.shade200,
+              width: _isHovered ? 2.0 : 1.0,
             ),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Image.asset(
-              widget.imagePath,
-              fit: BoxFit.contain,
-              filterQuality: FilterQuality.high, // ✅ Anti-blur
+            padding: EdgeInsets.all(widget.isMobile ? 12.0 : 16.0),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(4.0),
+              child: Image.asset(
+                widget.imagePath,
+                fit: BoxFit.contain,
+                filterQuality: FilterQuality.high,
+                isAntiAlias: true,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(4.0),
+                    ),
+                    child: Icon(
+                      Icons.business,
+                      color: Colors.grey.shade400,
+                      size: widget.isMobile ? 24.0 : 32.0,
+                    ),
+                  );
+                },
+              ),
             ),
           ),
         ),
