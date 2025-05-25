@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:ui';
+import 'package:eassist_tools_app/blocs/gallery/galleryeventcari_bloc.dart';
+import 'package:eassist_tools_app/common/constants.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CarouselSection extends StatefulWidget {
   final BoxConstraints constraints;
@@ -26,11 +29,13 @@ class _CarouselSectionState extends State<CarouselSection>
   late Animation<double> _hoverAnimation;
   double _currentPageValue = 1000.0;
 
+  /*
   final List<String> _carouselImages = [
     'assets/images/poster_1.png',
     'assets/images/poster_2.png',
     'assets/images/poster_3.png',
   ];
+  */
 
   @override
   void initState() {
@@ -55,6 +60,8 @@ class _CarouselSectionState extends State<CarouselSection>
     });
 
     _startCarouselTimer();
+
+    context.read<GalleryeventCariBloc>().add(RefreshGalleryeventCariEvent());
   }
 
   @override
@@ -207,75 +214,95 @@ class _CarouselSectionState extends State<CarouselSection>
                                 PointerDeviceKind.mouse,
                               },
                             ),
-                            child: PageView.builder(
-                              controller: _carouselController,
-                              onPageChanged: (index) {
-                                setState(() {
-                                  _currentCarouselPage = index % _carouselImages.length;
-                                });
-                              },
-                              itemBuilder: (context, index) {
-                                final realIndex = index % _carouselImages.length;
-                                final scale = _getScale(index);
-                                final opacity = _getOpacity(index);
-                                final isCenter = (_currentPageValue - index).abs() < 0.5;
-
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                  child: Transform.scale(
-                                    scale: scale,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(16.0),
-                                        boxShadow: isCenter ? [
-                                          BoxShadow(
-                                            color: Colors.black.withOpacity(0.15),
-                                            spreadRadius: 3,
-                                            blurRadius: 15,
-                                            offset: const Offset(0, 6),
-                                          ),
-                                        ] : null,
-                                      ),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(16.0),
-                                        child: Stack(
-                                          fit: StackFit.expand,
-                                          children: [
-                                            // Background image
-                                            Image.asset(
-                                              _carouselImages[realIndex],
-                                              fit: BoxFit.cover,
-                                              errorBuilder: (context, error, stackTrace) {
-                                                return Container(
-                                                  color: const Color(0xFF79AB43).withOpacity(0.1),
-                                                  child: const Center(
-                                                    child: Icon(Icons.image_not_supported, size: 48),
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                            // 🔥 Blur effect untuk gambar yang tidak aktif
-                                            if (!isCenter)
-                                              BackdropFilter(
-                                                filter: ImageFilter.blur(
-                                                  sigmaX: 3.0,
-                                                  sigmaY: 3.0,
-                                                ),
-                                                child: Container(
-                                                  color: Colors.black.withOpacity(0.1),
-                                                ),
+                            child: BlocBuilder<GalleryeventCariBloc, GalleryeventCariState>(
+                              builder: (context, state) {
+                                if (state.status == ListStatus.initial) {
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                } else if (state.status == ListStatus.failure) {
+                                  return const Center(
+                                    child: Text('Failed to load images'),
+                                  );
+                                } else if (state.items.isEmpty) {
+                                  return const Center(
+                                    child: Text('No images available'),
+                                  );
+                                } 
+                                return PageView.builder(
+                                  controller: _carouselController,
+                                  onPageChanged: (index) {
+                                    setState(() {
+                                      //_currentCarouselPage = index % _carouselImages.length;
+                                      _currentCarouselPage = index %state.items.length;
+                                    });
+                                  },
+                                  //itemCount: state.items.length,
+                                  itemBuilder: (context, index) {
+                                    final realIndex = index % state.items.length;
+                                    final scale = _getScale(index);
+                                    final opacity = _getOpacity(index);
+                                    final isCenter = (_currentPageValue - index).abs() < 0.5;
+                                
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                      child: Transform.scale(
+                                        scale: scale,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(16.0),
+                                            boxShadow: isCenter ? [
+                                              BoxShadow(
+                                                color: Colors.black.withOpacity(0.15),
+                                                spreadRadius: 3,
+                                                blurRadius: 15,
+                                                offset: const Offset(0, 6),
                                               ),
-                                            // 🔥 Opacity overlay
-                                            Container(
-                                              color: Colors.black.withOpacity(1.0 - opacity),
+                                            ] : null,
+                                          ),
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(16.0),
+                                            child: Stack(
+                                              fit: StackFit.expand,
+                                              children: [
+                                                // Background image
+                                                Image.network(
+                                                  state.items[realIndex].galleryUrl,
+                                                  //_carouselImages[realIndex],
+                                                  fit: BoxFit.cover,
+                                                  errorBuilder: (context, error, stackTrace) {
+                                                    return Container(
+                                                      color: const Color(0xFF79AB43).withOpacity(0.1),
+                                                      child: const Center(
+                                                        child: Icon(Icons.image_not_supported, size: 48),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                                // 🔥 Blur effect untuk gambar yang tidak aktif
+                                                if (!isCenter)
+                                                  BackdropFilter(
+                                                    filter: ImageFilter.blur(
+                                                      sigmaX: 3.0,
+                                                      sigmaY: 3.0,
+                                                    ),
+                                                    child: Container(
+                                                      color: Colors.black.withOpacity(0.1),
+                                                    ),
+                                                  ),
+                                                // 🔥 Opacity overlay
+                                                Container(
+                                                  color: Colors.black.withOpacity(1.0 - opacity),
+                                                ),
+                                              ],
                                             ),
-                                          ],
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ),
+                                    );
+                                  },
                                 );
-                              },
+                              }
                             ),
                           ),
                         ),
@@ -288,24 +315,42 @@ class _CarouselSectionState extends State<CarouselSection>
               const SizedBox(height: 20.0),
 
               // Page Indicator
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                  _carouselImages.length,
-                      (index) => AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                    width: _currentCarouselPage == index ? 24.0 : 8.0,
-                    height: 8.0,
-                    margin: const EdgeInsets.symmetric(horizontal: 3.0),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4.0),
-                      color: _currentCarouselPage == index
-                          ? const Color(0xFF79AB43)
-                          : Colors.grey.shade400,
+              BlocBuilder<GalleryeventCariBloc, GalleryeventCariState>(
+                builder: (context, state) {
+                  if (state.status == ListStatus.initial) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state.status == ListStatus.failure) {
+                    return const Center(
+                      child: Text('Failed to load images'),
+                    );
+                  } else if (state.items.isEmpty) {
+                    return const Center(
+                      child: Text('No images available'),
+                    );
+                  } 
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                      state.items.length,
+                      //_carouselImages.length,
+                          (index) => AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                        width: _currentCarouselPage == index ? 24.0 : 8.0,
+                        height: 8.0,
+                        margin: const EdgeInsets.symmetric(horizontal: 3.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4.0),
+                          color: _currentCarouselPage == index
+                              ? const Color(0xFF79AB43)
+                              : Colors.grey.shade400,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
+                  );
+                }
               ),
             ],
           ),

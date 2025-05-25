@@ -31,4 +31,12 @@ class GallerytestimonyCariModel {
 		'text3': text3,
 		'urutan': urutan.toString()};
 
+  Map<String, String> toMap() {
+    return {
+      'image': image1Url,
+      'name': text1,
+      'quote': text2,
+    };
+  }
+
 }

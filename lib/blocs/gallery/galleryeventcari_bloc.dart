@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/common/constants.dart';
 import 'package:eassist_tools_app/widgets/list_extension.dart';
@@ -16,6 +17,9 @@ class GalleryeventCariBloc extends Bloc<GalleryeventCariEvents, GalleryeventCari
 
 Future<void> onRefreshGalleryeventCari(
 		RefreshGalleryeventCariEvent event, Emitter<GalleryeventCariState> emit) async {
+
+  debugPrint("onRefreshGalleryeventCari called");
+
 	emit(const GalleryeventCariState());
 
 	add(FetchGalleryeventCariEvent());

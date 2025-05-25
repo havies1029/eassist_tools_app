@@ -1,20 +1,39 @@
+import 'package:eassist_tools_app/blocs/gallery/gallerymembercari_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ClientSection extends StatelessWidget {
+class ClientSection extends StatefulWidget {  
   final BoxConstraints constraints;
+
   const ClientSection({super.key, required this.constraints});
 
   @override
-  Widget build(BuildContext context) {
-    final bool isMobile = constraints.maxWidth < 768;
-    final double maxWidth = constraints.maxWidth > 1200
-        ? 1200
-        : constraints.maxWidth * 0.9;
+  State<ClientSection> createState() => ClientSectionState();
+}
 
+
+class ClientSectionState extends State<ClientSection> {
+
+  @override
+  void initState() {
+    super.initState();   
+
+    context.read<GallerymemberCariBloc>().add(RefreshGallerymemberCariEvent());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final bool isMobile = widget.constraints.maxWidth < 768;
+    final double maxWidth = widget.constraints.maxWidth > 1200
+        ? 1200
+        : widget.constraints.maxWidth * 0.9;
+
+    /*
     final List<String> clientLogos = List.generate(
       20,
           (index) => 'assets/images/client_${index + 1}.png',
     );
+    */
 
     // Tetapkan 5 kolom dan atur aspect ratio agar baris sesuai
     final int crossAxisCount = 5;
@@ -59,22 +78,28 @@ class ClientSection extends StatelessWidget {
               SizedBox(height: isMobile ? 30.0 : 40.0),
 
               // Grid Klien
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: clientLogos.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: crossAxisCount,
-                  crossAxisSpacing: isMobile ? 8.0 : 12.0,
-                  mainAxisSpacing: isMobile ? 8.0 : 12.0,
-                  childAspectRatio: childAspectRatio,
-                ),
-                itemBuilder: (context, index) {
-                  return ClientLogoCard(
-                    imagePath: clientLogos[index],
-                    isMobile: isMobile,
+              BlocBuilder<GallerymemberCariBloc, GallerymemberCariState>(
+                  builder: (context, state) {
+                  return GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    //itemCount: clientLogos.length,
+                    itemCount: state.items.length, 
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: crossAxisCount,
+                      crossAxisSpacing: isMobile ? 8.0 : 12.0,
+                      mainAxisSpacing: isMobile ? 8.0 : 12.0,
+                      childAspectRatio: childAspectRatio,
+                    ),
+                    itemBuilder: (context, index) {
+                      return ClientLogoCard(
+                        //imagePath: clientLogos[index],
+                        imagePath: state.items[index].image1Url,
+                        isMobile: isMobile,
+                      );
+                    },
                   );
-                },
+                }
               ),
             ],
           ),
@@ -134,7 +159,7 @@ class _ClientLogoCardState extends State<ClientLogoCard> {
             padding: EdgeInsets.all(widget.isMobile ? 12.0 : 16.0),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(4.0),
-              child: Image.asset(
+              child: Image.network(
                 widget.imagePath,
                 fit: BoxFit.contain,
                 filterQuality: FilterQuality.high,

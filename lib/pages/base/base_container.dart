@@ -1,4 +1,3 @@
-import 'package:eassist_tools_app/pages/chatting/guestscrud_main.dart';
 import 'package:eassist_tools_app/pages/chatting/roomcari_list.dart';
 import 'package:eassist_tools_app/pages/groupchat/groupchat_page.dart';
 import 'package:eassist_tools_app/pages/heropage/hero_main.dart';
@@ -14,7 +13,6 @@ import 'package:eassist_tools_app/pages/simulgis/simulgiscrud_main.dart';
 import 'package:eassist_tools_app/pages/simulgit/simulgitcrud_main.dart';
 import 'package:eassist_tools_app/pages/simulmv/simulmvcrud_main.dart';
 import 'package:eassist_tools_app/pages/simulpar/simulparcrud_main.dart';
-import 'package:eassist_tools_app/pages/dashboard/dashboard_main.dart';
 import 'package:eassist_tools_app/pages/simulwp/simulwpcrud_main.dart';
 import 'package:flutter/material.dart';
 import 'package:eassist_tools_app/pages/profile/profile_main_page.dart';
@@ -199,9 +197,6 @@ class PageContainer extends PageContainerBase {
         break;
       case PageType.klaimtrack:
         page = const Klaim1ListMainPage();
-        break;
-      case PageType.startchat:
-        page = const GuestsCrudMainPage();
         break;
       default:
         page = null;

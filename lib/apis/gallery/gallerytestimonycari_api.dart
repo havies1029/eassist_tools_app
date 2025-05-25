@@ -11,7 +11,6 @@ class GallerytestimonyCariAPI{
 		final http.Response response = await http.get(uri, headers: <String, String>{
 			'Content-Type': 'application/json; odata=verbos',
 			'Accept': 'application/json; odata=verbos',
-			'Authorization': 'Bearer ${AppData.userToken}'
 		});
 
 		if (response.statusCode == 200) {
