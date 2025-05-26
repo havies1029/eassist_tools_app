@@ -32,3 +32,5 @@ class SimulWPPageActive extends HomeState {}
 class SimulFlexasPageActive extends HomeState {}
 
 class TrackKlaimPageActive extends HomeState {}
+
+class StartChatPageActive extends HomeState {}

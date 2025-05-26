@@ -71,6 +71,8 @@ class _HomePageState extends State<HomePage> {
             return const PageContainer(pageType: PageType.simultree);
           } else if (state is TrackKlaimPageActive) {
             return const PageContainer(pageType: PageType.klaimtrack);
+          } else if (state is StartChatPageActive) {
+            return const PageContainer(pageType: PageType.startchat);
           } else if (state is ProfilePageActive) {
             return PageContainerWithUserRepository(
               pageType: PageType.profile,

@@ -1,16 +1,33 @@
+import 'package:eassist_tools_app/blocs/gallery/gallerytestimonycari_bloc.dart';
+import 'package:eassist_tools_app/common/constants.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' show pi;
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class TestimonialSection extends StatelessWidget {
+class TestimonialSection extends StatefulWidget {  
   final BoxConstraints constraints;
 
   const TestimonialSection({super.key, required this.constraints});
 
   @override
-  Widget build(BuildContext context) {
-    final bool isMobile = constraints.maxWidth < 768;
-    final double maxWidth = constraints.maxWidth > 1200 ? 1200 : constraints.maxWidth * 0.9;
+  State<TestimonialSection> createState() => TestimonialSectionState();
+}
 
+class TestimonialSectionState extends State<TestimonialSection> {  
+
+  @override
+  void initState() {
+    super.initState();   
+
+    context.read<GallerytestimonyCariBloc>().add(RefreshGallerytestimonyCariEvent());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final bool isMobile = widget.constraints.maxWidth < 768;
+    final double maxWidth = widget.constraints.maxWidth > 1200 ? 1200 : widget.constraints.maxWidth * 0.9;
+
+    /*
     final List<Map<String, String>> testimonials = [
       {
         'name': 'Putri Ariana',
@@ -38,13 +55,14 @@ class TestimonialSection extends StatelessWidget {
         'quote': '"Pelayanan ramah dan sangat membantu saat pengajuan klaim. JPS terbaik!"',
       },
     ];
+    */
 
     return Container(
       width: double.infinity,
       color: Colors.white,
       child: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: constraints.maxWidth > 1200 ? 64.0 : 32.0,
+          horizontal: widget.constraints.maxWidth > 1200 ? 64.0 : 32.0,
         ),
         child: Center(
           child: Container(
@@ -74,14 +92,32 @@ class TestimonialSection extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 50.0),
-                Wrap(
-                  alignment: WrapAlignment.center,
-                  spacing: 32.0,
-                  runSpacing: 40.0,
-                  children: testimonials
-                      .take(5)
-                      .map((t) => _buildTestimonialItem(t, constraints))
-                      .toList(),
+                BlocBuilder<GallerytestimonyCariBloc, GallerytestimonyCariState>(
+                  builder: (context, state) {
+                    if (state.status == ListStatus.initial) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (state.status == ListStatus.failure) {
+                      return const Center(
+                        child: Text('Failed to load images'),
+                      );
+                    } else if (state.items.isEmpty) {
+                      return const Center(
+                        child: Text('No images available'),
+                      );
+                    } 
+                    return Wrap(
+                      alignment: WrapAlignment.center,
+                      spacing: 32.0,
+                      runSpacing: 40.0,
+                      //children: testimonials                      
+                      children: state.items.map((e) => e.toMap()).toList()
+                          .take(5)
+                          .map((t) => _buildTestimonialItem(t, widget.constraints))
+                          .toList(),
+                    );
+                  }
                 ),
                 const SizedBox(height: 40.0),
                 Align(
@@ -142,7 +178,7 @@ class TestimonialSection extends StatelessWidget {
               Positioned(
                 bottom: 6,
                 child: ClipOval(
-                  child: Image.asset(
+                  child: Image.network(
                     testimonial['image']!,
                     width: 150,
                     height: 150,

@@ -1,4 +1,8 @@
 import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
+import 'package:eassist_tools_app/blocs/chatting/guestscrud_bloc.dart';
+import 'package:eassist_tools_app/blocs/gallery/galleryeventcari_bloc.dart';
+import 'package:eassist_tools_app/blocs/gallery/gallerymembercari_bloc.dart';
+import 'package:eassist_tools_app/blocs/gallery/gallerytestimonycari_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaim/klaim1list_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaim/klaim2list_bloc.dart';
 import 'package:eassist_tools_app/blocs/login/change_password_bloc.dart';
@@ -21,6 +25,7 @@ import 'package:eassist_tools_app/common/loading_indicator.dart';
 import 'package:eassist_tools_app/pages/home/home_page.dart';
 import 'package:eassist_tools_app/pages/login/login_page.dart';
 import 'package:eassist_tools_app/pages/splash/splash_page.dart';
+import 'package:eassist_tools_app/repositories/chatting/guestscrud_repository.dart';
 import 'package:eassist_tools_app/repositories/login/change_password_repository.dart';
 import 'package:eassist_tools_app/repositories/simulbon/simulboncrud_repository.dart';
 import 'package:eassist_tools_app/repositories/simulcar/simulcarcrud_repository.dart';
@@ -38,7 +43,6 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
-
 import 'blocs/simulcar/simulcarcrud_bloc.dart';
 import 'blocs/simulcargo/simulcargocrud_bloc.dart';
 import 'blocs/simulmb/simulmbcrud_bloc.dart';
@@ -48,6 +52,7 @@ Future<void> main() async {
   
   final userRepository = UserRepository();
   AppData.kIsWeb = kIsWeb;
+  
   runApp(BlocProvider<AuthenticationBloc>(
     create: (context) {
       return AuthenticationBloc(userRepository: userRepository)
@@ -111,20 +116,32 @@ class App extends StatelessWidget {
           create: (context) =>
               SimulcargoCrudBloc(repository: SimulcargoCrudRepository())),
         BlocProvider<SimulcarCrudBloc>(
-            create: (context) =>
-              SimulcarCrudBloc(repository: SimulcarCrudRepository())),
+          create: (context) =>
+            SimulcarCrudBloc(repository: SimulcarCrudRepository())),
         BlocProvider<SimulmbCrudBloc>(
-            create: (context) =>
-              SimulmbCrudBloc(repository: SimulmbCrudRepository())),
+          create: (context) =>
+            SimulmbCrudBloc(repository: SimulmbCrudRepository())),
         BlocProvider<SimultreeCrudBloc>(
-            create: (context) =>
-                SimultreeCrudBloc(repository: SimultreeCrudRepository())),
+          create: (context) =>
+              SimultreeCrudBloc(repository: SimultreeCrudRepository())),
         BlocProvider<Klaim1ListBloc>(
-              create: (context) =>
-                Klaim1ListBloc()),
-          BlocProvider<Klaim2ListBloc>(
-              create: (context) =>
-                  Klaim2ListBloc()),
+          create: (context) =>
+            Klaim1ListBloc()),
+        BlocProvider<Klaim2ListBloc>(
+          create: (context) =>
+              Klaim2ListBloc()),        
+        BlocProvider<GuestsCrudBloc>(
+          create: (context) =>
+              GuestsCrudBloc(repository: GuestsCrudRepository())),
+        BlocProvider<GalleryeventCariBloc>(
+          create: (context) =>
+              GalleryeventCariBloc()),        
+        BlocProvider<GallerytestimonyCariBloc>(
+          create: (context) =>
+              GallerytestimonyCariBloc()),        
+        BlocProvider<GallerymemberCariBloc>(
+          create: (context) =>
+              GallerymemberCariBloc()),        
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -166,6 +183,7 @@ class App extends StatelessWidget {
             }
         
             if (AppData.kIsWeb) {
+              debugPrint("AppData.kIsWeb #40");
               return LoginPage(
                 userRepository: userRepository,
               );
