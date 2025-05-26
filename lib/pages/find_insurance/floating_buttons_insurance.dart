@@ -20,14 +20,12 @@ class _FloatingButtonsState extends State<FloatingButtons>
   late Animation<double> _buttonsStaggerAnimation;
 
   bool get isMobile => widget.constraints.maxWidth < 768;
-  double get maxWidth =>
-      widget.constraints.maxWidth > 1200 ? 1200 : widget.constraints.maxWidth * 0.9;
+  double get maxWidth => widget.constraints.maxWidth > 1200 ? 1200 : widget.constraints.maxWidth * 0.9;
   double get sidePadding => widget.constraints.maxWidth > 1200 ? 64.0 : 32.0;
   double get innerPadding => isMobile ? 16.0 : 40.0;
 
   GoogleSignInAccount? _user;
 
-  // Statistics-related controllers and animations
   late AnimationController _cardsController;
   late AnimationController _numberController;
   late List<AnimationController> _hoverControllers;
@@ -86,7 +84,6 @@ class _FloatingButtonsState extends State<FloatingButtons>
       curve: Curves.easeOutCubic,
     ));
 
-    // Initialize statistics animations
     _cardsController = AnimationController(
       duration: const Duration(milliseconds: 1200),
       vsync: this,
@@ -170,7 +167,6 @@ class _FloatingButtonsState extends State<FloatingButtons>
   }
 
   Future<void> _handleSignIn() async {
-    debugPrint("handle sign in");
     try {
       final user = await _googleSignIn.signIn();
       setState(() => _user = user);
@@ -178,8 +174,6 @@ class _FloatingButtonsState extends State<FloatingButtons>
       if (user != null) {
         final auth = await user.authentication;
         final idToken = auth.idToken;
-
-        // Kirim ID Token ke backend kamu via HTTP POST
         print("ID Token: $idToken");
       }
     } catch (error) {
@@ -188,10 +182,8 @@ class _FloatingButtonsState extends State<FloatingButtons>
   }
 
   Future<void> _handleSignOut() async {
-    debugPrint("handle sign out");
     try {
       await _googleSignIn.signOut();
-      //await _googleSignIn.disconnect();
       setState(() => _user = null);
     } catch (error) {
       print('Logout gagal: $error');
@@ -223,11 +215,8 @@ class _FloatingButtonsState extends State<FloatingButtons>
   Widget _buildDesktopLayout() {
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Colors.white,
-            const Color(0xFFF8FBF5),
-          ],
+        gradient: const LinearGradient(
+          colors: [Colors.white, Color(0xFFF8FBF5)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -299,17 +288,8 @@ class _FloatingButtonsState extends State<FloatingButtons>
                       decoration: BoxDecoration(
                         color: isMobileCard ? Colors.white : Colors.transparent,
                         borderRadius: isMobileCard ? BorderRadius.circular(16.0) : null,
-                        border: !isMobileCard
-                            ? Border(
-                          right: index < _statistics.length - 1
-                              ? BorderSide(
-                            color: Colors.grey.withOpacity(0.2),
-                            width: 1,
-                          )
-                              : BorderSide.none,
-                        )
-                            : null,
-                        boxShadow: isMobileCard ? [
+                        boxShadow: isMobileCard
+                            ? [
                           BoxShadow(
                             color: Colors.black.withOpacity(0.05),
                             blurRadius: _elevationAnimations[index].value,
@@ -320,49 +300,50 @@ class _FloatingButtonsState extends State<FloatingButtons>
                             blurRadius: _elevationAnimations[index].value * 2,
                             offset: Offset(0, _elevationAnimations[index].value),
                           ),
-                        ] : null,
+                        ]
+                            : null,
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          AnimatedBuilder(
-                            animation: _numberAnimations[index],
-                            builder: (context, child) {
-                              return ShaderMask(
-                                shaderCallback: (bounds) => LinearGradient(
-                                  colors: [
-                                    stat.color,
-                                    stat.color.withOpacity(0.8),
-                                  ],
-                                ).createShader(bounds),
-                                child: Text(
-                                  '${stat.prefix ?? ''}${_numberAnimations[index].value.toInt()}${stat.suffix}',
-                                  style: TextStyle(
-                                    fontFamily: 'Satoshi-Bold',
-                                    fontSize: isMobile ? 24.0 : 28.0,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.white,
-                                    letterSpacing: -0.5,
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                          const SizedBox(height: 8.0),
-                          Text(
-                            stat.title,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontFamily: 'Satoshi-Regular',
-                              color: Colors.grey[600],
-                              fontSize: isMobile ? 13.0 : 14.0,
-                              fontWeight: FontWeight.w500,
-                              height: 1.2,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            // 1. TITLE DI ATAS
+                            Text(
+                              stat.title,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: 'Satoshi-Regular',
+                                color: Colors.grey[600],
+                                fontSize: isMobile ? 13.0 : 14.0,
+                                fontWeight: FontWeight.w500,
+                                height: 1.2,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
+                            const SizedBox(height: 8.0),
+
+                            // 2. ANGKA DI BAWAH
+                            AnimatedBuilder(
+                              animation: _numberAnimations[index],
+                              builder: (context, child) {
+                                return ShaderMask(
+                                  shaderCallback: (bounds) => LinearGradient(
+                                    colors: [stat.color, stat.color.withOpacity(0.8)],
+                                  ).createShader(bounds),
+                                  child: Text(
+                                    '${stat.prefix ?? ''}${_numberAnimations[index].value.toInt()}${stat.suffix}',
+                                    style: TextStyle(
+                                      fontFamily: 'Satoshi-Bold',
+                                      fontSize: isMobile ? 24.0 : 28.0,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.white,
+                                      letterSpacing: -0.5,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                     ),
                   );
                 },

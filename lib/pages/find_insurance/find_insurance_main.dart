@@ -90,7 +90,7 @@ class _FindInsurancePageState extends State<FindInsurancePage> {
                     _buildNavBar(constraints),
                     HeroSection(constraints: constraints),
                     FloatingButtons(constraints: constraints),
-                    ActionSection(constraints: constraints),
+                    // ActionSection(constraints: constraints),
                     FeatureSection(constraints: constraints),
                     CarouselSection(constraints: constraints),
                     TestimonialSection(constraints: constraints),

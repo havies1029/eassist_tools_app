@@ -1,6 +1,7 @@
 import 'package:eassist_tools_app/pages/chatting/roomcari_list.dart';
 import 'package:eassist_tools_app/pages/find_insurance/find_insurance_main.dart';
 import 'package:eassist_tools_app/pages/groupchat/groupchat_page.dart';
+import 'package:eassist_tools_app/pages/hero_user_page/hero_user_main.dart';
 import 'package:eassist_tools_app/pages/heropage/hero_main.dart';
 import 'package:eassist_tools_app/pages/home/home_page.dart';
 import 'package:eassist_tools_app/menu/app_menu_drawer.dart';
@@ -149,7 +150,7 @@ class PageContainer extends PageContainerBase {
 
     switch (pageType) {
       case PageType.home:
-        page = const FindInsuranceMain();
+        page = const HeroUserMain();
         break;
       case PageType.groupchat:
         page = const ChatPage(roomId: "support");

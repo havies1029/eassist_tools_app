@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 final GoogleSignIn _googleSignIn = GoogleSignIn(
-  scopes: ['email', 'profile'],
-  clientId: "217496566954-tiqmna993j1a943i9d86chpas0ipktle.apps.googleusercontent.com",
+  scopes: [
+    'email',
+    'profile'
+  ],
+  hostedDomain: "", // biarkan kosong kecuali organisasi
+  serverClientId: "217496566954-tiqmna993j1a943i9d86chpas0ipktle.apps.googleusercontent.com", // Penting!
 );
-
 
 class FloatingButtons extends StatefulWidget {
   final BoxConstraints constraints;

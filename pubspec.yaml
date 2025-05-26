@@ -15,7 +15,12 @@ dependencies:
   google_fonts: ^6.1.0 #baru
   flutter_staggered_animations: ^1.1.1 #baru
 
-
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  google_fonts: ^6.1.0
+  
   accordion: ^2.6.0
   connectivity_plus: ^6.0.2
   collection: ^1.18.0
@@ -47,17 +52,10 @@ dependencies:
   permission_handler: ^11.3.1
   path_provider: ^2.0.11
   quick_input_formatters: ^0.0.4
-  sqflite: ^2.3.1
-  string_validator: ^1.0.2
+  sqflite: ^2.3.1  
+  string_validator: ^1.0.2  
   timelines_plus: ^1.0.3
   uuid: ^4.5.1
-
-
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  flutter_lints: ^5.0.0
-  google_fonts: ^6.1.0
 
 flutter:
   uses-material-design: true
@@ -87,7 +85,6 @@ flutter:
     - assets/images/human.png
     - assets/images/jps_logo.png
     - assets/images/home_2.png
-    - assets/images/home_3.jpg
     - assets/images/poster_1.png
     - assets/images/poster_2.png
     - assets/images/poster_3.png
@@ -117,6 +114,7 @@ flutter:
     - assets/images/client_19.png
     - assets/images/client_20.png
     - assets/images/bg-home.jpg
+    - assets/images/jps_logo1.png
 
   fonts:
     - family: HeeboBold
