@@ -5,9 +5,9 @@ import '../../widgets/section/action_section.dart';
 import '../../widgets/section/carousel_section.dart';
 import '../../widgets/section/client_section.dart';
 import '../../widgets/section/feature_section.dart';
-import '../../widgets/section/floating_buttons.dart';
+import 'floating_buttons_insurance.dart';
 import '../../widgets/section/footer_section.dart';
-import '../../widgets/section/hero_section.dart';
+import 'find_section_insurance.dart';
 import '../../widgets/section/testimonial_section.dart';
 
 class FindInsuranceMain extends StatelessWidget {
@@ -72,12 +72,14 @@ class _FindInsurancePageState extends State<FindInsurancePage> {
         builder: (context, constraints) {
           return Stack(
             children: [
-              // 🔽 Background Image (full fill)
+              // 🔽 Background Image (full fill, tajam)
               Positioned.fill(
                 child: Image.asset(
                   'assets/images/home_3.jpg',
                   fit: BoxFit.cover,
-                  alignment: Alignment.topCenter,
+                  alignment: const Alignment(0, 3),
+                  cacheWidth: 1440,
+                  cacheHeight: 800,
                 ),
               ),
 
