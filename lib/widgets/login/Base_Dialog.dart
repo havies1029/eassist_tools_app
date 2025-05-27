@@ -224,7 +224,6 @@ abstract class BaseDialogState<T extends BaseDialog> extends State<T> with Ticke
       height: 80,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Colors.white,
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.3),
@@ -233,19 +232,12 @@ abstract class BaseDialogState<T extends BaseDialog> extends State<T> with Ticke
           ),
         ],
       ),
-      child: Center(
-        child: Container(
+      child: ClipOval(
+        child: Image.asset(
+          'assets/images/jps_logo.png',
           width: 60,
           height: 60,
-          decoration: const BoxDecoration(
-            shape: BoxShape.circle,
-            color: CustomPopupsUser.primaryGreen,
-          ),
-          child: const Icon(
-            Icons.language,
-            color: Colors.white,
-            size: 30,
-          ),
+          fit: BoxFit.cover,
         ),
       ),
     );

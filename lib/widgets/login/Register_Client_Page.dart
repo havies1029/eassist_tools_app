@@ -145,7 +145,6 @@ class _RegisterDialogState extends State<RegisterDialog> with TickerProviderStat
                           height: 80,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Colors.white,
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.grey.withOpacity(0.3),

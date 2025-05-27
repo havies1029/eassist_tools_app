@@ -57,7 +57,7 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
           // Tombol Gmail dengan Icon
           _buildIconButton(
             text: 'Masuk Menggunakan Gmail',
-            iconPath: 'assets/icons/google_icon.svg',
+            iconPath: 'assets/icons/google-icon.svg',
             isHovering: _isGmailHovering,
             onHover: (hovering) => setState(() => _isGmailHovering = hovering),
             onPressed: () => _handleGmailLogin(),

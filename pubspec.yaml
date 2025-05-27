@@ -121,6 +121,8 @@ flutter:
     - assets/images/about_3.png
     - assets/images/about_4.png
     - assets/images/about_5.png
+    - assets/icons/email_icon.svg
+    - assets/icons/google-icon.svg
 
 fonts:
     - family: HeeboBold
