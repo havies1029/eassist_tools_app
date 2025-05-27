@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import '../login/Popup.dart';
+import '../login/Register_Client_Page.dart';
 
 final GoogleSignIn _googleSignIn = GoogleSignIn(
   scopes: [
@@ -138,14 +140,14 @@ class _FloatingButtonsState extends State<FloatingButtons>
               child: Opacity(
                 opacity: value.clamp(0.0, 1.0),
                 child: EnhancedHoverButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (isLogin) {
                       debugPrint("is Login true");
-                      _handleSignIn();
-                    } else {                        
-                      debugPrint("is login false");// Handle register button press
-                      _handleSignOut();
-                    } 
+                      await CustomPopupsUser.showLoginDialog(context);
+                    } else {
+                      debugPrint("is login false – open register dialog");
+                      await CustomPopupsClient.showRegisterDialog(context); // Munculkan dialog daftar client
+                    }
                   },
                   isLogin: isLogin,
                   delay: delay,
@@ -370,7 +372,7 @@ class _EnhancedHoverButtonState extends State<EnhancedHoverButton>
                     const SizedBox(width: 8.0),
                     Flexible(
                       child: Text(
-                        widget.isLogin ? 'Masuk' : 'Daftar',
+                        widget.isLogin ? 'Masuk' : 'Daftar Client',
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontFamily: 'Satoshi-Regular',

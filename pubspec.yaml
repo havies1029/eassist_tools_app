@@ -115,8 +115,14 @@ flutter:
     - assets/images/client_20.png
     - assets/images/bg-home.jpg
     - assets/images/jps_logo1.png
+    - assets/images/about_jps.png
+    - assets/images/about_1.png
+    - assets/images/about_2.png
+    - assets/images/about_3.png
+    - assets/images/about_4.png
+    - assets/images/about_5.png
 
-  fonts:
+fonts:
     - family: HeeboBold
       fonts:
         - asset: assets/fonts/Heebo-Bold.ttf

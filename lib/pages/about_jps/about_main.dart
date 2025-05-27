@@ -2,23 +2,21 @@ import 'package:flutter/material.dart';
 import 'dart:math' show pi;
 
 import '../../repositories/user/user_repository.dart';
-import '../../widgets/section/action_section.dart';
-import '../../widgets/section/carousel_section.dart';
-import '../../widgets/section/client_section.dart';
-import '../../widgets/section/feature_section.dart';
-import '../../widgets/section/floating_buttons.dart';
+import 'abous_jps.dart';
+import 'action_about_section.dart';
+import 'artikel_card.dart';
+import 'floating_buttons_about.dart';
 import '../../widgets/section/footer_section.dart';
 import '../../widgets/section/navbar_widget.dart';
-import 'hero_section_heropage.dart';
-import '../../widgets/section/testimonial_section.dart';
+import 'hero_section_about.dart';
 
 
 class DummyUserRepository extends UserRepository {
   // Override semua method yang dibutuhkan dengan return dummy data atau kosong
 }
 
-class HeroMain extends StatelessWidget {
-  const HeroMain({super.key});
+class AboutMain extends StatelessWidget {
+  const AboutMain({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -45,13 +43,13 @@ class HeroMain extends StatelessWidget {
           textTheme: ButtonTextTheme.primary,
         ),
       ),
-      home: const HeroPage(),
+      home: const AboutPage(),
     );
   }
 }
 
-class HeroPage extends StatelessWidget {
-  const HeroPage({super.key});
+class AboutPage extends StatelessWidget {
+  const AboutPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -63,8 +61,8 @@ class HeroPage extends StatelessWidget {
               // Layer 1: Background Image
               Positioned.fill(
                 child: Image.asset(
-                  'assets/images/bg-home.jpg',
-                  fit: BoxFit.cover,
+                  'assets/images/about_jps.png',
+                  fit: BoxFit.fill,
                   alignment: const Alignment(0, 3),
                   cacheWidth: 1440,
                   cacheHeight: 800,
@@ -80,10 +78,8 @@ class HeroPage extends StatelessWidget {
                       HeroSection(constraints: constraints),
                       FloatingButtons(constraints: constraints),
                       ActionSection(constraints: constraints),
-                      FeatureSection(constraints: constraints),
-                      CarouselSection(constraints: constraints),
-                      TestimonialSection(constraints: constraints),
-                      ClientSection(constraints: constraints),
+                      AboutJps(constraints: constraints),
+                      ArtikelCard(constraints: constraints),
                       FooterSection(constraints: constraints),
                     ],
                   ),

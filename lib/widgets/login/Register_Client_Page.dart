@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CustomPopups {
+class CustomPopupsClient {
   static const Color primaryGreen = Color(0xFF79AB43);
 
   // Popup untuk Daftar Klien
@@ -91,7 +91,7 @@ class _RegisterDialogState extends State<RegisterDialog> with TickerProviderStat
                     width: double.infinity,
                     padding: const EdgeInsets.all(20),
                     decoration: const BoxDecoration(
-                      color: CustomPopups.primaryGreen,
+                      color: CustomPopupsClient.primaryGreen,
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(20),
                         topRight: Radius.circular(20),
@@ -227,7 +227,7 @@ class _RegisterDialogState extends State<RegisterDialog> with TickerProviderStat
                               boxShadow: _isHovering
                                   ? [
                                 BoxShadow(
-                                  color: CustomPopups.primaryGreen.withOpacity(0.3),
+                                  color: CustomPopupsClient.primaryGreen.withOpacity(0.3),
                                   blurRadius: 10,
                                   offset: const Offset(0, 5),
                                 ),
@@ -241,7 +241,7 @@ class _RegisterDialogState extends State<RegisterDialog> with TickerProviderStat
                                 onTap: () {
                                   // Simulasi pendaftaran berhasil
                                   Navigator.of(context).pop();
-                                  CustomPopups.showLoginDialog(context, _emailController.text);
+                                  CustomPopupsClient.showLoginDialog(context, _emailController.text);
                                 },
                                 child: const Center(
                                   child: Text(
@@ -301,7 +301,7 @@ class _RegisterDialogState extends State<RegisterDialog> with TickerProviderStat
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: CustomPopups.primaryGreen, width: 2),
+            borderSide: const BorderSide(color: CustomPopupsClient.primaryGreen, width: 2),
           ),
           filled: true,
           fillColor: Colors.grey.shade50,
@@ -382,7 +382,7 @@ class _LoginDialogState extends State<LoginDialog> with TickerProviderStateMixin
                     width: double.infinity,
                     padding: const EdgeInsets.all(20),
                     decoration: const BoxDecoration(
-                      color: CustomPopups.primaryGreen,
+                      color: CustomPopupsClient.primaryGreen,
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(20),
                         topRight: Radius.circular(20),
@@ -451,7 +451,7 @@ class _LoginDialogState extends State<LoginDialog> with TickerProviderStateMixin
                               height: 60,
                               decoration: const BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: CustomPopups.primaryGreen,
+                                color: CustomPopupsClient.primaryGreen,
                               ),
                               child: const Icon(
                                 Icons.language,
@@ -546,19 +546,19 @@ class _LoginDialogState extends State<LoginDialog> with TickerProviderStateMixin
                             decoration: BoxDecoration(
                               color: _isHovering
                                   ? const Color(0xFF6B9639)
-                                  : CustomPopups.primaryGreen,
+                                  : CustomPopupsClient.primaryGreen,
                               borderRadius: BorderRadius.circular(10),
                               boxShadow: _isHovering
                                   ? [
                                 BoxShadow(
-                                  color: CustomPopups.primaryGreen.withOpacity(0.4),
+                                  color: CustomPopupsClient.primaryGreen.withOpacity(0.4),
                                   blurRadius: 15,
                                   offset: const Offset(0, 8),
                                 ),
                               ]
                                   : [
                                 BoxShadow(
-                                  color: CustomPopups.primaryGreen.withOpacity(0.2),
+                                  color: CustomPopupsClient.primaryGreen.withOpacity(0.2),
                                   blurRadius: 5,
                                   offset: const Offset(0, 3),
                                 ),
@@ -574,7 +574,7 @@ class _LoginDialogState extends State<LoginDialog> with TickerProviderStateMixin
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text('Login berhasil!'),
-                                      backgroundColor: CustomPopups.primaryGreen,
+                                      backgroundColor: CustomPopupsClient.primaryGreen,
                                     ),
                                   );
                                 },
@@ -629,7 +629,7 @@ class DemoPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Custom Popups Demo'),
-        backgroundColor: CustomPopups.primaryGreen,
+        backgroundColor: CustomPopupsClient.primaryGreen,
         foregroundColor: Colors.white,
       ),
       body: Center(
@@ -638,21 +638,21 @@ class DemoPage extends StatelessWidget {
           children: [
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: CustomPopups.primaryGreen,
+                backgroundColor: CustomPopupsClient.primaryGreen,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
               ),
-              onPressed: () => CustomPopups.showRegisterDialog(context),
+              onPressed: () => CustomPopupsClient.showRegisterDialog(context),
               child: const Text('Buka Popup Daftar Klien'),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: CustomPopups.primaryGreen,
+                backgroundColor: CustomPopupsClient.primaryGreen,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
               ),
-              onPressed: () => CustomPopups.showLoginDialog(context, 'test@example.com'),
+              onPressed: () => CustomPopupsClient.showLoginDialog(context, 'test@example.com'),
               child: const Text('Buka Popup Login'),
             ),
           ],

@@ -32,7 +32,7 @@ class FooterSection extends StatelessWidget {
           // ─── Copyright Bar ───────────────────────────────
           Container(
             width: double.infinity,
-            color: Colors.white, // ✅ Sama seperti background lainnya
+            color: Colors.white,
             padding: const EdgeInsets.symmetric(vertical: 20.0),
             child: Center(
               child: Container(
@@ -43,7 +43,7 @@ class FooterSection extends StatelessWidget {
                   style: const TextStyle(
                     fontFamily: 'Satoshi-Regular',
                     fontSize: 18.0,
-                    color: Color(0xFF444444),
+                    color: Color(0xFF79AB43),
                   ),
                 ),
               ),

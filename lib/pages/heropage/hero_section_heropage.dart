@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../widgets/login/Register_Client_Page.dart';
 
 class HeroSection extends StatelessWidget {
   final BoxConstraints constraints;
