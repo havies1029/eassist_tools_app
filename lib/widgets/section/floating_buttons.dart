@@ -1,7 +1,11 @@
+import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import '../login/Popup.dart';
 import '../login/Register_Client_Page.dart';
+import 'package:eassist_tools_app/widgets/google_signin_button_stub.dart'
+    if (dart.library.js_interop) 'package:eassist_tools_app/widgets/google_signin_button_web.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
 
 final GoogleSignIn _googleSignIn = GoogleSignIn(
   scopes: [
@@ -51,6 +55,11 @@ class _FloatingButtonsState extends State<FloatingButtons>
     ));
 
     _startAnimations();
+
+    if (AppData.kIsWeb) {
+      // Register the Google Sign-In button for we
+      registerGoogleSigninButton();
+    }
   }
 
   void _startAnimations() async {
@@ -101,7 +110,7 @@ class _FloatingButtonsState extends State<FloatingButtons>
                   Padding(
                     padding: const EdgeInsets.only(left: 42.0), // ⬅️ Geser sedikit ke tengah
                     child: Row(
-                      children: [
+                      children: [                        
                         _buildAnimatedButton(
                           isLogin: true,
                           delay: const Duration(milliseconds: 0),
