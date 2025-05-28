@@ -68,13 +68,6 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // Logo JPS
-                      CircleAvatar(
-                        radius: 40,
-                        backgroundColor: Colors.white,
-                        backgroundImage: const AssetImage('assets/images/jps_logo.png'), // ganti sesuai logo
-                      ),
-                      const SizedBox(height: 24),
                       _buildMobileBody(),
                     ],
                   ),
@@ -96,6 +89,9 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
   Widget _buildMobileBody() {
     return Column(
       children: [
+        buildLogo(),
+        const SizedBox(height: 30),
+
         buildTextField(
           controller: _emailController,
           hintText: 'Email',

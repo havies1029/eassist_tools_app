@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../heropage/hero_main.dart';
+
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
 
@@ -53,14 +55,20 @@ class _SplashPageState extends State<SplashPage>
   }
 
   void _startAnimations() async {
-    // Mulai kedua animasi bersamaan
     _backgroundController.forward();
     _logoController.forward();
 
-    // Setelah animasi selesai, bisa navigasi ke halaman berikutnya
     await Future.delayed(const Duration(milliseconds: 2500));
-    // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => NextPage()));
+
+    // Cek apakah widget masih aktif sebelum navigasi
+    if (mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HeroMain()),
+      );
+    }
   }
+
 
   @override
   void dispose() {
