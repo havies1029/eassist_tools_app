@@ -28,7 +28,8 @@ enum PageType {
   simulcar,
   simulmb,
   simultree,
-  klaimtrack
+  klaimtrack,
+  startchat
 }
 
 abstract class PageContainerBase extends StatefulWidget {
@@ -59,14 +60,15 @@ class PageContainerBaseState extends State<PageContainerBase> {
     return MobileDesignWidget(
       child: Container(
         color: Colors.grey[200],
-        child: pageContainerType(
-            context,
-            widget.body,
-            widget.pageTitle,
-            widget.menuDrawer,
-            widget.background,
-            widget.backgroundColor,
-            widget.parentModal),
+        child: widget.body, //baru
+        //   child: pageContainerType(
+      //       context,
+      //       widget.body,
+      //       widget.pageTitle,
+      //       widget.menuDrawer,
+      //       widget.background,
+      //       widget.backgroundColor,
+      //       widget.parentModal),
       ),
     );
   }

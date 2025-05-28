@@ -1,5 +1,8 @@
 import 'package:eassist_tools_app/pages/chatting/roomcari_list.dart';
+import 'package:eassist_tools_app/pages/find_insurance/find_insurance_main.dart';
 import 'package:eassist_tools_app/pages/groupchat/groupchat_page.dart';
+import 'package:eassist_tools_app/pages/hero_user_page/hero_user_main.dart';
+import 'package:eassist_tools_app/pages/heropage/hero_main.dart';
 import 'package:eassist_tools_app/pages/home/home_page.dart';
 import 'package:eassist_tools_app/menu/app_menu_drawer.dart';
 import 'package:eassist_tools_app/pages/base/base_page.dart';
@@ -12,12 +15,12 @@ import 'package:eassist_tools_app/pages/simulgis/simulgiscrud_main.dart';
 import 'package:eassist_tools_app/pages/simulgit/simulgitcrud_main.dart';
 import 'package:eassist_tools_app/pages/simulmv/simulmvcrud_main.dart';
 import 'package:eassist_tools_app/pages/simulpar/simulparcrud_main.dart';
-import 'package:eassist_tools_app/pages/dashboard/dashboard_main.dart';
 import 'package:eassist_tools_app/pages/simulwp/simulwpcrud_main.dart';
 import 'package:flutter/material.dart';
 import 'package:eassist_tools_app/pages/profile/profile_main_page.dart';
 import 'package:eassist_tools_app/repositories/user/user_repository.dart';
 
+import '../about_jps/about_main.dart';
 import '../simulcar/simulcarcrud_main.dart';
 import '../simulcargo/simulcargocrud_main.dart';
 import '../simulmb/simulmbcrud_main.dart';
@@ -135,6 +138,8 @@ class PageContainer extends PageContainerBase {
         return "Calc. Premi TREE";
       case PageType.klaimtrack:
         return "Lacak Klaim";
+      case PageType.startchat:
+        return "Start Chat";
       default:
         return "Login Page";
     }
@@ -146,7 +151,7 @@ class PageContainer extends PageContainerBase {
 
     switch (pageType) {
       case PageType.home:
-        page = const DashboardMain();
+        page = const HeroMain();
         break;
       case PageType.groupchat:
         page = const ChatPage(roomId: "support");

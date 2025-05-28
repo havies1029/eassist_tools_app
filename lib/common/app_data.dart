@@ -14,7 +14,6 @@ class AppData {
   static var uriHtpp = useSSL ? Uri.https : Uri.http;
   static String version = "1.0.2";
 
-
 /*
    static bool useSSL = false;
    static String apiDomain = "http://10.0.2.2/eAssistToolsAPI/";
@@ -28,6 +27,7 @@ class AppData {
       "http${useSSL ? "s" : ""}://eassisttoolsapi.smartsoft-id.com/";
   static String prefixEndPoint = "";
   static String httpAuthority = "eassisttoolsapi.smartsoft-id.com";
+
 
 /*
 static bool useSSL = false;
