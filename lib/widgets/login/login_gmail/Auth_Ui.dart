@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart'; // Add this import for SVG support
-import 'base_dialog.dart';
+import '../../register/register_gmail/Popup.dart';
+import 'Base_Dialog.dart';
 import 'Popup.dart';
 import 'Auth_Api.dart'; // Import service untuk API calls
 
@@ -17,6 +18,9 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
   bool _isHovering = false;
   bool _isGmailHovering = false;
   bool _isEmailHovering = false;
+  bool _isHoveringRegister = false;
+  bool _isHoveringForgotPassword = false;
+  bool _rememberLogin = false; // State untuk checkbox simpan login
 
   @override
   void dispose() {
@@ -26,22 +30,76 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
+
+    if (isMobile) {
+      // 👉 Tampilan Mobile dengan latar hijau-putih
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: Stack(
+          children: [
+            // Background hijau di bagian atas
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              height: MediaQuery.of(context).size.height * 0.35,
+              child: Container(
+                color: const Color(0xFF79AB43),
+              ),
+            ),
+
+            // Konten di tengah
+            Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Logo JPS
+                      CircleAvatar(
+                        radius: 40,
+                        backgroundColor: Colors.white,
+                        backgroundImage: const AssetImage('assets/images/jps_logo.png'), // atau sesuai logo kamu
+                      ),
+                      const SizedBox(height: 24),
+                      _buildMobileBody(),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    // 👉 Desktop default
     return buildDialogContainer(
-      title: 'Masuk',
+      title: 'Login',
       body: Column(
         children: [
           buildLogo(),
           const SizedBox(height: 30),
-
-          // Input Email
           buildTextField(
             controller: _emailController,
             hintText: 'Email',
             keyboardType: TextInputType.emailAddress,
           ),
           const SizedBox(height: 20),
-
-          // Tombol Masuk
           buildAnimatedButton(
             text: 'Masuk',
             isHovering: _isHovering,
@@ -49,12 +107,8 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
             onPressed: () => _handleLogin(),
           ),
           const SizedBox(height: 20),
-
-          // Divider
           _buildDivider(),
           const SizedBox(height: 20),
-
-          // Tombol Gmail dengan Icon
           _buildIconButton(
             text: 'Masuk Menggunakan Gmail',
             iconPath: 'assets/icons/google-icon.svg',
@@ -62,22 +116,113 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
             onHover: (hovering) => setState(() => _isGmailHovering = hovering),
             onPressed: () => _handleGmailLogin(),
           ),
-          const SizedBox(height: 15),
-
-          // Tombol Email dengan Icon
-          _buildIconButton(
-            text: 'Masuk Menggunakan Email',
-            iconPath: 'assets/icons/email_icon.svg',
-            isHovering: _isEmailHovering,
-            onHover: (hovering) => setState(() => _isEmailHovering = hovering),
-            onPressed: () => _handleEmailLogin(),
-          ),
           const SizedBox(height: 20),
-
-          // Link Daftar
+          _buildLoginOptions(),
+          const SizedBox(height: 20),
           _buildRegisterLink(),
         ],
       ),
+    );
+
+  }
+
+  Widget _buildMobileBody() {
+    return Column(
+      children: [
+        buildTextField(
+          controller: _emailController,
+          hintText: 'Email',
+          keyboardType: TextInputType.emailAddress,
+        ),
+        const SizedBox(height: 20),
+
+        buildAnimatedButton(
+          text: 'Masuk',
+          isHovering: _isHovering,
+          onHover: (hovering) => setState(() => _isHovering = hovering),
+          onPressed: () => _handleLogin(),
+        ),
+        const SizedBox(height: 20),
+
+        _buildDivider(),
+        const SizedBox(height: 20),
+
+        _buildIconButton(
+          text: 'Masuk Menggunakan Gmail',
+          iconPath: 'assets/icons/google-icon.svg',
+          isHovering: _isGmailHovering,
+          onHover: (hovering) => setState(() => _isGmailHovering = hovering),
+          onPressed: () => _handleGmailLogin(),
+        ),
+        const SizedBox(height: 20),
+
+        _buildLoginOptions(),
+        const SizedBox(height: 20),
+
+        _buildRegisterLink(),
+      ],
+    );
+  }
+
+
+  // Widget untuk checkbox simpan login dan lupa kata sandi
+  Widget _buildLoginOptions() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        // Checkbox Simpan Login
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              _rememberLogin = !_rememberLogin;
+            });
+          },
+          child: Row(
+            children: [
+              SizedBox(
+                width: 20,
+                height: 20,
+                child: Checkbox(
+                  value: _rememberLogin,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      _rememberLogin = value ?? false;
+                    });
+                  },
+                  activeColor: const Color(0xFF7BA05B),
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                'Simpan Login',
+                style: TextStyle(
+                  color: Colors.grey.shade600,
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        // Lupa Kata Sandi
+        MouseRegion(
+          onEnter: (_) => setState(() => _isHoveringForgotPassword = true),
+          onExit: (_) => setState(() => _isHoveringForgotPassword = false),
+          child: GestureDetector(
+            onTap: () => _handleForgotPassword(),
+            child: Text(
+              'Lupa Kata Sandi?',
+              style: TextStyle(
+                color: _isHoveringForgotPassword
+                    ? const Color(0xFF7BA05B)
+                    : Colors.blue.shade600,
+                fontSize: 14,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -157,47 +302,38 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
       ],
     );
   }
-  bool _isHoveringRegister = false;
+
   Widget _buildRegisterLink() {
     return Container(
       width: double.infinity,
       height: 55,
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Belum Memiliki Akun?',
+            'Tidak memiliki akun? ',
             style: TextStyle(
-              color: CustomPopupsUser.lightGreen,
+              color: Colors.grey.shade600,
               fontSize: 14,
             ),
           ),
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context).pop();
-              CustomPopupsUser.showRegisterDialog(context);
-            },
-            child: MouseRegion(
-              onEnter: (_) => setState(() => _isHoveringRegister = true),
-              onExit: (_) => setState(() => _isHoveringRegister = false),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                decoration: BoxDecoration(
-                  color: _isHoveringRegister ? Colors.orange.shade200 : Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: _isHoveringRegister ? Colors.orange : Colors.orange.shade300,
-                  ),
-                ),
-                child: Text(
-                  'Daftar Sekarang',
-                  style: TextStyle(
-                    color: _isHoveringRegister ? Colors.orange.shade900 : Colors.orange.shade700,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
+          MouseRegion(
+            onEnter: (_) => setState(() => _isHoveringRegister = true),
+            onExit: (_) => setState(() => _isHoveringRegister = false),
+            child: GestureDetector(
+              onTap: () async {
+                Navigator.of(context).pop();
+                await CustomPopupsRegisterUser.showRegisterDialog(context);
+              },
+              child: Text(
+                'Daftar',
+                style: TextStyle(
+                  color: _isHoveringRegister
+                      ? const Color(0xFF7BA05B)
+                      : Colors.blue.shade600,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
@@ -208,15 +344,16 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
   }
 
 
+
   // Fungsi yang akan disambungkan ke API
   void _handleLogin() {
     Navigator.of(context).pop();
-    AuthService.login(_emailController.text).then((success) {
+    AuthService.login(_emailController.text, rememberLogin: _rememberLogin).then((success) {
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Login berhasil!'),
-            backgroundColor: CustomPopupsUser.primaryGreen,
+            backgroundColor: CustomPopupsLoginUser.primaryGreen,
           ),
         );
       }
@@ -244,11 +381,24 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Login dengan Email berhasil!'),
-            backgroundColor: CustomPopupsUser.primaryGreen,
+            backgroundColor: CustomPopupsLoginUser.primaryGreen,
           ),
         );
       }
     });
+  }
+
+  void _handleForgotPassword() {
+    // Implementasi untuk lupa kata sandi
+    Navigator.of(context).pop();
+    // Bisa menampilkan dialog baru untuk reset password
+    // atau navigate ke halaman forgot password
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Fitur lupa kata sandi akan ditambahkan'),
+        backgroundColor: Colors.orange,
+      ),
+    );
   }
 }
 
@@ -354,7 +504,7 @@ class _RegisterDialogState extends BaseDialogState<RegisterDialog> {
     ).then((success) {
       if (success) {
         Navigator.of(context).pop();
-        CustomPopupsUser.showLoginDialog(context, email: _emailController.text);
+        CustomPopupsLoginUser.showLoginDialog(context, email: _emailController.text);
       }
     });
   }
@@ -389,7 +539,7 @@ class _OTPLoginDialogState extends BaseDialogState<OTPLoginDialog> {
   @override
   Widget build(BuildContext context) {
     return buildDialogContainer(
-      title: 'Masuk',
+      title: 'Login',
       body: Column(
         children: [
           buildLogo(),
@@ -487,10 +637,10 @@ class _OTPLoginDialogState extends BaseDialogState<OTPLoginDialog> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Login berhasil!'),
-            backgroundColor: CustomPopupsUser.primaryGreen,
+            backgroundColor: CustomPopupsLoginUser.primaryGreen,
           ),
         );
       }
-      });
-    }
+    });
   }
+}

@@ -5,21 +5,21 @@ import '../../repositories/user/user_repository.dart';
 import '../../widgets/login/login_client/popup_client.dart';
 import '../../widgets/section/navbar_widget.dart';
 import '../profile/profile_main_page.dart';
-import 'action_user_section.dart';
 import '../../widgets/section/carousel_section.dart';
 import '../../widgets/section/client_section.dart';
 import '../../widgets/section/feature_section.dart';
-import 'floating_buttons_user.dart';
+import '../../widgets/section/about/floating_buttons_about.dart';
 import '../../widgets/section/footer_section.dart';
-import 'hero_section_heropage.dart';
+import '../../widgets/section/about/hero_section_about.dart';
 import '../../widgets/section/testimonial_section.dart';
+import 'action_article_section.dart';
 
 class DummyUserRepository extends UserRepository {
   // Override semua method yang dibutuhkan dengan return dummy data atau kosong
 }
 
-class HeroUserMain extends StatelessWidget {
-  const HeroUserMain({super.key});
+class ArticleMain extends StatelessWidget {
+  const ArticleMain({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -46,13 +46,13 @@ class HeroUserMain extends StatelessWidget {
           textTheme: ButtonTextTheme.primary,
         ),
       ),
-      home: const HeroUserPage(),
+      home: const ArticlePage(),
     );
   }
 }
 
-class HeroUserPage extends StatelessWidget {
-  const HeroUserPage({super.key});
+class ArticlePage extends StatelessWidget {
+  const ArticlePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +64,7 @@ class HeroUserPage extends StatelessWidget {
               // Layer 1: Background Image
               Positioned.fill(
                 child: Image.asset(
-                  'assets/images/home_3.jpg',
+                  'assets/images/article_home.png',
                   fit: BoxFit.cover,
                   alignment: const Alignment(0, 3),
                   cacheWidth: 1440,
@@ -81,10 +81,6 @@ class HeroUserPage extends StatelessWidget {
                       HeroSection(constraints: constraints),
                       FloatingButtons(constraints: constraints),
                       ActionSection(constraints: constraints),
-                      FeatureSection(constraints: constraints),
-                      CarouselSection(constraints: constraints),
-                      TestimonialSection(constraints: constraints),
-                      ClientSection(constraints: constraints),
                       FooterSection(constraints: constraints),
                     ],
                   ),

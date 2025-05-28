@@ -31,11 +31,10 @@ class _AboutJpsState extends State<AboutJps> with TickerProviderStateMixin {
   bool get isMobile => widget.constraints.maxWidth < 768;
   bool get isTablet => widget.constraints.maxWidth >= 768 && widget.constraints.maxWidth < 1024;
   double get maxWidth => widget.constraints.maxWidth > 1300 ? 1200 : widget.constraints.maxWidth * 0.9;
-  double get contentPadding => isMobile ? 16.0 : 32.0;
+  double get contentPadding => isMobile ? 16.0 : 10.0;
 
   final GlobalKey _descriptionKey = GlobalKey();
   double _textHeight = 0.0;
-
 
   @override
   void initState() {
@@ -120,8 +119,6 @@ class _AboutJpsState extends State<AboutJps> with TickerProviderStateMixin {
         });
       }
     });
-
-    _controller.forward();
   }
 
   @override
@@ -178,63 +175,101 @@ class _AboutJpsState extends State<AboutJps> with TickerProviderStateMixin {
         ],
       );
     } else {
-      return Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      // Desktop layout
+      return Column(
         children: [
-          // Kolom 1: Gambar about_1 & about_3
-          Expanded(
-            flex: 3,
-            child: Column(
-              children: [
-                _buildAnimatedImageContainer(
-                  'assets/images/about_1.png',
-                  height: 160,
-                  animation: _staggeredAnimation1,
-                  hoverController: _hoverController1,
+          // Row 1: Gambar 1 & 2, dan teks
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Kiri: 2 gambar atas
+              Expanded(
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: Column(
+                    // mainAxisAlignment: MainAxisAlignment.start, // <-- rata bawah
+                    children: [
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: SizedBox(
+                          width: 420,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.end, // Sebenarnya dengan Expanded, ini tidak ngaruh, tapi boleh dipakai
+                            children: [
+                              Expanded(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(40.0),
+                                  child: Image.asset(
+                                    'assets/images/about_2.png',
+                                    fit: BoxFit.fitHeight,
+                                    width: double.infinity,
+                                    height: 200,
+                                    alignment: Alignment.bottomRight,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(40.0),
+                                  child: Image.asset(
+                                    'assets/images/about_3.png',
+                                    fit: BoxFit.fitHeight,
+                                    width: double.infinity,
+                                    height: 250,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 16),
-                _buildAnimatedImageContainer(
-                  'assets/images/about_3.png',
-                  height: 160,
-                  animation: _staggeredAnimation3,
-                  hoverController: _hoverController3,
-                ),
-              ],
-            ),
+              ),
+              const SizedBox(width: 12),
+              // Kanan: Text
+              Expanded(
+                child: _buildAnimatedDescription(),
+              ),
+            ],
           ),
-          const SizedBox(width: 16),
-
-          // Kolom 2: Gambar about_2 & about_4
-          Expanded(
-            flex: 3,
-            child: Column(
-              children: [
-                _buildAnimatedImageContainer(
-                  'assets/images/about_2.png',
-                  height: 160,
-                  animation: _staggeredAnimation2,
-                  hoverController: _hoverController2,
+          const SizedBox(height: 28),
+          // Row 2: Gambar 3 & 4, fill full width, height lebih pendek
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(40.0),
+                  child: Image.asset(
+                    'assets/images/about_1.png',
+                    fit: BoxFit.fitHeight, // atau coba BoxFit.contain
+                    width: double.infinity,
+                    height: 250,
+                    alignment: Alignment.topRight,
+                  ),
                 ),
-                const SizedBox(height: 16),
-                _buildAnimatedImageContainer(
-                  'assets/images/about_4.png',
-                  height: 160,
-                  animation: _staggeredAnimation4,
-                  hoverController: _hoverController4,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(40.0),
+                  child: Image.asset(
+                    'assets/images/about_4.png',
+                    fit: BoxFit.fitHeight, // Untuk fill, atau coba BoxFit.contain
+                    width: double.infinity,
+                    height: 250,
+                    alignment: Alignment.topLeft,
+                  ),
                 ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 50),
-
-          // Kolom 3: Deskripsi panjang membentang
-          Expanded(
-            flex: 5,
-            child: _buildAnimatedDescription(),
+              ),
+            ],
           ),
         ],
       );
-
     }
   }
 
@@ -399,53 +434,53 @@ class _AboutJpsState extends State<AboutJps> with TickerProviderStateMixin {
 
   Widget _buildAnimatedDescription() {
     return FadeTransition(
-      opacity: _textFadeAnimation,
-      child: Transform.translate(
-        offset: Offset(0, 30 * (1 - _textFadeAnimation.value)),
-        child: Column(
-          key: _descriptionKey,
-          crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Mengenal JPS: Jelas, Praktis, dan Solutif!',
-              style: TextStyle(
-                fontFamily: 'Satoshi-Regular',
-                fontSize: isMobile ? 14.0 : 16.0,
-                fontWeight: FontWeight.w600,
-                color: const Color(0xFF79AB43),
-                height: 1.3,
-              ),
-              textAlign: isMobile ? TextAlign.center : TextAlign.left,
+        opacity: _textFadeAnimation,
+        child: Transform.translate(
+            offset: Offset(0, 30 * (1 - _textFadeAnimation.value)),
+            child: Column(
+              key: _descriptionKey,
+              crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Mengenal JPS: Jelas, Praktis, dan Solutif!',
+                  style: TextStyle(
+                    fontFamily: 'Satoshi-Regular',
+                    fontSize: isMobile ? 14.0 : 16.0,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFF79AB43),
+                    height: 1.3,
+                  ),
+                  textAlign: isMobile ? TextAlign.center : TextAlign.left,
+                ),
+                const SizedBox(height: 12.0),
+                Text(
+                  'Tentang JPS',
+                  style: TextStyle(
+                    fontFamily: 'Satoshi-Regular',
+                    fontSize: isMobile ? 28.0 : 36.0,
+                    fontWeight: FontWeight.w700,
+                    color: const Color(0xFF2D3748),
+                    height: 1.2,
+                  ),
+                  textAlign: isMobile ? TextAlign.center : TextAlign.left,
+                ),
+                const SizedBox(height: 20.0),
+                Text(
+                  'JPS hadir untuk memudahkan Anda memahami dunia asuransi tanpa ribet. Kami menyediakan informasi yang jelas, proses klaim yang praktis, dan solusi tepat guna yang membantu Anda mendapatkan perlindungan terbaik. Bersama JPS, asuransi tak lagi rumit, tapi jadi lebih dekat dan lebih mudah dimengerti oleh semua kalangan.',
+                  style: TextStyle(
+                    fontFamily: 'Satoshi-Regular',
+                    fontSize: isMobile ? 16.0 : 16.0,
+                    fontWeight: FontWeight.w400,
+                    color: const Color(0xFF718096),
+                    height: 1.6,
+                  ),
+                  textAlign: isMobile ? TextAlign.center : TextAlign.left,
+                ),
+                const SizedBox(height: 24.0),
+              ],
             ),
-            const SizedBox(height: 12.0),
-            Text(
-              'Tentang JPS',
-              style: TextStyle(
-                fontFamily: 'Satoshi-Regular',
-                fontSize: isMobile ? 28.0 : 36.0,
-                fontWeight: FontWeight.w700,
-                color: const Color(0xFF2D3748),
-                height: 1.2,
-              ),
-              textAlign: isMobile ? TextAlign.center : TextAlign.left,
             ),
-            const SizedBox(height: 20.0),
-            Text(
-              'JPS hadir untuk memudahkan Anda memahami dunia asuransi tanpa ribet. Kami menyediakan informasi yang jelas, proses klaim yang praktis, dan solusi tepat guna yang membantu Anda mendapatkan perlindungan terbaik. Bersama JPS, asuransi tak lagi rumit, tapi jadi lebih dekat dan lebih mudah dimengerti oleh semua kalangan.',
-              style: TextStyle(
-                fontFamily: 'Satoshi-Regular',
-                fontSize: isMobile ? 16.0 : 16.0,
-                fontWeight: FontWeight.w400,
-                color: const Color(0xFF718096),
-                height: 1.6,
-              ),
-              textAlign: isMobile ? TextAlign.center : TextAlign.left,
-            ),
-            const SizedBox(height: 24.0),
-          ],
-        ),
-      ),
-    );
-  }
+        );
+    }
 }

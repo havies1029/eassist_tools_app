@@ -21,6 +21,7 @@ import 'package:eassist_tools_app/pages/profile/profile_main_page.dart';
 import 'package:eassist_tools_app/repositories/user/user_repository.dart';
 
 import '../about_jps/about_main.dart';
+import '../article_page/article_main.dart';
 import '../simulcar/simulcarcrud_main.dart';
 import '../simulcargo/simulcargocrud_main.dart';
 import '../simulmb/simulmbcrud_main.dart';
@@ -151,6 +152,7 @@ class PageContainer extends PageContainerBase {
 
     switch (pageType) {
       case PageType.home:
+        // page = const HeroMain();
         page = const HeroMain();
         break;
       case PageType.groupchat:

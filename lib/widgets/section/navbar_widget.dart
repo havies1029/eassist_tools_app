@@ -1,14 +1,18 @@
+import 'package:eassist_tools_app/pages/splash/splash_page.dart';
 import 'package:eassist_tools_app/widgets/profile/profile_individu/profile_individu_main_page.dart';
+import 'package:eassist_tools_app/widgets/register/register_gmail/Popup.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' show pi;
 
 import '../../pages/about_jps/about_main.dart';
+import '../../pages/article_page/article_main.dart';
 import '../../pages/hero_user_page/hero_user_main.dart';
 import '../../pages/heropage/hero_main.dart';
 import '../../pages/profile/profile_main_page.dart';
+import '../../pages/testimony_page/testimony_main.dart';
 import '../../repositories/user/user_repository.dart';
-import '../../widgets/login/Register_Client_Page.dart';
-import '../login/Popup.dart';
+import '../login/login_client/popup_client.dart';
+import '../login/login_gmail/Popup.dart';
 
 
 
@@ -25,6 +29,7 @@ class NavbarWidget extends StatefulWidget {
 }
 
 class _NavbarWidgetState extends State<NavbarWidget> {
+  int _expandedMenuIndex = -1;
   bool _isMenuOpen = false;
   bool _isProfileMenuOpen = false;
   final GlobalKey _menuButtonKey = GlobalKey();
@@ -81,11 +86,12 @@ class _NavbarWidgetState extends State<NavbarWidget> {
         children: [
           // Barrier untuk menutup menu ketika tap di luar
           Positioned.fill(
-            child: GestureDetector(
-              onTap: _closeHamburgerMenu,
-              child: Container(
-                color: Colors.transparent,
-              ),
+            child: Listener(
+              behavior: HitTestBehavior.translucent,
+              onPointerDown: (_) {
+                if (_isMenuOpen) _closeHamburgerMenu();
+              },
+              child: const SizedBox.expand(),
             ),
           ),
           // Menu dropdown
@@ -122,19 +128,20 @@ class _NavbarWidgetState extends State<NavbarWidget> {
     _profileOverlayEntry = OverlayEntry(
       builder: (context) => Stack(
         children: [
-          // Barrier untuk menutup menu ketika tap di luar
+          // 🔽 INI YANG PENTING: Tap luar = tutup dropdown
           Positioned.fill(
-            child: GestureDetector(
-              onTap: _closeProfileMenu,
-              child: Container(
-                color: Colors.transparent,
-              ),
+            child: Listener(
+              behavior: HitTestBehavior.translucent,
+              onPointerDown: (_) {
+                if (_isProfileMenuOpen) _closeProfileMenu();
+              },
+              child: const SizedBox.expand(),
             ),
           ),
-          // Profile dropdown
+          // 🔽 Ini dropdown-nya
           Positioned(
             top: offset.dy + size.height + 8,
-            right: MediaQuery.of(context).size.width - offset.dx - size.width, // Adjust positioning
+            right: MediaQuery.of(context).size.width - offset.dx - size.width,
             child: Material(
               elevation: 16,
               borderRadius: BorderRadius.circular(12),
@@ -185,16 +192,19 @@ class _NavbarWidgetState extends State<NavbarWidget> {
         child: Row(
           children: [
             // Logo
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HeroMain()),
-                );
-              },
-              child: Image.asset(
-                'assets/images/jps_logo.png',
-                height: 60.0,
+            MouseRegion(
+              cursor: SystemMouseCursors.click, // <-- ini membuat kursor jadi pointer
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HeroMain()),
+                  );
+                },
+                child: Image.asset(
+                  'assets/images/jps_logo.png',
+                  height: 60.0,
+                ),
               ),
             ),
 
@@ -794,7 +804,7 @@ class _NavbarWidgetState extends State<NavbarWidget> {
                     SubMenuItem(
                       icon: Icons.reviews,
                       title: 'Testimoni',
-                      onTap: () => _handleMenuTap('Testimoni'),
+                      onTap: () => _handleMenuTap('Testimony'),
                     ),
                   ],
                 ),
@@ -802,6 +812,11 @@ class _NavbarWidgetState extends State<NavbarWidget> {
                   icon: Icons.layers, // ikon utama kategori
                   title: 'Semua Page yang telah dibuat',
                   subItems: [
+                    SubMenuItem(
+                      icon: Icons.business_outlined,
+                      title: 'Splash Screen',
+                      onTap: () => _handleMenuTap('Splash Screen'),
+                    ),
                     SubMenuItem(
                       icon: Icons.home_outlined,
                       title: 'Home Page',
@@ -818,6 +833,16 @@ class _NavbarWidgetState extends State<NavbarWidget> {
                       onTap: () => _handleMenuTap('About JPS'),
                     ),
                     SubMenuItem(
+                      icon: Icons.article,
+                      title: 'Article Page',
+                      onTap: () => _handleMenuTap('Article Page'),
+                    ),
+                    SubMenuItem(
+                      icon: Icons.record_voice_over,
+                      title: 'Testimony',
+                      onTap: () => _handleMenuTap('Testimony'),
+                    ),
+                    SubMenuItem(
                       icon: Icons.login_outlined,
                       title: 'Login Gmail',
                       onTap: () => _handleMenuTap('Login Gmail'),
@@ -826,6 +851,11 @@ class _NavbarWidgetState extends State<NavbarWidget> {
                       icon: Icons.person_outline,
                       title: 'Login Client',
                       onTap: () => _handleMenuTap('Login Client'),
+                    ),
+                    SubMenuItem(
+                      icon: Icons.person_outline,
+                      title: 'Register Gmail',
+                      onTap: () => _handleMenuTap('Register Gmail'),
                     ),
                     SubMenuItem(
                       icon: Icons.person_pin_circle_outlined,
@@ -849,10 +879,10 @@ class _NavbarWidgetState extends State<NavbarWidget> {
 
   Future<void> _handleMenuTap(String title) async {
     final dummyUserRepository = DummyUserRepository();
-    if (title == 'Tentang JPS') {
+     if (title == 'Splash Screen') {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const AboutMain()),
+        MaterialPageRoute(builder: (context) => const SplashPage()),
       );
     }else if (title == 'Tentang JPS') {
       Navigator.push(
@@ -874,10 +904,27 @@ class _NavbarWidgetState extends State<NavbarWidget> {
         context,
         MaterialPageRoute(builder: (context) => const AboutMain()),
       );
+    }else if (title == 'Article Page') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ArticleMain()),
+      );
+    }else if (title == 'Testimony') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const TestimonyMain()),
+      );
+    }else if (title == 'Artikel Asuransi') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ArticleMain()),
+      );
     }else if (title == 'Login Gmail') {
-      await CustomPopupsUser.showLoginDialog(context); // misal fungsi static
+      await CustomPopupsLoginUser.showLoginDialog(context);
     }else if (title == 'Login Client') {
       await CustomPopupsClient.showRegisterDialog(context);
+    }else if (title == 'Register Gmail') {
+      await CustomPopupsRegisterUser.showRegisterDialog(context);
     }else if (title == 'Profile Individu') {
       showDialog(
         context: context,

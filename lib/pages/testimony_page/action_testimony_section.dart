@@ -4,22 +4,20 @@ import 'package:flutter/material.dart';
 import 'dart:math' show pi;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../pages/testimony_page/testimony_main.dart';
-
-class TestimonialSection extends StatefulWidget {  
+class ActionSection extends StatefulWidget {
   final BoxConstraints constraints;
 
-  const TestimonialSection({super.key, required this.constraints});
+  const ActionSection({super.key, required this.constraints});
 
   @override
-  State<TestimonialSection> createState() => TestimonialSectionState();
+  State<ActionSection> createState() => ActionSectionState();
 }
 
-class TestimonialSectionState extends State<TestimonialSection> {  
+class ActionSectionState extends State<ActionSection> {
 
   @override
   void initState() {
-    super.initState();   
+    super.initState();
 
     context.read<GallerytestimonyCariBloc>().add(RefreshGallerytestimonyCariEvent());
   }
@@ -59,95 +57,79 @@ class TestimonialSectionState extends State<TestimonialSection> {
     ];
     */
 
-    return Container(
-      width: double.infinity,
-      color: Colors.white,
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: widget.constraints.maxWidth > 1200 ? 64.0 : 32.0,
+    return ClipRRect(
+      borderRadius: const BorderRadius.only(
+        topLeft: Radius.circular(50),
+        topRight: Radius.circular(50),
+      ),
+      child: Container(
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(50),
+            topRight: Radius.circular(50),
+          ),
         ),
-        child: Center(
-          child: Container(
-            width: maxWidth,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(height: 70),
-                RichText(
-                  textAlign: TextAlign.center,
-                  text: const TextSpan(
-                    style: TextStyle(
-                      fontFamily: 'Satoshi-Regular',
-                      fontSize: 25.0,
-                      color: Colors.black,
-                    ),
-                    children: [
-                      TextSpan(text: 'Testimoni Nasabah '),
-                      TextSpan(
-                        text: 'JPS',
-                        style: TextStyle(
-                          color: Color(0xFF79AB43),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 50.0),
-                BlocBuilder<GallerytestimonyCariBloc, GallerytestimonyCariState>(
-                  builder: (context, state) {
-                    if (state.status == ListStatus.initial) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else if (state.status == ListStatus.failure) {
-                      return const Center(
-                        child: Text('Failed to load images'),
-                      );
-                    } else if (state.items.isEmpty) {
-                      return const Center(
-                        child: Text('No images available'),
-                      );
-                    } 
-                    return Wrap(
-                      alignment: WrapAlignment.center,
-                      spacing: 32.0,
-                      runSpacing: 40.0,
-                      //children: testimonials                      
-                      children: state.items.map((e) => e.toMap()).toList()
-                          .take(5)
-                          .map((t) => _buildTestimonialItem(t, widget.constraints))
-                          .toList(),
-                    );
-                  }
-                ),
-                const SizedBox(height: 40.0),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const TestimonyMain()),
-                      );
-                    },
-                    child: const Text(
-                      'Tampilkan semua',
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: widget.constraints.maxWidth > 1200 ? 64.0 : 32.0,
+          ),
+          child: Center(
+            child: Container(
+              width: maxWidth,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 70),
+                  RichText(
+                    textAlign: TextAlign.center,
+                    text: const TextSpan(
                       style: TextStyle(
                         fontFamily: 'Satoshi-Regular',
-                        fontSize: 16.0,
-                        color: Color(0xFF79AB43),
-                        fontWeight: FontWeight.w500,
+                        fontSize: 25.0,
+                        color: Colors.black,
                       ),
+                      children: [
+                        TextSpan(text: 'Testimoni Nasabah '),
+                        TextSpan(
+                          text: 'JPS',
+                          style: TextStyle(
+                            color: Color(0xFF79AB43),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 50.0),
+                  BlocBuilder<GallerytestimonyCariBloc, GallerytestimonyCariState>(
+                    builder: (context, state) {
+                      if (state.status == ListStatus.initial) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (state.status == ListStatus.failure) {
+                        return const Center(child: Text('Failed to load images'));
+                      } else if (state.items.isEmpty) {
+                        return const Center(child: Text('No images available'));
+                      }
+                      return Wrap(
+                        alignment: WrapAlignment.center,
+                        spacing: 32.0,
+                        runSpacing: 40.0,
+                        children: state.items.map((e) => e.toMap())
+                            .map((t) => _buildTestimonialItem(t, widget.constraints))
+                            .toList(),
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
+
   }
 
   Widget _buildTestimonialItem(Map<String, String> testimonial, BoxConstraints constraints) {
