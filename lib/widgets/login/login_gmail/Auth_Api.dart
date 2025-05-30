@@ -8,7 +8,7 @@ class AuthService {
   static const String baseUrl = 'https://your-api-url.com/api';
 
   // Login dengan email dan password
-  static Future<bool> login(String email) async {
+  static Future<bool> login(String email, {required bool rememberLogin}) async {
     try {
       // TODO: Implementasi API call untuk login
       // Example:

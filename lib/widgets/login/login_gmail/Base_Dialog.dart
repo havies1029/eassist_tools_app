@@ -61,7 +61,7 @@ abstract class BaseDialogState<T extends BaseDialog> extends State<T> with Ticke
                     width: double.infinity,
                     padding: const EdgeInsets.all(20),
                     decoration: const BoxDecoration(
-                      color: CustomPopupsUser.primaryGreen,
+                      color: CustomPopupsLoginUser.primaryGreen,
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(20),
                         topRight: Radius.circular(20),
@@ -150,7 +150,7 @@ abstract class BaseDialogState<T extends BaseDialog> extends State<T> with Ticke
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: CustomPopupsUser.primaryGreen, width: 2),
+            borderSide: const BorderSide(color: CustomPopupsLoginUser.primaryGreen, width: 2),
           ),
           filled: true,
           fillColor: Colors.grey.shade50,
@@ -178,20 +178,20 @@ abstract class BaseDialogState<T extends BaseDialog> extends State<T> with Ticke
         width: double.infinity,
         height: 50,
         decoration: BoxDecoration(
-          color: backgroundColor ?? (isHovering ? const Color(0xFF6B9639) : CustomPopupsUser.primaryGreen),
+          color: backgroundColor ?? (isHovering ? const Color(0xFF6B9639) : CustomPopupsLoginUser.primaryGreen),
           borderRadius: BorderRadius.circular(10),
           border: border,
           boxShadow: boxShadow ?? (isHovering
               ? [
             BoxShadow(
-              color: CustomPopupsUser.primaryGreen.withOpacity(0.4),
+              color: CustomPopupsLoginUser.primaryGreen.withOpacity(0.4),
               blurRadius: 15,
               offset: const Offset(0, 8),
             ),
           ]
               : [
             BoxShadow(
-              color: CustomPopupsUser.primaryGreen.withOpacity(0.2),
+              color: CustomPopupsLoginUser.primaryGreen.withOpacity(0.2),
               blurRadius: 5,
               offset: const Offset(0, 3),
             ),

@@ -29,7 +29,7 @@ class HeroSection extends StatelessWidget {
         ),
         child: _buildHeroText(
           isMobile ? TextAlign.center : TextAlign.left,
-          paddingLeft: isMobile ? 0 : 220,
+          paddingLeft: isMobile ? 0 : 130,
           paddingBottom: 40,
         ),
       ),

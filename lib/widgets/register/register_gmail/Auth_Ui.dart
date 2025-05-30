@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart'; // Add this import for SVG support
-import 'base_dialog.dart';
+import '../../login/login_gmail/Popup.dart';
+import 'Base_Dialog.dart';
 import 'Popup.dart';
 import 'Auth_Api.dart'; // Import service untuk API calls
 
-// Login Dialog dengan opsi multiple (Email, Gmail, dll)
-class GeneralLoginDialog extends BaseDialog {
-  const GeneralLoginDialog({super.key});
+// Register Dialog dengan opsi multiple (Email, Gmail, dll)
+class GeneralRegisterDialog extends BaseDialog {
+  const GeneralRegisterDialog({super.key});
 
   @override
-  State<GeneralLoginDialog> createState() => _GeneralLoginDialogState();
+  State<GeneralRegisterDialog> createState() => _GeneralRegisterDialogState();
 }
 
-class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
+class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog> {
   final _emailController = TextEditingController();
   bool _isHovering = false;
   bool _isGmailHovering = false;
   bool _isEmailHovering = false;
+  bool _isHoveringLogin = false;
+  bool _isHoveringForgotPassword = false;
+  bool _rememberRegister = false;
 
   @override
   void dispose() {
@@ -26,58 +30,162 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
+
+    if (isMobile) {
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: Stack(
+          children: [
+            // Latar hijau atas
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              height: MediaQuery.of(context).size.height * 0.35,
+              child: Container(
+                color: const Color(0xFF79AB43),
+              ),
+            ),
+
+            // Kotak Form di tengah
+            Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildMobileBody(),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    // Default untuk Desktop/Web
     return buildDialogContainer(
-      title: 'Masuk',
-      body: Column(
-        children: [
-          buildLogo(),
-          const SizedBox(height: 30),
+      title: 'Register',
+      body: _buildMobileBody(),
+    );
+  }
 
-          // Input Email
-          buildTextField(
-            controller: _emailController,
-            hintText: 'Email',
-            keyboardType: TextInputType.emailAddress,
+  Widget _buildMobileBody() {
+    return Column(
+      children: [
+        buildLogo(),
+        const SizedBox(height: 30),
+
+        buildTextField(
+          controller: _emailController,
+          hintText: 'Email',
+          keyboardType: TextInputType.emailAddress,
+        ),
+        const SizedBox(height: 20),
+
+        buildAnimatedButton(
+          text: 'Masuk',
+          isHovering: _isHovering,
+          onHover: (hovering) => setState(() => _isHovering = hovering),
+          onPressed: () => _handleRegister(),
+        ),
+        const SizedBox(height: 20),
+
+        _buildDivider(),
+        const SizedBox(height: 20),
+
+        _buildIconButton(
+          text: 'Masuk Menggunakan Gmail',
+          iconPath: 'assets/icons/google-icon.svg',
+          isHovering: _isGmailHovering,
+          onHover: (hovering) => setState(() => _isGmailHovering = hovering),
+          onPressed: () => _handleGmailRegister(),
+        ),
+        const SizedBox(height: 20),
+
+        _buildRegisterOptions(),
+        const SizedBox(height: 20),
+
+        _buildLoginLink(),
+      ],
+    );
+  }
+
+
+  // Widget untuk checkbox simpan Register dan lupa kata sandi
+  Widget _buildRegisterOptions() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        // Checkbox Simpan Register
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              _rememberRegister = !_rememberRegister;
+            });
+          },
+          child: Row(
+            children: [
+              SizedBox(
+                width: 20,
+                height: 20,
+                child: Checkbox(
+                  value: _rememberRegister,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      _rememberRegister = value ?? false;
+                    });
+                  },
+                  activeColor: const Color(0xFF7BA05B),
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                'Simpan Register',
+                style: TextStyle(
+                  color: Colors.grey.shade600,
+                  fontSize: 14,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 20),
+        ),
 
-          // Tombol Masuk
-          buildAnimatedButton(
-            text: 'Masuk',
-            isHovering: _isHovering,
-            onHover: (hovering) => setState(() => _isHovering = hovering),
-            onPressed: () => _handleLogin(),
+        // Lupa Kata Sandi
+        MouseRegion(
+          onEnter: (_) => setState(() => _isHoveringForgotPassword = true),
+          onExit: (_) => setState(() => _isHoveringForgotPassword = false),
+          child: GestureDetector(
+            onTap: () => _handleForgotPassword(),
+            child: Text(
+              'Lupa Kata Sandi?',
+              style: TextStyle(
+                color: _isHoveringForgotPassword
+                    ? const Color(0xFF7BA05B)
+                    : Colors.blue.shade600,
+                fontSize: 14,
+              ),
+            ),
           ),
-          const SizedBox(height: 20),
-
-          // Divider
-          _buildDivider(),
-          const SizedBox(height: 20),
-
-          // Tombol Gmail dengan Icon
-          _buildIconButton(
-            text: 'Masuk Menggunakan Gmail',
-            iconPath: 'assets/icons/google-icon.svg',
-            isHovering: _isGmailHovering,
-            onHover: (hovering) => setState(() => _isGmailHovering = hovering),
-            onPressed: () => _handleGmailLogin(),
-          ),
-          const SizedBox(height: 15),
-
-          // Tombol Email dengan Icon
-          _buildIconButton(
-            text: 'Masuk Menggunakan Email',
-            iconPath: 'assets/icons/email_icon.svg',
-            isHovering: _isEmailHovering,
-            onHover: (hovering) => setState(() => _isEmailHovering = hovering),
-            onPressed: () => _handleEmailLogin(),
-          ),
-          const SizedBox(height: 20),
-
-          // Link Daftar
-          _buildRegisterLink(),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -157,47 +265,38 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
       ],
     );
   }
-  bool _isHoveringRegister = false;
-  Widget _buildRegisterLink() {
+
+  Widget _buildLoginLink() {
     return Container(
       width: double.infinity,
       height: 55,
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Belum Memiliki Akun?',
+            'Sudah memiliki akun? ',
             style: TextStyle(
-              color: CustomPopupsUser.lightGreen,
+              color: Colors.grey.shade600,
               fontSize: 14,
             ),
           ),
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context).pop();
-              CustomPopupsUser.showRegisterDialog(context);
-            },
-            child: MouseRegion(
-              onEnter: (_) => setState(() => _isHoveringRegister = true),
-              onExit: (_) => setState(() => _isHoveringRegister = false),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                decoration: BoxDecoration(
-                  color: _isHoveringRegister ? Colors.orange.shade200 : Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: _isHoveringRegister ? Colors.orange : Colors.orange.shade300,
-                  ),
-                ),
-                child: Text(
-                  'Daftar Sekarang',
-                  style: TextStyle(
-                    color: _isHoveringRegister ? Colors.orange.shade900 : Colors.orange.shade700,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
+          MouseRegion(
+            onEnter: (_) => setState(() => _isHoveringLogin = true),
+            onExit: (_) => setState(() => _isHoveringLogin = false),
+            child: GestureDetector(
+              onTap: () async {
+                Navigator.of(context).pop();
+                await CustomPopupsLoginUser.showLoginDialog(context);
+              },
+              child: Text(
+                'Login',
+                style: TextStyle(
+                  color: _isHoveringLogin
+                      ? const Color(0xFF7BA05B)
+                      : Colors.blue.shade600,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
@@ -209,27 +308,27 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
 
 
   // Fungsi yang akan disambungkan ke API
-  void _handleLogin() {
+  void _handleRegister() {
     Navigator.of(context).pop();
-    AuthService.login(_emailController.text).then((success) {
+    AuthService.Register(_emailController.text, rememberRegister: _rememberRegister).then((success) {
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Login berhasil!'),
-            backgroundColor: CustomPopupsUser.primaryGreen,
+            content: Text('Register berhasil!'),
+            backgroundColor: CustomPopupsRegisterUser.primaryGreen,
           ),
         );
       }
     });
   }
 
-  void _handleGmailLogin() {
+  void _handleGmailRegister() {
     Navigator.of(context).pop();
-    AuthService.loginWithGmail().then((success) {
+    AuthService.RegisterWithGmail().then((success) {
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Login dengan Gmail berhasil!'),
+            content: Text('Register dengan Gmail berhasil!'),
             backgroundColor: Colors.red,
           ),
         );
@@ -237,30 +336,43 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
     });
   }
 
-  void _handleEmailLogin() {
+  void _handleEmailRegister() {
     Navigator.of(context).pop();
-    AuthService.loginWithEmail().then((success) {
+    AuthService.RegisterWithEmail().then((success) {
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Login dengan Email berhasil!'),
-            backgroundColor: CustomPopupsUser.primaryGreen,
+            content: Text('Register dengan Email berhasil!'),
+            backgroundColor: CustomPopupsRegisterUser.primaryGreen,
           ),
         );
       }
     });
   }
+
+  void _handleForgotPassword() {
+    // Implementasi untuk lupa kata sandi
+    Navigator.of(context).pop();
+    // Bisa menampilkan dialog baru untuk reset password
+    // atau navigate ke halaman forgot password
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Fitur lupa kata sandi akan ditambahkan'),
+        backgroundColor: Colors.orange,
+      ),
+    );
+  }
 }
 
-// Register Dialog
-class RegisterDialog extends BaseDialog {
-  const RegisterDialog({super.key});
+// Login Dialog
+class LoginDialog extends BaseDialog {
+  const LoginDialog({super.key});
 
   @override
-  State<RegisterDialog> createState() => _RegisterDialogState();
+  State<LoginDialog> createState() => _LoginDialogState();
 }
 
-class _RegisterDialogState extends BaseDialogState<RegisterDialog> {
+class _LoginDialogState extends BaseDialogState<LoginDialog> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   String _selectedChoice = 'Pilihan';
@@ -307,7 +419,7 @@ class _RegisterDialogState extends BaseDialogState<RegisterDialog> {
             isHovering: _isHovering,
             onHover: (hovering) => setState(() => _isHovering = hovering),
             backgroundColor: _isHovering ? const Color(0xFF6B9639) : Colors.grey.shade400,
-            onPressed: () => _handleRegister(),
+            onPressed: () => _handleLogin(),
           ),
         ],
       ),
@@ -346,31 +458,31 @@ class _RegisterDialogState extends BaseDialogState<RegisterDialog> {
   }
 
   // Fungsi yang akan disambungkan ke API
-  void _handleRegister() {
-    AuthService.register(
+  void _handleLogin() {
+    AuthService.Login(
       _nameController.text,
       _emailController.text,
       _selectedChoice,
     ).then((success) {
       if (success) {
         Navigator.of(context).pop();
-        CustomPopupsUser.showLoginDialog(context, email: _emailController.text);
+        CustomPopupsRegisterUser.showRegisterDialog(context, email: _emailController.text);
       }
     });
   }
 }
 
-// OTP Login Dialog
-class OTPLoginDialog extends BaseDialog {
+// OTP Register Dialog
+class OTPRegisterDialog extends BaseDialog {
   final String email;
 
-  const OTPLoginDialog({super.key, required this.email});
+  const OTPRegisterDialog({super.key, required this.email});
 
   @override
-  State<OTPLoginDialog> createState() => _OTPLoginDialogState();
+  State<OTPRegisterDialog> createState() => _OTPRegisterDialogState();
 }
 
-class _OTPLoginDialogState extends BaseDialogState<OTPLoginDialog> {
+class _OTPRegisterDialogState extends BaseDialogState<OTPRegisterDialog> {
   final List<TextEditingController> _codeControllers = List.generate(4, (index) => TextEditingController());
   final List<FocusNode> _focusNodes = List.generate(4, (index) => FocusNode());
   bool _isHovering = false;
@@ -389,7 +501,7 @@ class _OTPLoginDialogState extends BaseDialogState<OTPLoginDialog> {
   @override
   Widget build(BuildContext context) {
     return buildDialogContainer(
-      title: 'Masuk',
+      title: 'Register',
       body: Column(
         children: [
           buildLogo(),
@@ -397,7 +509,7 @@ class _OTPLoginDialogState extends BaseDialogState<OTPLoginDialog> {
 
           // Judul
           const Text(
-            'Berikut Kode Login Anda',
+            'Berikut Kode Register Anda',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -434,7 +546,7 @@ class _OTPLoginDialogState extends BaseDialogState<OTPLoginDialog> {
             text: 'Masuk',
             isHovering: _isHovering,
             onHover: (hovering) => setState(() => _isHovering = hovering),
-            onPressed: () => _handleOTPLogin(),
+            onPressed: () => _handleOTPRegister(),
           ),
         ],
       ),
@@ -478,7 +590,7 @@ class _OTPLoginDialogState extends BaseDialogState<OTPLoginDialog> {
   }
 
   // Fungsi yang akan disambungkan ke API
-  void _handleOTPLogin() {
+  void _handleOTPRegister() {
     String otpCode = _codeControllers.map((controller) => controller.text).join();
 
     AuthService.verifyOTP(widget.email, otpCode).then((success) {
@@ -486,11 +598,11 @@ class _OTPLoginDialogState extends BaseDialogState<OTPLoginDialog> {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Login berhasil!'),
-            backgroundColor: CustomPopupsUser.primaryGreen,
+            content: Text('Register berhasil!'),
+            backgroundColor: CustomPopupsRegisterUser.primaryGreen,
           ),
         );
       }
-      });
-    }
+    });
   }
+}

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'dart:math' show pi;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../pages/testimony_page/testimony_main.dart';
+
 class TestimonialSection extends StatefulWidget {  
   final BoxConstraints constraints;
 
@@ -123,7 +125,12 @@ class TestimonialSectionState extends State<TestimonialSection> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const TestimonyMain()),
+                      );
+                    },
                     child: const Text(
                       'Tampilkan semua',
                       style: TextStyle(

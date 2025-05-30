@@ -414,66 +414,66 @@ class _AnimatedBenefitPointState extends State<AnimatedBenefitPoint>
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: _controller,
-      builder: (context, child) {
-        return Transform.scale(
-          scale: _scaleAnimation.value,
-          child: FadeTransition(
-            opacity: _fadeAnimation,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(20.0), // Increased from 8.0
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFFFFFF),
-                    borderRadius: BorderRadius.circular(20.0), // Increased radius
-                    boxShadow: [
-                      // Multiple shadows for better depth
-                      BoxShadow(
-                        color: const Color(0xFF79AB43).withOpacity(0.15),
-                        spreadRadius: 2,
-                        blurRadius: 12,
-                        offset: const Offset(0, 4),
-                      ),
-                      BoxShadow(
-                        color: const Color(0xFF79AB43).withOpacity(0.08),
-                        spreadRadius: 4,
-                        blurRadius: 20,
-                        offset: const Offset(0, 8),
-                      ),
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        spreadRadius: 1,
-                        blurRadius: 6,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Icon(
-                    widget.icon,
-                    color: const Color(0xFF79AB43),
-                    size: 24.0, // Increased from 18.0
-                  ),
-                ),
-                const SizedBox(width: 16.0), // Increased spacing
-                Flexible(
-                  child: Text(
-                    widget.text,
-                    style: const TextStyle(
-                      fontSize: 16.0, // Slightly increased
-                      fontFamily: 'Satoshi-Regular',
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF2D3748),
+        animation: _controller,
+        builder: (context, child) {
+          return Transform.scale(
+            scale: _scaleAnimation.value,
+            child: FadeTransition(
+              opacity: _fadeAnimation,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8.0), // Same as code 1
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFFFFFF),
+                      borderRadius: BorderRadius.circular(16.13), // Same radius as code 1
+                      boxShadow: [
+                        // Multiple shadows for better depth
+                        BoxShadow(
+                          color: const Color(0xFF79AB43).withOpacity(0.15),
+                          spreadRadius: 2,
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                        ),
+                        BoxShadow(
+                          color: const Color(0xFF79AB43).withOpacity(0.08),
+                          spreadRadius: 4,
+                          blurRadius: 20,
+                          offset: const Offset(0, 8),
+                        ),
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          spreadRadius: 1,
+                          blurRadius: 6,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Icon(
+                      widget.icon,
+                      color: const Color(0xFF79AB43),
+                      size: 18.0, // Same size as code 1
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(width: 12.0), // Same spacing as code 1
+                  Flexible(
+                    child: Text(
+                      widget.text,
+                      style: const TextStyle(
+                        fontSize: 15.0, // Same font size as code 1
+                        fontFamily: 'Satoshi-Regular',
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF2D3748),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
+          );
+          },
         );
-      },
-    );
-  }
+    }
 }

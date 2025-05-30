@@ -19,8 +19,11 @@ import 'package:eassist_tools_app/pages/simulwp/simulwpcrud_main.dart';
 import 'package:flutter/material.dart';
 import 'package:eassist_tools_app/pages/profile/profile_main_page.dart';
 import 'package:eassist_tools_app/repositories/user/user_repository.dart';
-
+import 'dart:io' show Platform;
+import 'package:eassist_tools_app/pages/splash/splash_page.dart';
 import '../about_jps/about_main.dart';
+import '../article_page/article_main.dart';
+import '../home/home_redirector_page.dart';
 import '../simulcar/simulcarcrud_main.dart';
 import '../simulcargo/simulcargocrud_main.dart';
 import '../simulmb/simulmbcrud_main.dart';
@@ -151,7 +154,8 @@ class PageContainer extends PageContainerBase {
 
     switch (pageType) {
       case PageType.home:
-        page = const HeroMain();
+        //page = const HeroMain();
+        page = const HomeRedirectorPage();
         break;
       case PageType.groupchat:
         page = const ChatPage(roomId: "support");

@@ -1,11 +1,11 @@
 import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:flutter/material.dart';
-import '../login/Popup.dart';
-import '../login/Register_Client_Page.dart';
 import 'package:eassist_tools_app/widgets/google_signin_button_stub.dart'
     if (dart.library.js_interop) 'package:eassist_tools_app/widgets/google_signin_button_web.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
+import '../login/login_gmail/Popup.dart';
+import '../login/login_client/popup_client.dart';
 
 final GoogleSignIn _googleSignIn = GoogleSignIn(
   scopes: [
@@ -152,7 +152,7 @@ class _FloatingButtonsState extends State<FloatingButtons>
                   onPressed: () async {
                     if (isLogin) {
                       debugPrint("is Login true");
-                      await CustomPopupsUser.showLoginDialog(context);
+                      await CustomPopupsLoginUser.showLoginDialog(context);
                     } else {
                       debugPrint("is login false – open register dialog");
                       await CustomPopupsClient.showRegisterDialog(context); // Munculkan dialog daftar client
