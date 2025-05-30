@@ -287,52 +287,55 @@ class _AboutJpsState extends State<AboutJps> with TickerProviderStateMixin {
   Widget _buildFigmaStyleGrid() {
     if (isMobile) {
       return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // Gambar atas (about_1 & about_2)
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
                 child: _buildAnimatedImageContainer(
                   'assets/images/about_1.png',
-                  height: _textHeight / 2,
+                  height: 120,
                   animation: _staggeredAnimation1,
                   hoverController: _hoverController1,
                 ),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 8),
               Expanded(
                 child: _buildAnimatedImageContainer(
                   'assets/images/about_2.png',
-                  height: _textHeight / 2,
+                  height: 120,
                   animation: _staggeredAnimation2,
                   hoverController: _hoverController2,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 40),
+          const SizedBox(height: 20),
 
-          // Deskripsi
-          _buildAnimatedDescription(),
-          const SizedBox(height: 40),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: _buildAnimatedDescription(),
+          ),
+          const SizedBox(height: 20),
 
-          // Gambar bawah (about_3 & about_4)
           Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Expanded(
                 child: _buildAnimatedImageContainer(
                   'assets/images/about_3.png',
-                  height: 160,
+                  height: 120,
                   animation: _staggeredAnimation3,
                   hoverController: _hoverController3,
                 ),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 8),
               Expanded(
                 child: _buildAnimatedImageContainer(
                   'assets/images/about_4.png',
-                  height: 160,
+                  height: 120,
                   animation: _staggeredAnimation4,
                   hoverController: _hoverController4,
                 ),
@@ -342,7 +345,7 @@ class _AboutJpsState extends State<AboutJps> with TickerProviderStateMixin {
         ],
       );
     } else {
-      // Desktop layout - 2x2 grid with equal spacing
+      // ... (Dekstop tetap seperti sebelumnya)
       return Container(
         constraints: const BoxConstraints(maxWidth: 500),
         child: Column(
@@ -434,53 +437,53 @@ class _AboutJpsState extends State<AboutJps> with TickerProviderStateMixin {
 
   Widget _buildAnimatedDescription() {
     return FadeTransition(
-        opacity: _textFadeAnimation,
-        child: Transform.translate(
-            offset: Offset(0, 30 * (1 - _textFadeAnimation.value)),
-            child: Column(
-              key: _descriptionKey,
-              crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Mengenal JPS: Jelas, Praktis, dan Solutif!',
-                  style: TextStyle(
-                    fontFamily: 'Satoshi-Regular',
-                    fontSize: isMobile ? 14.0 : 16.0,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF79AB43),
-                    height: 1.3,
-                  ),
-                  textAlign: isMobile ? TextAlign.center : TextAlign.left,
-                ),
-                const SizedBox(height: 12.0),
-                Text(
-                  'Tentang JPS',
-                  style: TextStyle(
-                    fontFamily: 'Satoshi-Regular',
-                    fontSize: isMobile ? 28.0 : 36.0,
-                    fontWeight: FontWeight.w700,
-                    color: const Color(0xFF2D3748),
-                    height: 1.2,
-                  ),
-                  textAlign: isMobile ? TextAlign.center : TextAlign.left,
-                ),
-                const SizedBox(height: 20.0),
-                Text(
-                  'JPS hadir untuk memudahkan Anda memahami dunia asuransi tanpa ribet. Kami menyediakan informasi yang jelas, proses klaim yang praktis, dan solusi tepat guna yang membantu Anda mendapatkan perlindungan terbaik. Bersama JPS, asuransi tak lagi rumit, tapi jadi lebih dekat dan lebih mudah dimengerti oleh semua kalangan.',
-                  style: TextStyle(
-                    fontFamily: 'Satoshi-Regular',
-                    fontSize: isMobile ? 16.0 : 16.0,
-                    fontWeight: FontWeight.w400,
-                    color: const Color(0xFF718096),
-                    height: 1.6,
-                  ),
-                  textAlign: isMobile ? TextAlign.center : TextAlign.left,
-                ),
-                const SizedBox(height: 24.0),
-              ],
+      opacity: _textFadeAnimation,
+      child: Transform.translate(
+        offset: Offset(0, 30 * (1 - _textFadeAnimation.value)),
+        child: Column(
+          key: _descriptionKey,
+          crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Mengenal JPS: Jelas, Praktis, dan Solutif!',
+              style: TextStyle(
+                fontFamily: 'Satoshi-Regular',
+                fontSize: isMobile ? 14.0 : 16.0,
+                fontWeight: FontWeight.w600,
+                color: const Color(0xFF79AB43),
+                height: 1.3,
+              ),
+              textAlign: isMobile ? TextAlign.center : TextAlign.left,
             ),
+            const SizedBox(height: 12.0),
+            Text(
+              'Tentang JPS',
+              style: TextStyle(
+                fontFamily: 'Satoshi-Regular',
+                fontSize: isMobile ? 28.0 : 36.0,
+                fontWeight: FontWeight.w700,
+                color: const Color(0xFF2D3748),
+                height: 1.2,
+              ),
+              textAlign: isMobile ? TextAlign.center : TextAlign.left,
             ),
-        );
-    }
+            const SizedBox(height: 20.0),
+            Text(
+              'JPS hadir untuk memudahkan Anda memahami dunia asuransi tanpa ribet. Kami menyediakan informasi yang jelas, proses klaim yang praktis, dan solusi tepat guna yang membantu Anda mendapatkan perlindungan terbaik. Bersama JPS, asuransi tak lagi rumit, tapi jadi lebih dekat dan lebih mudah dimengerti oleh semua kalangan.',
+              style: TextStyle(
+                fontFamily: 'Satoshi-Regular',
+                fontSize: isMobile ? 16.0 : 16.0,
+                fontWeight: FontWeight.w400,
+                color: const Color(0xFF718096),
+                height: 1.6,
+              ),
+              textAlign: isMobile ? TextAlign.center : TextAlign.left,
+            ),
+            const SizedBox(height: 24.0),
+          ],
+        ),
+      ),
+    );
+  }
 }

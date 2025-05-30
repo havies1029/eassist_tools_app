@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart'; // Add this import for SVG support
 import '../../register/register_gmail/Popup.dart';
+import '../login_client/ReusableOTPDialog.dart';
 import 'Base_Dialog.dart';
 import 'Popup.dart';
 import 'Auth_Api.dart'; // Import service untuk API calls
@@ -343,22 +344,58 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
     );
   }
 
+  // void _handleLogin() {
+  //   final email = _emailController.text.trim();
+  //
+  //   if (email.isEmpty) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(
+  //         content: Text('Email tidak boleh kosong'),
+  //         backgroundColor: Colors.red,
+  //       ),
+  //     );
+  //     return;
+  //   }
+  //
+  //   // ✅ Tutup dialog login terlebih dahulu
+  //   Navigator.of(context).pop();
+  //
+  //   // ✅ Tunggu 200ms sebelum membuka OTP dialog
+  //   Future.delayed(const Duration(milliseconds: 200), () {
+  //     showDialog(
+  //       context: context,
+  //       barrierDismissible: false, // kamu bisa atur true jika mau
+  //       builder: (_) => OTPLoginDialog(email: email),
+  //     );
+  //   });
+  // }
 
+  void _handleLogin() async {
+    debugPrint('🔵 Tombol Masuk ditekan');
 
-  // Fungsi yang akan disambungkan ke API
-  void _handleLogin() {
-    Navigator.of(context).pop();
-    AuthService.login(_emailController.text, rememberLogin: _rememberLogin).then((success) {
-      if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Login berhasil!'),
-            backgroundColor: CustomPopupsLoginUser.primaryGreen,
-          ),
-        );
-      }
-    });
+    // Contoh dummy async verifikasi login (misal panggil AuthService.login)
+    final success = await Future.delayed(
+      const Duration(milliseconds: 300),
+          () => true,
+    );
+
+    if (!mounted) return;
+
+    debugPrint('🟢 Memanggil OTP Dialog');
+
+    showDialog(
+      context: context,
+      builder: (_) => ReusableOTPDialog(
+        email: 'you@example.com',
+        onSubmit: (code) async {
+          final success = await AuthService.verifyOTP('you@example.com', code);
+          if (!success) throw 'Kode OTP salah';
+        },
+      ),
+    );
+
   }
+
 
   void _handleGmailLogin() {
     Navigator.of(context).pop();

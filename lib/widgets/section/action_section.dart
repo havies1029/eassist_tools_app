@@ -25,8 +25,9 @@ class _ActionSectionState extends State<ActionSection>
   bool get isMobile => widget.constraints.maxWidth < 768;
   bool get isTablet => widget.constraints.maxWidth >= 768 && widget.constraints.maxWidth < 1024;
 
-  double get maxWidth => widget.constraints.maxWidth > 1200 ? 1100 : widget.constraints.maxWidth * 0.88;
-  double get contentPadding => isMobile ? 16.0 : 35.0;
+  double get maxWidth =>
+      widget.constraints.maxWidth > 1200 ? 1200 : widget.constraints.maxWidth * 0.9;
+  double get contentPadding => isMobile ? 16.0 : 32.0;
 
   @override
   void initState() {
@@ -125,32 +126,31 @@ class _ActionSectionState extends State<ActionSection>
               topLeft: Radius.circular(50),
               topRight: Radius.circular(50),
             ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                spreadRadius: 0,
-                blurRadius: 20,
-                offset: const Offset(0, -5),
-              ),
-            ],
           ),
-          padding: const EdgeInsets.only(bottom: 0.0),
+          padding: EdgeInsets.only(
+            top: isMobile ? 20.0 : 40.0,
+            bottom: isMobile ? 20.0 : 40.0,
+          ),
           child: Center(
             child: Container(
               width: maxWidth,
               padding: EdgeInsets.symmetric(
-                vertical: isMobile ? 30.0 : 36.0,
+                vertical: isMobile ? 40.0 : 36.0,
               ),
               child: isMobile
                   ? Padding(
                 padding: EdgeInsets.symmetric(horizontal: contentPadding),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildAnimatedTitle(),
-                    const SizedBox(height: 20.0),
-                    _buildAnimatedImage(),
-                    const SizedBox(height: 20.0),
+                    const SizedBox(height: 32.0),
+                    _buildAnimatedBenefitPoints(),
+                    const SizedBox(height: 32.0),
                     _buildAnimatedCTAs(),
+                    const SizedBox(height: 32.0),
+                    // Add image for mobile
+                    _buildAnimatedImage(),
                   ],
                 ),
               )
@@ -172,6 +172,8 @@ class _ActionSectionState extends State<ActionSection>
                         children: [
                           _buildAnimatedTitle(),
                           const SizedBox(height: 30.0),
+                          _buildAnimatedBenefitPoints(),
+                          const SizedBox(height: 30.0),
                           _buildAnimatedCTAs(),
                         ],
                       ),
@@ -183,7 +185,8 @@ class _ActionSectionState extends State<ActionSection>
                     padding: EdgeInsets.only(right: contentPadding),
                     child: ConstrainedBox(
                       constraints: BoxConstraints(
-                        maxWidth: isTablet ? maxWidth : 450,
+                        maxWidth: isTablet ? maxWidth * 0.4 : maxWidth * 0.4,
+                        maxHeight: 300,
                       ),
                       child: _buildAnimatedImage(),
                     ),
@@ -211,22 +214,42 @@ class _ActionSectionState extends State<ActionSection>
   }
 
   Widget _buildAnimatedImage() {
-    return AnimatedBuilder(
-      animation: _imageController,
-      builder: (context, child) {
-        return Transform.translate(
-          offset: Offset(_imageSlideAnimation.value, 0),
-          child: FadeTransition(
-            opacity: _imageController,
-            child: MouseRegion(
-              onEnter: (_) => _onImageHover(true),
-              onExit: (_) => _onImageHover(false),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
-                child: _buildActionImage(),
+    return Center(
+      child: AnimatedBuilder(
+        animation: _imageController,
+        builder: (context, child) {
+          return Transform.translate(
+            offset: Offset(_imageSlideAnimation.value, 0),
+            child: FadeTransition(
+              opacity: _imageController,
+              child: MouseRegion(
+                onEnter: (_) => _onImageHover(true),
+                onExit: (_) => _onImageHover(false),
+                child: Container(
+                  width: isMobile ? double.infinity : null,
+                  constraints: BoxConstraints(
+                    maxWidth: isMobile ? 350 : 400,
+                    maxHeight: isMobile ? 350 : 400,
+                  ),
+                  child: _buildActionImage(),
+                ),
               ),
             ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildAnimatedBenefitPoints() {
+    return AnimatedBuilder(
+      animation: _ctaController,
+      builder: (context, child) {
+        return FadeTransition(
+          opacity: _ctaStaggerAnimation,
+          child: Transform.translate(
+            offset: Offset(0, 20 * (1 - _ctaStaggerAnimation.value)),
+            child: _buildBenefitPoints(),
           ),
         );
       },
@@ -249,39 +272,157 @@ class _ActionSectionState extends State<ActionSection>
   }
 
   void _onImageHover(bool isHovered) {
-    // Image hover animation bisa ditambahkan di sini
+
   }
 
   Widget _buildActionTitle() {
-    return ShaderMask(
-      shaderCallback: (bounds) => const LinearGradient(
-        colors: [Color(0xFF79AB43), Color(0xFF5D8B32)],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ).createShader(bounds),
-      child: RichText(
-        text: TextSpan(
-          style: TextStyle(
-            fontFamily: 'Satoshi-Regular',
-            fontSize: isMobile ? 32.0 : 40.0,
-            fontWeight: FontWeight.w500,
-            color: Colors.black,
-            height: 1.2,
-          ),
+    return Column(
+      crossAxisAlignment: isMobile ? CrossAxisAlignment.start : CrossAxisAlignment.start,
+      children: [
+        // Main title with logo
+        Row(
+          mainAxisAlignment: isMobile ? MainAxisAlignment.start : MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const TextSpan(text: 'Apa yang ingin Anda\n'),
-            TextSpan(
-              text: 'Lakukan',
+            Text(
+              'Asuransi melalui ',
               style: TextStyle(
-                color: const Color(0xFF79AB43),
-                fontWeight: FontWeight.bold,
+                fontFamily: 'Satoshi-Regular',
+                fontSize: isMobile ? 28.0 : 36.0,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+                height: 1.2,
               ),
             ),
-            const TextSpan(text: ' hari ini?'),
+            Flexible(
+              flex: 0, // biar hanya sebesar gambar
+              child: Image.asset(
+                'assets/images/jps_logo1.png',
+                height: isMobile ? 45.0 : 50.0,
+                fit: BoxFit.contain,
+              ),
+            )
           ],
         ),
-      ),
+        const SizedBox(height: 8.0),
+        // Subtitle
+        Text(
+          'Klaim mudah, perlindungan aman',
+          style: TextStyle(
+            fontFamily: 'Satoshi-Regular',
+            fontSize: isMobile ? 20.0 : 22.0,
+            fontWeight: FontWeight.w600,
+            color: Colors.black87,
+            height: 1.3,
+          ),
+          textAlign: isMobile ? TextAlign.left : TextAlign.left,
+        ),
+      ],
     );
+  }
+
+  Widget _buildBenefitPoints() {
+    final benefits = [
+      {'icon': Icons.flash_on, 'text': 'Klaim Cepat & Mudah'},
+      {'icon': Icons.home_work, 'text': 'Bengkel Terpercaya'},
+      {'icon': Icons.headset_mic, 'text': 'CS Responsif 24/7'},
+      {'icon': Icons.verified_user, 'text': 'Perlindungan Terjamin'},
+    ];
+
+    if (isMobile) {
+      // Mobile layout: 2x2 grid (tetap sama)
+      return Column(
+        children: [
+          // First row
+          Row(
+            children: [
+              Expanded(
+                child: AnimatedBenefitPoint(
+                  icon: benefits[0]['icon'] as IconData,
+                  text: benefits[0]['text'] as String,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: AnimatedBenefitPoint(
+                  icon: benefits[1]['icon'] as IconData,
+                  text: benefits[1]['text'] as String,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          // Second row
+          Row(
+            children: [
+              Expanded(
+                child: AnimatedBenefitPoint(
+                  icon: benefits[2]['icon'] as IconData,
+                  text: benefits[2]['text'] as String,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: AnimatedBenefitPoint(
+                  icon: benefits[3]['icon'] as IconData,
+                  text: benefits[3]['text'] as String,
+                ),
+              ),
+            ],
+          ),
+        ],
+      );
+    } else {
+      // Desktop layout: 2x2 grid, horizontal icon + text per item
+      return Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0, right: 12.0),
+                  child: AnimatedBenefitPointHorizontal(
+                    icon: benefits[0]['icon'] as IconData,
+                    text: benefits[0]['text'] as String,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0, left: 12.0),
+                  child: AnimatedBenefitPointHorizontal(
+                    icon: benefits[1]['icon'] as IconData,
+                    text: benefits[1]['text'] as String,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 0.0, right: 12.0),
+                  child: AnimatedBenefitPointHorizontal(
+                    icon: benefits[2]['icon'] as IconData,
+                    text: benefits[2]['text'] as String,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 0.0, left: 12.0),
+                  child: AnimatedBenefitPointHorizontal(
+                    icon: benefits[3]['icon'] as IconData,
+                    text: benefits[3]['text'] as String,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      );
+    }
   }
 
   Widget _buildActionImage() {
@@ -289,15 +430,15 @@ class _ActionSectionState extends State<ActionSection>
       tag: 'action_image',
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          
+          borderRadius: BorderRadius.circular(16.13),
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(16.13),
           child: Image.asset(
             'assets/images/home_2.png',
+            fit: BoxFit.cover,
             width: double.infinity,
-            fit: BoxFit.contain,
+            height: double.infinity,
           ),
         ),
       ),
@@ -305,25 +446,280 @@ class _ActionSectionState extends State<ActionSection>
   }
 
   Widget _buildActionCTAs() {
-    return Wrap(
-      spacing: 16.0,
-      runSpacing: 16.0,
-      children: [
-        AnimatedHoverActionButton(
-          onPressed: () {},
-          text: 'Cari Asuransi',
-          icon: Icons.search,
-          isPrimary: true,
-          delay: const Duration(milliseconds: 0),
-        ),
-        AnimatedHoverActionButton(
-          onPressed: () {},
-          text: 'Lapor Klaim',
-          icon: Icons.report_problem,
-          isPrimary: false,
-          delay: const Duration(milliseconds: 200),
-        ),
-      ],
+    if (isMobile) {
+      // Mobile: Stack buttons vertically with full width
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SizedBox(
+            width: double.infinity,
+            child: AnimatedHoverActionButton(
+              onPressed: () {},
+              text: 'Cari Asuransi',
+              icon: Icons.search,
+              isPrimary: true,
+              delay: const Duration(milliseconds: 0),
+            ),
+          ),
+          const SizedBox(height: 16.0),
+          SizedBox(
+            width: double.infinity,
+            child: AnimatedHoverActionButton(
+              onPressed: () {},
+              text: 'Lapor Klaim',
+              icon: Icons.report_problem,
+              isPrimary: false,
+              delay: const Duration(milliseconds: 200),
+            ),
+          ),
+        ],
+      );
+    } else {
+      // Desktop: keep original wrap layout
+      return Wrap(
+        spacing: 16.0,
+        runSpacing: 16.0,
+        children: [
+          AnimatedHoverActionButton(
+            onPressed: () {},
+            text: 'Cari Asuransi',
+            icon: Icons.search,
+            isPrimary: true,
+            delay: const Duration(milliseconds: 0),
+          ),
+          AnimatedHoverActionButton(
+            onPressed: () {},
+            text: 'Lapor Klaim',
+            icon: Icons.report_problem,
+            isPrimary: false,
+            delay: const Duration(milliseconds: 200),
+          ),
+        ],
+      );
+    }
+  }
+}
+
+// Widget baru untuk desktop layout horizontal
+class AnimatedBenefitPointHorizontal extends StatefulWidget {
+  final IconData icon;
+  final String text;
+  final Duration delay;
+
+  const AnimatedBenefitPointHorizontal({
+    super.key,
+    required this.icon,
+    required this.text,
+    this.delay = Duration.zero,
+  });
+
+  @override
+  State<AnimatedBenefitPointHorizontal> createState() => _AnimatedBenefitPointHorizontalState();
+}
+
+class _AnimatedBenefitPointHorizontalState extends State<AnimatedBenefitPointHorizontal>
+    with TickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 600),
+      vsync: this,
+    );
+
+    _scaleAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.elasticOut,
+    ));
+
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: const Interval(0.0, 0.5, curve: Curves.easeOut),
+    ));
+
+    Future.delayed(widget.delay, () {
+      if (mounted) _controller.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return Transform.scale(
+          scale: _scaleAnimation.value,
+          child: FadeTransition(
+            opacity: _fadeAnimation,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12.0),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF5F9F0),
+                    borderRadius: BorderRadius.circular(16.13),
+                  ),
+                  child: Icon(
+                    widget.icon,
+                    color: const Color(0xFF79AB43),
+                    size: 24.0,
+                  ),
+                ),
+                const SizedBox(width: 16.0),
+                Text(
+                  widget.text,
+                  style: const TextStyle(
+                    fontSize: 16.0,
+                    fontFamily: 'Satoshi-Regular',
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFF2D3748),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class AnimatedBenefitPoint extends StatefulWidget {
+  final IconData icon;
+  final String text;
+  final Duration delay;
+
+  const AnimatedBenefitPoint({
+    super.key,
+    required this.icon,
+    required this.text,
+    this.delay = Duration.zero,
+  });
+
+  @override
+  State<AnimatedBenefitPoint> createState() => _AnimatedBenefitPointState();
+}
+
+class _AnimatedBenefitPointState extends State<AnimatedBenefitPoint>
+    with TickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 600),
+      vsync: this,
+    );
+
+    _scaleAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.elasticOut,
+    ));
+
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: const Interval(0.0, 0.5, curve: Curves.easeOut),
+    ));
+
+    Future.delayed(widget.delay, () {
+      if (mounted) _controller.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return Transform.scale(
+          scale: _scaleAnimation.value,
+          child: FadeTransition(
+            opacity: _fadeAnimation,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12.0),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF5F9F0),
+                    borderRadius: BorderRadius.circular(16.13),
+                  ),
+                  child: Icon(
+                    widget.icon,
+                    color: const Color(0xFF79AB43),
+                    size: 24.0,
+                  ),
+                ),
+                const SizedBox(height: 8.0),
+                Text(
+                  widget.text,
+                  style: const TextStyle(
+                    fontSize: 14.0,
+                    fontFamily: 'Satoshi-Regular',
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFF2D3748),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class ActionButtonsRow extends StatelessWidget {
+  final List<Widget> children;
+  const ActionButtonsRow({super.key, required this.children});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: children.map((child) {
+        return Padding(
+          padding: const EdgeInsets.only(right: 16.0),
+          child: child,
+        );
+      }).toList(),
     );
   }
 }
@@ -457,7 +853,7 @@ class _AnimatedHoverActionButtonState extends State<AnimatedHoverActionButton>
                   padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
                   decoration: BoxDecoration(
                     color: _colorAnimation.value,
-                    borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(16.13),
                     border: widget.isPrimary
                         ? null
                         : Border.all(
@@ -477,6 +873,7 @@ class _AnimatedHoverActionButtonState extends State<AnimatedHoverActionButton>
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Transform.rotate(
                         angle: _iconRotationAnimation.value,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../widgets/login/login_client/popup_client.dart';
 
 class HeroSection extends StatelessWidget {
   final BoxConstraints constraints;
@@ -27,16 +28,75 @@ class HeroSection extends StatelessWidget {
           ),
           child: Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: isMobile ? 16.0 : 40.0,
-              vertical: isMobile ? 20.0 : 50.0,
+              horizontal: isMobile ? 20.0 : 40.0,
+              vertical: isMobile ? 30.0 : 50.0,
             ),
             child: isMobile
                 ? Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildHeroText(TextAlign.center),
-                const SizedBox(height: 20.0),
+                // --- JUDUL (persis sama dgn contoh pertama)
+                const Text(
+                  'Klien Kami, Prioritas Kami:',
+                  style: TextStyle(
+                    fontFamily: 'Satoshi-Regular',
+                    fontSize: 28,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                    height: 1.2,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Memberikan Solusi Terbaik untuk Anda!',
+                  style: TextStyle(
+                    fontFamily: 'Satoshi-Regular',
+                    fontSize: 28,
+                    fontWeight: FontWeight.w300,
+                    color: Colors.white,
+                    height: 1.2,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                RichText(
+                  text: const TextSpan(
+                    style: TextStyle(
+                      fontFamily: 'Satoshi-Regular',
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w400,
+                      height: 1.5,
+                      color: Colors.white,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: 'JPS',
+                        style: TextStyle(fontWeight: FontWeight.w700),
+                      ),
+                      TextSpan(
+                        text: ' adalah platform asuransi pintar yang memudahkan kamu mencari, memilih, dan klaim asuransi hanya dalam hitungan menit ',
+                      ),
+                      TextSpan(
+                        text: 'cepat',
+                        style: TextStyle(fontWeight: FontWeight.w700),
+                      ),
+                      TextSpan(text: ', '),
+                      TextSpan(
+                        text: 'aman',
+                        style: TextStyle(fontWeight: FontWeight.w700),
+                      ),
+                      TextSpan(text: ', dan '),
+                      TextSpan(
+                        text: 'terdaftar OJK',
+                        style: TextStyle(fontWeight: FontWeight.w700),
+                      ),
+                      TextSpan(text: '.'),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 30.0),
+                // --- GAMBAR
                 _buildHeroImage(),
+                const SizedBox(height: 30.0),
               ],
             )
                 : Row(
@@ -48,25 +108,23 @@ class HeroSection extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.only(right: 40.0),
                     child: Transform.translate(
-                      offset: const Offset(0, -20), // ✅ Teks naik 20px
+                      offset: const Offset(0, -20),
                       child: _buildHeroText(TextAlign.left),
                     ),
                   ),
                 ),
-
-                // Area gambar dengan Stack agar bisa membesar bebas
                 Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       width: 300,
                       height: 250,
                     ),
                     Positioned(
-                      right: -40, // boleh diatur lebih jika mau keluar lebih jauh
+                      right: -40,
                       bottom: 0,
                       child: SizedBox(
-                        width: 360, // 🔥 gambar lebih besar dari box normal
+                        width: 360,
                         child: _buildHeroImage(),
                       ),
                     ),
@@ -80,9 +138,10 @@ class HeroSection extends StatelessWidget {
     );
   }
 
+  // --- DESKTOP MODE SAJA
   Widget _buildHeroText(TextAlign align) {
     return Padding(
-      padding: const EdgeInsets.only(right: 50.0), // Padding menyelimuti seluruh teks
+      padding: const EdgeInsets.only(right: 50.0),
       child: Column(
         crossAxisAlignment: align == TextAlign.left
             ? CrossAxisAlignment.start
@@ -112,8 +171,8 @@ class HeroSection extends StatelessWidget {
           const SizedBox(height: 20),
           RichText(
             textAlign: align,
-            text: TextSpan(
-              style: const TextStyle(
+            text: const TextSpan(
+              style: TextStyle(
                 fontFamily: 'Satoshi-Regular',
                 fontSize: 15.0,
                 fontWeight: FontWeight.w400,
@@ -121,29 +180,29 @@ class HeroSection extends StatelessWidget {
                 color: Colors.white,
               ),
               children: [
-                const TextSpan(
+                TextSpan(
                   text: 'JPS',
                   style: TextStyle(fontWeight: FontWeight.w700),
                 ),
-                const TextSpan(
+                TextSpan(
                   text:
                   ' adalah platform asuransi pintar yang memudahkan kamu mencari, memilih,\ndan klaim asuransi hanya dalam hitungan menit ',
                 ),
-                const TextSpan(
+                TextSpan(
                   text: 'cepat',
                   style: TextStyle(fontWeight: FontWeight.w700),
                 ),
-                const TextSpan(text: ', '),
-                const TextSpan(
+                TextSpan(text: ', '),
+                TextSpan(
                   text: 'aman',
                   style: TextStyle(fontWeight: FontWeight.w700),
                 ),
-                const TextSpan(text: ', dan '),
-                const TextSpan(
+                TextSpan(text: ', dan '),
+                TextSpan(
                   text: 'terdaftar OJK',
                   style: TextStyle(fontWeight: FontWeight.w700),
                 ),
-                const TextSpan(text: '.'),
+                TextSpan(text: '.'),
               ],
             ),
           ),
@@ -151,7 +210,6 @@ class HeroSection extends StatelessWidget {
       ),
     );
   }
-
 
   Widget _buildHeroImage() {
     return Image.asset(

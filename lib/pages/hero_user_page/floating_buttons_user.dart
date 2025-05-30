@@ -1,4 +1,3 @@
-// Tetap sama seperti awal
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -24,8 +23,8 @@ class _FloatingButtonsState extends State<FloatingButtons>
   bool get isMobile => widget.constraints.maxWidth < 768;
   double get maxWidth =>
       widget.constraints.maxWidth > 1200 ? 1200 : widget.constraints.maxWidth * 0.9;
-  double get sidePadding => widget.constraints.maxWidth > 1200 ? 64.0 : 32.0;
-  double get innerPadding => isMobile ? 16.0 : 40.0;
+  double get sidePadding => widget.constraints.maxWidth > 1200 ? 64.0 : 30.0;
+  double get innerPadding => isMobile ? 14.0 : 32.0;
 
   GoogleSignInAccount? _user;
 
@@ -82,7 +81,7 @@ class _FloatingButtonsState extends State<FloatingButtons>
   @override
   Widget build(BuildContext context) {
     return Transform.translate(
-      offset: const Offset(0, -70),
+      offset: const Offset(0, -80),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: sidePadding),
         child: Center(
@@ -108,30 +107,35 @@ class _FloatingButtonsState extends State<FloatingButtons>
             child: Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: innerPadding,
-                vertical: 20.0,
+                vertical: isMobile ? 17.0 : 20.0,
               ),
-              child: Padding( // Tambahkan Padding di sini
-                padding: const EdgeInsets.only(left: 38.0), // Atur jarak kiri
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    _buildAnimatedBadge(
-                      icon: Icons.policy,
-                      text: '$_polisAktif Polis Aktif',
-                      backgroundColor: const Color(0xFF79AB43).withOpacity(0.25), // Hijau muda 25%
-                      textColor: const Color(0xFF79AB43), // Hijau tua
-                      delay: const Duration(milliseconds: 0),
-                    ),
-                    const SizedBox(width: 36.0),
-                    _buildAnimatedBadge(
-                      icon: Icons.attach_money,
-                      text: _formatCurrency(_totalPremi),
-                      backgroundColor: const Color(0xFF79AB43).withOpacity(0.25), // Hijau muda 25%
-                      textColor: const Color(0xFF79AB43), // Hijau tua
-                      delay: const Duration(milliseconds: 200),
-                    ),
-                  ],
-                ),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return Wrap(
+                    spacing: isMobile ? 10 : 32,
+                    runSpacing: isMobile ? 12 : 20,
+                    alignment: isMobile ? WrapAlignment.center : WrapAlignment.start,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      _buildAnimatedBadge(
+                        icon: Icons.policy,
+                        text: '$_polisAktif Polis Aktif',
+                        backgroundColor: const Color(0xFF79AB43).withOpacity(0.25),
+                        textColor: const Color(0xFF79AB43),
+                        delay: const Duration(milliseconds: 0),
+                        isMobile: isMobile,
+                      ),
+                      _buildAnimatedBadge(
+                        icon: Icons.attach_money,
+                        text: _formatCurrency(_totalPremi),
+                        backgroundColor: const Color(0xFF79AB43).withOpacity(0.25),
+                        textColor: const Color(0xFF79AB43),
+                        delay: const Duration(milliseconds: 200),
+                        isMobile: isMobile,
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
           ),
@@ -146,6 +150,7 @@ class _FloatingButtonsState extends State<FloatingButtons>
     required Color backgroundColor,
     required Color textColor,
     required Duration delay,
+    required bool isMobile,
   }) {
     return AnimatedBuilder(
       animation: _buttonsController,
@@ -164,6 +169,7 @@ class _FloatingButtonsState extends State<FloatingButtons>
                   text: text,
                   backgroundColor: backgroundColor,
                   textColor: textColor,
+                  isMobile: isMobile,
                 ),
               ),
             );
@@ -202,6 +208,7 @@ class InfoBadge extends StatelessWidget {
   final String text;
   final Color backgroundColor;
   final Color textColor;
+  final bool isMobile;
 
   const InfoBadge({
     super.key,
@@ -209,15 +216,19 @@ class InfoBadge extends StatelessWidget {
     required this.text,
     required this.backgroundColor,
     required this.textColor,
+    required this.isMobile,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+      padding: EdgeInsets.symmetric(
+        horizontal: isMobile ? 10.0 : 16.0,
+        vertical: isMobile ? 7.0 : 10.0,
+      ),
       decoration: BoxDecoration(
         color: backgroundColor,
-        borderRadius: BorderRadius.circular(16.13), // Rounded sesuai permintaan
+        borderRadius: BorderRadius.circular(isMobile ? 12.0 : 16.0),
         border: Border.all(
           color: backgroundColor.withOpacity(0.3),
           width: 1.0,
@@ -227,25 +238,25 @@ class InfoBadge extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            padding: const EdgeInsets.all(6.0),
+            padding: EdgeInsets.all(isMobile ? 4.0 : 6.0),
             decoration: const BoxDecoration(
-              color: Colors.white, // Background putih untuk icon
+              color: Colors.white,
               shape: BoxShape.circle,
             ),
             child: Icon(
-                icon,
-                color: textColor,
-                size: 16.0
+              icon,
+              color: textColor,
+              size: isMobile ? 14.0 : 16.0,
             ),
           ),
-          const SizedBox(width: 8.0),
+          SizedBox(width: isMobile ? 6.0 : 8.0),
           Text(
             text,
             style: TextStyle(
               fontFamily: 'Satoshi-Regular',
               color: textColor,
               fontWeight: FontWeight.w500,
-              fontSize: 24.2,
+              fontSize: isMobile ? 16.0 : 24.0,
             ),
           ),
         ],

@@ -40,10 +40,10 @@ class FooterSection extends StatelessWidget {
                 child: Text(
                   'Protect your future with JPS. © ${DateTime.now().year} JPS Insurance Platform.',
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'Satoshi-Regular',
-                    fontSize: 18.0,
-                    color: Color(0xFF79AB43),
+                    fontSize: isMobile ? 10.0 : 18.0, // ⬅️ Responsive font size
+                    color: const Color(0xFF79AB43),
                   ),
                 ),
               ),
@@ -56,54 +56,66 @@ class FooterSection extends StatelessWidget {
 
   Widget _buildMobileFooterContent() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start, // RATA KIRI
       children: [
-        Image.asset('assets/images/jps_logo.png', height: 90.0),
-        const SizedBox(height: 16.0),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Image.asset('assets/images/jps_logo.png', height: 70.0),
+        ),
+        const SizedBox(height: 14.0),
         const Text(
           'PT. Jaya Proteksindo Sakti',
           style: TextStyle(
             fontFamily: 'Satoshi-Regular',
-            fontSize: 18.0,
+            fontSize: 15.0, // lebih kecil
             fontWeight: FontWeight.bold,
           ),
+          textAlign: TextAlign.left,
         ),
-        const SizedBox(height: 8.0),
+        const SizedBox(height: 6.0),
         const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0),
+          padding: EdgeInsets.only(right: 24.0),
           child: Text(
             'No. 7 - 9, Jl. Kramat Raya, Kramat, Kec. Senen, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10450',
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.left,
             style: TextStyle(
               fontFamily: 'Satoshi-Regular',
-              fontSize: 18.0,
+              fontSize: 13.0, // lebih kecil
               color: Colors.black54,
+              height: 1.3,
             ),
           ),
         ),
-        const SizedBox(height: 20.0),
-        _buildHoverButtonOutlined(
-          icon: Icons.location_on_outlined,
-          text: 'Google Maps',
-          onPressed: () {},
+        const SizedBox(height: 16.0),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: _buildHoverButtonOutlined(
+            icon: Icons.location_on_outlined,
+            text: 'Google Maps',
+            onPressed: () {},
+            fontSize: 14.0,
+          ),
         ),
-        const SizedBox(height: 32.0),
+        const SizedBox(height: 28.0),
         const Text(
           'Media Sosial',
           style: TextStyle(
             fontFamily: 'Satoshi-Regular',
-            fontSize: 18.0,
+            fontSize: 15.0, // lebih kecil
             fontWeight: FontWeight.bold,
           ),
+          textAlign: TextAlign.left,
         ),
-        const SizedBox(height: 16.0),
+        const SizedBox(height: 12.0),
+        // Social button rata kiri (Wrap alignment: start)
         Wrap(
-          alignment: WrapAlignment.center,
-          spacing: 12.0,
-          runSpacing: 12.0,
+          alignment: WrapAlignment.start,
+          spacing: 8.0,
+          runSpacing: 10.0,
           children: [
-            _buildSocialButton(Icons.facebook, 'Facebook', () {}),
-            _buildSocialButton(Icons.camera_alt_outlined, 'Instagram', () {}),
-            _buildSocialButton(Icons.business_center_outlined, 'LinkedIn', () {}),
+            _buildSocialButton(Icons.facebook, 'Facebook', () {}, fontSize: 14.0),
+            _buildSocialButton(Icons.camera_alt_outlined, 'Instagram', () {}, fontSize: 14.0),
+            _buildSocialButton(Icons.business_center_outlined, 'LinkedIn', () {}, fontSize: 14.0),
           ],
         ),
       ],
@@ -200,16 +212,17 @@ class FooterSection extends StatelessWidget {
     required IconData icon,
     required String text,
     required VoidCallback onPressed,
+    double fontSize = 18.0, // default tetap 18, mobile bisa override jadi 14
   }) {
     return OutlinedButton.icon(
       onPressed: onPressed,
       icon: Icon(icon, color: const Color(0xFF79AB43)),
       label: Text(
         text,
-        style: const TextStyle(
+        style: TextStyle(
           fontFamily: 'Satoshi-Regular',
-          fontSize: 18.0,
-          color: Color(0xFF79AB43),
+          fontSize: fontSize,
+          color: const Color(0xFF79AB43),
         ),
       ),
       style: OutlinedButton.styleFrom(
@@ -219,15 +232,15 @@ class FooterSection extends StatelessWidget {
     );
   }
 
-  Widget _buildSocialButton(IconData icon, String text, VoidCallback onPressed) {
+  Widget _buildSocialButton(IconData icon, String text, VoidCallback onPressed, {double fontSize = 18.0}) {
     return OutlinedButton.icon(
       onPressed: onPressed,
       icon: Icon(icon, size: 16.0, color: const Color(0xFF79AB43)),
       label: Text(
         text,
-        style: const TextStyle(
+        style: TextStyle(
           fontFamily: 'Satoshi-Regular',
-          fontSize: 18.0,
+          fontSize: fontSize,
           color: Colors.black87,
         ),
       ),

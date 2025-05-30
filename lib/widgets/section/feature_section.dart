@@ -112,11 +112,13 @@ class _FeatureSectionState extends State<FeatureSection>
       child: Center(
         child: Container(
           width: maxWidth,
-          padding: EdgeInsets.symmetric(horizontal: isMobile ? 16.0 : 0),
+          padding: const EdgeInsets.only(top: 40.0, bottom: 10.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildAnimatedHeader(),
+              // Header tidak ditampilkan di mobile sesuai gambar
+              if (!isMobile) _buildAnimatedHeader(),
+
               isMobile
                   ? Column(
                 children: [
@@ -219,90 +221,99 @@ class _FeatureSectionState extends State<FeatureSection>
 
   Widget _buildFeatureTitle() {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
       children: [
-        RichText(
-          text: TextSpan(
-            style: TextStyle(
-              fontFamily: 'Satoshi-Regular',
-              fontSize: isMobile ? 32.0 : 40.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-              height: 1.2,
-            ),
-            children: [
-              const TextSpan(text: 'Bagaimana '),
-              TextSpan(
-                text: 'JPS',
-                style: TextStyle(color: const Color(0xFF79AB43)),
+        Container(
+          alignment: Alignment.centerLeft,
+          child: RichText(
+            textAlign: TextAlign.left,
+            text: TextSpan(
+              style: TextStyle(
+                fontFamily: 'Satoshi-Regular',
+                fontSize: isMobile ? 28.0 : 40.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+                height: 1.2,
               ),
-              const TextSpan(text: ' membantu'),
-            ],
+              children: [
+                const TextSpan(text: 'Bagaimana '),
+                TextSpan(
+                  text: 'JPS',
+                  style: TextStyle(color: const Color(0xFF79AB43)),
+                ),
+                const TextSpan(text: ' Membantu Asuransi Anda Lebih Baik'),
+              ],
+            ),
           ),
         ),
         const SizedBox(height: 8.0),
-        Text(
-          'Asuransi Anda Lebih Baik',
-          style: TextStyle(
-            fontFamily: 'Satoshi-Regular',
-            fontSize: isMobile ? 32.0 : 40.0,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-            height: 1.2,
-          ),
-        ),
         const SizedBox(height: 20.0),
-        ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 600),
-          child: Text(
-            'Kami membantu menyampaikan solusi asuransi Anda lewat visual yang jelas, terpercaya, dan mudah dipahami oleh semua audiens.',
-            style: TextStyle(
-              fontFamily: 'Satoshi-Regular',
-              fontSize: isMobile ? 18.0 : 20.0,
-              color: Colors.black54,
-              height: 1.5,
+        // Description dengan alignment center untuk mobile
+        Container(
+          alignment: Alignment.centerLeft,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 600),
+            child: Text(
+              'Kami bantu menyampaikan solusi asuransi Anda lewat visual yang jelas, terpercaya, dan mudah dipahami oleh semua audiens.',
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                fontFamily: 'Satoshi-Regular',
+                fontSize: isMobile ? 16.0 : 20.0,
+                color: Colors.black54,
+                height: 1.5,
+              ),
             ),
           ),
         ),
         const SizedBox(height: 30.0),
-        // ⭐ RATING
-        Row(
-          children: [
-            for (int i = 0; i < 5; i++)
-              TweenAnimationBuilder<double>(
-                duration: Duration(milliseconds: 200 + (i * 100)),
-                tween: Tween(begin: 0.0, end: 1.0),
-                builder: (context, value, child) {
-                  return Transform.scale(
-                    scale: value,
-                    child: const Icon(
-                      Icons.star,
-                      color: Color(0xFFFFD700),
-                      size: 20.0,
+        Container(
+          alignment: Alignment.centerLeft,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisSize: isMobile ? MainAxisSize.min : MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  for (int i = 0; i < 5; i++)
+                    TweenAnimationBuilder<double>(
+                      duration: Duration(milliseconds: 200 + (i * 100)),
+                      tween: Tween(begin: 0.0, end: 1.0),
+                      builder: (context, value, child) {
+                        return Transform.scale(
+                          scale: value,
+                          child: const Icon(
+                            Icons.star,
+                            color: Color(0xFFFFD700),
+                            size: 20.0,
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
+                  const SizedBox(width: 8.0),
+                  Text(
+                    '4.9 / 5 rating',
+                    style: TextStyle(
+                      fontSize: isMobile ? 16.0 : 14.0,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
               ),
-            const SizedBox(width: 8.0),
-            const Text(
-              '4.9 / 5 rating',
-              style: TextStyle(
-                fontSize: 14.0,
-                fontWeight: FontWeight.w600,
-                color: Colors.black,
+              const SizedBox(height: 8.0),
+              Text(
+                'Approved by Client JPS',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: isMobile ? 16.0 : 17.0,
+                  color: Colors.black54,
+                  fontStyle: FontStyle.italic,
+                ),
               ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8.0),
-        const Text(
-          'Approved by Client JPS',
-          style: TextStyle(
-            fontSize: 17.0,
-            color: Colors.black54,
-            fontStyle: FontStyle.italic,
+            ],
           ),
-        ),
+        )
       ],
     );
   }
@@ -313,12 +324,14 @@ class _FeatureSectionState extends State<FeatureSection>
       child: Column(
         children: [
           AnimatedFeatureItem(
-            icon: Icons.check_circle_outline,
+            icon: Icons.info_outline,
             title: 'Menginformasikan. Melindungi. Meyakinkan.',
-            description:
-            'Menyediakan informasi yang jelas, melindungi kepentingan Anda,\ndan memberikan rasa aman dalam setiap klaim asuransi.',
+            description: isMobile
+                ? 'Menyediakan informasi yang jelas, melindungi kepentingan Anda, dan memberikan rasa aman dalam setiap klaim asuransi.'
+                : 'Menyediakan informasi yang jelas, melindungi kepentingan Anda,\ndan memberikan rasa aman dalam setiap klaim asuransi.',
             delay: const Duration(milliseconds: 0),
             animation: _featuresStaggerAnimation,
+            isMobile: isMobile,
           ),
           const SizedBox(height: 32.0),
           AnimatedFeatureItem(
@@ -328,15 +341,17 @@ class _FeatureSectionState extends State<FeatureSection>
             'Klaim yang cepat dan transparan membangun kepercayaan penuh untuk setiap langkah perlindungan Anda.',
             delay: const Duration(milliseconds: 200),
             animation: _featuresStaggerAnimation,
+            isMobile: isMobile,
           ),
           const SizedBox(height: 32.0),
           AnimatedFeatureItem(
-            icon: Icons.description_outlined,
+            icon: Icons.check_circle_outline,
             title: 'Menyederhanakan Info Asuransi',
             description:
             'Proses klaim yang mudah dimengerti, mempermudah Anda dalam memahami hak dan perlindungan asuransi.',
             delay: const Duration(milliseconds: 400),
             animation: _featuresStaggerAnimation,
+            isMobile: isMobile,
           ),
         ],
       ),
@@ -351,6 +366,7 @@ class AnimatedFeatureItem extends StatefulWidget {
   final String description;
   final Duration delay;
   final Animation<double> animation;
+  final bool isMobile;
 
   const AnimatedFeatureItem({
     super.key,
@@ -359,6 +375,7 @@ class AnimatedFeatureItem extends StatefulWidget {
     required this.description,
     required this.delay,
     required this.animation,
+    this.isMobile = false,
   });
 
   @override
@@ -473,7 +490,7 @@ class _AnimatedFeatureItemState extends State<AnimatedFeatureItem>
                 scale: _scaleAnimation.value,
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
-                  padding: const EdgeInsets.all(20),
+                  padding: EdgeInsets.all(widget.isMobile ? 16 : 20),
                   decoration: BoxDecoration(
                     color: _backgroundAnimation.value,
                     borderRadius: BorderRadius.circular(16),
@@ -485,8 +502,8 @@ class _AnimatedFeatureItemState extends State<AnimatedFeatureItem>
                         scale: _iconScaleAnimation.value,
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 300),
-                          width: 48,
-                          height: 48,
+                          width: widget.isMobile ? 40 : 48,
+                          height: widget.isMobile ? 40 : 48,
                           decoration: BoxDecoration(
                             color: _isHovered
                                 ? const Color(0xFF79AB43).withOpacity(0.1)
@@ -503,12 +520,12 @@ class _AnimatedFeatureItemState extends State<AnimatedFeatureItem>
                             child: Icon(
                               widget.icon,
                               color: const Color(0xFF79AB43),
-                              size: 24.0,
+                              size: widget.isMobile ? 20.0 : 24.0,
                             ),
                           ),
                         ),
                       ),
-                      const SizedBox(width: 20.0),
+                      SizedBox(width: widget.isMobile ? 16.0 : 20.0),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -516,17 +533,17 @@ class _AnimatedFeatureItemState extends State<AnimatedFeatureItem>
                             Text(
                               widget.title,
                               style: TextStyle(
-                                fontSize: 25.0,
-                                fontWeight: FontWeight.w500, // tidak berubah
-                                color: _isHovered ? const Color(0xFF79AB43) : Colors.black, // 🟢 efek hover hijau
+                                fontSize: widget.isMobile ? 18.0 : 25.0,
+                                fontWeight: FontWeight.w500,
+                                color: _isHovered ? const Color(0xFF79AB43) : Colors.black,
                                 height: 1.3,
                               ),
                             ),
                             const SizedBox(height: 8.0),
                             Text(
                               widget.description,
-                              style: const TextStyle(
-                                fontSize: 17.0,
+                              style: TextStyle(
+                                fontSize: widget.isMobile ? 14.0 : 17.0,
                                 color: Colors.black54,
                                 height: 1.6,
                               ),

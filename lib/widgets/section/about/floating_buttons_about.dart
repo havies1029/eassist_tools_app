@@ -12,6 +12,7 @@ class FloatingButtons extends StatefulWidget {
 class _FloatingButtonsState extends State<FloatingButtons>
     with TickerProviderStateMixin {
   bool get isMobile => widget.constraints.maxWidth < 768;
+  bool get isSmallMobile => widget.constraints.maxWidth < 400;
   double get maxWidth => widget.constraints.maxWidth > 1200
       ? 1200
       : widget.constraints.maxWidth * 0.95;
@@ -135,15 +136,18 @@ class _FloatingButtonsState extends State<FloatingButtons>
   @override
   Widget build(BuildContext context) {
     return Transform.translate(
-      offset: const Offset(0, -50),
+      offset: Offset(0, isMobile ? -30 : -50),
       child: Align(
         alignment: Alignment.center,
         child: Container(
           constraints: BoxConstraints(maxWidth: maxWidth),
-          margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+          margin: EdgeInsets.symmetric(
+            vertical: 8.0,
+            horizontal: isMobile ? (isSmallMobile ? 12.0 : 16.0) : 16.0,
+          ),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(20.0),
+            borderRadius: BorderRadius.circular(isMobile ? 16.0 : 20.0),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.08),
@@ -157,8 +161,10 @@ class _FloatingButtonsState extends State<FloatingButtons>
             ),
           ),
           child: Padding(
-            padding:
-            const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
+            padding: EdgeInsets.symmetric(
+              vertical: isMobile ? (isSmallMobile ? 8.0 : 12.0) : 12.0,
+              horizontal: isMobile ? (isSmallMobile ? 8.0 : 12.0) : 20.0,
+            ),
             child: isMobile ? _buildMobileLayout() : _buildDesktopLayout(),
           ),
         ),
@@ -237,6 +243,7 @@ class _FloatingButtonsState extends State<FloatingButtons>
   Widget _buildMobileLayout() {
     return Column(
       children: [
+        // Row pertama - Lebih fokus pada spacing dan hierarchy
         Row(
           children: [
             Expanded(
@@ -247,11 +254,13 @@ class _FloatingButtonsState extends State<FloatingButtons>
                     title: _statistics['nasabah']['label'],
                     value: _formatNumber(_nasabahAnimation.value),
                     color: const Color(0xFF79AB43),
+                    isMobile: true,
+                    isSmallMobile: isSmallMobile,
                   );
                 },
               ),
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: isSmallMobile ? 8 : 10),
             Expanded(
               child: AnimatedBuilder(
                 animation: _klaimAnimation,
@@ -260,13 +269,16 @@ class _FloatingButtonsState extends State<FloatingButtons>
                     title: _statistics['klaim']['label'],
                     value: _formatNumber(_klaimAnimation.value),
                     color: const Color(0xFF79AB43),
+                    isMobile: true,
+                    isSmallMobile: isSmallMobile,
                   );
                 },
               ),
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: isSmallMobile ? 8 : 10),
+        // Row kedua
         Row(
           children: [
             Expanded(
@@ -277,11 +289,13 @@ class _FloatingButtonsState extends State<FloatingButtons>
                     title: _statistics['mitra']['label'],
                     value: _formatNumber(_mitraAnimation.value),
                     color: const Color(0xFF79AB43),
+                    isMobile: true,
+                    isSmallMobile: isSmallMobile,
                   );
                 },
               ),
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: isSmallMobile ? 8 : 10),
             Expanded(
               child: AnimatedBuilder(
                 animation: _danaAnimation,
@@ -290,6 +304,8 @@ class _FloatingButtonsState extends State<FloatingButtons>
                     title: _statistics['dana']['label'],
                     value: _formatCurrency(_danaAnimation.value),
                     color: const Color(0xFF79AB43),
+                    isMobile: true,
+                    isSmallMobile: isSmallMobile,
                   );
                 },
               ),
@@ -305,45 +321,71 @@ class StatCard extends StatelessWidget {
   final String title;
   final String value;
   final Color color;
+  final bool isMobile;
+  final bool isSmallMobile;
 
   const StatCard({
     super.key,
     required this.title,
     required this.value,
     required this.color,
+    this.isMobile = false,
+    this.isSmallMobile = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+      padding: EdgeInsets.symmetric(
+        vertical: isMobile
+            ? (isSmallMobile ? 8 : 10)
+            : 12,
+        horizontal: isMobile
+            ? (isSmallMobile ? 4 : 6)
+            : 8,
+      ),
       decoration: BoxDecoration(
         color: Colors.transparent,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: 'Satoshi-Regular',
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
-              color: Colors.grey[600],
+          // Title dengan improved mobile readability
+          Flexible(
+            child: Text(
+              title,
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontFamily: 'Satoshi-Regular',
+                fontSize: isMobile
+                    ? (isSmallMobile ? 10 : 11)
+                    : 17,
+                fontWeight: FontWeight.w600,
+                color: Colors.grey[600],
+                height: 1.2,
+              ),
             ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: 'Satoshi-Bold',
-              fontSize: 40,
-              fontWeight: FontWeight.w700,
-              color: color,
+          SizedBox(height: isSmallMobile ? 2 : 4),
+          // Value dengan better mobile scaling
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              value,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'Satoshi-Bold',
+                fontSize: isMobile
+                    ? (isSmallMobile ? 16 : 18)
+                    : 32,
+                fontWeight: FontWeight.w700,
+                color: color,
+                height: 1.1,
+              ),
             ),
           ),
         ],
