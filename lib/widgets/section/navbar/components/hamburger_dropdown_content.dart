@@ -96,6 +96,9 @@ class _HamburgerDropdownContentState
         SubMenuItem(icon: Icons.person_outline, title: 'Register Gmail', onTap: () {}),
         SubMenuItem(icon: Icons.person_pin_circle_outlined, title: 'Profile Individu', onTap: () {}),
         SubMenuItem(icon: Icons.business_outlined, title: 'Profile Perusahaan', onTap: () {}),
+        SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Contact', onTap: () {}),
+        SubMenuItem(icon: Icons.business_outlined, title: 'Rekan General', onTap: () {}),
+        SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pajak', onTap: () {}),
       ],
     },
   ];

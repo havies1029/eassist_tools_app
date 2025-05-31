@@ -1,5 +1,9 @@
+import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:flutter/material.dart';
+import 'package:eassist_tools_app/widgets/google_signin_button_stub.dart'
+if (dart.library.js_interop) 'package:eassist_tools_app/widgets/google_signin_button_web.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
 import '../login/login_gmail/Popup.dart';
 import '../login/login_client/popup_client.dart';
 
@@ -28,7 +32,7 @@ class _FloatingButtonsState extends State<FloatingButtons>
   bool get isMobile => widget.constraints.maxWidth < 768;
   double get maxWidth =>
       widget.constraints.maxWidth > 1200 ? 1200 : widget.constraints.maxWidth * 0.9;
-  double get sidePadding => widget.constraints.maxWidth > 1200 ? 64.0 : 32.0;
+  double get sidePadding => widget.constraints.maxWidth > 1200 ? 64.0 : 30.0;
   double get innerPadding => isMobile ? 16.0 : 40.0;
 
   GoogleSignInAccount? _user;
@@ -51,6 +55,11 @@ class _FloatingButtonsState extends State<FloatingButtons>
     ));
 
     _startAnimations();
+
+    if (AppData.kIsWeb) {
+      // Register the Google Sign-In button for we
+      registerGoogleSigninButton();
+    }
   }
 
   void _startAnimations() async {
@@ -67,7 +76,7 @@ class _FloatingButtonsState extends State<FloatingButtons>
   @override
   Widget build(BuildContext context) {
     return Transform.translate(
-      offset: const Offset(0, -70),
+      offset: const Offset(0, -80),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: sidePadding),
         child: Center(
@@ -93,28 +102,32 @@ class _FloatingButtonsState extends State<FloatingButtons>
             child: Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: innerPadding,
-                vertical: 20.0,
+                vertical: isMobile ? 17.0 : 20.0,
               ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 42.0), // ⬅️ Geser sedikit ke tengah
-                    child: Row(
-                      children: [
-                        _buildAnimatedButton(
-                          isLogin: true,
-                          delay: const Duration(milliseconds: 0),
-                        ),
-                        const SizedBox(width: 16.0),
-                        _buildAnimatedButton(
-                          isLogin: false,
-                          delay: const Duration(milliseconds: 200),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final isMobileLocal = constraints.maxWidth < 768;
+                  return Wrap(
+                    spacing: isMobileLocal ? 10 : 16,
+                    runSpacing: isMobileLocal ? 10 : 0,
+                    alignment: isMobileLocal
+                        ? WrapAlignment.center
+                        : WrapAlignment.start,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      _buildAnimatedButton(
+                        isLogin: true,
+                        delay: const Duration(milliseconds: 0),
+                        isMobile: isMobileLocal,
+                      ),
+                      _buildAnimatedButton(
+                        isLogin: false,
+                        delay: const Duration(milliseconds: 200),
+                        isMobile: isMobileLocal,
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
           ),
@@ -126,6 +139,7 @@ class _FloatingButtonsState extends State<FloatingButtons>
   Widget _buildAnimatedButton({
     required bool isLogin,
     required Duration delay,
+    required bool isMobile, // tambahkan argumen ini jika ingin passing ke EnhancedHoverButton
   }) {
     return AnimatedBuilder(
       animation: _buttonsController,
@@ -146,11 +160,12 @@ class _FloatingButtonsState extends State<FloatingButtons>
                       await CustomPopupsLoginUser.showLoginDialog(context);
                     } else {
                       debugPrint("is login false – open register dialog");
-                      await CustomPopupsClient.showRegisterDialog(context); // Munculkan dialog daftar client
+                      await CustomPopupsClient.showRegisterDialog(context);
                     }
                   },
                   isLogin: isLogin,
                   delay: delay,
+                  // isMobile: isMobile, // Uncomment jika EnhancedHoverButton mendukung argumen ini
                 ),
               ),
             );
@@ -183,7 +198,7 @@ class _FloatingButtonsState extends State<FloatingButtons>
     try {
       await _googleSignIn.signOut();
       //await _googleSignIn.disconnect();
-      setState(() => _user = null);      
+      setState(() => _user = null);
     } catch (error) {
       print('Logout gagal: $error');
     }
@@ -322,6 +337,7 @@ class _EnhancedHoverButtonState extends State<EnhancedHoverButton>
       ]),
       builder: (context, child) {
         return MouseRegion(
+          cursor: SystemMouseCursors.click,
           onEnter: (_) => _onHover(true),
           onExit: (_) => _onHover(false),
           child: GestureDetector(

@@ -20,7 +20,12 @@ class HomeRedirectorPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Jika native Android/iOS ATAU layar kecil (<768), tampilkan Splash
-    if (isMobilePlatform() || isSmallScreen(context)) {
+    // if (isMobilePlatform() || isSmallScreen(context)) {
+    //   return const SplashPage();
+    // } else {
+    //   return const HeroMain();
+    // }
+    if (isMobilePlatform()) {
       return const SplashPage();
     } else {
       return const HeroMain();

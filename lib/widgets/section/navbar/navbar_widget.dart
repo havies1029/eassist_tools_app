@@ -6,13 +6,20 @@ import 'package:eassist_tools_app/widgets/section/navbar/components/nav_bar.dart
 import 'package:eassist_tools_app/widgets/section/navbar/components/profile_dropdown_content.dart';
 import 'package:eassist_tools_app/widgets/section/navbar/components/profile_section.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:math' show pi;
 
+import '../../../blocs/profile/rekancontact_bloc.dart';
+import '../../../blocs/profile/rekangeneral_bloc.dart';
+import '../../../blocs/profile/rekanpajak_bloc.dart';
 import '../../../pages/about_jps/about_main.dart';
 import '../../../pages/article_page/article_main.dart';
 import '../../../pages/hero_user_page/hero_user_main.dart';
 import '../../../pages/heropage/hero_main.dart';
 import '../../../pages/profile/profile_main_page.dart';
+import '../../../pages/profile/rekancontact_form.dart';
+import '../../../pages/profile/rekangeneral_form.dart';
+import '../../../pages/profile/rekanpajak_form.dart';
 import '../../../pages/testimony_page/testimony_main.dart';
 import '../../../repositories/user/user_repository.dart';
 import '../../login/login_client/popup_client.dart';
@@ -276,10 +283,50 @@ class _NavbarWidgetState extends State<NavbarWidget> {
         context,
         MaterialPageRoute(builder: (context) => const TestimonyMain()),
       );
-    }else if (title == 'Artikel Asuransi') {
+    }else if (title == 'Rekan Contact') {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const ArticleMain()),
+        MaterialPageRoute(
+          builder: (context) {
+            return BlocProvider.value(
+              value: BlocProvider.of<RekanContactBloc>(context),
+              child: const RekanContactFormPage(
+                viewMode: 'tambah',    // atau 'ubah'
+                recordId: '',          // kalau 'ubah', ganti dengan ID yang relevan
+              ),
+            );
+          },
+        ),
+      );
+    }else if (title == 'Rekan General') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return BlocProvider.value(
+              value: BlocProvider.of<RekanGeneralBloc>(context),
+              child: const RekanGeneralFormPage(
+                viewMode: 'tambah',    // atau 'ubah'
+                recordId: '',          // kalau 'ubah', ganti dengan ID yang relevan
+              ),
+            );
+          },
+        ),
+      );
+    }else if (title == 'Rekan Pajak') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return BlocProvider.value(
+              value: BlocProvider.of<RekanPajakBloc>(context),
+              child: const RekanPajakFormPage(
+                viewMode: 'tambah',    // atau 'ubah'
+                recordId: '',          // kalau 'ubah', ganti dengan ID yang relevan
+              ),
+            );
+          },
+        ),
       );
     }else if (title == 'Login Gmail') {
       await CustomPopupsLoginUser.showLoginDialog(context);
