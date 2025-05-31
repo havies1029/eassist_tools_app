@@ -154,8 +154,8 @@ class PageContainer extends PageContainerBase {
 
     switch (pageType) {
       case PageType.home:
-        page = const HeroUserMain();
-        // page = const HomeRedirectorPage();
+        // page = const HeroMain();
+        page = const HomeRedirectorPage();
         break;
       case PageType.groupchat:
         page = const ChatPage(roomId: "support");
