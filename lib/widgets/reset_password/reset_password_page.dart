@@ -9,10 +9,17 @@ class ResetPasswordPage extends StatefulWidget {
 }
 
 class _ResetPasswordPageState extends State<ResetPasswordPage> with TickerProviderStateMixin {
-  final _passwordController = TextEditingController();
+  final _oldPasswordController = TextEditingController();
+  final _newPasswordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+
+  bool _showOldPassword = false;
+  bool _showNewPassword = false;
+  bool _showConfirmPassword = false;
   bool _isHovering = false;
-  late AnimationController _animationController;
-  late Animation<double> _scaleAnimation;
+
+  late final AnimationController _animationController;
+  late final Animation<double> _scaleAnimation;
 
   @override
   void initState() {
@@ -30,14 +37,33 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> with TickerProvid
   @override
   void dispose() {
     _animationController.dispose();
-    _passwordController.dispose();
+    _oldPasswordController.dispose();
+    _newPasswordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
-  void _submitNewPassword() {
-    final newPassword = _passwordController.text;
-    // TODO: Panggil fungsi untuk memperbarui password di sini.
-    // Contoh: AuthService.updatePassword(newPassword);
+  void _submitReset() {
+    final oldPwd = _oldPasswordController.text;
+    final newPwd = _newPasswordController.text;
+    final confirmPwd = _confirmPasswordController.text;
+
+    if (oldPwd.isEmpty || newPwd.isEmpty || confirmPwd.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Semua kolom harus diisi.')),
+      );
+      return;
+    }
+    if (newPwd != confirmPwd) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Password baru dan konfirmasi tidak sama.')),
+      );
+      return;
+    }
+
+    // TODO: Panggil fungsi untuk memperbarui password di sini, misalnya:
+    // AuthService.updatePassword(oldPwd, newPwd);
+
     Navigator.of(context).pop(); // Tutup halaman setelah submit
   }
 
@@ -136,11 +162,25 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> with TickerProvid
         children: [
           _buildLogo(),
           const SizedBox(height: 30),
-          _buildTextField(
-            controller: _passwordController,
-            hintText: 'Masukkan Password yang Baru',
-            keyboardType: TextInputType.visiblePassword,
-            obscureText: true,
+          _buildPasswordField(
+            controller: _oldPasswordController,
+            hintText: 'Masukkan Password Lama',
+            obscureText: !_showOldPassword,
+            onToggle: () => setState(() => _showOldPassword = !_showOldPassword),
+          ),
+          const SizedBox(height: 20),
+          _buildPasswordField(
+            controller: _newPasswordController,
+            hintText: 'Masukkan Password Baru',
+            obscureText: !_showNewPassword,
+            onToggle: () => setState(() => _showNewPassword = !_showNewPassword),
+          ),
+          const SizedBox(height: 20),
+          _buildPasswordField(
+            controller: _confirmPasswordController,
+            hintText: 'Ketik Ulang Password Baru',
+            obscureText: !_showConfirmPassword,
+            onToggle: () => setState(() => _showConfirmPassword = !_showConfirmPassword),
           ),
           const SizedBox(height: 40),
           _buildSubmitButton(),
@@ -174,11 +214,11 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> with TickerProvid
     );
   }
 
-  Widget _buildTextField({
+  Widget _buildPasswordField({
     required TextEditingController controller,
     required String hintText,
-    TextInputType? keyboardType,
-    bool obscureText = false,
+    required bool obscureText,
+    required VoidCallback onToggle,
   }) {
     return Container(
       decoration: BoxDecoration(
@@ -193,7 +233,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> with TickerProvid
       ),
       child: TextField(
         controller: controller,
-        keyboardType: keyboardType,
+        keyboardType: TextInputType.visiblePassword,
         obscureText: obscureText,
         decoration: InputDecoration(
           hintText: hintText,
@@ -213,6 +253,16 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> with TickerProvid
           filled: true,
           fillColor: Colors.grey.shade50,
           contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+          suffixIcon: Padding(
+            padding: const EdgeInsets.only(right: 10), // geser ikon 10px ke kiri
+            child: IconButton(
+              icon: Icon(
+                obscureText ? Icons.visibility_off : Icons.visibility,
+                color: Colors.grey.shade600,
+              ),
+              onPressed: onToggle,
+            ),
+          ),
         ),
       ),
     );
@@ -251,7 +301,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> with TickerProvid
           color: Colors.transparent,
           child: InkWell(
             borderRadius: BorderRadius.circular(10),
-            onTap: _submitNewPassword,
+            onTap: _submitReset,
             child: const Center(
               child: Text(
                 'Submit',
