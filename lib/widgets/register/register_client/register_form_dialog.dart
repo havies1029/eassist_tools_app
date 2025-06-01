@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'popup_client.dart';
-import 'login_verification_dialog.dart';
 
 class RegisterDialog extends StatefulWidget {
   const RegisterDialog({super.key});

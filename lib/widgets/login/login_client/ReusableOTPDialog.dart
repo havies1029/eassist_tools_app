@@ -1,5 +1,6 @@
+import 'dart:math'; // untuk fungsi min()
 import 'package:flutter/material.dart';
-import 'popup_client.dart';
+import '../../register/register_client/popup_client.dart';
 import 'package:flutter/services.dart';
 
 class ReusableOTPDialog extends StatefulWidget {
@@ -29,8 +30,8 @@ class _ReusableOTPDialogState extends State<ReusableOTPDialog>
   @override
   void initState() {
     super.initState();
-    _controllers = List.generate(4, (_) => TextEditingController());
-    _focusNodes = List.generate(4, (_) => FocusNode());
+    _controllers = List.generate(6, (_) => TextEditingController());
+    _focusNodes = List.generate(6, (_) => FocusNode());
 
     _animationController = AnimationController(
       vsync: this,
@@ -56,7 +57,7 @@ class _ReusableOTPDialogState extends State<ReusableOTPDialog>
     FocusScope.of(context).unfocus();
     final code = _controllers.map((c) => c.text).join();
 
-    if (code.length < 4) {
+    if (code.length < 6) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Kode OTP belum lengkap!')),
       );
@@ -78,6 +79,9 @@ class _ReusableOTPDialogState extends State<ReusableOTPDialog>
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final dialogWidth = screenWidth < 450 ? screenWidth * 0.9 : 400.0;
+
     return AnimatedBuilder(
       animation: _scaleAnimation,
       builder: (context, child) {
@@ -86,7 +90,7 @@ class _ReusableOTPDialogState extends State<ReusableOTPDialog>
           child: Dialog(
             backgroundColor: Colors.transparent,
             child: Container(
-              width: 400,
+              width: dialogWidth,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
@@ -212,42 +216,67 @@ class _ReusableOTPDialogState extends State<ReusableOTPDialog>
   }
 
   Widget _buildOTPFields() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: List.generate(4, (index) {
-        return Container(
-          width: 60,
-          height: 60,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            color: Colors.grey.shade50,
-            border: Border.all(color: Colors.grey.shade300),
-          ),
-          child: TextField(
-            controller: _controllers[index],
-            focusNode: _focusNodes[index],
-            keyboardType: TextInputType.number,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly], // ✅ hanya angka
-            maxLength: 1,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-              counterText: '',
-            ),
-            onChanged: (value) {
-              if (value.isNotEmpty && index < 3) {
-                _focusNodes[index + 1].requestFocus();
-              } else if (value.isEmpty && index > 0) {
-                _focusNodes[index - 1].requestFocus();
-              }
-            },
-            onSubmitted: (_) {
-              if (index == 3) _submitCode();
-            },
-          ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Baris utama: 6 kotak yang dibagi rata.
+        return Row(
+          children: List.generate(6, (index) {
+            return Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: AspectRatio(
+                  aspectRatio: 1, // Kotak selalu persegi
+                  child: LayoutBuilder(
+                    builder: (context, boxConstraints) {
+                      // Hitung fontSize berdasarkan lebar kotak
+                      final fontSize = boxConstraints.maxWidth * 0.5;
+                      return Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: Colors.grey.shade50,
+                          border: Border.all(color: Colors.grey.shade300),
+                        ),
+                        child: Center(
+                          // TextField dibungkus Center untuk memastikan vertikal ter‐center
+                          child: TextField(
+                            controller: _controllers[index],
+                            focusNode: _focusNodes[index],
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                            maxLength: 1,
+                            textAlign: TextAlign.center,
+                            textAlignVertical: TextAlignVertical.center,
+                            style: TextStyle(
+                              fontSize: fontSize.clamp(18.0, 40.0),
+                              fontWeight: FontWeight.bold,
+                            ),
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              counterText: '',
+                              isCollapsed: true,
+                              contentPadding: EdgeInsets.zero,
+                            ),
+                            onChanged: (value) {
+                              if (value.isNotEmpty && index < 5) {
+                                _focusNodes[index + 1].requestFocus();
+                              } else if (value.isEmpty && index > 0) {
+                                _focusNodes[index - 1].requestFocus();
+                              }
+                            },
+                            onSubmitted: (_) {
+                              if (index == 5) _submitCode();
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            );
+          }),
         );
-      }),
+      },
     );
   }
 

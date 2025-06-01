@@ -1,17 +1,18 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'popup_client.dart';
 
 class LoginDialog extends StatefulWidget {
   final String email;
   final String title;
-  final int codeLength;
   final void Function(String code)? onSubmit;
 
+  // Kita set default codeLength menjadi 6
   const LoginDialog({
     super.key,
     required this.email,
     this.title = 'Verifikasi',
-    this.codeLength = 4,
     this.onSubmit,
   });
 
@@ -20,6 +21,9 @@ class LoginDialog extends StatefulWidget {
 }
 
 class _LoginDialogState extends State<LoginDialog> with TickerProviderStateMixin {
+  // Kita pakai codeLength = 6 secara hardcoded di sini
+  static const int codeLength = 6;
+
   late final List<TextEditingController> _codeControllers;
   late final List<FocusNode> _focusNodes;
   bool _isHovering = false;
@@ -29,8 +33,8 @@ class _LoginDialogState extends State<LoginDialog> with TickerProviderStateMixin
   @override
   void initState() {
     super.initState();
-    _codeControllers = List.generate(widget.codeLength, (index) => TextEditingController());
-    _focusNodes = List.generate(widget.codeLength, (index) => FocusNode());
+    _codeControllers = List.generate(codeLength, (_) => TextEditingController());
+    _focusNodes = List.generate(codeLength, (_) => FocusNode());
 
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 300),
@@ -58,6 +62,9 @@ class _LoginDialogState extends State<LoginDialog> with TickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final dialogWidth = screenWidth < 450 ? screenWidth * 0.9 : 400.0;
+
     return AnimatedBuilder(
       animation: _scaleAnimation,
       builder: (context, child) {
@@ -66,7 +73,7 @@ class _LoginDialogState extends State<LoginDialog> with TickerProviderStateMixin
           child: Dialog(
             backgroundColor: Colors.transparent,
             child: Container(
-              width: 400,
+              width: dialogWidth,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
@@ -116,12 +123,14 @@ class _LoginDialogState extends State<LoginDialog> with TickerProviderStateMixin
             ),
           ),
           const SizedBox(width: 15),
-          Text(
-            widget.title,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
+          Expanded(
+            child: Text(
+              widget.title,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ],
@@ -168,7 +177,7 @@ class _LoginDialogState extends State<LoginDialog> with TickerProviderStateMixin
             ),
           ),
           const SizedBox(height: 30),
-          _buildOTPFields(),
+          _buildOTPFields(), // 6 kotak responsif di sini
           const SizedBox(height: 40),
           _buildLoginButton(),
         ],
@@ -206,38 +215,73 @@ class _LoginDialogState extends State<LoginDialog> with TickerProviderStateMixin
   }
 
   Widget _buildOTPFields() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: List.generate(widget.codeLength, (index) {
-        return Container(
-          width: 60,
-          height: 60,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.grey.shade300),
-            color: Colors.grey.shade50,
-          ),
-          child: TextField(
-            controller: _codeControllers[index],
-            focusNode: _focusNodes[index],
-            textAlign: TextAlign.center,
-            keyboardType: TextInputType.number,
-            maxLength: 1,
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-              counterText: '',
-            ),
-            onChanged: (value) {
-              if (value.isNotEmpty && index < widget.codeLength - 1) {
-                _focusNodes[index + 1].requestFocus();
-              } else if (value.isEmpty && index > 0) {
-                _focusNodes[index - 1].requestFocus();
-              }
-            },
-          ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Row(
+          children: List.generate(codeLength, (index) {
+            return Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: AspectRatio(
+                  aspectRatio: 1, // Pastikan kotak selalu persegi
+                  child: LayoutBuilder(
+                    builder: (context, boxConstraints) {
+                      // Ukuran font 50% dari lebar kotak, tapi dibatasi antara 18–40
+                      final calculatedFont = boxConstraints.maxWidth * 0.5;
+                      final fontSize = calculatedFont.clamp(18.0, 40.0);
+
+                      return Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: Colors.grey.shade50,
+                          border: Border.all(color: Colors.grey.shade300),
+                        ),
+                        child: Center(
+                          child: TextField(
+                            controller: _codeControllers[index],
+                            focusNode: _focusNodes[index],
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            maxLength: 1,
+                            textAlign: TextAlign.center,
+                            textAlignVertical: TextAlignVertical.center,
+                            style: TextStyle(
+                              fontSize: fontSize,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              counterText: '',
+                              isCollapsed: true,
+                              contentPadding: EdgeInsets.zero,
+                            ),
+                            onChanged: (value) {
+                              if (value.isNotEmpty && index < codeLength - 1) {
+                                _focusNodes[index + 1].requestFocus();
+                              } else if (value.isEmpty && index > 0) {
+                                _focusNodes[index - 1].requestFocus();
+                              }
+                            },
+                            onSubmitted: (_) {
+                              if (index == codeLength - 1) {
+                                final code = _combinedCode;
+                                widget.onSubmit?.call(code);
+                                Navigator.of(context).pop();
+                              }
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            );
+          }),
         );
-      }),
+      },
     );
   }
 
@@ -250,7 +294,9 @@ class _LoginDialogState extends State<LoginDialog> with TickerProviderStateMixin
         width: double.infinity,
         height: 50,
         decoration: BoxDecoration(
-          color: _isHovering ? const Color(0xFF6B9639) : CustomPopupsClient.primaryGreen,
+          color: _isHovering
+              ? const Color(0xFF6B9639)
+              : CustomPopupsClient.primaryGreen,
           borderRadius: BorderRadius.circular(10),
           boxShadow: _isHovering
               ? [

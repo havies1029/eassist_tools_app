@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'dart:math' show pi;
 
 import '../../repositories/user/user_repository.dart';
-import '../../widgets/login/login_client/popup_client.dart';
 import '../../widgets/section/action_section.dart';
 import '../../widgets/section/navbar/navbar_widget.dart';
 import '../profile/profile_main_page.dart';

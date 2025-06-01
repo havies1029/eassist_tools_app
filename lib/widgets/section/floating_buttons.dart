@@ -5,7 +5,7 @@ if (dart.library.js_interop) 'package:eassist_tools_app/widgets/google_signin_bu
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
 import '../login/login_gmail/Popup.dart';
-import '../login/login_client/popup_client.dart';
+import '../register/register_client/popup_client.dart';
 
 final GoogleSignIn _googleSignIn = GoogleSignIn(
   scopes: [

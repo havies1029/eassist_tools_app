@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'register_verification_dialog.dart';
 import 'register_form_dialog.dart';
-import 'login_verification_dialog.dart';
 
 class CustomPopupsClient {
   static const Color primaryGreen = Color(0xFF79AB43);

@@ -1,6 +1,7 @@
 import 'package:eassist_tools_app/pages/splash/splash_page.dart';
 import 'package:eassist_tools_app/widgets/profile/profile_individu/profile_individu_main_page.dart';
 import 'package:eassist_tools_app/widgets/register/register_gmail/Popup.dart';
+import 'package:eassist_tools_app/widgets/reset_password/reset_password_page.dart';
 import 'package:eassist_tools_app/widgets/section/navbar/components/hamburger_dropdown_content.dart';
 import 'package:eassist_tools_app/widgets/section/navbar/components/nav_bar.dart';
 import 'package:eassist_tools_app/widgets/section/navbar/components/profile_dropdown_content.dart';
@@ -16,14 +17,17 @@ import '../../../pages/about_jps/about_main.dart';
 import '../../../pages/article_page/article_main.dart';
 import '../../../pages/hero_user_page/hero_user_main.dart';
 import '../../../pages/heropage/hero_main.dart';
+import '../../PopUp/Popup_Succeed.dart';
+import '../../login/login_client/LoginClientPage.dart';
 import '../../profile/profile_perusahaan/profile_main_page.dart';
 import '../../../pages/profile/rekancontact_form.dart';
 import '../../../pages/profile/rekangeneral_form.dart';
 import '../../../pages/profile/rekanpajak_form.dart';
 import '../../../pages/testimony_page/testimony_main.dart';
 import '../../../repositories/user/user_repository.dart';
-import '../../login/login_client/popup_client.dart';
+// import '../../login/login_client/popup_client.dart';
 import '../../login/login_gmail/Popup.dart';
+import '../../register/register_client/popup_client.dart';
 
 
 
@@ -331,9 +335,45 @@ class _NavbarWidgetState extends State<NavbarWidget> {
     }else if (title == 'Login Gmail') {
       await CustomPopupsLoginUser.showLoginDialog(context);
     }else if (title == 'Login Client') {
+      // Jika ingin push ke halaman baru:
+      // Navigator.of(context).push(
+      //   MaterialPageRoute(builder: (_) => const LoginClientPage()),
+      // );
+
+      // Atau, jika kamu ingin menampilkannya sebagai dialog:
+      showDialog(
+        context: context,
+        barrierColor: Colors.black54,
+        builder: (_) => const LoginClientPage(),
+      );
+    }else if (title == 'Register Client') {
       await CustomPopupsClient.showRegisterDialog(context);
     }else if (title == 'Register Gmail') {
       await CustomPopupsRegisterUser.showRegisterDialog(context);
+    }else if (title == 'Reset Password Page') {
+      // Jika ingin push ke halaman baru:
+      // Navigator.of(context).push(
+      //   MaterialPageRoute(builder: (_) => const ResetPasswordPage()),
+      // );
+
+      // Atau, jika kamu ingin menampilkannya sebagai dialog:
+      showDialog(
+        context: context,
+        barrierColor: Colors.black54,
+        builder: (_) => const ResetPasswordPage(),
+      );
+    }else if (title == 'Popup Succeed') {
+      // Jika ingin push ke halaman baru:
+      // Navigator.of(context).push(
+      //   MaterialPageRoute(builder: (_) => const PopupSuceedPage()),
+      // );
+
+      // Atau, jika kamu ingin menampilkannya sebagai dialog:
+      showDialog(
+        context: context,
+        barrierColor: Colors.black54,
+        builder: (_) => const PopupSuceedPage(email: 'okdiantoardi9@gmail.com',),
+      );
     }else if (title == 'Profile Individu') {
       showDialog(
         context: context,
