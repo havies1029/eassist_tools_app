@@ -1,46 +1,23 @@
 import 'package:flutter/material.dart';
 
+// IMPORT SEMUA SECTION YANG SUDAH DI‐SPLIT
+import 'form_sections/rekan_contact_form_body.dart';
+import '../profile_perusahaan/form_sections/rekan_general_form_body.dart';
+import '../profile_perusahaan/form_sections/rekan_pajak_form_body.dart';
+import 'form_sections/informasi_pic_section.dart';
+import 'form_sections/informasi_pembayaran_section.dart';
+
 class ProfileFormSection extends StatelessWidget {
   final Map<String, bool> editSection;
   final Map<String, TextEditingController> controllers;
   final void Function(String sectionKey) toggleEdit;
 
   const ProfileFormSection({
-    super.key,
+    Key? key,
     required this.editSection,
     required this.controllers,
     required this.toggleEdit,
-  });
-
-  static const Map<String, List<Map<String, dynamic>>> sectionFields = {
-    'Informasi Perusahaan': [
-      {'label': 'Nama Badan Usaha', 'key': 'nama'},
-      {'label': 'Tipe', 'key': 'tipe'},
-      {'label': 'Bentuk Badan', 'key': 'bentuk'},
-      {'label': 'No. Klien', 'key': 'klien'},
-      {'label': 'Bidang Usaha', 'key': 'bidangUsaha'},
-    ],
-    'Kontak Perusahaan': [
-      {'label': 'Email', 'key': 'email'},
-      {'label': 'No. HP', 'key': 'phone'},
-      {'label': 'Alamat', 'key': 'alamat', 'maxLines': 2},
-      {'label': 'Provinsi', 'key': 'provinsi'},
-      {'label': 'Kota', 'key': 'kota'},
-      {'label': 'Kode Pos', 'key': 'kodePos'},
-    ],
-    'Informasi PIC': [
-      {'label': 'Nama PIC', 'key': 'namaPic'},
-      {'label': 'No. HP PIC', 'key': 'phonePic'},
-      {'label': 'Jabatan PIC', 'key': 'jabatanPic'},
-    ],
-    'Informasi Pajak (Optional)': [
-      {'label': 'NPWP', 'key': 'npwp'},
-      {'label': 'Alamat NPWP', 'key': 'alamatNpwp', 'maxLines': 2},
-      {'label': 'Provinsi (NPWP)', 'key': 'provinsiNpwp'},
-      {'label': 'Kota (NPWP)', 'key': 'kotaNpwp'},
-      {'label': 'Kode Pos (NPWP)', 'key': 'kodePosNpwp'},
-    ],
-  };
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -54,217 +31,323 @@ class ProfileFormSection extends StatelessWidget {
   }
 
   Widget _buildMobile() {
-    return Column(
-      children: [
-        ..._buildSections(['Informasi Perusahaan', 'Kontak Perusahaan', 'Informasi PIC']),
-        _buildSectionWithTitle('Informasi Pembayaran :', 'Informasi Pembayaran', [
-          _buildField('No. Rekening', controllers['noRekening']!, 'Informasi Pembayaran'),
-        ]),
-        const SizedBox(height: 16),
-        _buildSections(['Informasi Pajak (Optional)']).first,
-      ],
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          // 1) RekanGeneralFormBody (menggantikan posisi RekanPajakFormBody)
+          Card(
+            elevation: 2,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: RekanGeneralFormBody(
+                viewMode: 'tambah',
+                recordId: '',
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // 2) RekanContactFormBody (menggantikan posisi RekanGeneralFormBody)
+          Card(
+            elevation: 2,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: RekanContactFormBody(
+                viewMode: 'tambah',
+                recordId: '',
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // 3) Informasi PIC (tetap sama)
+          Card(
+            elevation: 2,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InformasiPICSection(
+                isEditing: editSection['Informasi PIC'] ?? false,
+                controllers: controllers,
+                toggleEdit: toggleEdit,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // 4) Informasi Pembayaran (tetap sama)
+          Card(
+            elevation: 2,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InformasiPembayaranSection(
+                isEditing: editSection['Informasi Pembayaran'] ?? false,
+                controller: controllers['noRekening']!,
+                toggleEdit: toggleEdit,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // 5) RekanPajakFormBody (menggantikan posisi RekanContactFormBody)
+          Card(
+            elevation: 2,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: RekanPajakFormBody(
+                viewMode: 'tambah',
+                recordId: '',
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildTablet() {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(child: _buildSections(['Informasi Perusahaan']).first),
-            const SizedBox(width: 16),
-            Expanded(child: _buildSections(['Kontak Perusahaan']).first),
-          ],
-        ),
-        const SizedBox(height: 16),
-        Row(
-          children: [
-            Expanded(child: _buildSections(['Informasi PIC']).first),
-            const SizedBox(width: 16),
-            Expanded(child: _buildSectionWithTitle('Informasi Pembayaran :', 'Informasi Pembayaran', [
-              _buildField('No. Rekening', controllers['noRekening']!, 'Informasi Pembayaran'),
-            ])),
-          ],
-        ),
-        const SizedBox(height: 16),
-        Row(
-          children: [
-            Expanded(child: _buildSections(['Informasi Pajak (Optional)']).first),
-            const Expanded(child: SizedBox()),
-          ],
-        ),
-      ],
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          // Baris pertama: 2 kolom (RekanGeneralFormBody | RekanContactFormBody)
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: RekanGeneralFormBody(
+                      viewMode: 'tambah',
+                      recordId: '',
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: RekanContactFormBody(
+                      viewMode: 'tambah',
+                      recordId: '',
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // Baris kedua: 2 kolom (Informasi PIC | Informasi Pembayaran)
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InformasiPICSection(
+                      isEditing: editSection['Informasi PIC'] ?? false,
+                      controllers: controllers,
+                      toggleEdit: toggleEdit,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InformasiPembayaranSection(
+                      isEditing: editSection['Informasi Pembayaran'] ?? false,
+                      controller: controllers['noRekening']!,
+                      toggleEdit: toggleEdit,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // Baris ketiga: 1 kolom (RekanPajakFormBody)
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: RekanPajakFormBody(
+                      viewMode: 'tambah',
+                      recordId: '',
+                    ),
+                  ),
+                ),
+              ),
+              const Expanded(child: SizedBox()),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildDesktop() {
-    return Column(
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start, // <-- penting!
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Align(
-                alignment: Alignment.topCenter, // <-- supaya card nempel ke atas
-                child: _buildSections(['Informasi Perusahaan']).first,
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: _buildSections(['Kontak Perusahaan']).first,
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: _buildSections(['Informasi PIC']).first,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 24),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: _buildSectionWithTitle(
-                  'Informasi Pembayaran :',
-                  'Informasi Pembayaran',
-                  [
-                    _buildField('No. Rekening', controllers['noRekening']!, 'Informasi Pembayaran'),
-                  ],
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          // Baris pertama: 3 kolom (RekanGeneralFormBody | RekanContactFormBody | Informasi PIC)
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: RekanGeneralFormBody(
+                        viewMode: 'tambah',
+                        recordId: '',
+                      ),
+                    ),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: _buildSections(['Informasi Pajak (Optional)']).first,
+              const SizedBox(width: 16),
+              Expanded(
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: RekanContactFormBody(
+                        viewMode: 'tambah',
+                        recordId: '',
+                      ),
+                    ),
+                  ),
+                ),
               ),
-            ),
-            const SizedBox(width: 16),
-            const Expanded(
-              child: SizedBox(), // Kolom ketiga kosong untuk simetri
-            ),
-          ],
-        )
-        ,
-      ],
-    );
-  }
-
-  List<Widget> _buildSections(List<String> keys) {
-    return keys.map((sectionKey) {
-      final fields = sectionFields[sectionKey]!
-          .map((field) => _buildField(
-        field['label'],
-        controllers[field['key']]!,
-        sectionKey,
-        maxLines: field['maxLines'] ?? 1,
-      ))
-          .toList();
-
-      return Column(
-        children: [
-          _buildSectionWithTitle('$sectionKey :', sectionKey, fields),
-          const SizedBox(height: 16),
-        ],
-      );
-    }).toList();
-  }
-
-  Widget _buildSectionWithTitle(String title, String sectionKey, List<Widget> children) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                title,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InformasiPICSection(
+                        isEditing: editSection['Informasi PIC'] ?? false,
+                        controllers: controllers,
+                        toggleEdit: toggleEdit,
+                      ),
+                    ),
+                  ),
+                ),
               ),
-            ),
-            const SizedBox(width: 8),
-            InkWell(
-              onTap: () => toggleEdit(sectionKey),
-              child: Icon(
-                editSection[sectionKey]! ? Icons.check : Icons.edit,
-                size: 20,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(20),
-          margin: const EdgeInsets.only(bottom: 8),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.shade200,
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              )
             ],
           ),
-          child: Column(
+
+          const SizedBox(height: 24),
+
+          // Baris kedua: 2 kolom (Informasi Pembayaran | RekanPajakFormBody) + kolom kosong
+          Row(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: children,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildField(String label, TextEditingController controller, String sectionKey,
-      {int maxLines = 1}) {
-    final bool isEditing = editSection[sectionKey]!;
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 14,
-              color: Colors.grey,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey.shade300),
-              borderRadius: BorderRadius.circular(6),
-              color: Colors.white,
-            ),
-            child: isEditing
-                ? TextField(
-              controller: controller,
-              maxLines: maxLines,
-              decoration: const InputDecoration.collapsed(hintText: ''),
-              style: const TextStyle(fontSize: 16),
-            )
-                : Text(
-              controller.text,
-              style: const TextStyle(fontSize: 16),
-            ),
+            children: [
+              Expanded(
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InformasiPembayaranSection(
+                        isEditing: editSection['Informasi Pembayaran'] ?? false,
+                        controller: controllers['noRekening']!,
+                        toggleEdit: toggleEdit,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: RekanPajakFormBody(
+                        viewMode: 'tambah',
+                        recordId: '',
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              const Expanded(child: SizedBox()), // kolom ketiga kosong
+            ],
           ),
         ],
       ),

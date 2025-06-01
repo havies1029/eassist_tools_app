@@ -16,7 +16,7 @@ import '../../../pages/about_jps/about_main.dart';
 import '../../../pages/article_page/article_main.dart';
 import '../../../pages/hero_user_page/hero_user_main.dart';
 import '../../../pages/heropage/hero_main.dart';
-import '../../../pages/profile/profile_main_page.dart';
+import '../../profile/profile_perusahaan/profile_main_page.dart';
 import '../../../pages/profile/rekancontact_form.dart';
 import '../../../pages/profile/rekangeneral_form.dart';
 import '../../../pages/profile/rekanpajak_form.dart';
