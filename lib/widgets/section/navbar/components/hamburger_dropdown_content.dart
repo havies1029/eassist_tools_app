@@ -97,6 +97,7 @@ class _HamburgerDropdownContentState
         SubMenuItem(icon: Icons.person_outline, title: 'Register Gmail', onTap: () {}),
         SubMenuItem(icon: Icons.person_outline, title: 'Reset Password Page', onTap: () {}),
         SubMenuItem(icon: Icons.person_outline, title: 'Popup Succeed', onTap: () {}),
+        SubMenuItem(icon: Icons.business_outlined, title: 'Dialog Confirmation', onTap: () {}),
         SubMenuItem(icon: Icons.person_pin_circle_outlined, title: 'Profile Individu', onTap: () {}),
         SubMenuItem(icon: Icons.business_outlined, title: 'Profile Perusahaan', onTap: () {}),
         SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Contact', onTap: () {}),

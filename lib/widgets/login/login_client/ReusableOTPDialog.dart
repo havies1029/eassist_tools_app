@@ -1,5 +1,6 @@
 import 'dart:math'; // untuk fungsi min()
 import 'package:flutter/material.dart';
+import '../../../pages/hero_user_page/hero_user_main.dart';
 import '../../register/register_client/popup_client.dart';
 import 'package:flutter/services.dart';
 
@@ -67,7 +68,13 @@ class _ReusableOTPDialogState extends State<ReusableOTPDialog>
     setState(() => isLoading = true);
     try {
       await widget.onSubmit?.call(code);
-      if (mounted) Navigator.of(context).pop();
+      if (!mounted) return;
+      // Tutup dialog
+      Navigator.of(context).pop();
+      // Setelah dialog tertutup, langsung pindah ke HeroUserMain()
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) => const HeroUserMain()),
+      );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Verifikasi gagal: $e')),
@@ -76,6 +83,7 @@ class _ReusableOTPDialogState extends State<ReusableOTPDialog>
       if (mounted) setState(() => isLoading = false);
     }
   }
+
 
   @override
   Widget build(BuildContext context) {

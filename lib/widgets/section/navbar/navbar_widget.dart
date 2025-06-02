@@ -1,4 +1,5 @@
 import 'package:eassist_tools_app/pages/splash/splash_page.dart';
+import 'package:eassist_tools_app/widgets/PopUp/ConfirmationDialog.dart';
 import 'package:eassist_tools_app/widgets/profile/profile_individu/profile_individu_main_page.dart';
 import 'package:eassist_tools_app/widgets/register/register_gmail/Popup.dart';
 import 'package:eassist_tools_app/widgets/reset_password/reset_password_page.dart';
@@ -413,6 +414,14 @@ class _NavbarWidgetState extends State<NavbarWidget> {
               userRepository: dummyUserRepository,
             ),
           ),
+        ),
+      );
+    } else if (title == 'Dialog Confirmation') {
+      showDialog(
+        context: context,
+        barrierColor: Colors.black54,
+        builder: (_) => ConfirmationDialog(
+          onConfirm: () { Navigator.push(context, MaterialPageRoute(builder: (_) => const HeroUserPage())); },
         ),
       );
     }

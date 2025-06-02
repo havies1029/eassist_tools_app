@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart'; // Add this import for SVG support
+import 'package:flutter_svg/flutter_svg.dart';
 import '../../register/register_gmail/Popup.dart';
 import '../login_client/ReusableOTPDialog.dart';
 import 'Base_Dialog.dart';
 import 'Popup.dart';
 import 'Auth_Api.dart'; // Import service untuk API calls
 
-// Login Dialog dengan opsi multiple (Email, Gmail, dll)
 class GeneralLoginDialog extends BaseDialog {
   const GeneralLoginDialog({super.key});
 
@@ -16,16 +15,21 @@ class GeneralLoginDialog extends BaseDialog {
 
 class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
   final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
   bool _isHovering = false;
   bool _isGmailHovering = false;
-  bool _isEmailHovering = false;
   bool _isHoveringRegister = false;
   bool _isHoveringForgotPassword = false;
-  bool _rememberLogin = false; // State untuk checkbox simpan login
+  bool _rememberLogin = false;
+
+  String? _emailError;
+  String? _passwordError;
 
   @override
   void dispose() {
     _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
@@ -34,12 +38,10 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
     final isMobile = MediaQuery.of(context).size.width < 600;
 
     if (isMobile) {
-      // 👉 Tampilan Mobile dengan latar hijau-putih
       return Scaffold(
         backgroundColor: Colors.white,
         body: Stack(
           children: [
-            // Background hijau di bagian atas
             Positioned(
               top: 0,
               left: 0,
@@ -49,8 +51,6 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
                 color: const Color(0xFF79AB43),
               ),
             ),
-
-            // Konten di tengah
             Center(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -70,11 +70,11 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // Logo JPS
                       CircleAvatar(
                         radius: 40,
                         backgroundColor: Colors.white,
-                        backgroundImage: const AssetImage('assets/images/jps_logo.png'), // atau sesuai logo kamu
+                        backgroundImage:
+                        const AssetImage('assets/images/jps_logo.png'),
                       ),
                       const SizedBox(height: 24),
                       _buildMobileBody(),
@@ -88,25 +88,92 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
       );
     }
 
-    // 👉 Desktop default
+    // ======= DESKTOP =========
     return buildDialogContainer(
       title: 'Login',
       body: Column(
         children: [
           buildLogo(),
           const SizedBox(height: 30),
+
+          // ––––– Input Email –––––
           buildTextField(
             controller: _emailController,
             hintText: 'Email',
             keyboardType: TextInputType.emailAddress,
           ),
+          if (_emailError != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 4, left: 12),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  _emailError!,
+                  style: const TextStyle(color: Colors.red, fontSize: 12),
+                ),
+              ),
+            ),
           const SizedBox(height: 20),
+
+          // ––––– Input Password –––––
+          // Ganti buildTextField(...) dengan TextField manual:
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.1),
+                  blurRadius: 5,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: TextField(
+              controller: _passwordController,
+              obscureText: true,
+              decoration: InputDecoration(
+                hintText: 'Password',
+                hintStyle: TextStyle(color: Colors.grey.shade400),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(color: Colors.grey.shade300),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(color: Colors.grey.shade300),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(
+                      color: Color(0xFF79AB43), width: 2),
+                ),
+                filled: true,
+                fillColor: Colors.grey.shade50,
+                contentPadding:
+                const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+              ),
+            ),
+          ),
+          if (_passwordError != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 4, left: 12),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  _passwordError!,
+                  style: const TextStyle(color: Colors.red, fontSize: 12),
+                ),
+              ),
+            ),
+          const SizedBox(height: 20),
+
           buildAnimatedButton(
             text: 'Masuk',
             isHovering: _isHovering,
             onHover: (hovering) => setState(() => _isHovering = hovering),
             onPressed: () => _handleLogin(),
           ),
+
           const SizedBox(height: 20),
           _buildDivider(),
           const SizedBox(height: 20),
@@ -124,7 +191,6 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
         ],
       ),
     );
-
   }
 
   Widget _buildMobileBody() {
@@ -135,6 +201,68 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
           hintText: 'Email',
           keyboardType: TextInputType.emailAddress,
         ),
+        if (_emailError != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 4, left: 12),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                _emailError!,
+                style: const TextStyle(color: Colors.red, fontSize: 12),
+              ),
+            ),
+          ),
+        const SizedBox(height: 20),
+
+        // ––––– Input Password (mobile) –––––
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.1),
+                blurRadius: 5,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: TextField(
+            controller: _passwordController,
+            obscureText: true,
+            decoration: InputDecoration(
+              hintText: 'Password',
+              hintStyle: TextStyle(color: Colors.grey.shade400),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(color: Colors.grey.shade300),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(color: Colors.grey.shade300),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide:
+                const BorderSide(color: Color(0xFF79AB43), width: 2),
+              ),
+              filled: true,
+              fillColor: Colors.grey.shade50,
+              contentPadding:
+              const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+            ),
+          ),
+        ),
+        if (_passwordError != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 4, left: 12),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                _passwordError!,
+                style: const TextStyle(color: Colors.red, fontSize: 12),
+              ),
+            ),
+          ),
         const SizedBox(height: 20),
 
         buildAnimatedButton(
@@ -165,13 +293,10 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
     );
   }
 
-
-  // Widget untuk checkbox simpan login dan lupa kata sandi
   Widget _buildLoginOptions() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        // Checkbox Simpan Login
         GestureDetector(
           onTap: () {
             setState(() {
@@ -206,7 +331,6 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
           ),
         ),
 
-        // Lupa Kata Sandi
         MouseRegion(
           onEnter: (_) => setState(() => _isHoveringForgotPassword = true),
           onExit: (_) => setState(() => _isHoveringForgotPassword = false),
@@ -251,12 +375,23 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
               width: 1.5,
             ),
             boxShadow: isHovering
-                ? [BoxShadow(color: Colors.grey.withOpacity(0.2), blurRadius: 8, offset: const Offset(0, 4))]
-                : [BoxShadow(color: Colors.grey.withOpacity(0.1), blurRadius: 3, offset: const Offset(0, 2))],
+                ? [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                blurRadius: 8,
+                offset: const Offset(0, 4),
+              )
+            ]
+                : [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.1),
+                blurRadius: 3,
+                offset: const Offset(0, 2),
+              )
+            ],
           ),
           child: Row(
             children: [
-              // Icon container
               Padding(
                 padding: const EdgeInsets.only(left: 20),
                 child: SizedBox(
@@ -269,21 +404,19 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
                   ),
                 ),
               ),
-              // Text centered in remaining space
               Expanded(
                 child: Center(
                   child: Text(
                     text,
                     style: TextStyle(
-                      color: const Color(0xFF7BA05B), // Light green color
+                      color: const Color(0xFF7BA05B),
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
               ),
-              // Empty space to balance the icon on the left
-              const SizedBox(width: 44), // 20 (padding) + 24 (icon width)
+              const SizedBox(width: 44),
             ],
           ),
         ),
@@ -297,7 +430,8 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
         Expanded(child: Container(height: 1, color: Colors.grey.shade300)),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: Text('Atau', style: TextStyle(color: Colors.grey.shade500, fontSize: 14)),
+          child:
+          Text('Atau', style: TextStyle(color: Colors.grey.shade500, fontSize: 14)),
         ),
         Expanded(child: Container(height: 1, color: Colors.grey.shade300)),
       ],
@@ -344,36 +478,38 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
     );
   }
 
-  // void _handleLogin() {
-  //   final email = _emailController.text.trim();
-  //
-  //   if (email.isEmpty) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       const SnackBar(
-  //         content: Text('Email tidak boleh kosong'),
-  //         backgroundColor: Colors.red,
-  //       ),
-  //     );
-  //     return;
-  //   }
-  //
-  //   // ✅ Tutup dialog login terlebih dahulu
-  //   Navigator.of(context).pop();
-  //
-  //   // ✅ Tunggu 200ms sebelum membuka OTP dialog
-  //   Future.delayed(const Duration(milliseconds: 200), () {
-  //     showDialog(
-  //       context: context,
-  //       barrierDismissible: false, // kamu bisa atur true jika mau
-  //       builder: (_) => OTPLoginDialog(email: email),
-  //     );
-  //   });
-  // }
-
   void _handleLogin() async {
-    debugPrint('🔵 Tombol Masuk ditekan');
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
 
-    // Contoh dummy async verifikasi login (misal panggil AuthService.login)
+    setState(() {
+      _emailError = null;
+      _passwordError = null;
+    });
+
+    var hasError = false;
+    if (email.isEmpty) {
+      setState(() => _emailError = 'Email tidak boleh kosong');
+      hasError = true;
+    } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+        .hasMatch(email)) {
+      setState(() => _emailError = 'Format email tidak valid');
+      hasError = true;
+    }
+
+    if (password.isEmpty) {
+      setState(() => _passwordError = 'Password tidak boleh kosong');
+      hasError = true;
+    } else if (password.length < 6) {
+      setState(() => _passwordError = 'Password minimal 6 karakter');
+      hasError = true;
+    }
+
+    if (hasError) return;
+
+    debugPrint(
+        '🔵 Tombol Masuk ditekan dengan email="$email" dan password(tersimpan)');
+
     final success = await Future.delayed(
       const Duration(milliseconds: 300),
           () => true,
@@ -381,21 +517,18 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
 
     if (!mounted) return;
 
-    debugPrint('🟢 Memanggil OTP Dialog');
-
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (_) => ReusableOTPDialog(
-        email: 'you@example.com',
+        email: email,
         onSubmit: (code) async {
-          final success = await AuthService.verifyOTP('you@example.com', code);
-          if (!success) throw 'Kode OTP salah';
+          final otpSuccess = await AuthService.verifyOTP(email, code);
+          if (!otpSuccess) throw 'Kode OTP salah';
         },
       ),
     );
-
   }
-
 
   void _handleGmailLogin() {
     Navigator.of(context).pop();
@@ -411,25 +544,8 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
     });
   }
 
-  void _handleEmailLogin() {
-    Navigator.of(context).pop();
-    AuthService.loginWithEmail().then((success) {
-      if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Login dengan Email berhasil!'),
-            backgroundColor: CustomPopupsLoginUser.primaryGreen,
-          ),
-        );
-      }
-    });
-  }
-
   void _handleForgotPassword() {
-    // Implementasi untuk lupa kata sandi
     Navigator.of(context).pop();
-    // Bisa menampilkan dialog baru untuk reset password
-    // atau navigate ke halaman forgot password
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Fitur lupa kata sandi akan ditambahkan'),
@@ -493,7 +609,8 @@ class _RegisterDialogState extends BaseDialogState<RegisterDialog> {
             text: 'Daftar',
             isHovering: _isHovering,
             onHover: (hovering) => setState(() => _isHovering = hovering),
-            backgroundColor: _isHovering ? const Color(0xFF6B9639) : Colors.grey.shade400,
+            backgroundColor:
+            _isHovering ? const Color(0xFF6B9639) : Colors.grey.shade400,
             onPressed: () => _handleRegister(),
           ),
         ],
@@ -541,7 +658,8 @@ class _RegisterDialogState extends BaseDialogState<RegisterDialog> {
     ).then((success) {
       if (success) {
         Navigator.of(context).pop();
-        CustomPopupsLoginUser.showLoginDialog(context, email: _emailController.text);
+        CustomPopupsLoginUser.showLoginDialog(
+            context, email: _emailController.text);
       }
     });
   }
@@ -558,8 +676,10 @@ class OTPLoginDialog extends BaseDialog {
 }
 
 class _OTPLoginDialogState extends BaseDialogState<OTPLoginDialog> {
-  final List<TextEditingController> _codeControllers = List.generate(4, (index) => TextEditingController());
-  final List<FocusNode> _focusNodes = List.generate(4, (index) => FocusNode());
+  final List<TextEditingController> _codeControllers =
+  List.generate(4, (index) => TextEditingController());
+  final List<FocusNode> _focusNodes =
+  List.generate(4, (index) => FocusNode());
   bool _isHovering = false;
 
   @override
@@ -633,32 +753,33 @@ class _OTPLoginDialogState extends BaseDialogState<OTPLoginDialog> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: List.generate(4, (index) {
         return Container(
-          width: 60,
-          height: 60,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.grey.shade300),
-            color: Colors.grey.shade50,
-          ),
-          child: TextField(
-            controller: _codeControllers[index],
-            focusNode: _focusNodes[index],
-            textAlign: TextAlign.center,
-            keyboardType: TextInputType.number,
-            maxLength: 1,
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-              counterText: '',
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey.shade300),
+              color: Colors.grey.shade50,
             ),
-            onChanged: (value) {
-              if (value.isNotEmpty && index < 3) {
-                _focusNodes[index + 1].requestFocus();
-              } else if (value.isEmpty && index > 0) {
-                _focusNodes[index - 1].requestFocus();
-              }
-            },
-          ),
+            child: TextField(
+              controller: _codeControllers[index],
+              focusNode: _focusNodes[index],
+              textAlign: TextAlign.center,
+              keyboardType: TextInputType.number,
+              maxLength: 1,
+              style:
+              const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+                counterText: '',
+              ),
+              onChanged: (value) {
+                if (value.isNotEmpty && index < 3) {
+                  _focusNodes[index + 1].requestFocus();
+                } else if (value.isEmpty && index > 0) {
+                  _focusNodes[index - 1].requestFocus();
+                }
+              },
+            )
         );
       }),
     );
@@ -666,7 +787,8 @@ class _OTPLoginDialogState extends BaseDialogState<OTPLoginDialog> {
 
   // Fungsi yang akan disambungkan ke API
   void _handleOTPLogin() {
-    String otpCode = _codeControllers.map((controller) => controller.text).join();
+    String otpCode =
+    _codeControllers.map((controller) => controller.text).join();
 
     AuthService.verifyOTP(widget.email, otpCode).then((success) {
       if (success) {
