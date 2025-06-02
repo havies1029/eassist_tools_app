@@ -1,13 +1,16 @@
+import 'package:eassist_tools_app/common/app_data.dart';
+import 'package:eassist_tools_app/widgets/google_signin_button_stub.dart'
+    if (dart.library.js_interop) 'package:eassist_tools_app/widgets/google_signin_button_web.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
 
 final GoogleSignIn _googleSignIn = GoogleSignIn(
-  scopes: [
-    'email',
-    'profile'
-  ],
-  hostedDomain: "", // biarkan kosong kecuali organisasi
-  serverClientId: "217496566954-tiqmna993j1a943i9d86chpas0ipktle.apps.googleusercontent.com", // Penting!
+  scopes: ['email', 'profile'],
+  hostedDomain: '', // biarkan kosong kecuali organisasi
+  // Untuk Android, pastikan serverClientId sesuai dengan yang ada di Google Cloud Console
+  serverClientId:
+      '217496566954-tiqmna993j1a943i9d86chpas0ipktle.apps.googleusercontent.com',
 );
 
 class FloatingButtons extends StatefulWidget {
@@ -24,12 +27,11 @@ class _FloatingButtonsState extends State<FloatingButtons>
   late Animation<double> _buttonsStaggerAnimation;
 
   bool get isMobile => widget.constraints.maxWidth < 768;
-  double get maxWidth =>
-      widget.constraints.maxWidth > 1200 ? 1200 : widget.constraints.maxWidth * 0.9;
+  double get maxWidth => widget.constraints.maxWidth > 1200
+      ? 1200
+      : widget.constraints.maxWidth * 0.9;
   double get sidePadding => widget.constraints.maxWidth > 1200 ? 64.0 : 32.0;
   double get innerPadding => isMobile ? 16.0 : 40.0;
-
-  GoogleSignInAccount? _user;
 
   @override
   void initState() {
@@ -49,6 +51,11 @@ class _FloatingButtonsState extends State<FloatingButtons>
     ));
 
     _startAnimations();
+
+    if (AppData.kIsWeb) {
+      // Register the Google Sign-In button for we
+      registerGoogleSigninButton();
+    }
   }
 
   void _startAnimations() async {
@@ -89,32 +96,22 @@ class _FloatingButtonsState extends State<FloatingButtons>
               ],
             ),
             child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: innerPadding,
-                vertical: 20.0,
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 42.0), // ⬅️ Geser sedikit ke tengah
-                    child: Row(
-                      children: [
-                        _buildAnimatedButton(
-                          isLogin: true,
-                          delay: const Duration(milliseconds: 0),
-                        ),
-                        const SizedBox(width: 16.0),
-                        _buildAnimatedButton(
-                          isLogin: false,
-                          delay: const Duration(milliseconds: 200),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+                padding: EdgeInsets.symmetric(
+                  horizontal: innerPadding,
+                  vertical: 20.0,
+                ),
+                child: Row(
+                  children: [
+                    AppData.kIsWeb?
+                    googleSigninButton():
+                    _buildAnimatedButton(
+                        isLogin: true,
+                        delay: const Duration(milliseconds: 200)),
+                    _buildAnimatedButton(
+                        isLogin: false,
+                        delay: const Duration(milliseconds: 200)),
+                  ],
+                )),
           ),
         ),
       ),
@@ -142,10 +139,11 @@ class _FloatingButtonsState extends State<FloatingButtons>
                     if (isLogin) {
                       debugPrint("is Login true");
                       _handleSignIn();
-                    } else {                        
-                      debugPrint("is login false");// Handle register button press
+                    } else {
+                      debugPrint(
+                          "is login false"); // Handle register button press
                       _handleSignOut();
-                    } 
+                    }
                   },
                   isLogin: isLogin,
                   delay: delay,
@@ -160,9 +158,9 @@ class _FloatingButtonsState extends State<FloatingButtons>
 
   Future<void> _handleSignIn() async {
     debugPrint("handle sign in");
+
     try {
       final user = await _googleSignIn.signIn();
-      setState(() => _user = user);
 
       if (user != null) {
         final auth = await user.authentication;
@@ -181,12 +179,10 @@ class _FloatingButtonsState extends State<FloatingButtons>
     try {
       await _googleSignIn.signOut();
       //await _googleSignIn.disconnect();
-      setState(() => _user = null);      
     } catch (error) {
       print('Logout gagal: $error');
     }
   }
-
 }
 
 class EnhancedHoverButton extends StatefulWidget {
@@ -333,7 +329,8 @@ class _EnhancedHoverButtonState extends State<EnhancedHoverButton>
                   (1.0 - _pressController.value * 0.05),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 20.0, vertical: 12.0),
                 decoration: BoxDecoration(
                   color: _backgroundAnimation.value,
                   borderRadius: BorderRadius.circular(24.0),
@@ -378,7 +375,7 @@ class _EnhancedHoverButtonState extends State<EnhancedHoverButton>
                               ? const Color(0xFF79AB43)
                               : Colors.white,
                           fontWeight:
-                          _isHovered ? FontWeight.w600 : FontWeight.w500,
+                              _isHovered ? FontWeight.w600 : FontWeight.w500,
                           fontSize: 16.0,
                         ),
                       ),
