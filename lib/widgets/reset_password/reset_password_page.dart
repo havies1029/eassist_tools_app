@@ -18,6 +18,10 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> with TickerProvid
   bool _showConfirmPassword = false;
   bool _isHovering = false;
 
+  String? _oldPasswordError;
+  String? _newPasswordError;
+  String? _confirmPasswordError;
+
   late final AnimationController _animationController;
   late final Animation<double> _scaleAnimation;
 
@@ -44,27 +48,60 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> with TickerProvid
   }
 
   void _submitReset() {
-    final oldPwd = _oldPasswordController.text;
-    final newPwd = _newPasswordController.text;
-    final confirmPwd = _confirmPasswordController.text;
+    setState(() {
+      // Reset semua error message
+      _oldPasswordError = null;
+      _newPasswordError = null;
+      _confirmPasswordError = null;
+    });
 
-    if (oldPwd.isEmpty || newPwd.isEmpty || confirmPwd.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Semua kolom harus diisi.')),
-      );
-      return;
+    final oldPwd = _oldPasswordController.text.trim();
+    final newPwd = _newPasswordController.text.trim();
+    final confirmPwd = _confirmPasswordController.text.trim();
+
+    bool hasError = false;
+
+    // Validasi: Password Lama tidak boleh kosong
+    if (oldPwd.isEmpty) {
+      setState(() {
+        _oldPasswordError = 'Password lama tidak boleh kosong';
+      });
+      hasError = true;
     }
-    if (newPwd != confirmPwd) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Password baru dan konfirmasi tidak sama.')),
-      );
+
+    // Validasi: Password Baru tidak boleh kosong
+    if (newPwd.isEmpty) {
+      setState(() {
+        _newPasswordError = 'Password baru tidak boleh kosong';
+      });
+      hasError = true;
+    }
+
+    // Validasi: Konfirmasi Password tidak boleh kosong
+    if (confirmPwd.isEmpty) {
+      setState(() {
+        _confirmPasswordError = 'Ketik ulang password baru tidak boleh kosong';
+      });
+      hasError = true;
+    }
+
+    // Jika sebelumnya tidak ada error kosong dan password baru tidak sama
+    if (!hasError && newPwd != confirmPwd) {
+      setState(() {
+        _confirmPasswordError = 'Password baru dan konfirmasi tidak sama';
+      });
+      hasError = true;
+    }
+
+    if (hasError) {
+      // Kalau ada error, jangan lanjut ke API
       return;
     }
 
     // TODO: Panggil fungsi untuk memperbarui password di sini, misalnya:
     // AuthService.updatePassword(oldPwd, newPwd);
 
-    Navigator.of(context).pop(); // Tutup halaman setelah submit
+    Navigator.of(context).pop(); // Tutup halaman setelah submit berhasil
   }
 
   @override
@@ -74,34 +111,47 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> with TickerProvid
 
     return Scaffold(
       backgroundColor: Colors.black54,
-      body: Center(
-        child: AnimatedBuilder(
-          animation: _scaleAnimation,
-          builder: (context, child) {
-            return Transform.scale(
-              scale: _scaleAnimation.value,
-              child: Container(
-                width: dialogWidth,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.3),
-                      blurRadius: 20,
-                      offset: const Offset(0, 10),
+      // ←– Wrapping GestureDetector untuk mendeteksi tap di area gelap
+      body: GestureDetector(
+        onTap: () {
+          Navigator.of(context).pop();
+        },
+        behavior: HitTestBehavior.opaque, // Pastikan area kosong juga terdeteksi
+        child: Center(
+          // ←– Tambahkan GestureDetector di sini agar tap di dalam dialog tidak propagasi
+          child: GestureDetector(
+            onTap: () {
+              // Block tap di dalam dialog agar tidak menutup
+            },
+            child: AnimatedBuilder(
+              animation: _scaleAnimation,
+              builder: (context, child) {
+                return Transform.scale(
+                  scale: _scaleAnimation.value,
+                  child: Container(
+                    width: dialogWidth,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.3),
+                          blurRadius: 20,
+                          offset: const Offset(0, 10),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _buildHeader(context),
-                    _buildBody(),
-                  ],
-                ),
-              ),
-            );
-          },
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _buildHeader(context),
+                        _buildBody(),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
         ),
       ),
     );
@@ -161,28 +211,88 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> with TickerProvid
       child: Column(
         children: [
           _buildLogo(),
-          const SizedBox(height: 30),
+          const SizedBox(height: 15),
+
+          const Text(
+            'Masukkan Password kamu!', // sesuaikan teks header-nya
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87, // warna lebih gelap
+            ),
+          ),
+
+          const SizedBox(height: 5),
+
+          const Text(
+            'Yuk, isi data kamu dan jadi bagian dari klien eksklusif kami.', // sesuaikan teks subheader-nya
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.black54, // warna sedikit lebih terang
+            ),
+          ),
+
+          const SizedBox(height: 35),
+          // Password Lama
           _buildPasswordField(
             controller: _oldPasswordController,
             hintText: 'Masukkan Password Lama',
             obscureText: !_showOldPassword,
             onToggle: () => setState(() => _showOldPassword = !_showOldPassword),
           ),
+          if (_oldPasswordError != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 5, left: 8),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  _oldPasswordError!,
+                  style: const TextStyle(color: Colors.red, fontSize: 12),
+                ),
+              ),
+            ),
           const SizedBox(height: 20),
+
+          // Password Baru
           _buildPasswordField(
             controller: _newPasswordController,
             hintText: 'Masukkan Password Baru',
             obscureText: !_showNewPassword,
             onToggle: () => setState(() => _showNewPassword = !_showNewPassword),
           ),
+          if (_newPasswordError != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 5, left: 8),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  _newPasswordError!,
+                  style: const TextStyle(color: Colors.red, fontSize: 12),
+                ),
+              ),
+            ),
           const SizedBox(height: 20),
+
+          // Konfirmasi Password Baru
           _buildPasswordField(
             controller: _confirmPasswordController,
             hintText: 'Ketik Ulang Password Baru',
             obscureText: !_showConfirmPassword,
             onToggle: () => setState(() => _showConfirmPassword = !_showConfirmPassword),
           ),
+          if (_confirmPasswordError != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 5, left: 8),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  _confirmPasswordError!,
+                  style: const TextStyle(color: Colors.red, fontSize: 12),
+                ),
+              ),
+            ),
           const SizedBox(height: 40),
+
           _buildSubmitButton(),
         ],
       ),
@@ -254,7 +364,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> with TickerProvid
           fillColor: Colors.grey.shade50,
           contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
           suffixIcon: Padding(
-            padding: const EdgeInsets.only(right: 10), // geser ikon 10px ke kiri
+            padding: const EdgeInsets.only(right: 10),
             child: IconButton(
               icon: Icon(
                 obscureText ? Icons.visibility_off : Icons.visibility,

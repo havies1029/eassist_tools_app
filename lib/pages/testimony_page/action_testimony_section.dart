@@ -252,12 +252,27 @@ class ActionSectionState extends State<ActionSection> with SingleTickerProviderS
               height: 1.4,
             ),
           ),
+          const SizedBox(height: 12.0),
+          // Star Rating Widget
+          _buildStarRating(),
         ],
       ),
     );
   }
-}
 
+  Widget _buildStarRating({int rating = 5}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(5, (index) {
+        return Icon(
+          index < rating ? Icons.star : Icons.star_border,
+          color: const Color(0xFFFFD700), // Gold color
+          size: 20.0,
+        );
+      }),
+    );
+  }
+}
 
 class CircularBorderPainter extends CustomPainter {
   final double strokeWidthBase;
@@ -303,7 +318,6 @@ class CircularBorderPainter extends CustomPainter {
       accentPaint,
     );
   }
-
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => false;

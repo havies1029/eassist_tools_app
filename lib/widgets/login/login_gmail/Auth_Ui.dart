@@ -94,7 +94,28 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
       body: Column(
         children: [
           buildLogo(),
-          const SizedBox(height: 30),
+          const SizedBox(height: 15),
+
+          const Text(
+            'Masukkan Email dan Password', // sesuaikan teks header-nya
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87, // warna lebih gelap
+            ),
+          ),
+
+          const SizedBox(height: 5),
+
+          const Text(
+            'Yuk, login dulu biar bisa akses semuanya!', // sesuaikan teks subheader-nya
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.black54, // warna sedikit lebih terang
+            ),
+          ),
+
+          const SizedBox(height: 35),
 
           // ––––– Input Email –––––
           buildTextField(

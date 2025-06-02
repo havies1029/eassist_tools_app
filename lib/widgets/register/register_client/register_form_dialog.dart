@@ -241,7 +241,28 @@ class _RegisterDialogState extends State<RegisterDialog> with TickerProviderStat
         child: Column(
           children: [
             _buildLogo(),
-            const SizedBox(height: 30),
+            const SizedBox(height: 20),
+
+            const Text(
+              'Masukkan Nama Lengkap dan No. Telp kamu!', // sesuaikan teks header-nya
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87, // warna lebih gelap
+              ),
+            ),
+
+            const SizedBox(height: 5),
+
+            const Text(
+              'Yuk, isi data kamu dan jadi bagian dari klien eksklusif kami.', // sesuaikan teks subheader-nya
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.black54, // warna sedikit lebih terang
+              ),
+            ),
+
+            const SizedBox(height: 35),
 
             // Nama Lengkap
             _buildTextField(
@@ -250,6 +271,7 @@ class _RegisterDialogState extends State<RegisterDialog> with TickerProviderStat
               keyboardType: TextInputType.text,
               errorText: _nameError,
             ),
+
             const SizedBox(height: 20),
 
             // No. Telepon
@@ -260,6 +282,7 @@ class _RegisterDialogState extends State<RegisterDialog> with TickerProviderStat
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               errorText: _phoneError,
             ),
+
             const SizedBox(height: 20),
 
             // Password

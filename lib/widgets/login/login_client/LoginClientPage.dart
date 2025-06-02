@@ -46,7 +46,7 @@ class _LoginClientPageState extends State<LoginClientPage>
     final email = _emailController.text.trim();
     final password = _passwordController.text;
 
-    // Reset error messages
+    // Reset semua pesan error
     setState(() {
       _emailErrorText = null;
       _passwordErrorText = null;
@@ -54,6 +54,7 @@ class _LoginClientPageState extends State<LoginClientPage>
 
     bool hasError = false;
 
+    // Validasi Email
     if (email.isEmpty) {
       setState(() {
         _emailErrorText = 'Email tidak boleh kosong';
@@ -61,6 +62,7 @@ class _LoginClientPageState extends State<LoginClientPage>
       hasError = true;
     }
 
+    // Validasi Password
     if (password.isEmpty) {
       setState(() {
         _passwordErrorText = 'Password tidak boleh kosong';
@@ -69,7 +71,7 @@ class _LoginClientPageState extends State<LoginClientPage>
     }
 
     if (hasError) {
-      // Jika ada error, jangan lanjut
+      // Jika ada error, jangan lanjut navigasi
       return;
     }
 
@@ -96,6 +98,10 @@ class _LoginClientPageState extends State<LoginClientPage>
             scale: _scaleAnimation.value,
             child: Container(
               width: dialogWidth,
+              // BATASI TINGGI MAKSIMAL DIALOG
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.8,
+              ),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
@@ -109,8 +115,16 @@ class _LoginClientPageState extends State<LoginClientPage>
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  // 1) Header tetap di atas
                   _buildHeader(context),
-                  _buildBody(),
+
+                  // 2) Area Body yang sekarang scrollable (boleh memanjang)
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.zero, // sudah ada padding di _buildBody
+                      child: _buildBody(),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -174,7 +188,30 @@ class _LoginClientPageState extends State<LoginClientPage>
       child: Column(
         children: [
           _buildLogo(),
-          const SizedBox(height: 30),
+          const SizedBox(height: 15),
+
+          const Text(
+            'Masukkan alamat Gmail dan Password kamu!', // teks header
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+
+          const SizedBox(height: 5),
+
+          const Text(
+            'Yuk, isi data kamu dan jadi bagian dari klien eksklusif kami.', // teks subheader
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.black54,
+            ),
+          ),
+
+          const SizedBox(height: 35),
+
+          // Field Email dengan errorText
           _buildTextField(
             controller: _emailController,
             hintText: 'Masukkan Email',
@@ -182,6 +219,8 @@ class _LoginClientPageState extends State<LoginClientPage>
             errorText: _emailErrorText,
           ),
           const SizedBox(height: 20),
+
+          // Field Password dengan errorText
           _buildTextField(
             controller: _passwordController,
             hintText: 'Masukkan Password',
@@ -190,6 +229,7 @@ class _LoginClientPageState extends State<LoginClientPage>
             errorText: _passwordErrorText,
           ),
           const SizedBox(height: 40),
+
           _buildLoginButton(),
         ],
       ),
@@ -269,6 +309,8 @@ class _LoginClientPageState extends State<LoginClientPage>
             ),
           ),
         ),
+
+        // Tampilkan errorText jika tidak null
         if (errorText != null) ...[
           const SizedBox(height: 5),
           Text(

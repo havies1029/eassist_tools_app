@@ -127,6 +127,18 @@ class TestimonialSectionState extends State<TestimonialSection> {
     );
   }
 
+  // Widget untuk menampilkan bintang rating
+  Widget _buildStarRating(bool isMobile) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(5, (index) => Icon(
+        Icons.star,
+        color: Colors.amber,
+        size: isMobile ? 16.0 : 20.0,
+      )),
+    );
+  }
+
   // Tambahkan isMobile ke parameter
   Widget _buildTestimonialItem(Map<String, String> testimonial, BoxConstraints constraints, bool isMobile) {
     // Atur width responsif: 2 kolom mobile, default desktop
@@ -207,6 +219,9 @@ class TestimonialSectionState extends State<TestimonialSection> {
               ],
             ),
           ),
+          SizedBox(height: isMobile ? 8.0 : 12.0),
+          // Tambahkan 5 bintang di sini
+          _buildStarRating(isMobile),
         ],
       ),
     );
