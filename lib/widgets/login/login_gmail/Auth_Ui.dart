@@ -5,6 +5,18 @@ import '../login_client/ReusableOTPDialog.dart';
 import 'Base_Dialog.dart';
 import 'Popup.dart';
 import 'Auth_Api.dart'; // Import service untuk API calls
+import 'package:eassist_tools_app/widgets/google_signin_button_stub.dart'
+if (dart.library.js_interop) 'package:eassist_tools_app/widgets/google_signin_button_web.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
+
+final GoogleSignIn _googleSignIn = GoogleSignIn(
+  scopes: ['email', 'profile'],
+  hostedDomain: '', // biarkan kosong kecuali organisasi
+  // Untuk Android, pastikan serverClientId sesuai dengan yang ada di Google Cloud Console
+  serverClientId:
+  '217496566954-tiqmna993j1a943i9d86chpas0ipktle.apps.googleusercontent.com',
+);
 
 class GeneralLoginDialog extends BaseDialog {
   const GeneralLoginDialog({super.key});
@@ -15,7 +27,6 @@ class GeneralLoginDialog extends BaseDialog {
 
 class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
   final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
 
   bool _isHovering = false;
   bool _isGmailHovering = false;
@@ -24,12 +35,10 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
   bool _rememberLogin = false;
 
   String? _emailError;
-  String? _passwordError;
 
   @override
   void dispose() {
     _emailController.dispose();
-    _passwordController.dispose();
     super.dispose();
   }
 
@@ -97,21 +106,21 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
           const SizedBox(height: 15),
 
           const Text(
-            'Masukkan Email dan Password', // sesuaikan teks header-nya
+            'Masukkan Email', // diperbarui agar tidak menyebutkan password
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.bold,
-              color: Colors.black87, // warna lebih gelap
+              color: Colors.black87,
             ),
           ),
 
           const SizedBox(height: 5),
 
           const Text(
-            'Yuk, login dulu biar bisa akses semuanya!', // sesuaikan teks subheader-nya
+            'Yuk, login dulu biar bisa akses semuanya!',
             style: TextStyle(
               fontSize: 12,
-              color: Colors.black54, // warna sedikit lebih terang
+              color: Colors.black54,
             ),
           ),
 
@@ -130,58 +139,6 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   _emailError!,
-                  style: const TextStyle(color: Colors.red, fontSize: 12),
-                ),
-              ),
-            ),
-          const SizedBox(height: 20),
-
-          // ––––– Input Password –––––
-          // Ganti buildTextField(...) dengan TextField manual:
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.1),
-                  blurRadius: 5,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: TextField(
-              controller: _passwordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                hintText: 'Password',
-                hintStyle: TextStyle(color: Colors.grey.shade400),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: Colors.grey.shade300),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: Colors.grey.shade300),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(
-                      color: Color(0xFF79AB43), width: 2),
-                ),
-                filled: true,
-                fillColor: Colors.grey.shade50,
-                contentPadding:
-                const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-              ),
-            ),
-          ),
-          if (_passwordError != null)
-            Padding(
-              padding: const EdgeInsets.only(top: 4, left: 12),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  _passwordError!,
                   style: const TextStyle(color: Colors.red, fontSize: 12),
                 ),
               ),
@@ -229,57 +186,6 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
               alignment: Alignment.centerLeft,
               child: Text(
                 _emailError!,
-                style: const TextStyle(color: Colors.red, fontSize: 12),
-              ),
-            ),
-          ),
-        const SizedBox(height: 20),
-
-        // ––––– Input Password (mobile) –––––
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.1),
-                blurRadius: 5,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: TextField(
-            controller: _passwordController,
-            obscureText: true,
-            decoration: InputDecoration(
-              hintText: 'Password',
-              hintStyle: TextStyle(color: Colors.grey.shade400),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(color: Colors.grey.shade300),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(color: Colors.grey.shade300),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide:
-                const BorderSide(color: Color(0xFF79AB43), width: 2),
-              ),
-              filled: true,
-              fillColor: Colors.grey.shade50,
-              contentPadding:
-              const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-            ),
-          ),
-        ),
-        if (_passwordError != null)
-          Padding(
-            padding: const EdgeInsets.only(top: 4, left: 12),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                _passwordError!,
                 style: const TextStyle(color: Colors.red, fontSize: 12),
               ),
             ),
@@ -451,8 +357,10 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
         Expanded(child: Container(height: 1, color: Colors.grey.shade300)),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
-          child:
-          Text('Atau', style: TextStyle(color: Colors.grey.shade500, fontSize: 14)),
+          child: Text(
+            'Atau',
+            style: TextStyle(color: Colors.grey.shade500, fontSize: 14),
+          ),
         ),
         Expanded(child: Container(height: 1, color: Colors.grey.shade300)),
       ],
@@ -501,11 +409,9 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
 
   void _handleLogin() async {
     final email = _emailController.text.trim();
-    final password = _passwordController.text.trim();
 
     setState(() {
       _emailError = null;
-      _passwordError = null;
     });
 
     var hasError = false;
@@ -518,18 +424,9 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
       hasError = true;
     }
 
-    if (password.isEmpty) {
-      setState(() => _passwordError = 'Password tidak boleh kosong');
-      hasError = true;
-    } else if (password.length < 6) {
-      setState(() => _passwordError = 'Password minimal 6 karakter');
-      hasError = true;
-    }
-
     if (hasError) return;
 
-    debugPrint(
-        '🔵 Tombol Masuk ditekan dengan email="$email" dan password(tersimpan)');
+    debugPrint('🔵 Tombol Masuk ditekan dengan email="$email"');
 
     final success = await Future.delayed(
       const Duration(milliseconds: 300),
@@ -699,8 +596,7 @@ class OTPLoginDialog extends BaseDialog {
 class _OTPLoginDialogState extends BaseDialogState<OTPLoginDialog> {
   final List<TextEditingController> _codeControllers =
   List.generate(4, (index) => TextEditingController());
-  final List<FocusNode> _focusNodes =
-  List.generate(4, (index) => FocusNode());
+  final List<FocusNode> _focusNodes = List.generate(4, (index) => FocusNode());
   bool _isHovering = false;
 
   @override
@@ -774,33 +670,33 @@ class _OTPLoginDialogState extends BaseDialogState<OTPLoginDialog> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: List.generate(4, (index) {
         return Container(
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey.shade300),
-              color: Colors.grey.shade50,
+          width: 60,
+          height: 60,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.grey.shade300),
+            color: Colors.grey.shade50,
+          ),
+          child: TextField(
+            controller: _codeControllers[index],
+            focusNode: _focusNodes[index],
+            textAlign: TextAlign.center,
+            keyboardType: TextInputType.number,
+            maxLength: 1,
+            style:
+            const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              counterText: '',
             ),
-            child: TextField(
-              controller: _codeControllers[index],
-              focusNode: _focusNodes[index],
-              textAlign: TextAlign.center,
-              keyboardType: TextInputType.number,
-              maxLength: 1,
-              style:
-              const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-                counterText: '',
-              ),
-              onChanged: (value) {
-                if (value.isNotEmpty && index < 3) {
-                  _focusNodes[index + 1].requestFocus();
-                } else if (value.isEmpty && index > 0) {
-                  _focusNodes[index - 1].requestFocus();
-                }
-              },
-            )
+            onChanged: (value) {
+              if (value.isNotEmpty && index < 3) {
+                _focusNodes[index + 1].requestFocus();
+              } else if (value.isEmpty && index > 0) {
+                _focusNodes[index - 1].requestFocus();
+              }
+            },
+          ),
         );
       }),
     );

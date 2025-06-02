@@ -16,8 +16,6 @@ class GeneralRegisterDialog extends BaseDialog {
 
 class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog> {
   final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  String? _passwordError;
 
   bool _isHovering = false;
   bool _isHoveringLogin = false;
@@ -27,7 +25,6 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
   @override
   void dispose() {
     _emailController.dispose();
-    _passwordController.dispose();
     super.dispose();
   }
 
@@ -96,7 +93,7 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
         const SizedBox(height: 15),
 
         const Text(
-          'Masukkan Email dan Password', // sesuaikan teks header-nya
+          'Masukkan Email',
           style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.bold,
@@ -107,7 +104,7 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
         const SizedBox(height: 5),
 
         const Text(
-          'Yuk, login dulu biar bisa akses semuanya!', // sesuaikan teks subheader-nya
+          'Yuk, daftar dulu biar bisa akses semuanya!',
           style: TextStyle(
             fontSize: 12,
             color: Colors.black54, // warna sedikit lebih terang
@@ -124,31 +121,11 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
         ),
         const SizedBox(height: 20),
 
-        // Input Password - Gunakan buildTextField dengan obscureText
-        buildTextField(
-          controller: _passwordController,
-          hintText: 'Password',
-          obscureText: true,
-        ),
-        // Tampilkan pesan error jika password kosong
-        if (_passwordError != null)
-          Padding(
-            padding: const EdgeInsets.only(top: 5, left: 4),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                _passwordError!,
-                style: const TextStyle(color: Colors.red, fontSize: 12),
-              ),
-            ),
-          ),
-        const SizedBox(height: 20),
-
         buildAnimatedButton(
-          text: 'Masuk',
+          text: 'Daftar',
           isHovering: _isHovering,
           onHover: (hovering) => setState(() => _isHovering = hovering),
-          onPressed: () => _validateAndRegister(),
+          onPressed: () => _handleRegister(),
         ),
         const SizedBox(height: 20),
 
@@ -156,7 +133,7 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
         const SizedBox(height: 20),
 
         _buildIconButton(
-          text: 'Masuk Menggunakan Gmail',
+          text: 'Daftar Menggunakan Gmail',
           iconPath: 'assets/icons/google-icon.svg',
           isHovering: _isHoveringGmail,
           onHover: (hovering) => setState(() => _isHoveringGmail = hovering),
@@ -170,23 +147,6 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
         _buildLoginLink(),
       ],
     );
-  }
-
-  // Validasi sederhana sebelum memanggil API register
-  void _validateAndRegister() {
-    setState(() {
-      _passwordError = null;
-    });
-
-    if (_passwordController.text.isEmpty) {
-      setState(() {
-        _passwordError = 'Password tidak boleh kosong';
-      });
-      return;
-    }
-
-    // Jika lolos validasi, panggil fungsi register asli
-    _handleRegister();
   }
 
   // Widget untuk checkbox simpan Register dan lupa kata sandi
