@@ -372,8 +372,15 @@ class _NavbarWidgetState extends State<NavbarWidget> {
       showDialog(
         context: context,
         barrierColor: Colors.black54,
-        builder: (_) => const PopupSuceedPage(email: 'okdiantoardi9@gmail.com',),
+        builder: (_) => PopupSuceedPage(
+          message: 'Tampilan isi popup sesuai parameter',
+          onOk: () {
+            // navigasi ke halaman X
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const HeroUserPage()));
+          },
+        ),
       );
+
     }else if (title == 'Profile Individu') {
       showDialog(
         context: context,

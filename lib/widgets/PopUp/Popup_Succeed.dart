@@ -2,16 +2,25 @@ import 'package:flutter/material.dart';
 import '../register/register_client/popup_client.dart';
 
 class PopupSuceedPage extends StatefulWidget {
-  final String email;
+  /// Pesan yang ingin ditampilkan di bagian body popup
+  final String message;
 
-  const PopupSuceedPage({Key? key, required this.email}) : super(key: key);
+  /// Callback yang dipanggil ketika tombol OK ditekan.
+  final VoidCallback onOk;
+
+  const PopupSuceedPage({
+    Key? key,
+    required this.message,
+    required this.onOk,
+  }) : super(key: key);
 
   @override
   _PopupSuceedPageState createState() => _PopupSuceedPageState();
 }
 
-class _PopupSuceedPageState extends State<PopupSuceedPage> with TickerProviderStateMixin {
-  bool _isHovering = false; // jika nanti ingin tombol atau interaksi lain
+class _PopupSuceedPageState extends State<PopupSuceedPage>
+    with TickerProviderStateMixin {
+  bool _isHovering = false;
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
 
@@ -36,40 +45,40 @@ class _PopupSuceedPageState extends State<PopupSuceedPage> with TickerProviderSt
 
   @override
   Widget build(BuildContext context) {
+    // Hitung lebar dialog, misalnya 90% layar jika < 450, atau 400
     final screenWidth = MediaQuery.of(context).size.width;
     final dialogWidth = screenWidth < 450 ? screenWidth * 0.9 : 400.0;
 
-    return Scaffold(
-      backgroundColor: Colors.black54,
-      body: Center(
-        child: AnimatedBuilder(
-          animation: _scaleAnimation,
-          builder: (context, child) {
-            return Transform.scale(
-              scale: _scaleAnimation.value,
-              child: Container(
-                width: dialogWidth,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.3),
-                      blurRadius: 20,
-                      offset: const Offset(0, 10),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _buildHeader(),
-                    _buildBody(),
-                  ],
-                ),
+    return Dialog(
+      backgroundColor: Colors.transparent, // agar bentuk kotaknya custom
+      insetPadding: const EdgeInsets.all(32),
+      child: AnimatedBuilder(
+        animation: _scaleAnimation,
+        builder: (context, child) {
+          return Transform.scale(
+            scale: _scaleAnimation.value,
+            child: Container(
+              width: dialogWidth,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
+                  ),
+                ],
               ),
-            );
-          },
-        ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _buildHeader(),
+                  _buildBody(),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -127,11 +136,9 @@ class _PopupSuceedPageState extends State<PopupSuceedPage> with TickerProviderSt
       ),
       child: Column(
         children: [
-          // Pesan utama, wrapped agar responsif dan tidak overflow
+          // Tampilkan pesan dinamis
           Text(
-            'Register sebagai Client telah sukses.\n'
-                'Silakan mengecek password yang telah dikirimkan ke\n'
-                '${widget.email}',
+            widget.message,
             textAlign: TextAlign.center,
             style: const TextStyle(
               fontSize: 16,
@@ -139,7 +146,7 @@ class _PopupSuceedPageState extends State<PopupSuceedPage> with TickerProviderSt
             ),
           ),
           const SizedBox(height: 30),
-          // Tombol "OK" untuk menutup popup
+          // Tombol "OK" dengan callback onOk
           MouseRegion(
             onEnter: (_) => setState(() => _isHovering = true),
             onExit: (_) => setState(() => _isHovering = false),
@@ -172,7 +179,10 @@ class _PopupSuceedPageState extends State<PopupSuceedPage> with TickerProviderSt
                 color: Colors.transparent,
                 child: InkWell(
                   borderRadius: BorderRadius.circular(10),
-                  onTap: () => Navigator.of(context).pop(),
+                  onTap: () {
+                    Navigator.of(context).pop(); // tutup dialog
+                    widget.onOk(); // panggil callback
+                  },
                   child: const Center(
                     child: Text(
                       'OK',

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../../pages/hero_user_page/hero_user_main.dart';
 import '../../register/register_client/popup_client.dart';
+import '../hero_user/hero_user_main.dart'; // Pastikan path ini sesuai dengan lokasi HeroUserPage/HeroUserMain Anda
 
 class LoginClientPage extends StatefulWidget {
   const LoginClientPage({Key? key}) : super(key: key);
@@ -8,10 +10,15 @@ class LoginClientPage extends StatefulWidget {
   _LoginClientPageState createState() => _LoginClientPageState();
 }
 
-class _LoginClientPageState extends State<LoginClientPage> with TickerProviderStateMixin {
+class _LoginClientPageState extends State<LoginClientPage>
+    with TickerProviderStateMixin {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _isHovering = false;
+
+  String? _emailErrorText;
+  String? _passwordErrorText;
+
+  bool _isHoveringButton = false;
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
 
@@ -39,9 +46,40 @@ class _LoginClientPageState extends State<LoginClientPage> with TickerProviderSt
   void _submitLogin() {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
-    // TODO: Panggil fungsi login nyata di sini.
-    // Contoh: AuthService.login(email, password);
-    Navigator.of(context).pop(); // Kembali setelah login
+
+    // Reset error messages
+    setState(() {
+      _emailErrorText = null;
+      _passwordErrorText = null;
+    });
+
+    bool hasError = false;
+
+    if (email.isEmpty) {
+      setState(() {
+        _emailErrorText = 'Email tidak boleh kosong';
+      });
+      hasError = true;
+    }
+
+    if (password.isEmpty) {
+      setState(() {
+        _passwordErrorText = 'Password tidak boleh kosong';
+      });
+      hasError = true;
+    }
+
+    if (hasError) {
+      // Jika ada error, jangan lanjut
+      return;
+    }
+
+    // Jika validasi sukses, tutup dialog lalu navigasi ke HeroUserPage
+    Navigator.of(context).pop();
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const HeroUserMain()),
+    );
   }
 
   @override
@@ -49,37 +87,36 @@ class _LoginClientPageState extends State<LoginClientPage> with TickerProviderSt
     final screenWidth = MediaQuery.of(context).size.width;
     final dialogWidth = screenWidth < 450 ? screenWidth * 0.9 : 400.0;
 
-    return Scaffold(
-      backgroundColor: Colors.black54,
-      body: Center(
-        child: AnimatedBuilder(
-          animation: _scaleAnimation,
-          builder: (context, child) {
-            return Transform.scale(
-              scale: _scaleAnimation.value,
-              child: Container(
-                width: dialogWidth,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.3),
-                      blurRadius: 20,
-                      offset: const Offset(0, 10),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _buildHeader(context),
-                    _buildBody(),
-                  ],
-                ),
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: const EdgeInsets.all(32),
+      child: AnimatedBuilder(
+        animation: _scaleAnimation,
+        builder: (context, child) {
+          return Transform.scale(
+            scale: _scaleAnimation.value,
+            child: Container(
+              width: dialogWidth,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
+                  ),
+                ],
               ),
-            );
-          },
-        ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _buildHeader(context),
+                  _buildBody(),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -143,6 +180,7 @@ class _LoginClientPageState extends State<LoginClientPage> with TickerProviderSt
             controller: _emailController,
             hintText: 'Masukkan Email',
             keyboardType: TextInputType.emailAddress,
+            errorText: _emailErrorText,
           ),
           const SizedBox(height: 20),
           _buildTextField(
@@ -150,6 +188,7 @@ class _LoginClientPageState extends State<LoginClientPage> with TickerProviderSt
             hintText: 'Masukkan Password',
             keyboardType: TextInputType.visiblePassword,
             obscureText: true,
+            errorText: _passwordErrorText,
           ),
           const SizedBox(height: 40),
           _buildLoginButton(),
@@ -186,61 +225,76 @@ class _LoginClientPageState extends State<LoginClientPage> with TickerProviderSt
   Widget _buildTextField({
     required TextEditingController controller,
     required String hintText,
-    TextInputType? keyboardType,
+    required TextInputType keyboardType,
     bool obscureText = false,
+    String? errorText,
   }) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            blurRadius: 5,
-            offset: const Offset(0, 2),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.1),
+                blurRadius: 5,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: TextField(
+            controller: controller,
+            keyboardType: keyboardType,
+            obscureText: obscureText,
+            decoration: InputDecoration(
+              hintText: hintText,
+              hintStyle: TextStyle(color: Colors.grey.shade400),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(color: Colors.grey.shade300),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(color: Colors.grey.shade300),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(
+                    color: CustomPopupsClient.primaryGreen, width: 2),
+              ),
+              filled: true,
+              fillColor: Colors.grey.shade50,
+              contentPadding:
+              const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+            ),
+          ),
+        ),
+        if (errorText != null) ...[
+          const SizedBox(height: 5),
+          Text(
+            errorText,
+            style: const TextStyle(color: Colors.red, fontSize: 12),
           ),
         ],
-      ),
-      child: TextField(
-        controller: controller,
-        keyboardType: keyboardType,
-        obscureText: obscureText,
-        decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: TextStyle(color: Colors.grey.shade400),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Colors.grey.shade300),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Colors.grey.shade300),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: CustomPopupsClient.primaryGreen, width: 2),
-          ),
-          filled: true,
-          fillColor: Colors.grey.shade50,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-        ),
-      ),
+      ],
     );
   }
 
   Widget _buildLoginButton() {
     return MouseRegion(
-      onEnter: (_) => setState(() => _isHovering = true),
-      onExit: (_) => setState(() => _isHovering = false),
+      onEnter: (_) => setState(() => _isHoveringButton = true),
+      onExit: (_) => setState(() => _isHoveringButton = false),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         width: double.infinity,
         height: 50,
         decoration: BoxDecoration(
-          color: _isHovering
+          color: _isHoveringButton
               ? const Color(0xFF6B9639)
               : CustomPopupsClient.primaryGreen,
           borderRadius: BorderRadius.circular(10),
-          boxShadow: _isHovering
+          boxShadow: _isHoveringButton
               ? [
             BoxShadow(
               color: CustomPopupsClient.primaryGreen.withOpacity(0.4),
