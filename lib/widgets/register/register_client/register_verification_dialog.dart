@@ -1,19 +1,25 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'popup_client.dart';
+import '../../profile/profile_perusahaan/profile_main_page.dart';
+import '../../../repositories/user/user_repository.dart';
+import '../../profile/profile_individu/profile_individu_main_page.dart';
+
+// Dummy repository (cocokkan dengan yang di RegisterDialog)
+class dummyUserRepository extends UserRepository {
+  // Override method sesuai kebutuhan
+}
 
 class LoginDialog extends StatefulWidget {
   final String email;
   final String title;
-  final void Function(String code)? onSubmit;
+  final String selectedChoice;
 
-  // Kita set default codeLength menjadi 6
   const LoginDialog({
     super.key,
     required this.email,
     this.title = 'Verifikasi',
-    this.onSubmit,
+    required this.selectedChoice,
   });
 
   @override
@@ -21,20 +27,20 @@ class LoginDialog extends StatefulWidget {
 }
 
 class _LoginDialogState extends State<LoginDialog> with TickerProviderStateMixin {
-  // Kita pakai codeLength = 6 secara hardcoded di sini
-  static const int codeLength = 6;
+  static const int _codeLength = 6;
 
   late final List<TextEditingController> _codeControllers;
   late final List<FocusNode> _focusNodes;
-  bool _isHovering = false;
-  late AnimationController _animationController;
-  late Animation<double> _scaleAnimation;
+  late final AnimationController _animationController;
+  late final Animation<double> _scaleAnimation;
+  bool _isButtonHovering = false;
 
   @override
   void initState() {
     super.initState();
-    _codeControllers = List.generate(codeLength, (_) => TextEditingController());
-    _focusNodes = List.generate(codeLength, (_) => FocusNode());
+    // Buat controller dan focus node untuk masing-masing kotak OTP
+    _codeControllers = List.generate(_codeLength, (_) => TextEditingController());
+    _focusNodes      = List.generate(_codeLength, (_) => FocusNode());
 
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 300),
@@ -49,11 +55,11 @@ class _LoginDialogState extends State<LoginDialog> with TickerProviderStateMixin
   @override
   void dispose() {
     _animationController.dispose();
-    for (var controller in _codeControllers) {
-      controller.dispose();
+    for (final c in _codeControllers) {
+      c.dispose();
     }
-    for (var node in _focusNodes) {
-      node.dispose();
+    for (final f in _focusNodes) {
+      f.dispose();
     }
     super.dispose();
   }
@@ -62,12 +68,13 @@ class _LoginDialogState extends State<LoginDialog> with TickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
+    // Responsif: jika layar < 450, pakai 90% lebar, else 400px
     final screenWidth = MediaQuery.of(context).size.width;
     final dialogWidth = screenWidth < 450 ? screenWidth * 0.9 : 400.0;
 
     return AnimatedBuilder(
       animation: _scaleAnimation,
-      builder: (context, child) {
+      builder: (context, _) {
         return Transform.scale(
           scale: _scaleAnimation.value,
           child: Dialog(
@@ -75,6 +82,7 @@ class _LoginDialogState extends State<LoginDialog> with TickerProviderStateMixin
             child: Container(
               width: dialogWidth,
               decoration: BoxDecoration(
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
@@ -141,7 +149,7 @@ class _LoginDialogState extends State<LoginDialog> with TickerProviderStateMixin
   Widget _buildBody() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(30),
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
@@ -152,7 +160,7 @@ class _LoginDialogState extends State<LoginDialog> with TickerProviderStateMixin
       child: Column(
         children: [
           _buildLogo(),
-          const SizedBox(height: 30),
+          const SizedBox(height: 20),
           Text(
             'Berikut Kode ${widget.title}',
             style: const TextStyle(
@@ -161,13 +169,13 @@ class _LoginDialogState extends State<LoginDialog> with TickerProviderStateMixin
               color: Colors.black87,
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 8),
           const Text(
             'Kode ini akan digunakan untuk verifikasi Anda dengan aman.',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 14, color: Colors.grey),
           ),
-          const SizedBox(height: 5),
+          const SizedBox(height: 8),
           Text(
             widget.email.isEmpty ? 'email@example.com' : widget.email,
             style: const TextStyle(
@@ -176,10 +184,10 @@ class _LoginDialogState extends State<LoginDialog> with TickerProviderStateMixin
               fontWeight: FontWeight.w500,
             ),
           ),
+          const SizedBox(height: 25),
+          _buildOTPFields(),
           const SizedBox(height: 30),
-          _buildOTPFields(), // 6 kotak responsif di sini
-          const SizedBox(height: 40),
-          _buildLoginButton(),
+          _buildVerifyButton(),
         ],
       ),
     );
@@ -218,17 +226,17 @@ class _LoginDialogState extends State<LoginDialog> with TickerProviderStateMixin
     return LayoutBuilder(
       builder: (context, constraints) {
         return Row(
-          children: List.generate(codeLength, (index) {
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: List.generate(_codeLength, (index) {
             return Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4),
                 child: AspectRatio(
-                  aspectRatio: 1, // Pastikan kotak selalu persegi
+                  aspectRatio: 1,
                   child: LayoutBuilder(
-                    builder: (context, boxConstraints) {
-                      // Ukuran font 50% dari lebar kotak, tapi dibatasi antara 18–40
+                    builder: (_, boxConstraints) {
                       final calculatedFont = boxConstraints.maxWidth * 0.5;
-                      final fontSize = calculatedFont.clamp(18.0, 40.0);
+                      final fontSize       = calculatedFont.clamp(18.0, 40.0);
 
                       return Container(
                         decoration: BoxDecoration(
@@ -241,12 +249,9 @@ class _LoginDialogState extends State<LoginDialog> with TickerProviderStateMixin
                             controller: _codeControllers[index],
                             focusNode: _focusNodes[index],
                             keyboardType: TextInputType.number,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
+                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                             maxLength: 1,
                             textAlign: TextAlign.center,
-                            textAlignVertical: TextAlignVertical.center,
                             style: TextStyle(
                               fontSize: fontSize,
                               fontWeight: FontWeight.bold,
@@ -258,17 +263,15 @@ class _LoginDialogState extends State<LoginDialog> with TickerProviderStateMixin
                               contentPadding: EdgeInsets.zero,
                             ),
                             onChanged: (value) {
-                              if (value.isNotEmpty && index < codeLength - 1) {
+                              if (value.isNotEmpty && index < _codeLength - 1) {
                                 _focusNodes[index + 1].requestFocus();
                               } else if (value.isEmpty && index > 0) {
                                 _focusNodes[index - 1].requestFocus();
                               }
                             },
                             onSubmitted: (_) {
-                              if (index == codeLength - 1) {
-                                final code = _combinedCode;
-                                widget.onSubmit?.call(code);
-                                Navigator.of(context).pop();
+                              if (index == _codeLength - 1) {
+                                _submitCode();
                               }
                             },
                           ),
@@ -285,32 +288,24 @@ class _LoginDialogState extends State<LoginDialog> with TickerProviderStateMixin
     );
   }
 
-  Widget _buildLoginButton() {
+  Widget _buildVerifyButton() {
     return MouseRegion(
-      onEnter: (_) => setState(() => _isHovering = true),
-      onExit: (_) => setState(() => _isHovering = false),
+      onEnter: (_) => setState(() => _isButtonHovering = true),
+      onExit: (_) => setState(() => _isButtonHovering = false),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         width: double.infinity,
         height: 50,
         decoration: BoxDecoration(
-          color: _isHovering
+          color: _isButtonHovering
               ? const Color(0xFF6B9639)
               : CustomPopupsClient.primaryGreen,
           borderRadius: BorderRadius.circular(10),
-          boxShadow: _isHovering
-              ? [
+          boxShadow: [
             BoxShadow(
-              color: CustomPopupsClient.primaryGreen.withOpacity(0.4),
-              blurRadius: 15,
-              offset: const Offset(0, 8),
-            ),
-          ]
-              : [
-            BoxShadow(
-              color: CustomPopupsClient.primaryGreen.withOpacity(0.2),
-              blurRadius: 5,
-              offset: const Offset(0, 3),
+              color: CustomPopupsClient.primaryGreen.withOpacity(_isButtonHovering ? 0.4 : 0.2),
+              blurRadius: _isButtonHovering ? 15 : 5,
+              offset: Offset(0, _isButtonHovering ? 8 : 3),
             ),
           ],
         ),
@@ -318,11 +313,7 @@ class _LoginDialogState extends State<LoginDialog> with TickerProviderStateMixin
           color: Colors.transparent,
           child: InkWell(
             borderRadius: BorderRadius.circular(10),
-            onTap: () {
-              final code = _combinedCode;
-              widget.onSubmit?.call(code);
-              Navigator.of(context).pop();
-            },
+            onTap: _submitCode,
             child: const Center(
               child: Text(
                 'Verifikasi',
@@ -337,5 +328,48 @@ class _LoginDialogState extends State<LoginDialog> with TickerProviderStateMixin
         ),
       ),
     );
+  }
+
+  void _submitCode() {
+    final code = _combinedCode;
+
+    // ===== VALIDASI KODE OTP: 6 digit angka =====
+    if (code.length != 6 || !RegExp(r'^[0-9]{6}$').hasMatch(code)) {
+      // Tampilkan SnackBar jika invalid, tetap biarkan dialog terbuka
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Kode OTP harus berupa 6 digit angka',
+            textAlign: TextAlign.center,
+          ),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    // 1) Tutup LoginDialog (OTP)
+    Navigator.of(context).pop();
+
+    // 2) Navigasi ke halaman profil berdasarkan pilihan
+    if (widget.selectedChoice == 'Individual') {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => ProfileIndividuMainPage(
+            userid: 123,
+            userRepository: dummyUserRepository(),
+          ),
+        ),
+      );
+    } else {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => ProfileMainPage(
+            userid: 123,
+            userRepository: dummyUserRepository(),
+          ),
+        ),
+      );
+    }
   }
 }

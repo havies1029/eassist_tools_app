@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart'; // Add this import for SVG support
 import '../../login/login_gmail/Popup.dart';
+import '../../reset_password/reset_password_page.dart';
 import 'Base_Dialog.dart';
 import 'Popup.dart';
 import 'Auth_Api.dart'; // Import service untuk API calls
@@ -173,7 +174,15 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
           onEnter: (_) => setState(() => _isHoveringForgotPassword = true),
           onExit: (_) => setState(() => _isHoveringForgotPassword = false),
           child: GestureDetector(
-            onTap: () => _handleForgotPassword(),
+            onTap: () {
+              Navigator.of(context).pop(); // Tutup dialog register dulu
+              showDialog(
+                context: context,
+                barrierColor: Colors.black54,
+                // builder: (_) => ResetPasswordPage(email: _emailController.text),
+                builder: (_) => ResetPasswordPage(),
+              );
+            },
             child: Text(
               'Lupa Kata Sandi?',
               style: TextStyle(
@@ -185,6 +194,8 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
             ),
           ),
         ),
+
+
       ],
     );
   }

@@ -1,5 +1,15 @@
+import 'package:eassist_tools_app/widgets/register/register_client/popup_client.dart';
 import 'package:flutter/material.dart';
-import 'popup_client.dart';
+import 'package:flutter/services.dart'; // untuk FilteringTextInputFormatter
+import '../../../pages/profile/profile_main_page.dart';
+import '../../../repositories/user/user_repository.dart';
+import '../../profile/profile_individu/profile_individu_main_page.dart';
+import 'register_verification_dialog.dart'; // Import LoginDialog
+
+// Dummy repository (bisa diganti implementasi sungguhan)
+class dummyUserRepository extends UserRepository {
+  // Override method sesuai kebutuhan
+}
 
 class RegisterDialog extends StatefulWidget {
   const RegisterDialog({super.key});
@@ -9,12 +19,28 @@ class RegisterDialog extends StatefulWidget {
 }
 
 class _RegisterDialogState extends State<RegisterDialog> with TickerProviderStateMixin {
-  final _nameController = TextEditingController();
-  final _emailController = TextEditingController();
-  String _selectedChoice = 'Pilihan';
-  bool _isHovering = false;
+  final _nameController            = TextEditingController();
+  final _phoneController           = TextEditingController();
+  final _passwordController        = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+
+  String _selectedChoice      = 'Pilihan';
+  bool _isHovering            = false;
+  bool _showPassword          = false;
+  bool _showConfirmPassword   = false;
+
   late AnimationController _animationController;
-  late Animation<double> _scaleAnimation;
+  late Animation<double>   _scaleAnimation;
+
+  // Pesan error per field
+  String? _nameError;
+  String? _phoneError;
+  String? _passwordError;
+  String? _confirmPasswordError;
+  String? _dropdownError;
+
+  // Dummy repository
+  final _repo = dummyUserRepository();
 
   @override
   void initState() {
@@ -33,15 +59,105 @@ class _RegisterDialogState extends State<RegisterDialog> with TickerProviderStat
   void dispose() {
     _animationController.dispose();
     _nameController.dispose();
-    _emailController.dispose();
+    _phoneController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
+  }
+
+  void _submitRegistration() {
+    // 1. Reset semua pesan error
+    setState(() {
+      _nameError            = null;
+      _phoneError           = null;
+      _passwordError        = null;
+      _confirmPasswordError = null;
+      _dropdownError        = null;
+    });
+
+    final name            = _nameController.text.trim();
+    final phone           = _phoneController.text.trim();
+    final password        = _passwordController.text;
+    final confirmPassword = _confirmPasswordController.text;
+    final choice          = _selectedChoice; // 'Pilihan', 'Individual', atau 'Perusahaan'
+
+    bool hasError = false;
+
+    // ===== VALIDASI NAMA LENGKAP =====
+    if (name.isEmpty) {
+      _nameError = 'Nama Lengkap wajib diisi';
+      hasError   = true;
+    } else if (name.length < 3) {
+      _nameError = 'Nama minimal 3 karakter';
+      hasError   = true;
+    } else if (!RegExp(r"^[a-zA-Z\s]+$").hasMatch(name)) {
+      _nameError = 'Nama hanya boleh berisi huruf dan spasi';
+      hasError   = true;
+    }
+
+    // ===== VALIDASI NO. TELEPON =====
+    if (phone.isEmpty) {
+      _phoneError = 'No. Telepon wajib diisi';
+      hasError    = true;
+    } else if (!RegExp(r'^[0-9]+$').hasMatch(phone)) {
+      _phoneError = 'No. Telepon hanya berupa angka';
+      hasError    = true;
+    }
+
+    // ===== VALIDASI PASSWORD =====
+    if (password.isEmpty) {
+      _passwordError = 'Password wajib diisi';
+      hasError       = true;
+    } else if (password.length < 6) {
+      _passwordError = 'Password minimal 6 karakter';
+      hasError       = true;
+    }
+
+    // ===== VALIDASI KONFIRMASI PASSWORD =====
+    if (confirmPassword.isEmpty) {
+      _confirmPasswordError = 'Konfirmasi Password wajib diisi';
+      hasError             = true;
+    } else if (confirmPassword != password) {
+      _confirmPasswordError = 'Password dan Konfirmasi tidak cocok';
+      hasError             = true;
+    }
+
+    // ===== VALIDASI DROPDOWN =====
+    if (choice == 'Pilihan') {
+      _dropdownError = 'Harap pilih tipe klien';
+      hasError       = true;
+    }
+
+    if (hasError) {
+      // Jika ada error, tampilkan kembali form dengan border merah & pesan
+      setState(() {});
+      return;
+    }
+
+    // 2. Tutup dialog pendaftaran
+    Navigator.of(context).pop();
+
+    // Simpan context parent untuk navigasi setelah OTP
+    final parentContext = context;
+
+    // 3. Buka LoginDialog (OTP)
+    showDialog(
+      context: parentContext,
+      barrierDismissible: false,
+      builder: (ctx) {
+        return LoginDialog(
+          email: phone,               // Menggunakan nomor telepon sebagai placeholder email di OTP dialog
+          selectedChoice: choice,     // Kirim pilihan dropdown
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _scaleAnimation,
-      builder: (context, child) {
+      builder: (context, _) {
         return Transform.scale(
           scale: _scaleAnimation.value,
           child: Dialog(
@@ -61,8 +177,8 @@ class _RegisterDialogState extends State<RegisterDialog> with TickerProviderStat
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  _buildHeader(context),
-                  _buildBody(context),
+                  _buildHeader(),
+                  _buildBody(),
                 ],
               ),
             ),
@@ -72,7 +188,7 @@ class _RegisterDialogState extends State<RegisterDialog> with TickerProviderStat
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildHeader() {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -110,7 +226,7 @@ class _RegisterDialogState extends State<RegisterDialog> with TickerProviderStat
     );
   }
 
-  Widget _buildBody(BuildContext context) {
+  Widget _buildBody() {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(30),
@@ -121,18 +237,69 @@ class _RegisterDialogState extends State<RegisterDialog> with TickerProviderStat
           bottomRight: Radius.circular(20),
         ),
       ),
-      child: Column(
-        children: [
-          _buildLogo(),
-          const SizedBox(height: 30),
-          _buildTextField(controller: _nameController, hintText: 'Nama Lengkap'),
-          const SizedBox(height: 20),
-          _buildTextField(controller: _emailController, hintText: 'Email', keyboardType: TextInputType.emailAddress),
-          const SizedBox(height: 20),
-          _buildDropdown(),
-          const SizedBox(height: 40),
-          _buildSubmitButton(),
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            _buildLogo(),
+            const SizedBox(height: 30),
+
+            // Nama Lengkap
+            _buildTextField(
+              controller: _nameController,
+              hintText: 'Nama Lengkap',
+              keyboardType: TextInputType.text,
+              errorText: _nameError,
+            ),
+            const SizedBox(height: 20),
+
+            // No. Telepon
+            _buildTextField(
+              controller: _phoneController,
+              hintText: 'No. Telepon',
+              keyboardType: TextInputType.phone,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              errorText: _phoneError,
+            ),
+            const SizedBox(height: 20),
+
+            // Password
+            _buildPasswordField(
+              controller: _passwordController,
+              hintText: 'Password',
+              obscureText: !_showPassword,
+              onToggle: () => setState(() => _showPassword = !_showPassword),
+              errorText: _passwordError,
+            ),
+            const SizedBox(height: 20),
+
+            // Konfirmasi Password
+            _buildPasswordField(
+              controller: _confirmPasswordController,
+              hintText: 'Konfirmasi Password',
+              obscureText: !_showConfirmPassword,
+              onToggle: () => setState(() => _showConfirmPassword = !_showConfirmPassword),
+              errorText: _confirmPasswordError,
+            ),
+            const SizedBox(height: 20),
+
+            // Dropdown + pesan error
+            _buildDropdown(),
+            if (_dropdownError != null) ...[
+              const SizedBox(height: 5),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  _dropdownError!,
+                  style: const TextStyle(color: Colors.red, fontSize: 12),
+                ),
+              ),
+            ],
+            const SizedBox(height: 40),
+
+            // Tombol Daftar
+            _buildSubmitButton(),
+          ],
+        ),
       ),
     );
   }
@@ -162,12 +329,125 @@ class _RegisterDialogState extends State<RegisterDialog> with TickerProviderStat
     );
   }
 
+  /// TextField biasa dengan dukungan errorText
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String hintText,
+    TextInputType? keyboardType,
+    List<TextInputFormatter>? inputFormatters,
+    String? errorText,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 5,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: TextField(
+        controller: controller,
+        keyboardType: keyboardType,
+        inputFormatters: inputFormatters,
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: TextStyle(color: Colors.grey.shade400),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: errorText != null ? Colors.red : Colors.grey.shade300),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: errorText != null ? Colors.red : Colors.grey.shade300),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(
+              color: errorText != null ? Colors.red : CustomPopupsClient.primaryGreen,
+              width: 2,
+            ),
+          ),
+          filled: true,
+          fillColor: Colors.grey.shade50,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+          errorText: errorText,
+        ),
+      ),
+    );
+  }
+
+  /// TextField untuk password dengan dukungan errorText
+  Widget _buildPasswordField({
+    required TextEditingController controller,
+    required String hintText,
+    required bool obscureText,
+    required VoidCallback onToggle,
+    String? errorText,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 5,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: TextField(
+        controller: controller,
+        keyboardType: TextInputType.visiblePassword,
+        obscureText: obscureText,
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: TextStyle(color: Colors.grey.shade400),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: errorText != null ? Colors.red : Colors.grey.shade300),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: errorText != null ? Colors.red : Colors.grey.shade300),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(
+              color: errorText != null ? Colors.red : CustomPopupsClient.primaryGreen,
+              width: 2,
+            ),
+          ),
+          filled: true,
+          fillColor: Colors.grey.shade50,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+          suffixIcon: Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: IconButton(
+              icon: Icon(
+                obscureText ? Icons.visibility_off : Icons.visibility,
+                color: Colors.grey.shade600,
+              ),
+              onPressed: onToggle,
+            ),
+          ),
+          errorText: errorText,
+        ),
+      ),
+    );
+  }
+
+  /// Dropdown dengan border yang berubah saat error
   Widget _buildDropdown() {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 15),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
+        border: Border.all(
+          color: _dropdownError != null ? Colors.red : Colors.grey.shade300,
+        ),
         borderRadius: BorderRadius.circular(10),
       ),
       child: DropdownButtonHideUnderline(
@@ -175,15 +455,16 @@ class _RegisterDialogState extends State<RegisterDialog> with TickerProviderStat
           value: _selectedChoice,
           isExpanded: true,
           icon: const Icon(Icons.keyboard_arrow_down),
-          items: ['Pilihan', 'Individual', 'Perusahaan', 'Organisasi'].map((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
+          items: ['Pilihan', 'Individual', 'Perusahaan']
+              .map((String value) => DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          ))
+              .toList(),
           onChanged: (String? newValue) {
             setState(() {
               _selectedChoice = newValue!;
+              _dropdownError   = null;
             });
           },
         ),
@@ -216,10 +497,7 @@ class _RegisterDialogState extends State<RegisterDialog> with TickerProviderStat
           color: Colors.transparent,
           child: InkWell(
             borderRadius: BorderRadius.circular(10),
-            onTap: () {
-              Navigator.of(context).pop();
-              CustomPopupsClient.showLoginDialog(context, _emailController.text);
-            },
+            onTap: _submitRegistration,
             child: const Center(
               child: Text(
                 'Daftar',
@@ -231,48 +509,6 @@ class _RegisterDialogState extends State<RegisterDialog> with TickerProviderStat
               ),
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String hintText,
-    TextInputType? keyboardType,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            blurRadius: 5,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: TextField(
-        controller: controller,
-        keyboardType: keyboardType,
-        decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: TextStyle(color: Colors.grey.shade400),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Colors.grey.shade300),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Colors.grey.shade300),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: CustomPopupsClient.primaryGreen, width: 2),
-          ),
-          filled: true,
-          fillColor: Colors.grey.shade50,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
         ),
       ),
     );

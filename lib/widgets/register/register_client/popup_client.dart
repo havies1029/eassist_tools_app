@@ -1,23 +1,35 @@
 import 'package:flutter/material.dart';
-import 'register_verification_dialog.dart';
 import 'register_form_dialog.dart';
+import 'register_verification_dialog.dart';
 
 class CustomPopupsClient {
   static const Color primaryGreen = Color(0xFF79AB43);
 
-  static Future<void> showRegisterDialog(BuildContext context) async {
-    showDialog(
+  /// Menampilkan form pendaftaran (RegisterDialog)
+  static Future<void> showRegisterDialog(BuildContext context) {
+    return showDialog(
       context: context,
       barrierDismissible: true,
-      builder: (context) => const RegisterDialog(),
+      builder: (_) => RegisterDialog(),
     );
   }
 
-  static void showLoginDialog(BuildContext context, String email) {
-    showDialog(
+  /// Menampilkan dialog OTP (LoginDialog) setelah registrasi.
+  ///
+  /// - [email]: nilai yang akan ditampilkan di dalam LoginDialog
+  /// - [selectedChoice]: 'Individual' atau 'Perusahaan', diteruskan ke LoginDialog
+  static Future<void> showLoginDialog(
+      BuildContext context, {
+        required String email,
+        required String selectedChoice,
+      }) {
+    return showDialog(
       context: context,
-      barrierDismissible: true,
-      builder: (context) => LoginDialog(email: email),
+      barrierDismissible: false, // paksa user menyelesaikan OTP terlebih dahulu
+      builder: (_) => LoginDialog(
+        email: email,
+        selectedChoice: selectedChoice,
+      ),
     );
   }
 }
