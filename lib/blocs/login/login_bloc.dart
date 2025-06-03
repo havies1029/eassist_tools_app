@@ -16,6 +16,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     required this.authenticationBloc,
   }) : super(LoginInitial()) {
     on<LoginButtonPressed>(_onLoginButtonPressed);
+    on<PinVerified>(_onPinVerified);
   }
 
   Future<void> _onLoginButtonPressed(
@@ -30,11 +31,23 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         password: event.password,
       );
       
-      emit(LoginPreAuthenticate());      
-      authenticationBloc.add(LoggedIn(user: user));      
+      if (user.requiresPinVerification) {
+        emit(LoginRequiresPinVerification(user: user));
+      }
+      else {
+        emit(LoginPreAuthenticate());      
+        authenticationBloc.add(LoggedIn(user: user));  
+      }          
       emit(LoginPostAuthenticate());            
     } catch (error) {      
       emit(LoginFailure(error: error.toString()));
     }
   }
+
+  Future<void> _onPinVerified(
+      PinVerified event, Emitter<LoginState> emit) async {
+    emit(LoginPreAuthenticate());
+    authenticationBloc.add(LoggedIn(user: event.user));
+  }
+
 }

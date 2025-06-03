@@ -108,7 +108,7 @@ class _FeatureSectionState extends State<FeatureSection>
     return Container(
       width: double.infinity,
       color: Colors.white,
-      padding: const EdgeInsets.only(bottom: 70.0),
+      // padding: const EdgeInsets.only(bottom: 70.0),
       child: Center(
         child: Container(
           width: maxWidth,
@@ -320,7 +320,7 @@ class _FeatureSectionState extends State<FeatureSection>
 
   Widget _buildFeatureList() {
     return Padding(
-      padding: const EdgeInsets.only(top: 8.0),
+      padding: const EdgeInsets.only(top: 0),
       child: Column(
         children: [
           AnimatedFeatureItem(
@@ -333,7 +333,7 @@ class _FeatureSectionState extends State<FeatureSection>
             animation: _featuresStaggerAnimation,
             isMobile: isMobile,
           ),
-          const SizedBox(height: 32.0),
+          const SizedBox(height: 18.0),
           AnimatedFeatureItem(
             icon: Icons.person_outline,
             title: 'Membangun Kepercayaan Klien',
@@ -343,7 +343,7 @@ class _FeatureSectionState extends State<FeatureSection>
             animation: _featuresStaggerAnimation,
             isMobile: isMobile,
           ),
-          const SizedBox(height: 32.0),
+          const SizedBox(height: 18.0),
           AnimatedFeatureItem(
             icon: Icons.check_circle_outline,
             title: 'Menyederhanakan Info Asuransi',
@@ -505,21 +505,20 @@ class _AnimatedFeatureItemState extends State<AnimatedFeatureItem>
                           width: widget.isMobile ? 40 : 48,
                           height: widget.isMobile ? 40 : 48,
                           decoration: BoxDecoration(
-                            color: _isHovered
-                                ? const Color(0xFF79AB43).withOpacity(0.1)
-                                : const Color(0xFFF8F9FA),
+                            color: Colors.white, // background putih
                             borderRadius: BorderRadius.circular(12.0),
-                            border: Border.all(
-                              color: _isHovered
-                                  ? const Color(0xFF79AB43).withOpacity(0.3)
-                                  : const Color(0xFFE9ECEF),
-                              width: 1.0,
-                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2), // shadow lembut
+                                blurRadius: 8.0,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
                           ),
                           child: Center(
                             child: Icon(
                               widget.icon,
-                              color: const Color(0xFF79AB43),
+                              color: const Color(0xFF79AB43), // ikon tetap hijau
                               size: widget.isMobile ? 20.0 : 24.0,
                             ),
                           ),
@@ -561,6 +560,7 @@ class _AnimatedFeatureItemState extends State<AnimatedFeatureItem>
       },
     );
   }
+
 
   void _onHover(bool isHovered) {
     setState(() {

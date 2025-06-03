@@ -18,6 +18,7 @@ class User {
   bool hasDownline;
   Uint8List? foto;
   String? personId;
+  bool requiresPinVerification;
 
   User(
       {this.id,
@@ -34,7 +35,8 @@ class User {
       this.userCabang,
       this.hasDownline = false,
       this.foto,
-      this.personId});
+      this.personId,
+      this.requiresPinVerification = true,});
 
   factory User.fromDatabaseJson(Map<String, dynamic> data) => User(
         id: data['id'],
@@ -52,6 +54,7 @@ class User {
         foto: data['foto'] ?? '',
         token: data['token'],
         personId: data['personId'],
+        requiresPinVerification: data['requiresPinVerification'] ?? false,
       );
 
   Map<String, dynamic> toDatabaseJson() => {
@@ -69,6 +72,7 @@ class User {
         "userCabang": userCabang,
         "hasDownline": hasDownline?1:0,
         "token": token,
-        "foto": foto
+        "foto": foto,
+        'requiresPinVerification': requiresPinVerification,
       };
 }

@@ -38,7 +38,8 @@ class DummyUserRepository extends UserRepository {
 
 class NavbarWidget extends StatefulWidget {
   final BoxConstraints constraints;
-  const NavbarWidget({super.key, required this.constraints});
+  final bool hideProfile;
+  const NavbarWidget({super.key, required this.constraints, this.hideProfile = false,});
 
   @override
   State<NavbarWidget> createState() => _NavbarWidgetState();
@@ -207,14 +208,18 @@ class _NavbarWidgetState extends State<NavbarWidget> {
       isMenuOpen: _isMenuOpen,
       menuButtonKey: _menuButtonKey,
       onHamburgerToggle: _toggleHamburgerMenu,
-      // DI SINI kita inject ProfileSection:
-      profileSection: ProfileSection(
+      // Jika hideProfile true, kirim SizedBox.shrink() (widget kosong),
+      // bukan null, karena NavBar mengharapkan Widget non-null
+      profileSection: widget.hideProfile
+          ? const SizedBox.shrink()
+          : ProfileSection(
         profileButtonKey: _profileButtonKey,
         isProfileMenuOpen: _isProfileMenuOpen,
         onToggleProfileMenu: _toggleProfileMenu,
       ),
     );
   }
+
 
   void _handleProfileMenuTap(String menu) async {
     final dummyUserRepository = DummyUserRepository();
