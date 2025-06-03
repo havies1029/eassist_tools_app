@@ -6,6 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
 import '../login/login_gmail/Popup.dart';
 import '../register/register_client/popup_client.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 final GoogleSignIn _googleSignIn = GoogleSignIn(
   scopes: [
@@ -75,8 +76,14 @@ class _FloatingButtonsState extends State<FloatingButtons>
 
   @override
   Widget build(BuildContext context) {
+    final bool isMobile = widget.constraints.maxWidth < 768;
+    final Size screenSize = MediaQuery.of(context).size;
+    final Offset translateOffset = isMobile
+        ? const Offset(0, -35)
+        : const Offset(0, -80);
+    final bool isExact1900x1200 = screenSize.width >= 1500.0;
     return Transform.translate(
-      offset: const Offset(0, -80),
+      offset: translateOffset,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: sidePadding),
         child: Center(
@@ -85,7 +92,7 @@ class _FloatingButtonsState extends State<FloatingButtons>
             margin: const EdgeInsets.symmetric(vertical: 20.0),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(24.0),
+              borderRadius: BorderRadius.circular(16.13),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.08),
@@ -108,7 +115,9 @@ class _FloatingButtonsState extends State<FloatingButtons>
                 builder: (context, constraints) {
                   final isMobileLocal = constraints.maxWidth < 768;
                   return Wrap(
-                    spacing: isMobileLocal ? 10 : 16,
+                    spacing: isExact1900x1200
+                        ? -10
+                        : (isMobileLocal ? 10 : 16),
                     runSpacing: isMobileLocal ? 10 : 0,
                     alignment: isMobileLocal
                         ? WrapAlignment.center
@@ -139,11 +148,15 @@ class _FloatingButtonsState extends State<FloatingButtons>
   Widget _buildAnimatedButton({
     required bool isLogin,
     required Duration delay,
-    required bool isMobile, // tambahkan argumen ini jika ingin passing ke EnhancedHoverButton
+    required bool isMobile,
   }) {
     return AnimatedBuilder(
       animation: _buttonsController,
       builder: (context, child) {
+        // Ambil ukuran layar saat ini
+        final Size screenSize = MediaQuery.of(context).size;
+        final bool isExact1900x1200 = (screenSize.width >= 1500.0);
+
         return TweenAnimationBuilder<double>(
           duration: const Duration(milliseconds: 600),
           tween: Tween(begin: 0.0, end: _buttonsStaggerAnimation.value),
@@ -153,19 +166,20 @@ class _FloatingButtonsState extends State<FloatingButtons>
               offset: Offset(30 * (1 - value), 0),
               child: Opacity(
                 opacity: value.clamp(0.0, 1.0),
-                child: EnhancedHoverButton(
-                  onPressed: () async {
-                    if (isLogin) {
-                      debugPrint("is Login true");
-                      await CustomPopupsLoginUser.showLoginDialog(context);
-                    } else {
-                      debugPrint("is login false – open register dialog");
-                      await CustomPopupsClient.showRegisterDialog(context);
-                    }
-                  },
-                  isLogin: isLogin,
-                  delay: delay,
-                  // isMobile: isMobile, // Uncomment jika EnhancedHoverButton mendukung argumen ini
+                child: Padding(
+                  // Jika layar tepat 1900×1200 → tambahkan padding kiri 20 px (misalnya)
+                  padding: EdgeInsets.only(left: isExact1900x1200 ? 30.0 : 0.0),
+                  child: EnhancedHoverButton(
+                    onPressed: () async {
+                      if (isLogin) {
+                        await CustomPopupsLoginUser.showLoginDialog(context);
+                      } else {
+                        await CustomPopupsClient.showRegisterDialog(context);
+                      }
+                    },
+                    isLogin: isLogin,
+                    delay: delay,
+                  ),
                 ),
               ),
             );
@@ -174,6 +188,7 @@ class _FloatingButtonsState extends State<FloatingButtons>
       },
     );
   }
+
 
   Future<void> _handleSignIn() async {
     debugPrint("handle sign in");
@@ -351,10 +366,10 @@ class _EnhancedHoverButtonState extends State<EnhancedHoverButton>
                   (1.0 - _pressController.value * 0.05),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
                 decoration: BoxDecoration(
                   color: _backgroundAnimation.value,
-                  borderRadius: BorderRadius.circular(24.0),
+                  borderRadius: BorderRadius.circular(16.13),
                   border: Border.all(
                     color: _borderAnimation.value ?? Colors.transparent,
                     width: 1.5,

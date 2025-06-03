@@ -48,25 +48,24 @@ class HeroSection extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.only(right: 40.0),
                     child: Transform.translate(
-                      offset: const Offset(0, -20), // ✅ Teks naik 20px
+                      offset: const Offset(0, -20),
                       child: _buildHeroText(TextAlign.left),
                     ),
                   ),
                 ),
-
                 // Area gambar dengan Stack agar bisa membesar bebas
                 Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       width: 300,
                       height: 250,
                     ),
                     Positioned(
-                      right: -40, // boleh diatur lebih jika mau keluar lebih jauh
+                      right: -40, // posisikan gambar agar keluar lebih jauh
                       bottom: 0,
                       child: SizedBox(
-                        width: 360, // 🔥 gambar lebih besar dari box normal
+                        width: 360, // gambar lebih besar dari box normal
                         child: _buildHeroImage(),
                       ),
                     ),
@@ -81,6 +80,9 @@ class HeroSection extends StatelessWidget {
   }
 
   Widget _buildHeroText(TextAlign align) {
+    // Tentukan ukuran font berdasarkan isMobile
+    final double headingSize = isMobile ? 24 : 40;
+
     return Column(
       crossAxisAlignment: align == TextAlign.left
           ? CrossAxisAlignment.start
@@ -89,9 +91,9 @@ class HeroSection extends StatelessWidget {
         Text(
           'Klien Kami, Prioritas Kami:',
           textAlign: align,
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: 'Satoshi-Regular',
-            fontSize: 40,
+            fontSize: headingSize,
             fontWeight: FontWeight.w700,
             color: Colors.white,
           ),
@@ -100,9 +102,9 @@ class HeroSection extends StatelessWidget {
         Text(
           'Memberikan Solusi Terbaik untuk Anda!',
           textAlign: align,
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: 'Satoshi-Regular',
-            fontSize: 40,
+            fontSize: headingSize,
             fontWeight: FontWeight.w200,
             color: Colors.white,
           ),

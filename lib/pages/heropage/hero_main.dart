@@ -12,6 +12,8 @@ import '../../widgets/section/navbar/navbar_widget.dart';
 import 'hero_section_heropage.dart';
 import '../../widgets/section/testimonial_section.dart';
 
+// **Tambah import ini agar bisa memanggil dialog login:**
+import 'package:eassist_tools_app/widgets/login/login_gmail/Popup.dart';
 
 class DummyUserRepository extends UserRepository {
   // Override semua method yang dibutuhkan dengan return dummy data atau kosong
@@ -50,19 +52,40 @@ class HeroMain extends StatelessWidget {
   }
 }
 
-class HeroPage extends StatelessWidget {
+// Ubah HeroPage jadi StatefulWidget
+class HeroPage extends StatefulWidget {
   const HeroPage({super.key});
+
+  @override
+  State<HeroPage> createState() => _HeroPageState();
+}
+
+class _HeroPageState extends State<HeroPage> {
+  @override
+  void initState() {
+    super.initState();
+
+    // Memastikan dialog dipanggil setelah frame pertama selesai dirender
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      CustomPopupsLoginUser.showLoginDialog(context);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: LayoutBuilder(
         builder: (context, constraints) {
+          final bool isMobile = constraints.maxWidth < 768;
           return Stack(
             children: [
-              // Layer 1: Background Image
+              // Layer 1: Background (Image untuk non-mobile, hijau untuk mobile)
               Positioned.fill(
-                child: Image.asset(
+                child: isMobile
+                    ? Container(
+                  color: const Color(0xFF79AB43), // hijau full-screen
+                )
+                    : Image.asset(
                   'assets/images/bg-home.jpg',
                   fit: BoxFit.cover,
                   alignment: const Alignment(0, 3),
@@ -71,17 +94,17 @@ class HeroPage extends StatelessWidget {
                 ),
               ),
 
-              // Layer 2: Scrollable content (tanpa navbar)
+              // Layer 2: Konten scrollable
               Positioned.fill(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.only(top: 88), // space for navbar
+                  padding: const EdgeInsets.only(top: 88), // ruang untuk navbar
                   child: Column(
                     children: [
                       HeroSection(constraints: constraints),
                       FloatingButtons(constraints: constraints),
                       ActionSection(constraints: constraints),
-                      FeatureSection(constraints: constraints),
                       CarouselSection(constraints: constraints),
+                      FeatureSection(constraints: constraints),
                       TestimonialSection(constraints: constraints),
                       ClientSection(constraints: constraints),
                       FooterSection(constraints: constraints),
@@ -90,7 +113,7 @@ class HeroPage extends StatelessWidget {
                 ),
               ),
 
-              // Layer 3: Always-on-top Navbar with overlay support
+              // Layer 3: Navbar overlay di atas semua
               const _FixedNavbarOverlay(),
             ],
           );
@@ -110,12 +133,13 @@ class _FixedNavbarOverlay extends StatelessWidget {
       left: 0,
       right: 0,
       child: Stack(
-        clipBehavior: Clip.none, // ini penting agar pop-up bisa muncul di luar batas
+        clipBehavior: Clip.none, // agar pop-up bisa muncul di luar batas
         children: [
           Material(
             color: Colors.transparent,
             elevation: 20,
             child: NavbarWidget(
+              hideProfile: true,
               constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width,
               ),

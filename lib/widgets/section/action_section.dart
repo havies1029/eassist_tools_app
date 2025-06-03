@@ -129,13 +129,13 @@ class _ActionSectionState extends State<ActionSection>
           ),
           padding: EdgeInsets.only(
             top: isMobile ? 20.0 : 40.0,
-            bottom: isMobile ? 20.0 : 40.0,
+            bottom: isMobile ? 0 : 40.0,
           ),
           child: Center(
             child: Container(
               width: maxWidth,
               padding: EdgeInsets.symmetric(
-                vertical: isMobile ? 40.0 : 36.0,
+                vertical: isMobile ? 0 : 36.0,
               ),
               child: isMobile
                   ? Padding(
@@ -276,50 +276,95 @@ class _ActionSectionState extends State<ActionSection>
   }
 
   Widget _buildActionTitle() {
+    // Jika mobile, kita center-kan belah pihak agar padding kiri+kanan seimbang.
+    if (isMobile) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.center, // keseluruhan kolom rata tengah
+        children: [
+          // Baris pertama (judul + logo), dibungkus Center agar berada di tengah
+          Center(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'Asuransi melalui ',
+                  style: TextStyle(
+                    fontFamily: 'Satoshi-Regular',
+                    fontSize: 28.0,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                    height: 1.2,
+                  ),
+                ),
+                Image.asset(
+                  'assets/images/jps_logo1.png',
+                  height: 45.0,
+                  fit: BoxFit.contain,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8.0),
+          // Baris kedua, teks rata tengah
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 0), // sudah center, jadi tak perlu horizontal padding tambahan
+            child: Text(
+              'Klaim mudah, perlindungan aman',
+              style: TextStyle(
+                fontFamily: 'Satoshi-Regular',
+                fontSize: 20.0,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+                height: 1.3,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      );
+    }
+
+    // Jika bukan mobile, kembalikan seperti semula (left-aligned)
     return Column(
-      crossAxisAlignment: isMobile ? CrossAxisAlignment.start : CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Main title with logo
         Row(
-          mainAxisAlignment: isMobile ? MainAxisAlignment.start : MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
               'Asuransi melalui ',
               style: TextStyle(
                 fontFamily: 'Satoshi-Regular',
-                fontSize: isMobile ? 28.0 : 36.0,
+                fontSize: 36.0,
                 fontWeight: FontWeight.w600,
                 color: Colors.black87,
                 height: 1.2,
               ),
             ),
-            Flexible(
-              flex: 0, // biar hanya sebesar gambar
-              child: Image.asset(
-                'assets/images/jps_logo1.png',
-                height: isMobile ? 45.0 : 50.0,
-                fit: BoxFit.contain,
-              ),
-            )
+            Image.asset(
+              'assets/images/jps_logo1.png',
+              height: 50.0,
+              fit: BoxFit.contain,
+            ),
           ],
         ),
         const SizedBox(height: 8.0),
-        // Subtitle
         Text(
           'Klaim mudah, perlindungan aman',
           style: TextStyle(
             fontFamily: 'Satoshi-Regular',
-            fontSize: isMobile ? 20.0 : 22.0,
+            fontSize: 22.0,
             fontWeight: FontWeight.w600,
             color: Colors.black87,
             height: 1.3,
           ),
-          textAlign: isMobile ? TextAlign.left : TextAlign.left,
+          textAlign: TextAlign.left,
         ),
       ],
     );
   }
+
 
   Widget _buildBenefitPoints() {
     final benefits = [
@@ -330,97 +375,117 @@ class _ActionSectionState extends State<ActionSection>
     ];
 
     if (isMobile) {
-      // Mobile layout: 2x2 grid (tetap sama)
       return Column(
         children: [
-          // First row
+          // Baris pertama, dengan padding vertikal di tiap fitur
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Expanded(
-                child: AnimatedBenefitPoint(
-                  icon: benefits[0]['icon'] as IconData,
-                  text: benefits[0]['text'] as String,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: AnimatedBenefitPoint(
+                    icon: benefits[0]['icon'] as IconData,
+                    text: benefits[0]['text'] as String,
+                    isMobile: true,
+                  ),
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: AnimatedBenefitPoint(
-                  icon: benefits[1]['icon'] as IconData,
-                  text: benefits[1]['text'] as String,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: AnimatedBenefitPoint(
+                    icon: benefits[1]['icon'] as IconData,
+                    text: benefits[1]['text'] as String,
+                    isMobile: true,
+                  ),
                 ),
               ),
             ],
           ),
+          // Jarak antar baris (bisa disesuaikan jika perlu)
           const SizedBox(height: 20),
-          // Second row
+          // Baris kedua, dengan padding vertikal di tiap fitur
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Expanded(
-                child: AnimatedBenefitPoint(
-                  icon: benefits[2]['icon'] as IconData,
-                  text: benefits[2]['text'] as String,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: AnimatedBenefitPoint(
+                    icon: benefits[2]['icon'] as IconData,
+                    text: benefits[2]['text'] as String,
+                    isMobile: true,
+                  ),
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: AnimatedBenefitPoint(
-                  icon: benefits[3]['icon'] as IconData,
-                  text: benefits[3]['text'] as String,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: AnimatedBenefitPoint(
+                    icon: benefits[3]['icon'] as IconData,
+                    text: benefits[3]['text'] as String,
+                    isMobile: true,
+                  ),
                 ),
               ),
             ],
           ),
         ],
       );
-    } else {
-      // Desktop layout: 2x2 grid, horizontal icon + text per item
-      return Column(
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 16.0, right: 12.0),
-                  child: AnimatedBenefitPointHorizontal(
-                    icon: benefits[0]['icon'] as IconData,
-                    text: benefits[0]['text'] as String,
+    }  else {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16.0), // Tambahkan padding atas-bawah
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 16.0, right: 12.0),
+                    child: AnimatedBenefitPointHorizontal(
+                      icon: benefits[0]['icon'] as IconData,
+                      text: benefits[0]['text'] as String,
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 16.0, left: 12.0),
-                  child: AnimatedBenefitPointHorizontal(
-                    icon: benefits[1]['icon'] as IconData,
-                    text: benefits[1]['text'] as String,
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 16.0, left: 12.0),
+                    child: AnimatedBenefitPointHorizontal(
+                      icon: benefits[1]['icon'] as IconData,
+                      text: benefits[1]['text'] as String,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 0.0, right: 12.0),
-                  child: AnimatedBenefitPointHorizontal(
-                    icon: benefits[2]['icon'] as IconData,
-                    text: benefits[2]['text'] as String,
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 0.0, right: 12.0),
+                    child: AnimatedBenefitPointHorizontal(
+                      icon: benefits[2]['icon'] as IconData,
+                      text: benefits[2]['text'] as String,
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 0.0, left: 12.0),
-                  child: AnimatedBenefitPointHorizontal(
-                    icon: benefits[3]['icon'] as IconData,
-                    text: benefits[3]['text'] as String,
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 0.0, left: 12.0),
+                    child: AnimatedBenefitPointHorizontal(
+                      icon: benefits[3]['icon'] as IconData,
+                      text: benefits[3]['text'] as String,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       );
     }
   }
@@ -575,12 +640,19 @@ class _AnimatedBenefitPointHorizontalState extends State<AnimatedBenefitPointHor
                 Container(
                   padding: const EdgeInsets.all(12.0),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF5F9F0),
+                    color: Colors.white, // background putih
                     borderRadius: BorderRadius.circular(16.13),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2), // shadow lembut
+                        blurRadius: 8.0,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                   ),
                   child: Icon(
                     widget.icon,
-                    color: const Color(0xFF79AB43),
+                    color: const Color(0xFF79AB43), // warna ikon sesuai kebutuhan
                     size: 24.0,
                   ),
                 ),
@@ -607,12 +679,14 @@ class AnimatedBenefitPoint extends StatefulWidget {
   final IconData icon;
   final String text;
   final Duration delay;
+  final bool isMobile;
 
   const AnimatedBenefitPoint({
     super.key,
     required this.icon,
     required this.text,
     this.delay = Duration.zero,
+    this.isMobile = false,
   });
 
   @override
@@ -663,6 +737,12 @@ class _AnimatedBenefitPointState extends State<AnimatedBenefitPoint>
 
   @override
   Widget build(BuildContext context) {
+    // Tentukan sizeIcon lebih besar jika isMobile true
+    final double sizeIcon = widget.isMobile ? 32.0 : 24.0;
+    final EdgeInsets containerPadding = widget.isMobile
+        ? const EdgeInsets.all(16.0)
+        : const EdgeInsets.all(12.0);
+
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
@@ -671,24 +751,32 @@ class _AnimatedBenefitPointState extends State<AnimatedBenefitPoint>
           child: FadeTransition(
             opacity: _fadeAnimation,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
                   padding: const EdgeInsets.all(12.0),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF5F9F0),
+                    color: Colors.white, // background putih
                     borderRadius: BorderRadius.circular(16.13),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2), // shadow lembut
+                        blurRadius: 8.0,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                   ),
                   child: Icon(
                     widget.icon,
-                    color: const Color(0xFF79AB43),
-                    size: 24.0,
+                    color: const Color(0xFF79AB43), // warna ikon sesuai kebutuhan
+                    size: sizeIcon,
                   ),
                 ),
-                const SizedBox(height: 8.0),
+                const SizedBox(height: 14.0),
                 Text(
                   widget.text,
+                  textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontSize: 14.0,
                     fontFamily: 'Satoshi-Regular',
