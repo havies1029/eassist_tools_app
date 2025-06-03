@@ -6,56 +6,59 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ActionSection extends StatefulWidget {
   final BoxConstraints constraints;
+  final int? maxItems; // Maksimum global (opsional)
+  final int? maxItemsPerPage; // Maksimum per halaman/tampilan (opsional)
 
-  const ActionSection({super.key, required this.constraints});
+  const ActionSection({
+    super.key,
+    required this.constraints,
+    this.maxItems,
+    this.maxItemsPerPage,
+  });
 
   @override
   State<ActionSection> createState() => ActionSectionState();
 }
 
-class ActionSectionState extends State<ActionSection> {
+class ActionSectionState extends State<ActionSection> with SingleTickerProviderStateMixin {
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
+
+  int currentItemCount = 0;
 
   @override
   void initState() {
     super.initState();
-
     context.read<GallerytestimonyCariBloc>().add(RefreshGallerytestimonyCariEvent());
+
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(parent: _fadeController, curve: Curves.easeIn);
+
+    currentItemCount = 8;
+  }
+
+  @override
+  void dispose() {
+    _fadeController.dispose();
+    super.dispose();
+  }
+
+  void _loadMore(int max) {
+    setState(() {
+      final defaultPerPage = widget.constraints.maxWidth < 768 ? 4 : 6;
+      final step = widget.maxItemsPerPage ?? defaultPerPage;
+      currentItemCount = (currentItemCount + step).clamp(0, max);
+      _fadeController.forward(from: 0); // ulangi animasi
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final bool isMobile = widget.constraints.maxWidth < 768;
     final double maxWidth = widget.constraints.maxWidth > 1200 ? 1200 : widget.constraints.maxWidth * 0.9;
-
-    /*
-    final List<Map<String, String>> testimonials = [
-      {
-        'name': 'Putri Ariana',
-        'image': 'assets/images/t1.png',
-        'quote': '"Proses klaim cepat dan tanpa ribet. Terima kasih JPS!"',
-      },
-      {
-        'name': 'Brian Domani',
-        'image': 'assets/images/t2.png',
-        'quote': '"Sudah coba beberapa asuransi, tapi JPS paling responsif dan transparan."',
-      },
-      {
-        'name': 'Monita Vonita',
-        'image': 'assets/images/t3.png',
-        'quote': '"JPS benar-benar peduli. Klaim saya diproses dengan cepat tanpa drama."',
-      },
-      {
-        'name': 'Rian Pramaja',
-        'image': 'assets/images/t4.png',
-        'quote': '"Baru pertama kali klaim, prosesnya mudah dan agen sangat membantu banget!"',
-      },
-      {
-        'name': 'Novia Wijaya',
-        'image': 'assets/images/t5.png',
-        'quote': '"Pelayanan ramah dan sangat membantu saat pengajuan klaim. JPS terbaik!"',
-      },
-    ];
-    */
 
     return ClipRRect(
       borderRadius: const BorderRadius.only(
@@ -112,13 +115,59 @@ class ActionSectionState extends State<ActionSection> {
                       } else if (state.items.isEmpty) {
                         return const Center(child: Text('No images available'));
                       }
-                      return Wrap(
-                        alignment: WrapAlignment.center,
-                        spacing: 32.0,
-                        runSpacing: 40.0,
-                        children: state.items.map((e) => e.toMap())
-                            .map((t) => _buildTestimonialItem(t, widget.constraints))
-                            .toList(),
+
+                      final allItems = state.items.map((e) => e.toMap()).toList();
+                      final maxDisplay = widget.maxItems != null
+                          ? allItems.take(widget.maxItems!).toList()
+                          : allItems;
+
+                      if (currentItemCount == 0) {
+                        final defaultPerPage = widget.constraints.maxWidth < 768 ? 4 : 6;
+                        currentItemCount = widget.maxItemsPerPage ?? defaultPerPage;
+                      }
+
+                      final displayedItems = maxDisplay.take(currentItemCount).toList();
+                      final hasMore = currentItemCount < maxDisplay.length;
+
+                      _fadeController.forward(from: 0);
+
+                      return Column(
+                        children: [
+                          AnimatedBuilder(
+                            animation: _fadeAnimation,
+                            builder: (context, child) {
+                              return Opacity(
+                                opacity: _fadeAnimation.value,
+                                child: Wrap(
+                                  alignment: WrapAlignment.center,
+                                  spacing: isMobile ? 16.0 : 32.0,
+                                  runSpacing: 40.0,
+                                  children: displayedItems
+                                      .map((t) => _buildTestimonialItem(t, widget.constraints))
+                                      .toList(),
+                                ),
+                              );
+                            },
+                          ),
+                          if (hasMore) ...[
+                            const SizedBox(height: 32),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF79AB43),
+                                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                              ),
+                              onPressed: () => _loadMore(maxDisplay.length),
+                              child: const Text(
+                                'Lihat Lebih Banyak',
+                                style: TextStyle(
+                                  fontFamily: 'Satoshi-Regular',
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ]
+                        ],
                       );
                     },
                   ),
@@ -129,11 +178,12 @@ class ActionSectionState extends State<ActionSection> {
         ),
       ),
     );
-
   }
 
   Widget _buildTestimonialItem(Map<String, String> testimonial, BoxConstraints constraints) {
-    final double itemWidth = constraints.maxWidth > 1200
+    final double itemWidth = constraints.maxWidth < 768
+        ? (constraints.maxWidth / 2) - 48
+        : constraints.maxWidth > 1200
         ? 200
         : constraints.maxWidth > 1024
         ? 170
@@ -168,10 +218,11 @@ class ActionSectionState extends State<ActionSection> {
                 bottom: 6,
                 child: ClipOval(
                   child: Image.network(
-                    testimonial['image']!,
+                    testimonial['image'] ?? '',
                     width: 150,
                     height: 150,
                     fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
                   ),
                 ),
               ),
@@ -179,7 +230,7 @@ class ActionSectionState extends State<ActionSection> {
           ),
           const SizedBox(height: 16.0),
           Text(
-            testimonial['name']!,
+            testimonial['name'] ?? '',
             style: const TextStyle(
               fontFamily: 'Satoshi-Regular',
               fontSize: 18.0,
@@ -190,7 +241,9 @@ class ActionSectionState extends State<ActionSection> {
           ),
           const SizedBox(height: 8.0),
           Text(
-            testimonial['quote']!,
+            testimonial['quote'] ?? '',
+            maxLines: 4,
+            overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
             style: const TextStyle(
               fontFamily: 'Satoshi-Regular',
@@ -199,8 +252,24 @@ class ActionSectionState extends State<ActionSection> {
               height: 1.4,
             ),
           ),
+          const SizedBox(height: 12.0),
+          // Star Rating Widget
+          _buildStarRating(),
         ],
       ),
+    );
+  }
+
+  Widget _buildStarRating({int rating = 5}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(5, (index) {
+        return Icon(
+          index < rating ? Icons.star : Icons.star_border,
+          color: const Color(0xFFFFD700), // Gold color
+          size: 20.0,
+        );
+      }),
     );
   }
 }
@@ -249,7 +318,6 @@ class CircularBorderPainter extends CustomPainter {
       accentPaint,
     );
   }
-
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => false;

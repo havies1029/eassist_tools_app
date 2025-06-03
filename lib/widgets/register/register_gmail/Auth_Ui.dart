@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart'; // Add this import for SVG support
 import '../../login/login_gmail/Popup.dart';
+import '../../reset_password/reset_password_page.dart';
 import 'Base_Dialog.dart';
 import 'Popup.dart';
 import 'Auth_Api.dart'; // Import service untuk API calls
@@ -15,16 +16,18 @@ class GeneralRegisterDialog extends BaseDialog {
 
 class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog> {
   final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  String? _passwordError;
+
   bool _isHovering = false;
-  bool _isGmailHovering = false;
-  bool _isEmailHovering = false;
   bool _isHoveringLogin = false;
-  bool _isHoveringForgotPassword = false;
+  bool _isHoveringGmail = false;
   bool _rememberRegister = false;
 
   @override
   void dispose() {
     _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
@@ -90,8 +93,30 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
     return Column(
       children: [
         buildLogo(),
-        const SizedBox(height: 30),
+        const SizedBox(height: 15),
 
+        const Text(
+          'Masukkan Email dan Password', // sesuaikan teks header-nya
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+            color: Colors.black87, // warna lebih gelap
+          ),
+        ),
+
+        const SizedBox(height: 5),
+
+        const Text(
+          'Yuk, login dulu biar bisa akses semuanya!', // sesuaikan teks subheader-nya
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.black54, // warna sedikit lebih terang
+          ),
+        ),
+
+        const SizedBox(height: 35),
+
+        // Input Email
         buildTextField(
           controller: _emailController,
           hintText: 'Email',
@@ -99,11 +124,31 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
         ),
         const SizedBox(height: 20),
 
+        // Input Password - Gunakan buildTextField dengan obscureText
+        buildTextField(
+          controller: _passwordController,
+          hintText: 'Password',
+          obscureText: true,
+        ),
+        // Tampilkan pesan error jika password kosong
+        if (_passwordError != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 5, left: 4),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                _passwordError!,
+                style: const TextStyle(color: Colors.red, fontSize: 12),
+              ),
+            ),
+          ),
+        const SizedBox(height: 20),
+
         buildAnimatedButton(
           text: 'Masuk',
           isHovering: _isHovering,
           onHover: (hovering) => setState(() => _isHovering = hovering),
-          onPressed: () => _handleRegister(),
+          onPressed: () => _validateAndRegister(),
         ),
         const SizedBox(height: 20),
 
@@ -113,8 +158,8 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
         _buildIconButton(
           text: 'Masuk Menggunakan Gmail',
           iconPath: 'assets/icons/google-icon.svg',
-          isHovering: _isGmailHovering,
-          onHover: (hovering) => setState(() => _isGmailHovering = hovering),
+          isHovering: _isHoveringGmail,
+          onHover: (hovering) => setState(() => _isHoveringGmail = hovering),
           onPressed: () => _handleGmailRegister(),
         ),
         const SizedBox(height: 20),
@@ -127,6 +172,22 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
     );
   }
 
+  // Validasi sederhana sebelum memanggil API register
+  void _validateAndRegister() {
+    setState(() {
+      _passwordError = null;
+    });
+
+    if (_passwordController.text.isEmpty) {
+      setState(() {
+        _passwordError = 'Password tidak boleh kosong';
+      });
+      return;
+    }
+
+    // Jika lolos validasi, panggil fungsi register asli
+    _handleRegister();
+  }
 
   // Widget untuk checkbox simpan Register dan lupa kata sandi
   Widget _buildRegisterOptions() {
@@ -170,16 +231,21 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
 
         // Lupa Kata Sandi
         MouseRegion(
-          onEnter: (_) => setState(() => _isHoveringForgotPassword = true),
-          onExit: (_) => setState(() => _isHoveringForgotPassword = false),
+          onEnter: (_) => setState(() => _isHoveringLogin = true),
+          onExit: (_) => setState(() => _isHoveringLogin = false),
           child: GestureDetector(
-            onTap: () => _handleForgotPassword(),
+            onTap: () {
+              Navigator.of(context).pop(); // Tutup dialog register dulu
+              showDialog(
+                context: context,
+                barrierColor: Colors.black54,
+                builder: (_) => ResetPasswordPage(),
+              );
+            },
             child: Text(
               'Lupa Kata Sandi?',
               style: TextStyle(
-                color: _isHoveringForgotPassword
-                    ? const Color(0xFF7BA05B)
-                    : Colors.blue.shade600,
+                color: _isHoveringLogin ? const Color(0xFF7BA05B) : Colors.blue.shade600,
                 fontSize: 14,
               ),
             ),
@@ -292,9 +358,7 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
               child: Text(
                 'Login',
                 style: TextStyle(
-                  color: _isHoveringLogin
-                      ? const Color(0xFF7BA05B)
-                      : Colors.blue.shade600,
+                  color: _isHoveringLogin ? const Color(0xFF7BA05B) : Colors.blue.shade600,
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                 ),
@@ -306,11 +370,13 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
     );
   }
 
-
   // Fungsi yang akan disambungkan ke API
   void _handleRegister() {
     Navigator.of(context).pop();
-    AuthService.Register(_emailController.text, rememberRegister: _rememberRegister).then((success) {
+    AuthService.Register(
+      _emailController.text,
+      rememberRegister: _rememberRegister,
+    ).then((success) {
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -334,33 +400,6 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
         );
       }
     });
-  }
-
-  void _handleEmailRegister() {
-    Navigator.of(context).pop();
-    AuthService.RegisterWithEmail().then((success) {
-      if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Register dengan Email berhasil!'),
-            backgroundColor: CustomPopupsRegisterUser.primaryGreen,
-          ),
-        );
-      }
-    });
-  }
-
-  void _handleForgotPassword() {
-    // Implementasi untuk lupa kata sandi
-    Navigator.of(context).pop();
-    // Bisa menampilkan dialog baru untuk reset password
-    // atau navigate ke halaman forgot password
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Fitur lupa kata sandi akan ditambahkan'),
-        backgroundColor: Colors.orange,
-      ),
-    );
   }
 }
 

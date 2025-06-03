@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../widgets/login/login_client/popup_client.dart';
 
 class HeroSection extends StatelessWidget {
   final BoxConstraints constraints;

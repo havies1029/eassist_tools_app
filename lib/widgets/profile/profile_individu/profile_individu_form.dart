@@ -1,41 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../profile_individu/form_sections/section_identitas_rekening.dart';
+import '../profile_individu/form_sections/section_informasi_klien.dart';
+import '../profile_individu/form_sections/section_kontak_klien.dart';
 
 class ProfileIndividuFormSection extends StatelessWidget {
   final Map<String, bool> editSection;
   final Map<String, TextEditingController> controllers;
   final void Function(String sectionKey) toggleEdit;
 
-  ProfileIndividuFormSection({
+  const ProfileIndividuFormSection({
     Key? key,
     required this.editSection,
     required this.controllers,
     required this.toggleEdit,
   }) : super(key: key);
-
-
-  static const Map<String, List<Map<String, dynamic>>> sectionFields = {
-    'Informasi Klien': [
-      {'label': 'Nama Lengkap', 'key': 'nama'},
-      {'label': 'Tipe', 'key': 'tipe'},
-      {'label': 'No. Klien', 'key': 'klien'},
-      {'label': 'Gender', 'key': 'gender'},
-    ],
-    'Kontak Klien': [
-      {'label': 'Email', 'key': 'email'},
-      {'label': 'No. HP', 'key': 'phone'},
-      {'label': 'Alamat', 'key': 'alamat', 'maxLines': 2},
-      {'label': 'Provinsi', 'key': 'provinsi'},
-      {'label': 'Kota', 'key': 'kota'},
-      {'label': 'Kode Pos', 'key': 'kodePos'},
-    ],
-    'Identitas dan Rekening': [
-      {'label': 'KTP', 'key': 'ktp', 'isSpecial': true},
-      {'label': 'Rekening Bank', 'key': 'rekeningBank', 'isSpecial': true},
-      {'label': 'No. Rekening', 'key': 'noRekening'},
-      {'label': 'NPWP', 'key': 'npwp'},
-      {'label': 'Pekerjaan', 'key': 'pekerjaan'},
-    ],
-  };
 
   @override
   Widget build(BuildContext context) {
@@ -43,184 +23,52 @@ class ProfileIndividuFormSection extends StatelessWidget {
     final bool isMobile = maxWidth < 768;
     final bool isTablet = maxWidth >= 768 && maxWidth < 1024;
 
-    if (isMobile) return _buildMobile();
-    if (isTablet) return _buildTablet();
-    return _buildDesktop();
+    if (isMobile) return _buildMobile(context);
+    if (isTablet) return _buildTablet(context);
+    return _buildDesktop(context);
   }
 
-  Widget _buildMobile() {
-    return Column(
-      children: [
-        ..._buildSections(['Informasi Klien', 'Kontak Klien', 'Identitas dan Rekening']),
-      ],
-    );
-  }
-
-  Widget _buildTablet() {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(child: _buildSections(['Informasi Klien']).first),
-            const SizedBox(width: 16),
-            Expanded(child: _buildSections(['Kontak Klien']).first),
-          ],
-        ),
-        const SizedBox(height: 16),
-        Row(
-          children: [
-            Expanded(child: _buildSections(['Identitas dan Rekening']).first),
-            const Expanded(child: SizedBox()),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDesktop() {
-    return Column(
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: _buildSections(['Informasi Klien']).first,
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: _buildSections(['Kontak Klien']).first,
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: _buildSections(['Identitas dan Rekening']).first,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  List<Widget> _buildSections(List<String> keys) {
-    return keys.map((sectionKey) {
-      final fields = sectionFields[sectionKey]!
-          .map((field) => _buildField(
-        field['label'],
-        field['key'],
-        sectionKey,
-        maxLines: field['maxLines'] ?? 1,
-        isSpecial: field['isSpecial'] ?? false,
-      ))
-          .toList();
-
-      return Column(
-        children: [
-          _buildSectionWithTitle('$sectionKey :', sectionKey, fields),
-          const SizedBox(height: 16),
-        ],
-      );
-    }).toList();
-  }
-
-  Widget _buildSectionWithTitle(String title, String sectionKey, List<Widget> children) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                title,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-              ),
-            ),
-            const SizedBox(width: 8),
-            InkWell(
-              onTap: () => toggleEdit(sectionKey),
-              child: Icon(
-                editSection[sectionKey]! ? Icons.check : Icons.edit,
-                size: 20,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(20),
-          margin: const EdgeInsets.only(bottom: 8),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.shade200,
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              )
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: children,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildField(String label, String key, String sectionKey,
-      {int maxLines = 1, bool isSpecial = false}) {
-    final bool isEditing = editSection[sectionKey]!;
-
-    if (isSpecial) {
-      return _buildSpecialField(label, key, sectionKey);
-    }
-
-    final controller = controllers[key];
-    if (controller == null) return const SizedBox.shrink();
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
+  Widget _buildMobile(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 14,
-              color: Colors.grey,
-              fontWeight: FontWeight.w500,
+          // --- Kontak Perusahaan ---
+          Card(
+            elevation: 2,
+            shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SectionKontakKlien(isEditing: true, controllers: {}, toggleEdit: () {  },
+              ),
             ),
           ),
-          const SizedBox(height: 6),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey.shade300),
-              borderRadius: BorderRadius.circular(6),
-              color: Colors.white,
+          const SizedBox(height: 16),
+
+          // --- General Information ---
+          Card(
+            elevation: 2,
+            shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SectionInformasiKlien(isEditing: true, controllers: {}, toggleEdit: () {  },
+              ),
             ),
-            child: isEditing
-                ? TextField(
-              controller: controller,
-              maxLines: maxLines,
-              decoration: const InputDecoration.collapsed(hintText: ''),
-              style: const TextStyle(fontSize: 16),
-            )
-                : Text(
-              controller.text,
-              style: const TextStyle(fontSize: 16),
+          ),
+          const SizedBox(height: 16),
+
+          // --- Informasi Pajak ---
+          Card(
+            elevation: 2,
+            shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SectionIdentitasRekening(isEditing: true, controllers: {}, toggleEdit: () {  },
+              ),
             ),
           ),
         ],
@@ -228,157 +76,106 @@ class ProfileIndividuFormSection extends StatelessWidget {
     );
   }
 
-  Widget _buildSpecialField(String label, String key, String sectionKey) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
+  Widget _buildTablet(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 14,
-              color: Colors.grey,
-              fontWeight: FontWeight.w500,
+          // Pada tablet: dua kolom (Kontak + General), lalu Informasi Pajak di bawah
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SectionKontakKlien(isEditing: true, controllers: {}, toggleEdit: () {  },
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SectionInformasiKlien(isEditing: true, controllers: {}, toggleEdit: () {  },
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Card(
+            elevation: 2,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12)),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SectionIdentitasRekening(isEditing: true, controllers: {}, toggleEdit: () {  },
+              ),
             ),
           ),
-          const SizedBox(height: 6),
-          if (key == 'ktp') ...[
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(6),
-                color: Colors.grey.shade50,
-              ),
-              child: const Text(
-                'KTP',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDesktop(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Kontak Perusahaan
+          Expanded(
+            child: Card(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SectionKontakKlien(isEditing: true, controllers: {}, toggleEdit: () {  },),
               ),
             ),
-            const SizedBox(height: 8),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade100,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.grey.shade300),
-              ),
-              child: const Text(
-                'Upload KTP',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
+          ),
+          const SizedBox(width: 16),
+
+          // General Information
+          Expanded(
+            child: Card(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SectionInformasiKlien(isEditing: true, controllers: {}, toggleEdit: () {  },
                 ),
               ),
             ),
-          ] else if (key == 'rekeningBank') ...[
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(6),
-                color: Colors.white,
-              ),
-              child: Row(
-                children: [
-                  // Plus icon
-                  Container(
-                    width: 24,
-                    height: 24,
-                    decoration: BoxDecoration(
-                      color: Colors.green.shade100,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: const Icon(
-                      Icons.add,
-                      size: 16,
-                      color: Colors.green,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  // Payment method icons
-                  Container(
-                    width: 32,
-                    height: 20,
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'M',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  Container(
-                    width: 32,
-                    height: 20,
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'G',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  Container(
-                    width: 32,
-                    height: 20,
-                    decoration: BoxDecoration(
-                      color: Colors.orange,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'AM',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  Container(
-                    width: 32,
-                    height: 20,
-                    decoration: BoxDecoration(
-                      color: Colors.blue.shade800,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'V',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+          ),
+          const SizedBox(width: 16),
+
+          // Informasi Pajak
+          Expanded(
+            child: Card(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SectionIdentitasRekening(isEditing: true, controllers: {}, toggleEdit: () {  },
+                ),
               ),
             ),
-          ],
+          ),
         ],
       ),
     );

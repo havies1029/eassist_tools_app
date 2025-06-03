@@ -2,7 +2,7 @@ import 'package:eassist_tools_app/blocs/gallery/gallerymembercari_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ClientSection extends StatefulWidget {  
+class ClientSection extends StatefulWidget {
   final BoxConstraints constraints;
 
   const ClientSection({super.key, required this.constraints});
@@ -16,7 +16,7 @@ class ClientSectionState extends State<ClientSection> {
 
   @override
   void initState() {
-    super.initState();   
+    super.initState();
 
     context.read<GallerymemberCariBloc>().add(RefreshGallerymemberCariEvent());
   }
@@ -36,15 +36,15 @@ class ClientSectionState extends State<ClientSection> {
     */
 
     // Tetapkan 5 kolom dan atur aspect ratio agar baris sesuai
-    final int crossAxisCount = 5;
-    final double childAspectRatio = 1.6;
+    final int crossAxisCount = isMobile ? 3 : 5;
+    final double childAspectRatio = isMobile ? 1.1 : 1.6;
 
     return Container(
       width: double.infinity,
       color: Colors.white,
       padding: EdgeInsets.symmetric(
-        vertical: isMobile ? 40.0 : 60.0,
-        horizontal: 20.0,
+        vertical: isMobile ? 40.0 : 40.0,
+        horizontal: 40.0,
       ),
       child: Center(
         child: Container(
@@ -58,7 +58,7 @@ class ClientSectionState extends State<ClientSection> {
                 text: TextSpan(
                   style: TextStyle(
                     fontFamily: 'Satoshi-Regular',
-                    fontSize: isMobile ? 22.0 : 28.0,
+                    fontSize: isMobile ? 15.0 : 28.0,
                     color: Colors.black,
                     height: 1.2,
                   ),
@@ -80,26 +80,26 @@ class ClientSectionState extends State<ClientSection> {
               // Grid Klien
               BlocBuilder<GallerymemberCariBloc, GallerymemberCariState>(
                   builder: (context, state) {
-                  return GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    //itemCount: clientLogos.length,
-                    itemCount: state.items.length, 
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: crossAxisCount,
-                      crossAxisSpacing: isMobile ? 8.0 : 12.0,
-                      mainAxisSpacing: isMobile ? 8.0 : 12.0,
-                      childAspectRatio: childAspectRatio,
-                    ),
-                    itemBuilder: (context, index) {
-                      return ClientLogoCard(
-                        //imagePath: clientLogos[index],
-                        imagePath: state.items[index].image1Url,
-                        isMobile: isMobile,
-                      );
-                    },
-                  );
-                }
+                    return GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      //itemCount: clientLogos.length,
+                      itemCount: state.items.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: crossAxisCount,
+                        crossAxisSpacing: isMobile ? 8.0 : 12.0,
+                        mainAxisSpacing: isMobile ? 8.0 : 12.0,
+                        childAspectRatio: childAspectRatio,
+                      ),
+                      itemBuilder: (context, index) {
+                        return ClientLogoCard(
+                          //imagePath: clientLogos[index],
+                          imagePath: state.items[index].image1Url,
+                          isMobile: isMobile,
+                        );
+                      },
+                    );
+                  }
               ),
             ],
           ),
@@ -156,7 +156,7 @@ class _ClientLogoCardState extends State<ClientLogoCard> {
             ),
           ),
           child: Padding(
-            padding: EdgeInsets.all(widget.isMobile ? 12.0 : 16.0),
+            padding: EdgeInsets.all(widget.isMobile ? 6.0 : 16.0), // Padding kecil untuk mobile
             child: ClipRRect(
               borderRadius: BorderRadius.circular(4.0),
               child: Image.network(

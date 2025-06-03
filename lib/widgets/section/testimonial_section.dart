@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../pages/testimony_page/testimony_main.dart';
 
-class TestimonialSection extends StatefulWidget {  
+class TestimonialSection extends StatefulWidget {
   final BoxConstraints constraints;
 
   const TestimonialSection({super.key, required this.constraints});
@@ -15,12 +15,11 @@ class TestimonialSection extends StatefulWidget {
   State<TestimonialSection> createState() => TestimonialSectionState();
 }
 
-class TestimonialSectionState extends State<TestimonialSection> {  
+class TestimonialSectionState extends State<TestimonialSection> {
 
   @override
   void initState() {
-    super.initState();   
-
+    super.initState();
     context.read<GallerytestimonyCariBloc>().add(RefreshGallerytestimonyCariEvent());
   }
 
@@ -29,42 +28,12 @@ class TestimonialSectionState extends State<TestimonialSection> {
     final bool isMobile = widget.constraints.maxWidth < 768;
     final double maxWidth = widget.constraints.maxWidth > 1200 ? 1200 : widget.constraints.maxWidth * 0.9;
 
-    /*
-    final List<Map<String, String>> testimonials = [
-      {
-        'name': 'Putri Ariana',
-        'image': 'assets/images/t1.png',
-        'quote': '"Proses klaim cepat dan tanpa ribet. Terima kasih JPS!"',
-      },
-      {
-        'name': 'Brian Domani',
-        'image': 'assets/images/t2.png',
-        'quote': '"Sudah coba beberapa asuransi, tapi JPS paling responsif dan transparan."',
-      },
-      {
-        'name': 'Monita Vonita',
-        'image': 'assets/images/t3.png',
-        'quote': '"JPS benar-benar peduli. Klaim saya diproses dengan cepat tanpa drama."',
-      },
-      {
-        'name': 'Rian Pramaja',
-        'image': 'assets/images/t4.png',
-        'quote': '"Baru pertama kali klaim, prosesnya mudah dan agen sangat membantu banget!"',
-      },
-      {
-        'name': 'Novia Wijaya',
-        'image': 'assets/images/t5.png',
-        'quote': '"Pelayanan ramah dan sangat membantu saat pengajuan klaim. JPS terbaik!"',
-      },
-    ];
-    */
-
     return Container(
       width: double.infinity,
       color: Colors.white,
       child: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: widget.constraints.maxWidth > 1200 ? 64.0 : 32.0,
+          horizontal: widget.constraints.maxWidth > 1200 ? 40.0 : 40.0,
         ),
         child: Center(
           child: Container(
@@ -73,17 +42,18 @@ class TestimonialSectionState extends State<TestimonialSection> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 70),
+                // Judul responsif
                 RichText(
                   textAlign: TextAlign.center,
-                  text: const TextSpan(
+                  text: TextSpan(
                     style: TextStyle(
                       fontFamily: 'Satoshi-Regular',
-                      fontSize: 25.0,
+                      fontSize: isMobile ? 15.0 : 25.0, // Judul: 15 mobile
                       color: Colors.black,
                     ),
                     children: [
-                      TextSpan(text: 'Testimoni Nasabah '),
-                      TextSpan(
+                      const TextSpan(text: 'Testimoni Nasabah '),
+                      const TextSpan(
                         text: 'JPS',
                         style: TextStyle(
                           color: Color(0xFF79AB43),
@@ -93,35 +63,42 @@ class TestimonialSectionState extends State<TestimonialSection> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 50.0),
+                SizedBox(height: isMobile ? 35.0 : 50.0),
                 BlocBuilder<GallerytestimonyCariBloc, GallerytestimonyCariState>(
-                  builder: (context, state) {
-                    if (state.status == ListStatus.initial) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
+                    builder: (context, state) {
+                      if (state.status == ListStatus.initial) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (state.status == ListStatus.failure) {
+                        return const Center(
+                          child: Text('Failed to load images'),
+                        );
+                      } else if (state.items.isEmpty) {
+                        return const Center(
+                          child: Text('No images available'),
+                        );
+                      }
+
+                      final crossAxisCount = isMobile ? 2 : 5;
+                      final childAspectRatio = isMobile ? 0.7 : 0.7;
+
+                      return GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: state.items.take(5).length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: crossAxisCount,
+                          crossAxisSpacing: isMobile ? 8.0 : 32.0,
+                          mainAxisSpacing: isMobile ? 16.0 : 40.0,
+                          childAspectRatio: childAspectRatio,
+                        ),
+                        itemBuilder: (context, idx) =>
+                            _buildTestimonialItem(state.items[idx].toMap(), widget.constraints, isMobile),
                       );
-                    } else if (state.status == ListStatus.failure) {
-                      return const Center(
-                        child: Text('Failed to load images'),
-                      );
-                    } else if (state.items.isEmpty) {
-                      return const Center(
-                        child: Text('No images available'),
-                      );
-                    } 
-                    return Wrap(
-                      alignment: WrapAlignment.center,
-                      spacing: 32.0,
-                      runSpacing: 40.0,
-                      //children: testimonials                      
-                      children: state.items.map((e) => e.toMap()).toList()
-                          .take(5)
-                          .map((t) => _buildTestimonialItem(t, widget.constraints))
-                          .toList(),
-                    );
-                  }
+                    }
                 ),
-                const SizedBox(height: 40.0),
+                const SizedBox(height: 20.0),
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
@@ -131,12 +108,12 @@ class TestimonialSectionState extends State<TestimonialSection> {
                         MaterialPageRoute(builder: (context) => const TestimonyMain()),
                       );
                     },
-                    child: const Text(
+                    child: Text(
                       'Tampilkan semua',
                       style: TextStyle(
                         fontFamily: 'Satoshi-Regular',
-                        fontSize: 16.0,
-                        color: Color(0xFF79AB43),
+                        fontSize: isMobile ? 12.0 : 16.0, // Responsive!
+                        color: const Color(0xFF79AB43),
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -150,12 +127,30 @@ class TestimonialSectionState extends State<TestimonialSection> {
     );
   }
 
-  Widget _buildTestimonialItem(Map<String, String> testimonial, BoxConstraints constraints) {
-    final double itemWidth = constraints.maxWidth > 1200
+  // Widget untuk menampilkan bintang rating
+  Widget _buildStarRating(bool isMobile) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(5, (index) => Icon(
+        Icons.star,
+        color: Colors.amber,
+        size: isMobile ? 16.0 : 20.0,
+      )),
+    );
+  }
+
+  // Tambahkan isMobile ke parameter
+  Widget _buildTestimonialItem(Map<String, String> testimonial, BoxConstraints constraints, bool isMobile) {
+    // Atur width responsif: 2 kolom mobile, default desktop
+    final double itemWidth = isMobile
+        ? (constraints.maxWidth / 2) - 28 // 2 kolom, padding kanan-kiri
+        : constraints.maxWidth > 1200
         ? 200
         : constraints.maxWidth > 1024
         ? 170
         : 150;
+
+    final double imageSize = isMobile ? 120 : 150;
 
     return SizedBox(
       width: itemWidth,
@@ -166,8 +161,8 @@ class TestimonialSectionState extends State<TestimonialSection> {
             alignment: Alignment.center,
             children: [
               Container(
-                width: 160,
-                height: 160,
+                width: imageSize + 10,
+                height: imageSize + 10,
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.white,
@@ -187,36 +182,46 @@ class TestimonialSectionState extends State<TestimonialSection> {
                 child: ClipOval(
                   child: Image.network(
                     testimonial['image']!,
-                    width: 150,
-                    height: 150,
+                    width: imageSize,
+                    height: imageSize,
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16.0),
-          Text(
-            testimonial['name']!,
-            style: const TextStyle(
-              fontFamily: 'Satoshi-Regular',
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
+          SizedBox(height: isMobile ? 8.0 : 16.0),
+          // RichText untuk nama (bold) dan quote (normal)
+          RichText(
             textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 8.0),
-          Text(
-            testimonial['quote']!,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontFamily: 'Satoshi-Regular',
-              fontSize: 16.0,
-              color: Colors.black54,
-              height: 1.4,
+            text: TextSpan(
+              style: const TextStyle(
+                fontFamily: 'Satoshi-Regular',
+                height: 1.4,
+              ),
+              children: [
+                TextSpan(
+                  text: testimonial['name']! + '\n',
+                  style: TextStyle(
+                    fontSize: isMobile ? 12.0 : 18.0, // Nama: 12 mobile, 18 desktop
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                TextSpan(
+                  text: testimonial['quote']!,
+                  style: TextStyle(
+                    fontSize: isMobile ? 10.0 : 16.0, // Deskripsi: 10 mobile, 16 desktop
+                    color: Colors.black54,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+              ],
             ),
           ),
+          SizedBox(height: isMobile ? 8.0 : 12.0),
+          // Tambahkan 5 bintang di sini
+          _buildStarRating(isMobile),
         ],
       ),
     );
@@ -267,7 +272,6 @@ class CircularBorderPainter extends CustomPainter {
       accentPaint,
     );
   }
-
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => false;

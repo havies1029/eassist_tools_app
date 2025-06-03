@@ -7,7 +7,7 @@ import 'action_about_section.dart';
 import 'artikel_card.dart';
 import '../../widgets/section/about/floating_buttons_about.dart';
 import '../../widgets/section/footer_section.dart';
-import '../../widgets/section/navbar_widget.dart';
+import '../../widgets/section/navbar/navbar_widget.dart';
 import '../../widgets/section/about/hero_section_about.dart';
 
 

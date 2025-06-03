@@ -124,14 +124,14 @@ class _CarouselSectionState extends State<CarouselSection>
     final double maxWidth = widget.constraints.maxWidth > 1200
         ? 1200
         : widget.constraints.maxWidth * 0.9;
-    final titleFontSize = isMobile ? 20.0 : (isTablet ? 22.0 : 24.0);
+    final titleFontSize = isMobile ? 15.0 : (isTablet ? 22.0 : 24.0);
 
     return Container(
       width: double.infinity,
       color: Colors.white,
       padding: EdgeInsets.symmetric(
-        vertical: isMobile ? 20.0 : 30.0,
-        horizontal: isMobile ? 16.0 : 0.0,
+        vertical: isMobile ? 40.0 : 40.0,
+        horizontal: isMobile ? 4.0 : 40.0,
       ),
       child: Center(
         child: Container(
@@ -215,94 +215,94 @@ class _CarouselSectionState extends State<CarouselSection>
                               },
                             ),
                             child: BlocBuilder<GalleryeventCariBloc, GalleryeventCariState>(
-                              builder: (context, state) {
-                                if (state.status == ListStatus.initial) {
-                                  return const Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                } else if (state.status == ListStatus.failure) {
-                                  return const Center(
-                                    child: Text('Failed to load images'),
-                                  );
-                                } else if (state.items.isEmpty) {
-                                  return const Center(
-                                    child: Text('No images available'),
-                                  );
-                                } 
-                                return PageView.builder(
-                                  controller: _carouselController,
-                                  onPageChanged: (index) {
-                                    setState(() {
-                                      //_currentCarouselPage = index % _carouselImages.length;
-                                      _currentCarouselPage = index %state.items.length;
-                                    });
-                                  },
-                                  //itemCount: state.items.length,
-                                  itemBuilder: (context, index) {
-                                    final realIndex = index % state.items.length;
-                                    final scale = _getScale(index);
-                                    final opacity = _getOpacity(index);
-                                    final isCenter = (_currentPageValue - index).abs() < 0.5;
-                                
-                                    return Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                      child: Transform.scale(
-                                        scale: scale,
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(16.0),
-                                            boxShadow: isCenter ? [
-                                              BoxShadow(
-                                                color: Colors.black.withOpacity(0.15),
-                                                spreadRadius: 3,
-                                                blurRadius: 15,
-                                                offset: const Offset(0, 6),
-                                              ),
-                                            ] : null,
-                                          ),
-                                          child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(16.0),
-                                            child: Stack(
-                                              fit: StackFit.expand,
-                                              children: [
-                                                // Background image
-                                                Image.network(
-                                                  state.items[realIndex].galleryUrl,
-                                                  //_carouselImages[realIndex],
-                                                  fit: BoxFit.cover,
-                                                  errorBuilder: (context, error, stackTrace) {
-                                                    return Container(
-                                                      color: const Color(0xFF79AB43).withOpacity(0.1),
-                                                      child: const Center(
-                                                        child: Icon(Icons.image_not_supported, size: 48),
-                                                      ),
-                                                    );
-                                                  },
+                                builder: (context, state) {
+                                  if (state.status == ListStatus.initial) {
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  } else if (state.status == ListStatus.failure) {
+                                    return const Center(
+                                      child: Text('Failed to load images'),
+                                    );
+                                  } else if (state.items.isEmpty) {
+                                    return const Center(
+                                      child: Text('No images available'),
+                                    );
+                                  }
+                                  return PageView.builder(
+                                    controller: _carouselController,
+                                    onPageChanged: (index) {
+                                      setState(() {
+                                        //_currentCarouselPage = index % _carouselImages.length;
+                                        _currentCarouselPage = index %state.items.length;
+                                      });
+                                    },
+                                    //itemCount: state.items.length,
+                                    itemBuilder: (context, index) {
+                                      final realIndex = index % state.items.length;
+                                      final scale = _getScale(index);
+                                      final opacity = _getOpacity(index);
+                                      final isCenter = (_currentPageValue - index).abs() < 0.5;
+
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                        child: Transform.scale(
+                                          scale: scale,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(16.0),
+                                              boxShadow: isCenter ? [
+                                                BoxShadow(
+                                                  color: Colors.black.withOpacity(0.15),
+                                                  spreadRadius: 3,
+                                                  blurRadius: 15,
+                                                  offset: const Offset(0, 6),
                                                 ),
-                                                // 🔥 Blur effect untuk gambar yang tidak aktif
-                                                if (!isCenter)
-                                                  BackdropFilter(
-                                                    filter: ImageFilter.blur(
-                                                      sigmaX: 3.0,
-                                                      sigmaY: 3.0,
-                                                    ),
-                                                    child: Container(
-                                                      color: Colors.black.withOpacity(0.1),
-                                                    ),
+                                              ] : null,
+                                            ),
+                                            child: ClipRRect(
+                                              borderRadius: BorderRadius.circular(16.0),
+                                              child: Stack(
+                                                fit: StackFit.expand,
+                                                children: [
+                                                  // Background image
+                                                  Image.network(
+                                                    state.items[realIndex].galleryUrl,
+                                                    //_carouselImages[realIndex],
+                                                    fit: BoxFit.cover,
+                                                    errorBuilder: (context, error, stackTrace) {
+                                                      return Container(
+                                                        color: const Color(0xFF79AB43).withOpacity(0.1),
+                                                        child: const Center(
+                                                          child: Icon(Icons.image_not_supported, size: 48),
+                                                        ),
+                                                      );
+                                                    },
                                                   ),
-                                                // 🔥 Opacity overlay
-                                                Container(
-                                                  color: Colors.black.withOpacity(1.0 - opacity),
-                                                ),
-                                              ],
+                                                  // 🔥 Blur effect untuk gambar yang tidak aktif
+                                                  if (!isCenter)
+                                                    BackdropFilter(
+                                                      filter: ImageFilter.blur(
+                                                        sigmaX: 3.0,
+                                                        sigmaY: 3.0,
+                                                      ),
+                                                      child: Container(
+                                                        color: Colors.black.withOpacity(0.1),
+                                                      ),
+                                                    ),
+                                                  // 🔥 Opacity overlay
+                                                  Container(
+                                                    color: Colors.black.withOpacity(1.0 - opacity),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              }
+                                      );
+                                    },
+                                  );
+                                }
                             ),
                           ),
                         ),
@@ -316,41 +316,41 @@ class _CarouselSectionState extends State<CarouselSection>
 
               // Page Indicator
               BlocBuilder<GalleryeventCariBloc, GalleryeventCariState>(
-                builder: (context, state) {
-                  if (state.status == ListStatus.initial) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (state.status == ListStatus.failure) {
-                    return const Center(
-                      child: Text('Failed to load images'),
-                    );
-                  } else if (state.items.isEmpty) {
-                    return const Center(
-                      child: Text('No images available'),
-                    );
-                  } 
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(
-                      state.items.length,
-                      //_carouselImages.length,
-                          (index) => AnimatedContainer(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInOut,
-                        width: _currentCarouselPage == index ? 24.0 : 8.0,
-                        height: 8.0,
-                        margin: const EdgeInsets.symmetric(horizontal: 3.0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4.0),
-                          color: _currentCarouselPage == index
-                              ? const Color(0xFF79AB43)
-                              : Colors.grey.shade400,
+                  builder: (context, state) {
+                    if (state.status == ListStatus.initial) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (state.status == ListStatus.failure) {
+                      return const Center(
+                        child: Text('Failed to load images'),
+                      );
+                    } else if (state.items.isEmpty) {
+                      return const Center(
+                        child: Text('No images available'),
+                      );
+                    }
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(
+                        state.items.length,
+                        //_carouselImages.length,
+                            (index) => AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                          width: _currentCarouselPage == index ? 24.0 : 8.0,
+                          height: 8.0,
+                          margin: const EdgeInsets.symmetric(horizontal: 3.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4.0),
+                            color: _currentCarouselPage == index
+                                ? const Color(0xFF79AB43)
+                                : Colors.grey.shade400,
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                }
+                    );
+                  }
               ),
             ],
           ),

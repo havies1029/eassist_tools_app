@@ -118,10 +118,12 @@ abstract class BaseDialogState<T extends BaseDialog> extends State<T> with Ticke
     );
   }
 
+  // Ganti fungsi buildTextField di Base_Dialog.dart dengan yang ini:
   Widget buildTextField({
     required TextEditingController controller,
     required String hintText,
     TextInputType? keyboardType,
+    bool obscureText = false, // Tambahkan parameter ini
   }) {
     return Container(
       decoration: BoxDecoration(
@@ -137,6 +139,7 @@ abstract class BaseDialogState<T extends BaseDialog> extends State<T> with Ticke
       child: TextField(
         controller: controller,
         keyboardType: keyboardType,
+        obscureText: obscureText, // Tambahkan ini
         decoration: InputDecoration(
           hintText: hintText,
           hintStyle: TextStyle(color: Colors.grey.shade400),

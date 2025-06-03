@@ -26,47 +26,57 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
-    double maxWidth = widget.constraints.maxWidth > 1300
-        ? 1200
-        : widget.constraints.maxWidth * 0.9;
-    bool isMobile = widget.constraints.maxWidth < 768;
+    final double constraintWidth = widget.constraints.maxWidth;
+    final bool isMobile = constraintWidth < 768;
+    final double maxWidth = constraintWidth > 1300
+        ? 1200.0
+        : constraintWidth * 0.9;
 
-    return Container(
-      width: double.infinity,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(50),
-          topRight: Radius.circular(50),
-        ),
-      ),
-      padding: EdgeInsets.symmetric(
-        vertical: isMobile ? 40.0 : 60.0,
-        horizontal: 20.0,
-      ),
-      child: Center(
-        child: Container(
-          width: maxWidth,
-          child: isMobile
-              ? Column(
-            children: [
-              _buildMainArticle(),
-              const SizedBox(height: 32),
-              _buildSidebar(),
-            ],
-          )
-              : Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(flex: 7, child: _buildMainArticle()),
-              const SizedBox(width: 32),
-              Expanded(flex: 3, child: _buildSidebar()),
-            ],
+    return LayoutBuilder(
+      builder: (context, _) {
+        return Container(
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(50.0),
+              topRight: Radius.circular(50.0),
+            ),
           ),
-        ),
-      ),
+          padding: EdgeInsets.symmetric(
+            vertical: isMobile ? 40.0 : 60.0,
+            horizontal: isMobile ? 16.0 : 20.0,
+          ),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: maxWidth),
+              child: isMobile
+                  ? SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildMainArticle(),
+                    const SizedBox(height: 32.0),
+                    _buildSidebar(),
+                  ],
+                ),
+              )
+                  : Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(flex: 7, child: _buildMainArticle()),
+                  const SizedBox(width: 32.0),
+                  Expanded(flex: 3, child: _buildSidebar()),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
+
 
   void _scrollToSection(String sectionId) {
     final key = _sectionKeys[sectionId];
@@ -110,28 +120,41 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
             ),
           ),
           const SizedBox(height: 16),
-          Row(
+          Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 12.0,
+            runSpacing: 12.0,
+            alignment: WrapAlignment.spaceBetween,
             children: [
-              CircleAvatar(
-                radius: 20,
-                backgroundColor: Colors.grey.shade300,
-                child: Icon(Icons.person, color: Colors.grey.shade600, size: 20),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircleAvatar(
+                    radius: 20,
+                    backgroundColor: Colors.grey.shade300,
+                    child: Icon(Icons.person, color: Colors.grey.shade600, size: 20),
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    'Ryan Basudara · May 22, 2025',
+                    style: TextStyle(
+                      fontFamily: 'Satoshi-Regular',
+                      fontSize: 14,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 12),
-              Text(
-                'Ryan Basudara · May 22, 2025',
-                style: TextStyle(
-                  fontFamily: 'Satoshi-Regular',
-                  fontSize: 14,
-                  color: Colors.grey.shade600,
-                ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _buildSocialIcon(Icons.bookmark_border, 0),
+                  const SizedBox(width: 12),
+                  _buildSocialIcon(Icons.facebook, 1),
+                  const SizedBox(width: 12),
+                  _buildSocialIcon(Icons.camera_alt, 2),
+                ],
               ),
-              const Spacer(),
-              _buildSocialIcon(Icons.bookmark_border, 0),
-              const SizedBox(width: 12),
-              _buildSocialIcon(Icons.facebook, 1),
-              const SizedBox(width: 12),
-              _buildSocialIcon(Icons.camera_alt, 2),
             ],
           ),
           const SizedBox(height: 24),
@@ -166,14 +189,18 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
           ),
           const SizedBox(height: 24),
           // Table of Contents Menu - Half width
-          Row(
-            children: [
-              Expanded(
-                flex: 1,
-                child: _buildTableOfContents(),
-              ),
-              const Expanded(flex: 1, child: SizedBox()),
-            ],
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final isMobile = constraints.maxWidth < 768;
+              return isMobile
+                  ? _buildTableOfContents(isMobile: true)
+                  : Row(
+                children: [
+                  Expanded(flex: 1, child: _buildTableOfContents(isMobile: false)),
+                  const Expanded(flex: 1, child: SizedBox()),
+                ],
+              );
+            },
           ),
           const SizedBox(height: 32),
           // Main Content
@@ -231,7 +258,7 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
     );
   }
 
-  Widget _buildTableOfContents() {
+  Widget _buildTableOfContents({required bool isMobile}) {
     final List<Map<String, String>> menuItems = [
       {'title': 'Apa Itu JPS?', 'id': 'apa-itu-jps'},
       {'title': 'Jenis Perlindungan Mikro yang Ditawarkan JPS', 'id': 'jenis-perlindungan'},
@@ -241,6 +268,7 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
     ];
 
     return Container(
+      width: isMobile ? double.infinity : null,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: const Color(0xFFF8F9FA),
@@ -625,7 +653,7 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
                               color: const Color(0xFF79AB43),
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(50),
                             ),
                             child: Text(
                               article['category'],
