@@ -11,15 +11,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:math' show pi;
 
+import '../../../blocs/profile/rekanbank_bloc.dart';
 import '../../../blocs/profile/rekancontact_bloc.dart';
 import '../../../blocs/profile/rekangeneral_bloc.dart';
 import '../../../blocs/profile/rekanpajak_bloc.dart';
+import '../../../blocs/profile/rekanpic_bloc.dart';
+import '../../../blocs/profile/rekanpiccrud_bloc.dart';
+import '../../../blocs/profile/rekanpiclist_bloc.dart';
 import '../../../pages/about_jps/about_main.dart';
 import '../../../pages/article_page/article_main.dart';
 import '../../../pages/asset/active_asset_main.dart';
 import '../../../pages/asset/find_insurance_main.dart';
 import '../../../pages/hero_user_page/hero_user_main.dart';
 import '../../../pages/heropage/hero_main.dart';
+import '../../../pages/profile/rekanbank_form.dart';
+import '../../../pages/profile/rekanpic_form.dart';
+import '../../../pages/profile/rekanpiccrud_form.dart';
+import '../../../pages/profile/rekanpiccrud_main.dart';
+import '../../../pages/profile/rekanpiclist_list.dart';
+import '../../../pages/profile/rekanpiclist_list_widget.dart';
 import '../../PopUp/Popup_Succeed.dart';
 import '../../login/login_client/LoginClientPage.dart';
 import '../../profile/profile_perusahaan/profile_main_page.dart';
@@ -331,6 +341,140 @@ class _NavbarWidgetState extends State<NavbarWidget> {
         ),
       );
     }else if (title == 'Rekan Pajak') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return BlocProvider.value(
+              value: BlocProvider.of<RekanPajakBloc>(context),
+              child: const RekanPajakFormPage(
+                viewMode: 'tambah',    // atau 'ubah'
+                recordId: '',          // kalau 'ubah', ganti dengan ID yang relevan
+              ),
+            );
+          },
+        ),
+      );
+    }
+    else if (title == 'Rekan Bank') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return BlocProvider.value(
+              value: BlocProvider.of<RekanBankBloc>(context),
+              child: const RekanBankFormPage(
+                viewMode: 'tambah',    // atau 'ubah'
+                recordId: '',          // kalau 'ubah', ganti dengan ID yang relevan
+              ),
+            );
+          },
+        ),
+      );
+    }else if (title == 'Rekan Pic Form') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return BlocProvider.value(
+              value: BlocProvider.of<RekanPicBloc>(context),
+              child: const RekanPicFormPage(
+                viewMode: 'tambah',    // atau 'ubah'
+                recordId: '',          // kalau 'ubah', ganti dengan ID yang relevan
+              ),
+            );
+          },
+        ),
+      );
+    }
+    else if (title == 'Rekan Pic Crud Form') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return BlocProvider.value(
+              value: BlocProvider.of<RekanPicCrudBloc>(context),
+              child: const RekanPicCrudFormPage(
+                viewMode: 'tambah',    // atau 'ubah'
+                recordId: '',          // kalau 'ubah', ganti dengan ID yang relevan
+              ),
+            );
+          },
+        ),
+      );
+    }else if (title == 'Rekan Pic Crud Main') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return BlocProvider.value(
+              value: BlocProvider.of<RekanPicCrudBloc>(context),
+              child: const RekanPicCrudMainPage(
+                viewMode: 'tambah',    // atau 'ubah'
+                recordId: '',          // kalau 'ubah', ganti dengan ID yang relevan
+              ),
+            );
+          },
+        ),
+      );
+    }else if (title == 'Rekan Pic List List') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return BlocProvider.value(
+              value: BlocProvider.of<RekanPajakBloc>(context),
+              child: const RekanPicListPage(// kalau 'ubah', ganti dengan ID yang relevan
+              ),
+            );
+          },
+        ),
+      );
+    }else if (title == 'Rekan Pic List List Widget') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return BlocProvider.value(
+              value: BlocProvider.of<RekanPicListBloc>(context),
+              child: const RekanPicListListWidget(searchText: '',
+                // kalau 'ubah', ganti dengan ID yang relevan
+              ),
+            );
+          },
+        ),
+      );
+    }
+    //
+    // else if (title == 'Rekan Pic List Main') {
+    //   Navigator.push(
+    //     context,
+    //     MaterialPageRoute(
+    //       builder: (context) {
+    //         return BlocProvider.value(
+    //           value: BlocProvider.of<RekanListBloc>(context),
+    //           child: const RekanPicListMainPage(
+    //             // kalau 'ubah', ganti dengan ID yang relevan
+    //           ),
+    //         );
+    //       },
+    //     ),
+    //   );
+    // }else if (title == 'Rekan Pic List Title Widget') {
+    //   Navigator.push(
+    //     context,
+    //     MaterialPageRoute(
+    //       builder: (context) {
+    //         return BlocProvider.value(
+    //           value: BlocProvider.of<RekanPajakBloc>(context),
+    //           child: const RekanPicListTileWidget(isDefault: 123, mrekanpicId: '', picEmail: '', picHp: '', picNama: '',// kalau 'ubah', ganti dengan ID yang relevan
+    //           ),
+    //         );
+    //       },
+    //     ),
+    //   );
+    // }
+    else if (title == 'Rekan General V2') {
       Navigator.push(
         context,
         MaterialPageRoute(

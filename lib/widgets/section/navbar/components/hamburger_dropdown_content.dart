@@ -115,6 +115,16 @@ class _HamburgerDropdownContentState
 
           SubMenuItem(icon: Icons.business_outlined, title: 'Find Insurance', onTap: () {}),
           SubMenuItem(icon: Icons.business_outlined, title: 'Active Asset', onTap: () {}),
+
+          SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Bank', onTap: () {}),
+          SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic Form', onTap: () {}),
+          SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic Crud Form', onTap: () {}),
+          SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic Crud Main', onTap: () {}),
+          SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic List List', onTap: () {}),
+          SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic List List Widget', onTap: () {}),
+          SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic List Main', onTap: () {}),
+          SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic List Title Widget', onTap: () {}),
+          SubMenuItem(icon: Icons.business_outlined, title: 'Rekan General V2', onTap: () {}),
         ],
       },
   ];
