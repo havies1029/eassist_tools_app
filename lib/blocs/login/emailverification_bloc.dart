@@ -18,12 +18,12 @@ class EmailVerificationBloc extends Bloc<EmailVerificationEvents, EmailVerificat
 
 		ReturnDataAPI returnData;
 		bool hasFailure = true;
-		emit(state.copyWith(isSaving: true, isSaved: false));
+		emit(state.copyWith(isLoading: true, isLoaded: false));
 		returnData = await repository.emailVerificationTambah(event.record);
 		hasFailure = !returnData.success;
 		emit(state.copyWith(
-			isSaving: false,
-			isSaved: true,
+			isLoading: false,
+			isLoaded: true,
 			hasFailure: hasFailure));
 	}
 	

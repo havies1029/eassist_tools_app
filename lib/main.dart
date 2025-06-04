@@ -6,6 +6,8 @@ import 'package:eassist_tools_app/blocs/gallery/gallerytestimonycari_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaim/klaim1list_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaim/klaim2list_bloc.dart';
 import 'package:eassist_tools_app/blocs/login/change_password_bloc.dart';
+import 'package:eassist_tools_app/blocs/login/emailverification_bloc.dart';
+import 'package:eassist_tools_app/blocs/login/login_bloc.dart';
 import 'package:eassist_tools_app/blocs/networkconnection/network_bloc.dart';
 import 'package:eassist_tools_app/blocs/onboardmenu/onboardmenucari_bloc.dart';
 import 'package:eassist_tools_app/blocs/profile/rekancontact_bloc.dart';
@@ -23,11 +25,13 @@ import 'package:eassist_tools_app/blocs/simulwp/simulwpcrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/takeimage/takeimage_cubit.dart';
 import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:eassist_tools_app/common/loading_indicator.dart';
+import 'package:eassist_tools_app/pages/heropage/hero_main.dart';
 import 'package:eassist_tools_app/pages/home/home_page.dart';
 import 'package:eassist_tools_app/pages/login/login_page.dart';
 import 'package:eassist_tools_app/pages/splash/splash_page.dart';
 import 'package:eassist_tools_app/repositories/chatting/guestscrud_repository.dart';
 import 'package:eassist_tools_app/repositories/login/change_password_repository.dart';
+import 'package:eassist_tools_app/repositories/login/emailverification_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/rekancontact_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/rekangeneral_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/rekanpajak_repository.dart';
@@ -79,6 +83,16 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider<LoginBloc>(
+          create: (context) =>
+              LoginBloc(
+                authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                userRepository: userRepository,
+              )
+        ),
+        BlocProvider<EmailVerificationBloc>(
+          create: (context) =>
+              EmailVerificationBloc(repository: EmailVerificationRepository())),
         BlocProvider<ChangePasswordBloc>(
           create: (context) =>
               ChangePasswordBloc(repository: ChangePasswordRepository())),
@@ -156,11 +170,14 @@ class App extends StatelessWidget {
                 RekanGeneralBloc(repository: RekanGeneralRepository())),
         BlocProvider<RekanPajakBloc>(
             create: (context) =>
-                RekanPajakBloc(repository: RekanPajakRepository())),
+                RekanPajakBloc(repository: RekanPajakRepository())),        
+        BlocProvider<GallerymemberCariBloc>(
+          create: (context) =>
+              GallerymemberCariBloc()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Calculator JPS',
+        title: 'JPS Insurance',
         theme: FlexThemeData.light(scheme: FlexScheme.mandyRed),
         // The Mandy red, dark theme.
         darkTheme: FlexThemeData.dark(scheme: FlexScheme.mandyRed),
@@ -169,6 +186,8 @@ class App extends StatelessWidget {
 
         routes: const {},
 
+        home: HeroMain(),
+        /*
         home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
           builder: (context, state) {
             if (state is AuthenticationUninitialized) {
@@ -207,6 +226,7 @@ class App extends StatelessWidget {
             }
           },
         ),
+        */
       ),
     );
   }

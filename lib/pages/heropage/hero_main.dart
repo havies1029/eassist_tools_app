@@ -1,23 +1,8 @@
+import 'package:eassist_tools_app/pages/heropage/hero_page.dart';
 import 'package:flutter/material.dart';
-import 'dart:math' show pi;
 
-import '../../repositories/user/user_repository.dart';
-import '../../widgets/section/action_section.dart';
-import '../../widgets/section/carousel_section.dart';
-import '../../widgets/section/client_section.dart';
-import '../../widgets/section/feature_section.dart';
-import '../../widgets/section/floating_buttons.dart';
-import '../../widgets/section/footer_section.dart';
-import '../../widgets/section/navbar/navbar_widget.dart';
-import 'hero_section_heropage.dart';
-import '../../widgets/section/testimonial_section.dart';
 
 // **Tambah import ini agar bisa memanggil dialog login:**
-import 'package:eassist_tools_app/widgets/login/login_gmail/Popup.dart';
-
-class DummyUserRepository extends UserRepository {
-  // Override semua method yang dibutuhkan dengan return dummy data atau kosong
-}
 
 class HeroMain extends StatelessWidget {
   const HeroMain({super.key});
@@ -53,100 +38,4 @@ class HeroMain extends StatelessWidget {
 }
 
 // Ubah HeroPage jadi StatefulWidget
-class HeroPage extends StatefulWidget {
-  const HeroPage({super.key});
 
-  @override
-  State<HeroPage> createState() => _HeroPageState();
-}
-
-class _HeroPageState extends State<HeroPage> {
-  @override
-  void initState() {
-    super.initState();
-
-    // Memastikan dialog dipanggil setelah frame pertama selesai dirender
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      CustomPopupsLoginUser.showLoginDialog(context);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          final bool isMobile = constraints.maxWidth < 768;
-          return Stack(
-            children: [
-              // Layer 1: Background (Image untuk non-mobile, hijau untuk mobile)
-              Positioned.fill(
-                child: isMobile
-                    ? Container(
-                  color: const Color(0xFF79AB43), // hijau full-screen
-                )
-                    : Image.asset(
-                  'assets/images/bg-home.jpg',
-                  fit: BoxFit.cover,
-                  alignment: const Alignment(0, 3),
-                  cacheWidth: 1440,
-                  cacheHeight: 800,
-                ),
-              ),
-
-              // Layer 2: Konten scrollable
-              Positioned.fill(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.only(top: 88), // ruang untuk navbar
-                  child: Column(
-                    children: [
-                      HeroSection(constraints: constraints),
-                      FloatingButtons(constraints: constraints),
-                      ActionSection(constraints: constraints),
-                      CarouselSection(constraints: constraints),
-                      FeatureSection(constraints: constraints),
-                      TestimonialSection(constraints: constraints),
-                      ClientSection(constraints: constraints),
-                      FooterSection(constraints: constraints),
-                    ],
-                  ),
-                ),
-              ),
-
-              // Layer 3: Navbar overlay di atas semua
-              const _FixedNavbarOverlay(),
-            ],
-          );
-        },
-      ),
-    );
-  }
-}
-
-class _FixedNavbarOverlay extends StatelessWidget {
-  const _FixedNavbarOverlay();
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      top: 0,
-      left: 0,
-      right: 0,
-      child: Stack(
-        clipBehavior: Clip.none, // agar pop-up bisa muncul di luar batas
-        children: [
-          Material(
-            color: Colors.transparent,
-            elevation: 20,
-            child: NavbarWidget(
-              hideProfile: true,
-              constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

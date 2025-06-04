@@ -8,6 +8,7 @@ class EmailVerificationState extends Equatable {
 	final bool isSaving;
 	final bool isSaved;
 	final bool hasFailure;
+  final bool requestPinVerification;
 	const EmailVerificationState(
 		{this.record,
 		this.isLoading = false,
@@ -15,6 +16,7 @@ class EmailVerificationState extends Equatable {
 		this.isSaving = false,
 		this.isSaved = false,
 		this.hasFailure = false,
+    this.requestPinVerification = true,
 });
 
 	EmailVerificationState copyWith({
@@ -24,6 +26,7 @@ class EmailVerificationState extends Equatable {
 		bool? isSaving,
 		bool? isSaved,
 		bool? hasFailure,
+    bool? requestPinVerification,
 	}){
 		return EmailVerificationState(
 			record: record ?? this.record,
@@ -32,6 +35,7 @@ class EmailVerificationState extends Equatable {
 			isSaving: isSaving ?? this.isSaving,
 			isSaved: isSaved ?? this.isSaved,
 			hasFailure: hasFailure ?? this.hasFailure,
+      requestPinVerification: requestPinVerification ?? this.requestPinVerification,  
 		);
 	}
 
