@@ -12,6 +12,7 @@ import 'package:eassist_tools_app/models/combobox/combompropinsi_model.dart';
 import 'package:eassist_tools_app/widgets/combobox/combompropinsi_widget.dart';
 import 'package:eassist_tools_app/models/combobox/comborkodepos_model.dart';
 import 'package:eassist_tools_app/widgets/combobox/comborkodepos_widget.dart';
+import '../../inline_error_text.dart';
 
 /// Widget yang hanya berisi “body” form Informasi Pajak (tanpa Dialog).
 class RekanPajakFormBody extends StatefulWidget {
@@ -44,6 +45,19 @@ class _RekanPajakFormBodyState extends State<RekanPajakFormBody> {
 
   // Edit mode flag
   bool isEditingSection = false;
+  Widget _buildDisabledDropdown({required String text}) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontFamily: 'Satoshi',
+          fontSize: 14,
+        ),
+      ),
+    );
+  }
 
   @override
   void initState() {
@@ -109,6 +123,11 @@ class _RekanPajakFormBodyState extends State<RekanPajakFormBody> {
             ),
             const SizedBox(height: 12),
 
+            // Inline error
+            if (errors.isNotEmpty)
+              const InlineErrorText("Silakan lengkapi semua kolom wajib."),
+            const SizedBox(height: 8),
+
             // Field: Alamat
             _buildLabelText('Alamat'),
             const SizedBox(height: 6),
@@ -133,17 +152,13 @@ class _RekanPajakFormBodyState extends State<RekanPajakFormBody> {
             // Dropdown: Kota
             _buildLabelText('Kota'),
             const SizedBox(height: 6),
-            _buildStyledDropdown(
-              child: buildFieldMkotaId(),
-            ),
+            _buildStyledDropdown(child: buildFieldMkotaId()),
             const SizedBox(height: 12),
 
             // Dropdown: Propinsi
             _buildLabelText('Propinsi'),
             const SizedBox(height: 6),
-            _buildStyledDropdown(
-              child: buildFieldMpropinsiId(),
-            ),
+            _buildStyledDropdown(child: buildFieldMpropinsiId()),
             const SizedBox(height: 12),
 
             // Field: NPWP No
@@ -169,14 +184,9 @@ class _RekanPajakFormBodyState extends State<RekanPajakFormBody> {
             // Dropdown: Kode Pos
             _buildLabelText('Kode Pos'),
             const SizedBox(height: 6),
-            _buildStyledDropdown(
-              child: buildFieldRkodeposId(),
-            ),
+            _buildStyledDropdown(child: buildFieldRkodeposId()),
 
             const SizedBox(height: 16),
-
-            // Daftar error
-            FormError(errors: errors, key: null),
           ],
         ),
       ),
@@ -212,6 +222,11 @@ class _RekanPajakFormBodyState extends State<RekanPajakFormBody> {
       inputFormatters: inputFormatters,
       decoration: InputDecoration(
         hintText: hintText,
+        hintStyle: const TextStyle(
+          fontFamily: 'Satoshi',
+          fontSize: 14,
+          color: Colors.grey,
+        ),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
         contentPadding:
         const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -277,11 +292,9 @@ class _RekanPajakFormBodyState extends State<RekanPajakFormBody> {
     }
   }
 
-  // ======================================================================
-  // Salin helper dropdown persis dari versi dialog Anda, tanpa comboKey
-  // ======================================================================
   Widget buildFieldMkotaId() {
-    return buildFieldComboMKota(
+    return isEditingSection
+        ? buildFieldComboMKota(
       labelText: 'mkotaId',
       initItem: fieldComboMKota,
       onChangedCallback: (value) {
@@ -291,20 +304,20 @@ class _RekanPajakFormBodyState extends State<RekanPajakFormBody> {
         }
       },
       onSaveCallback: (value) {
-        if (value != null) {
-          fieldComboMKota = value;
-        }
+        if (value != null) fieldComboMKota = value;
       },
       validatorCallback: (value) {
-        if (value == null) {
-          _addError("Field ComboMKota tidak boleh kosong.");
-        }
+        if (value == null) _addError("Field ComboMKota tidak boleh kosong.");
       },
+    )
+        : _buildDisabledDropdown(
+      text: fieldComboMKota?.kotaDesc ?? '-',
     );
   }
 
   Widget buildFieldMpropinsiId() {
-    return buildFieldComboMPropinsi(
+    return isEditingSection
+        ? buildFieldComboMPropinsi(
       labelText: 'mpropinsiId',
       initItem: fieldComboMPropinsi,
       onChangedCallback: (value) {
@@ -314,39 +327,38 @@ class _RekanPajakFormBodyState extends State<RekanPajakFormBody> {
         }
       },
       onSaveCallback: (value) {
-        if (value != null) {
-          fieldComboMPropinsi = value;
-        }
+        if (value != null) fieldComboMPropinsi = value;
       },
       validatorCallback: (value) {
-        if (value == null) {
-          _addError("Field ComboMPropinsi tidak boleh kosong.");
-        }
+        if (value == null) _addError("Field ComboMPropinsi tidak boleh kosong.");
       },
+    )
+        : _buildDisabledDropdown(
+      text: fieldComboMPropinsi?.propinsiNama ?? '-',
     );
   }
 
+
   Widget buildFieldRkodeposId() {
-    return buildFieldComboRKodepos(
+    return isEditingSection
+        ? buildFieldComboRKodepos(
       labelText: 'rkodeposId',
       initItem: fieldComboRKodepos,
       onChangedCallback: (value) {
         if (value != null) {
           _removeError("Field ComboRKodepos tidak boleh kosong.");
-          rekanPajakBloc
-              .add(ComboRKodeposChangedEvent(comboRKodepos: value));
+          rekanPajakBloc.add(ComboRKodeposChangedEvent(comboRKodepos: value));
         }
       },
       onSaveCallback: (value) {
-        if (value != null) {
-          fieldComboRKodepos = value;
-        }
+        if (value != null) fieldComboRKodepos = value;
       },
       validatorCallback: (value) {
-        if (value == null) {
-          _addError("Field ComboRKodepos tidak boleh kosong.");
-        }
+        if (value == null) _addError("Field ComboRKodepos tidak boleh kosong.");
       },
+    )
+        : _buildDisabledDropdown(
+      text: fieldComboRKodepos?.kodeposNo ?? '-',
     );
   }
 }

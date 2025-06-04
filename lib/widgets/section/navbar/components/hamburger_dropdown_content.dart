@@ -81,31 +81,44 @@ class _HamburgerDropdownContentState
         SubMenuItem(icon: Icons.reviews, title: 'Testimoni', onTap: () {}),
       ],
     },
-    {
-      'icon': Icons.layers,
-      'title': 'Semua Page yang telah dibuat',
-      'subs': [
-        SubMenuItem(icon: Icons.business_outlined, title: 'Splash Screen', onTap: () {}),
-        SubMenuItem(icon: Icons.home_outlined, title: 'Home Page', onTap: () {}),
-        SubMenuItem(icon: Icons.supervised_user_circle_outlined, title: 'Hero User Page', onTap: () {}),
-        SubMenuItem(icon: Icons.info_outline, title: 'About JPS', onTap: () {}),
-        SubMenuItem(icon: Icons.article, title: 'Article Page', onTap: () {}),
-        SubMenuItem(icon: Icons.record_voice_over, title: 'Testimoni', onTap: () {}),
-        SubMenuItem(icon: Icons.login_outlined, title: 'Login Gmail', onTap: () {}),
-        SubMenuItem(icon: Icons.login_outlined, title: 'Login Client', onTap: () {}),
-        SubMenuItem(icon: Icons.person_outline, title: 'Register Client', onTap: () {}),
-        SubMenuItem(icon: Icons.person_outline, title: 'Register Gmail', onTap: () {}),
-        SubMenuItem(icon: Icons.person_outline, title: 'Reset Password Page', onTap: () {}),
-        SubMenuItem(icon: Icons.person_outline, title: 'Popup Succeed', onTap: () {}),
-        SubMenuItem(icon: Icons.business_outlined, title: 'Dialog Confirmation', onTap: () {}),
-        SubMenuItem(icon: Icons.person_pin_circle_outlined, title: 'Profile Individu', onTap: () {}),
-        SubMenuItem(icon: Icons.business_outlined, title: 'Profile Perusahaan', onTap: () {}),
-        SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Contact', onTap: () {}),
-        SubMenuItem(icon: Icons.business_outlined, title: 'Rekan General', onTap: () {}),
-        SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pajak', onTap: () {}),
-      ],
-    },
+      {
+        'icon': Icons.layers,
+        'title': 'Semua Page yang telah dibuat',
+        'subs': [
+          // 1. Halaman Umum
+          SubMenuItem(icon: Icons.business_outlined, title: 'Splash Screen', onTap: () {}),
+          SubMenuItem(icon: Icons.home_outlined, title: 'Home Page', onTap: () {}),
+          SubMenuItem(icon: Icons.supervised_user_circle_outlined, title: 'Hero User Page', onTap: () {}),
+          SubMenuItem(icon: Icons.info_outline, title: 'About JPS', onTap: () {}),
+          SubMenuItem(icon: Icons.article, title: 'Article Page', onTap: () {}),
+          SubMenuItem(icon: Icons.record_voice_over, title: 'Testimoni', onTap: () {}),
+
+          // 2. Autentikasi (Login / Register)
+          SubMenuItem(icon: Icons.login_outlined, title: 'Login Gmail', onTap: () {}),
+          SubMenuItem(icon: Icons.login_outlined, title: 'Login Client', onTap: () {}),
+          SubMenuItem(icon: Icons.person_outline, title: 'Register Gmail', onTap: () {}),
+          SubMenuItem(icon: Icons.person_outline, title: 'Register Client', onTap: () {}),
+          SubMenuItem(icon: Icons.lock_reset, title: 'Reset Password Page', onTap: () {}),
+
+          // 3. Profil
+          SubMenuItem(icon: Icons.person_pin_circle_outlined, title: 'Profile Individu', onTap: () {}),
+          SubMenuItem(icon: Icons.business_outlined, title: 'Profile Perusahaan', onTap: () {}),
+
+          // 4. Rekan
+          SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Contact', onTap: () {}),
+          SubMenuItem(icon: Icons.business_outlined, title: 'Rekan General', onTap: () {}),
+          SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pajak', onTap: () {}),
+
+          // 5. Dialog / Popup
+          SubMenuItem(icon: Icons.person_outline, title: 'Popup Succeed', onTap: () {}),
+          SubMenuItem(icon: Icons.business_outlined, title: 'Dialog Confirmation', onTap: () {}),
+
+          SubMenuItem(icon: Icons.business_outlined, title: 'Find Insurance', onTap: () {}),
+          SubMenuItem(icon: Icons.business_outlined, title: 'Active Asset', onTap: () {}),
+        ],
+      },
   ];
+
 
   @override
   Widget build(BuildContext context) {

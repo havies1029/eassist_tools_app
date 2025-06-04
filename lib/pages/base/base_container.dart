@@ -1,5 +1,5 @@
 import 'package:eassist_tools_app/pages/chatting/roomcari_list.dart';
-import 'package:eassist_tools_app/pages/find_insurance/find_insurance_main.dart';
+import 'package:eassist_tools_app/pages/asset/find_insurance_main.dart';
 import 'package:eassist_tools_app/pages/groupchat/groupchat_page.dart';
 import 'package:eassist_tools_app/pages/hero_user_page/hero_user_main.dart';
 import 'package:eassist_tools_app/pages/heropage/hero_main.dart';

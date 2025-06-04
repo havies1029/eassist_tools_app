@@ -18,7 +18,7 @@ class HeroSection extends StatelessWidget {
         alignment: Alignment.topLeft, // GANTI dari Center ke Align
         child: Container(
           width: maxWidth,
-          margin: const EdgeInsets.only(top: 50),
+          margin: const EdgeInsets.only(top: 100),
           decoration: const BoxDecoration(
             color: Colors.transparent,
             borderRadius: BorderRadius.only(
@@ -29,7 +29,7 @@ class HeroSection extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: isMobile ? 16.0 : 40.0,
-              vertical: isMobile ? 20.0 : 50.0,
+              vertical: isMobile ? 20.0 : 30.0,
             ),
             child: isMobile
                 ? Column(

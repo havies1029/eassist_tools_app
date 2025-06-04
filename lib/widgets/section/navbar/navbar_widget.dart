@@ -16,6 +16,8 @@ import '../../../blocs/profile/rekangeneral_bloc.dart';
 import '../../../blocs/profile/rekanpajak_bloc.dart';
 import '../../../pages/about_jps/about_main.dart';
 import '../../../pages/article_page/article_main.dart';
+import '../../../pages/asset/active_asset_main.dart';
+import '../../../pages/asset/find_insurance_main.dart';
 import '../../../pages/hero_user_page/hero_user_main.dart';
 import '../../../pages/heropage/hero_main.dart';
 import '../../PopUp/Popup_Succeed.dart';
@@ -293,6 +295,11 @@ class _NavbarWidgetState extends State<NavbarWidget> {
         context,
         MaterialPageRoute(builder: (context) => const TestimonyMain()),
       );
+    }else if (title == 'Find Insurance') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const FindInsuranceMain()),
+      );
     }else if (title == 'Rekan Contact') {
       Navigator.push(
         context,
@@ -428,6 +435,11 @@ class _NavbarWidgetState extends State<NavbarWidget> {
         builder: (_) => ConfirmationDialog(
           onConfirm: () { Navigator.push(context, MaterialPageRoute(builder: (_) => const HeroUserPage())); },
         ),
+      );
+    }else if (title == 'Active Asset') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ActiveAssetMain()),
       );
     }
   }

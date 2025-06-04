@@ -14,6 +14,8 @@ import 'package:eassist_tools_app/models/combobox/combomtipecst_model.dart';
 import 'package:eassist_tools_app/widgets/combobox/combomtipecst_widget.dart';
 import 'package:eassist_tools_app/models/combobox/combomtitle_model.dart';
 import 'package:eassist_tools_app/widgets/combobox/combomtitle_widget.dart';
+import '../../inline_error_text.dart';
+
 
 /// Widget yang hanya berisi “body” form General Information (tanpa Dialog).
 class RekanGeneralFormBody extends StatefulWidget {
@@ -60,6 +62,20 @@ class _RekanGeneralFormBodyState extends State<RekanGeneralFormBody> {
   void dispose() {
     fieldRekanNamaController.dispose();
     super.dispose();
+  }
+
+  Widget _buildDisabledDropdown({required String text}) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontFamily: 'Satoshi',
+          fontSize: 14,
+        ),
+      ),
+    );
   }
 
   void _loadData() {
@@ -111,36 +127,33 @@ class _RekanGeneralFormBodyState extends State<RekanGeneralFormBody> {
             ),
             const SizedBox(height: 12),
 
+            // Error alert
+            if (errors.isNotEmpty)
+              const InlineErrorText("Silakan lengkapi semua kolom wajib."),
+            const SizedBox(height: 8),
+
             // Dropdown: Bentuk Customer
             _buildLabelText('Bentuk Customer'),
             const SizedBox(height: 6),
-            _buildStyledDropdown(
-              child: buildFieldMbentukcstId(),
-            ),
+            _buildStyledDropdown(child: buildFieldMbentukcstId()),
             const SizedBox(height: 12),
 
             // Dropdown: Bidang
             _buildLabelText('Bidang'),
             const SizedBox(height: 6),
-            _buildStyledDropdown(
-              child: buildFieldMbidangId(),
-            ),
+            _buildStyledDropdown(child: buildFieldMbidangId()),
             const SizedBox(height: 12),
 
             // Dropdown: Tipe Customer
             _buildLabelText('Tipe Customer'),
             const SizedBox(height: 6),
-            _buildStyledDropdown(
-              child: buildFieldMtipecstId(),
-            ),
+            _buildStyledDropdown(child: buildFieldMtipecstId()),
             const SizedBox(height: 12),
 
             // Dropdown: Title
             _buildLabelText('Title'),
             const SizedBox(height: 6),
-            _buildStyledDropdown(
-              child: buildFieldMtitleId(),
-            ),
+            _buildStyledDropdown(child: buildFieldMtitleId()),
             const SizedBox(height: 12),
 
             // Field: Nama Rekan
@@ -161,11 +174,7 @@ class _RekanGeneralFormBodyState extends State<RekanGeneralFormBody> {
                 if (value.isNotEmpty) _removeError(kStringNullError);
               },
             ),
-
             const SizedBox(height: 16),
-
-            // Daftar error
-            FormError(errors: errors, key: null),
           ],
         ),
       ),
@@ -201,6 +210,11 @@ class _RekanGeneralFormBodyState extends State<RekanGeneralFormBody> {
       inputFormatters: inputFormatters,
       decoration: InputDecoration(
         hintText: hintText,
+        hintStyle: const TextStyle(
+          fontFamily: 'Satoshi',
+          fontSize: 14,
+          color: Colors.grey,
+        ),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
         contentPadding:
         const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -266,42 +280,39 @@ class _RekanGeneralFormBodyState extends State<RekanGeneralFormBody> {
     }
   }
 
-  // ======================================================================
-  // Salin helper dropdown persis dari versi dialog Anda, tanpa comboKey
-  // ======================================================================
   Widget buildFieldMbentukcstId() {
-    return buildFieldComboMBentukCst(
+    return isEditingSection
+        ? buildFieldComboMBentukCst(
       labelText: 'mbentukcstId',
       initItem: fieldComboMBentukCst,
       onChangedCallback: (value) {
         if (value != null) {
           _removeError("Field ComboMBentukCst tidak boleh kosong.");
-          rekanGeneralBloc
-              .add(ComboMBentukCstChangedEvent(comboMBentukCst: value));
+          rekanGeneralBloc.add(ComboMBentukCstChangedEvent(comboMBentukCst: value));
         }
       },
       onSaveCallback: (value) {
-        if (value != null) {
-          fieldComboMBentukCst = value;
-        }
+        if (value != null) fieldComboMBentukCst = value;
       },
       validatorCallback: (value) {
-        if (value == null) {
-          _addError("Field ComboMBentukCst tidak boleh kosong.");
-        }
+        if (value == null) _addError("Field ComboMBentukCst tidak boleh kosong.");
       },
+    )
+        : _buildDisabledDropdown(
+      text: fieldComboMBentukCst?.bentukNama ?? '-',
     );
   }
 
+
   Widget buildFieldMbidangId() {
-    return buildFieldComboMBidang(
+    return isEditingSection
+        ? buildFieldComboMBidang(
       labelText: 'mbidangId',
       initItem: fieldComboMBidang,
       onChangedCallback: (value) {
         if (value != null) {
           _removeError("Field ComboMBidang tidak boleh kosong.");
-          rekanGeneralBloc
-              .add(ComboMBidangChangedEvent(comboMBidang: value));
+          rekanGeneralBloc.add(ComboMBidangChangedEvent(comboMBidang: value));
         }
       },
       onSaveCallback: (value) {
@@ -314,18 +325,21 @@ class _RekanGeneralFormBodyState extends State<RekanGeneralFormBody> {
           _addError("Field ComboMBidang tidak boleh kosong.");
         }
       },
+    )
+        : _buildDisabledDropdown(
+      text: fieldComboMBidang?.bidangNama ?? '-',
     );
   }
 
   Widget buildFieldMtipecstId() {
-    return buildFieldComboMTipeCst(
+    return isEditingSection
+        ? buildFieldComboMTipeCst(
       labelText: 'mtipecstId',
       initItem: fieldComboMTipeCst,
       onChangedCallback: (value) {
         if (value != null) {
           _removeError("Field ComboMTipeCst tidak boleh kosong.");
-          rekanGeneralBloc
-              .add(ComboMTipeCstChangedEvent(comboMTipeCst: value));
+          rekanGeneralBloc.add(ComboMTipeCstChangedEvent(comboMTipeCst: value));
         }
       },
       onSaveCallback: (value) {
@@ -338,11 +352,15 @@ class _RekanGeneralFormBodyState extends State<RekanGeneralFormBody> {
           _addError("Field ComboMTipeCst tidak boleh kosong.");
         }
       },
+    )
+        : _buildDisabledDropdown(
+      text: fieldComboMTipeCst?.tipeNama ?? '-',
     );
   }
 
   Widget buildFieldMtitleId() {
-    return buildFieldComboMTitle(
+    return isEditingSection
+        ? buildFieldComboMTitle(
       labelText: 'mtitleId',
       initItem: fieldComboMTitle,
       onChangedCallback: (value) {
@@ -361,6 +379,9 @@ class _RekanGeneralFormBodyState extends State<RekanGeneralFormBody> {
           _addError("Field ComboMTitle tidak boleh kosong.");
         }
       },
+    )
+        : _buildDisabledDropdown(
+      text: fieldComboMTitle?.titleDesc ?? '-',
     );
   }
 }
