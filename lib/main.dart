@@ -28,9 +28,13 @@ import 'package:eassist_tools_app/pages/login/login_page.dart';
 import 'package:eassist_tools_app/pages/splash/splash_page.dart';
 import 'package:eassist_tools_app/repositories/chatting/guestscrud_repository.dart';
 import 'package:eassist_tools_app/repositories/login/change_password_repository.dart';
+import 'package:eassist_tools_app/repositories/profile/rekanbank_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/rekancontact_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/rekangeneral_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/rekanpajak_repository.dart';
+import 'package:eassist_tools_app/repositories/profile/rekanpic_repository.dart';
+import 'package:eassist_tools_app/repositories/profile/rekanpiccrud_repository.dart';
+import 'package:eassist_tools_app/repositories/profile/rekanpiclist_repository.dart';
 import 'package:eassist_tools_app/repositories/simulbon/simulboncrud_repository.dart';
 import 'package:eassist_tools_app/repositories/simulcar/simulcarcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/simulcargo/simulcargocrud_repository.dart';
@@ -47,18 +51,22 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
+import 'blocs/profile/rekanbank_bloc.dart';
 import 'blocs/profile/rekangeneral_bloc.dart';
 import 'blocs/profile/rekanpajak_bloc.dart';
+import 'blocs/profile/rekanpic_bloc.dart';
+import 'blocs/profile/rekanpiccrud_bloc.dart';
+import 'blocs/profile/rekanpiclist_bloc.dart';
 import 'blocs/simulcar/simulcarcrud_bloc.dart';
 import 'blocs/simulcargo/simulcargocrud_bloc.dart';
 import 'blocs/simulmb/simulmbcrud_bloc.dart';
 import 'blocs/simultree/simultreecrud_bloc.dart';
 
 Future<void> main() async {
-  
+
   final userRepository = UserRepository();
   AppData.kIsWeb = kIsWeb;
-  
+
   runApp(BlocProvider<AuthenticationBloc>(
     create: (context) {
       return AuthenticationBloc(userRepository: userRepository)
@@ -80,74 +88,74 @@ class App extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<ChangePasswordBloc>(
-          create: (context) =>
-              ChangePasswordBloc(repository: ChangePasswordRepository())),
+            create: (context) =>
+                ChangePasswordBloc(repository: ChangePasswordRepository())),
         BlocProvider<TakeImageCubit>(
           create: (context) => TakeImageCubit(),
-        ),        
+        ),
         BlocProvider<ProgressIndicatorBloc>(
-          create: (context) => ProgressIndicatorBloc()),
+            create: (context) => ProgressIndicatorBloc()),
         BlocProvider<NetworkBloc>(
-          create: (context) => NetworkBloc()..add(NetworkObserve())), 
+            create: (context) => NetworkBloc()..add(NetworkObserve())),
         BlocProvider<OnBoardMenuCariBloc>(
-          create: (context) => OnBoardMenuCariBloc()),   
+            create: (context) => OnBoardMenuCariBloc()),
         BlocProvider<SimulmvListBloc>(
-          create: (context) => SimulmvListBloc()),      
+            create: (context) => SimulmvListBloc()),
         BlocProvider<SimulmvCrudBloc>(
-          create: (context) =>
-              SimulmvCrudBloc(repository: SimulmvCrudRepository())), 
+            create: (context) =>
+                SimulmvCrudBloc(repository: SimulmvCrudRepository())),
         BlocProvider<SimulparListBloc>(
-          create: (context) => SimulparListBloc()),      
+            create: (context) => SimulparListBloc()),
         BlocProvider<SimulparCrudBloc>(
-          create: (context) =>
-              SimulparCrudBloc(repository: SimulparCrudRepository())),
+            create: (context) =>
+                SimulparCrudBloc(repository: SimulparCrudRepository())),
         BlocProvider<SimuleeiListBloc>(
-          create: (context) => SimuleeiListBloc()),   
+            create: (context) => SimuleeiListBloc()),
         BlocProvider<SimuleeiCrudBloc>(
-          create: (context) =>
-              SimuleeiCrudBloc(repository: SimuleeiCrudRepository())), 
+            create: (context) =>
+                SimuleeiCrudBloc(repository: SimuleeiCrudRepository())),
         BlocProvider<SimulgitCrudBloc>(
-          create: (context) =>
-              SimulgitCrudBloc(repository: SimulgitCrudRepository())),
+            create: (context) =>
+                SimulgitCrudBloc(repository: SimulgitCrudRepository())),
         BlocProvider<SimulgisCrudBloc>(
-          create: (context) =>
-              SimulgisCrudBloc(repository: SimulgisCrudRepository())), 
+            create: (context) =>
+                SimulgisCrudBloc(repository: SimulgisCrudRepository())),
         BlocProvider<SimulbonCrudBloc>(
-          create: (context) =>
-              SimulbonCrudBloc(repository: SimulbonCrudRepository())),
+            create: (context) =>
+                SimulbonCrudBloc(repository: SimulbonCrudRepository())),
         BlocProvider<SimulwpCrudBloc>(
-          create: (context) =>
-              SimulwpCrudBloc(repository: SimulwpCrudRepository())),
+            create: (context) =>
+                SimulwpCrudBloc(repository: SimulwpCrudRepository())),
         BlocProvider<SimulcargoCrudBloc>(
-          create: (context) =>
-              SimulcargoCrudBloc(repository: SimulcargoCrudRepository())),
+            create: (context) =>
+                SimulcargoCrudBloc(repository: SimulcargoCrudRepository())),
         BlocProvider<SimulcarCrudBloc>(
-          create: (context) =>
-            SimulcarCrudBloc(repository: SimulcarCrudRepository())),
+            create: (context) =>
+                SimulcarCrudBloc(repository: SimulcarCrudRepository())),
         BlocProvider<SimulmbCrudBloc>(
-          create: (context) =>
-            SimulmbCrudBloc(repository: SimulmbCrudRepository())),
+            create: (context) =>
+                SimulmbCrudBloc(repository: SimulmbCrudRepository())),
         BlocProvider<SimultreeCrudBloc>(
-          create: (context) =>
-              SimultreeCrudBloc(repository: SimultreeCrudRepository())),
+            create: (context) =>
+                SimultreeCrudBloc(repository: SimultreeCrudRepository())),
         BlocProvider<Klaim1ListBloc>(
-          create: (context) =>
-            Klaim1ListBloc()),
+            create: (context) =>
+                Klaim1ListBloc()),
         BlocProvider<Klaim2ListBloc>(
-          create: (context) =>
-              Klaim2ListBloc()),        
+            create: (context) =>
+                Klaim2ListBloc()),
         BlocProvider<GuestsCrudBloc>(
-          create: (context) =>
-              GuestsCrudBloc(repository: GuestsCrudRepository())),
+            create: (context) =>
+                GuestsCrudBloc(repository: GuestsCrudRepository())),
         BlocProvider<GalleryeventCariBloc>(
-          create: (context) =>
-              GalleryeventCariBloc()),        
+            create: (context) =>
+                GalleryeventCariBloc()),
         BlocProvider<GallerytestimonyCariBloc>(
-          create: (context) =>
-              GallerytestimonyCariBloc()),        
+            create: (context) =>
+                GallerytestimonyCariBloc()),
         BlocProvider<GallerymemberCariBloc>(
-          create: (context) =>
-              GallerymemberCariBloc()),
+            create: (context) =>
+                GallerymemberCariBloc()),
         BlocProvider<RekanContactBloc>(
             create: (context) =>
                 RekanContactBloc(repository: RekanContactRepository())),
@@ -157,6 +165,18 @@ class App extends StatelessWidget {
         BlocProvider<RekanPajakBloc>(
             create: (context) =>
                 RekanPajakBloc(repository: RekanPajakRepository())),
+        BlocProvider<RekanBankBloc>(
+            create: (context) =>
+                RekanBankBloc(repository: RekanBankRepository())),
+        BlocProvider<RekanPicBloc>(
+            create: (context) =>
+                RekanPicBloc(repository: RekanPicRepository())),
+        BlocProvider<RekanPicCrudBloc>(
+            create: (context) =>
+                RekanPicCrudBloc(repository: RekanPicCrudRepository())),
+        BlocProvider<RekanPicListBloc>(
+            create: (context) =>
+                RekanPicListBloc()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -173,21 +193,21 @@ class App extends StatelessWidget {
           builder: (context, state) {
             if (state is AuthenticationUninitialized) {
               debugPrint("AuthenticationUninitialized #10");
-        
+
               return const SplashPage();
             }
-        
+
             if (state is AuthenticationAuthenticated) {
               debugPrint("AuthenticationAuthenticated #20");
-        
+
               return HomePage(
                 userRepository: userRepository,
                 userid: 0,
                 key: null,
               );
-               
+
             }
-        
+
             if (state is AuthenticationUnauthenticated) {
               debugPrint("AuthenticationUnauthenticated #30");
               return HomePage(
@@ -196,7 +216,7 @@ class App extends StatelessWidget {
                 key: null,
               );
             }
-        
+
             if (AppData.kIsWeb) {
               debugPrint("AppData.kIsWeb #40");
               return LoginPage(
