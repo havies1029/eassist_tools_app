@@ -9,7 +9,6 @@ import 'package:eassist_tools_app/widgets/section/navbar/components/profile_drop
 import 'package:eassist_tools_app/widgets/section/navbar/components/profile_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'dart:math' show pi;
 
 import '../../../blocs/profile/rekanbank_bloc.dart';
 import '../../../blocs/profile/rekancontact_bloc.dart';
@@ -31,6 +30,7 @@ import '../../../pages/profile/rekanpiccrud_main.dart';
 import '../../../pages/profile/rekanpiclist_list.dart';
 import '../../../pages/profile/rekanpiclist_list_widget.dart';
 import '../../PopUp/Popup_Succeed.dart';
+import '../../forget_password/ForgetPasswordPage.dart';
 import '../../login/login_client/LoginClientPage.dart';
 import '../../profile/profile_perusahaan/profile_main_page.dart';
 import '../../../pages/profile/rekancontact_form.dart';
@@ -518,6 +518,18 @@ class _NavbarWidgetState extends State<NavbarWidget> {
         context: context,
         barrierColor: Colors.black54,
         builder: (_) => const ResetPasswordPage(),
+      );
+    }else if (title == 'Forget Password Page') {
+      // Jika ingin push ke halaman baru:
+      // Navigator.of(context).push(
+      //   MaterialPageRoute(builder: (_) => const ForgetPasswordPage()),
+      // );
+
+      // Atau, jika kamu ingin menampilkannya sebagai dialog:
+      showDialog(
+        context: context,
+        barrierColor: Colors.black54,
+        builder: (_) => const ForgetPasswordPage(),
       );
     }else if (title == 'Popup Succeed') {
       // Jika ingin push ke halaman baru:

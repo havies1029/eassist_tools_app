@@ -9,7 +9,6 @@ import 'package:eassist_tools_app/models/profile/rekanbank_model.dart';
 import 'package:eassist_tools_app/models/combobox/combombank_model.dart';
 import 'package:eassist_tools_app/widgets/combobox/combombank_widget.dart';
 import 'package:dropdown_search/dropdown_search.dart';
-import '../../inline_error_text.dart';
 
 /// Widget untuk menampilkan alert merah atas section
 class SectionErrorAlert extends StatelessWidget {

@@ -73,7 +73,7 @@ Future<User> validateUserLogin(UserLogin userLogin) async {
       );
       return user;
     } on Exception catch (e) {
-     //debugPrint("Error : ${e.toString()}");
+     debugPrint("Error : ${e.toString()}");
       rethrow;
     }
   } else {

@@ -1,3 +1,5 @@
+import 'package:eassist_tools_app/widgets/section/signature/signature_model/AssetData.dart';
+import 'package:eassist_tools_app/widgets/section/signature/signature_model/StatData.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
@@ -604,30 +606,4 @@ class DonutChartPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
-}
-
-class AssetData {
-  final String label;
-  final double percentage;
-  final Color color;
-
-  AssetData({
-    required this.label,
-    required this.percentage,
-    required this.color,
-  });
-}
-
-class StatData {
-  final IconData icon;
-  final String label;
-  final String value;
-  final Color color;
-
-  StatData({
-    required this.icon,
-    required this.label,
-    required this.value,
-    required this.color,
-  });
 }

@@ -11,6 +11,8 @@ class LoginClientPage extends StatefulWidget {
 
 class _LoginClientPageState extends State<LoginClientPage>
     with TickerProviderStateMixin {
+  // ─────────────────────────────────────────────────────────────────────
+  // 1) Semua controller & errorText diletakkan di sini:
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -20,6 +22,7 @@ class _LoginClientPageState extends State<LoginClientPage>
   bool _isHoveringButton = false;
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
+  // ─────────────────────────────────────────────────────────────────────
 
   @override
   void initState() {
@@ -116,9 +119,9 @@ class _LoginClientPageState extends State<LoginClientPage>
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   // 1) Header tetap di atas
-                  _buildHeader(context),
+                  _buildHeader(),
 
-                  // 2) Area Body yang sekarang scrollable (boleh memanjang)
+                  // 2) Area Body yang scrollable (form + button)
                   Expanded(
                     child: SingleChildScrollView(
                       padding: EdgeInsets.zero, // sudah ada padding di _buildBody
@@ -134,7 +137,7 @@ class _LoginClientPageState extends State<LoginClientPage>
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildHeader() {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -198,9 +201,7 @@ class _LoginClientPageState extends State<LoginClientPage>
               color: Colors.black87,
             ),
           ),
-
           const SizedBox(height: 5),
-
           const Text(
             'Yuk, isi data kamu dan jadi bagian dari klien eksklusif kami.', // teks subheader
             style: TextStyle(
@@ -208,29 +209,19 @@ class _LoginClientPageState extends State<LoginClientPage>
               color: Colors.black54,
             ),
           ),
-
           const SizedBox(height: 35),
 
-          // Field Email dengan errorText
-          _buildTextField(
-            controller: _emailController,
-            hintText: 'Masukkan Email',
-            keyboardType: TextInputType.emailAddress,
-            errorText: _emailErrorText,
-          ),
-          const SizedBox(height: 20),
+          // ───────────────────────────────────────────────────────────────────
+          // Daftar field dipangkas ke method terpisah agar mudah di‐edit
+          ..._buildFields(),
+          // ───────────────────────────────────────────────────────────────────
 
-          // Field Password dengan errorText
-          _buildTextField(
-            controller: _passwordController,
-            hintText: 'Masukkan Password',
-            keyboardType: TextInputType.visiblePassword,
-            obscureText: true,
-            errorText: _passwordErrorText,
-          ),
           const SizedBox(height: 40),
 
+          // ───────────────────────────────────────────────────────────────────
+          // Button juga terpisah di method sendiri (_buildLoginButton)
           _buildLoginButton(),
+          // ───────────────────────────────────────────────────────────────────
         ],
       ),
     );
@@ -261,6 +252,38 @@ class _LoginClientPageState extends State<LoginClientPage>
     );
   }
 
+  // ─────────────────────────────────────────────────────────────────────
+  // Method yang mengembalikan List<Widget> berisi semua field
+  // Kalau mau menambah field baru, cukup edit di sini.
+  List<Widget> _buildFields() {
+    return [
+      _buildTextField(
+        controller: _emailController,
+        hintText: 'Masukkan Email',
+        keyboardType: TextInputType.emailAddress,
+        errorText: _emailErrorText,
+      ),
+      const SizedBox(height: 20),
+      _buildTextField(
+        controller: _passwordController,
+        hintText: 'Masukkan Password',
+        keyboardType: TextInputType.visiblePassword,
+        obscureText: true,
+        errorText: _passwordErrorText,
+      ),
+
+      // Jika ingin menambahkan field baru, tinggal tambahkan di sini, contohnya:
+      // const SizedBox(height: 20),
+      // _buildTextField(
+      //   controller: _otpController,
+      //   hintText: 'Masukkan OTP',
+      //   keyboardType: TextInputType.number,
+      //   errorText: _otpErrorText,
+      // ),
+    ];
+  }
+
+  // Method builder untuk TextField: desain tetap sama
   Widget _buildTextField({
     required TextEditingController controller,
     required String hintText,
@@ -310,7 +333,7 @@ class _LoginClientPageState extends State<LoginClientPage>
           ),
         ),
 
-        // Tampilkan errorText jika tidak null
+        // Tampilkan errorText jika tidak null (desain tetap sama)
         if (errorText != null) ...[
           const SizedBox(height: 5),
           Text(
@@ -322,6 +345,7 @@ class _LoginClientPageState extends State<LoginClientPage>
     );
   }
 
+  // Method builder untuk tombol "Masuk"
   Widget _buildLoginButton() {
     return MouseRegion(
       onEnter: (_) => setState(() => _isHoveringButton = true),
@@ -371,4 +395,5 @@ class _LoginClientPageState extends State<LoginClientPage>
       ),
     );
   }
+// ─────────────────────────────────────────────────────────────────────
 }

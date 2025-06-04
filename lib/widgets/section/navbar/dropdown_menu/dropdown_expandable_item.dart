@@ -1,4 +1,3 @@
-import 'dart:math' show pi;
 import 'package:flutter/material.dart';
 import 'dropdown_sub_menu_tile.dart';
 import 'sub_menu_item.dart';

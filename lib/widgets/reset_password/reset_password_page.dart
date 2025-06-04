@@ -8,20 +8,28 @@ class ResetPasswordPage extends StatefulWidget {
   _ResetPasswordPageState createState() => _ResetPasswordPageState();
 }
 
-class _ResetPasswordPageState extends State<ResetPasswordPage> with TickerProviderStateMixin {
-  final _oldPasswordController = TextEditingController();
-  final _newPasswordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
+class _ResetPasswordPageState extends State<ResetPasswordPage>
+    with TickerProviderStateMixin {
+  // Controllers
+  final TextEditingController _oldPasswordController = TextEditingController();
+  final TextEditingController _newPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+  TextEditingController();
 
+  // Visibility toggle
   bool _showOldPassword = false;
   bool _showNewPassword = false;
   bool _showConfirmPassword = false;
+
+  // Hover state untuk tombol
   bool _isHovering = false;
 
+  // Error messages
   String? _oldPasswordError;
   String? _newPasswordError;
   String? _confirmPasswordError;
 
+  // Animasi
   late final AnimationController _animationController;
   late final Animation<double> _scaleAnimation;
 
@@ -85,7 +93,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> with TickerProvid
       hasError = true;
     }
 
-    // Jika sebelumnya tidak ada error kosong dan password baru tidak sama
+    // Jika tidak ada error kosong dan password baru tidak sama
     if (!hasError && newPwd != confirmPwd) {
       setState(() {
         _confirmPasswordError = 'Password baru dan konfirmasi tidak sama';
@@ -111,17 +119,13 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> with TickerProvid
 
     return Scaffold(
       backgroundColor: Colors.black54,
-      // ←– Wrapping GestureDetector untuk mendeteksi tap di area gelap
       body: GestureDetector(
-        onTap: () {
-          Navigator.of(context).pop();
-        },
-        behavior: HitTestBehavior.opaque, // Pastikan area kosong juga terdeteksi
+        onTap: () => Navigator.of(context).pop(),
+        behavior: HitTestBehavior.opaque,
         child: Center(
-          // ←– Tambahkan GestureDetector di sini agar tap di dalam dialog tidak propagasi
           child: GestureDetector(
             onTap: () {
-              // Block tap di dalam dialog agar tidak menutup
+              // Mencegah propagasi tap ke background
             },
             child: AnimatedBuilder(
               animation: _scaleAnimation,
@@ -157,6 +161,9 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> with TickerProvid
     );
   }
 
+  // -------------------------------------------------
+  // HEADER DIALOG
+  // -------------------------------------------------
   Widget _buildHeader(BuildContext context) {
     return Container(
       width: double.infinity,
@@ -197,6 +204,9 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> with TickerProvid
     );
   }
 
+  // -------------------------------------------------
+  // BODY DIALOG (Ringkas, semua field & button direfer ke metode di bawah)
+  // -------------------------------------------------
   Widget _buildBody() {
     return Container(
       width: double.infinity,
@@ -212,85 +222,30 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> with TickerProvid
         children: [
           _buildLogo(),
           const SizedBox(height: 15),
-
           const Text(
-            'Masukkan Password kamu!', // sesuaikan teks header-nya
+            'Masukkan Password kamu!',
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.bold,
-              color: Colors.black87, // warna lebih gelap
+              color: Colors.black87,
             ),
           ),
-
           const SizedBox(height: 5),
-
           const Text(
-            'Yuk, isi data kamu dan jadi bagian dari klien eksklusif kami.', // sesuaikan teks subheader-nya
+            'Yuk, isi data kamu dan jadi bagian dari klien eksklusif kami.',
             style: TextStyle(
               fontSize: 12,
-              color: Colors.black54, // warna sedikit lebih terang
+              color: Colors.black54,
             ),
           ),
-
           const SizedBox(height: 35),
-          // Password Lama
-          _buildPasswordField(
-            controller: _oldPasswordController,
-            hintText: 'Masukkan Password Lama',
-            obscureText: !_showOldPassword,
-            onToggle: () => setState(() => _showOldPassword = !_showOldPassword),
-          ),
-          if (_oldPasswordError != null)
-            Padding(
-              padding: const EdgeInsets.only(top: 5, left: 8),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  _oldPasswordError!,
-                  style: const TextStyle(color: Colors.red, fontSize: 12),
-                ),
-              ),
-            ),
-          const SizedBox(height: 20),
 
-          // Password Baru
-          _buildPasswordField(
-            controller: _newPasswordController,
-            hintText: 'Masukkan Password Baru',
-            obscureText: !_showNewPassword,
-            onToggle: () => setState(() => _showNewPassword = !_showNewPassword),
-          ),
-          if (_newPasswordError != null)
-            Padding(
-              padding: const EdgeInsets.only(top: 5, left: 8),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  _newPasswordError!,
-                  style: const TextStyle(color: Colors.red, fontSize: 12),
-                ),
-              ),
-            ),
+          // Panggilan ke metode‐metode field di bagian terbawah:
+          _buildOldPasswordField(),
           const SizedBox(height: 20),
-
-          // Konfirmasi Password Baru
-          _buildPasswordField(
-            controller: _confirmPasswordController,
-            hintText: 'Ketik Ulang Password Baru',
-            obscureText: !_showConfirmPassword,
-            onToggle: () => setState(() => _showConfirmPassword = !_showConfirmPassword),
-          ),
-          if (_confirmPasswordError != null)
-            Padding(
-              padding: const EdgeInsets.only(top: 5, left: 8),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  _confirmPasswordError!,
-                  style: const TextStyle(color: Colors.red, fontSize: 12),
-                ),
-              ),
-            ),
+          _buildNewPasswordField(),
+          const SizedBox(height: 20),
+          _buildConfirmPasswordField(),
           const SizedBox(height: 40),
 
           _buildSubmitButton(),
@@ -299,6 +254,9 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> with TickerProvid
     );
   }
 
+  // -------------------------------------------------
+  // LOGO DI BAGIAN ATAS BODY
+  // -------------------------------------------------
   Widget _buildLogo() {
     return Container(
       width: 80,
@@ -324,6 +282,88 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> with TickerProvid
     );
   }
 
+  // =================================================
+  // SEMUA WIDGET INPUT FIELD & BUTTON =======================================
+  // Letakkan di bagian paling bawah agar lebih mudah dicari & diberikan function
+  // =================================================
+
+  // Field untuk "Password Lama" beserta error‐nya
+  Widget _buildOldPasswordField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildPasswordField(
+          controller: _oldPasswordController,
+          hintText: 'Masukkan Password Lama',
+          obscureText: !_showOldPassword,
+          onToggle: () => setState(() => _showOldPassword = !_showOldPassword),
+        ),
+        if (_oldPasswordError != null) ...[
+          const SizedBox(height: 5),
+          Padding(
+            padding: const EdgeInsets.only(left: 8),
+            child: Text(
+              _oldPasswordError!,
+              style: const TextStyle(color: Colors.red, fontSize: 12),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  // Field untuk "Password Baru" beserta error‐nya
+  Widget _buildNewPasswordField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildPasswordField(
+          controller: _newPasswordController,
+          hintText: 'Masukkan Password Baru',
+          obscureText: !_showNewPassword,
+          onToggle: () => setState(() => _showNewPassword = !_showNewPassword),
+        ),
+        if (_newPasswordError != null) ...[
+          const SizedBox(height: 5),
+          Padding(
+            padding: const EdgeInsets.only(left: 8),
+            child: Text(
+              _newPasswordError!,
+              style: const TextStyle(color: Colors.red, fontSize: 12),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  // Field untuk "Konfirmasi Password Baru" beserta error‐nya
+  Widget _buildConfirmPasswordField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildPasswordField(
+          controller: _confirmPasswordController,
+          hintText: 'Ketik Ulang Password Baru',
+          obscureText: !_showConfirmPassword,
+          onToggle: () =>
+              setState(() => _showConfirmPassword = !_showConfirmPassword),
+        ),
+        if (_confirmPasswordError != null) ...[
+          const SizedBox(height: 5),
+          Padding(
+            padding: const EdgeInsets.only(left: 8),
+            child: Text(
+              _confirmPasswordError!,
+              style: const TextStyle(color: Colors.red, fontSize: 12),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  // Membuat TextField password dengan toggle visibility
   Widget _buildPasswordField({
     required TextEditingController controller,
     required String hintText,
@@ -378,6 +418,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> with TickerProvid
     );
   }
 
+  // Tombol "Submit"
   Widget _buildSubmitButton() {
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovering = true),

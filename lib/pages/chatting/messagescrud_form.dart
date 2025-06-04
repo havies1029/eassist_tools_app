@@ -7,7 +7,6 @@ import 'package:eassist_tools_app/models/chatting/messagescrud_model.dart';
 import 'package:intl/intl.dart';
 import 'package:eassist_tools_app/common/thousand_separator_input_formatter.dart';
 import 'package:date_field/date_field.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 
 
 class MessagesCrudFormPage extends StatefulWidget {

@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
-import 'dart:math' show pi;
 
+import '../../widgets/section/about/hero_section_about.dart';
+import '../../widgets/section/action_section.dart';
 import '../../widgets/section/navbar/navbar_widget.dart';
-import '../../widgets/signature/AssetDashboard.dart';
-import '../../widgets/signature/actiond_asset_section.dart';
-import '../../widgets/section/carousel_section.dart';
-import '../../widgets/section/client_section.dart';
-import '../../widgets/section/feature_section.dart';
+import '../../widgets/section/signature/AssetDashboard.dart';
 import '../../widgets/section/about/floating_buttons_about.dart';
 import '../../widgets/section/footer_section.dart';
-import '../../widgets/signature/find_section_insurance.dart';
-import '../../widgets/section/testimonial_section.dart';
 
 class ActiveAssetMain extends StatelessWidget {
   const ActiveAssetMain({super.key});

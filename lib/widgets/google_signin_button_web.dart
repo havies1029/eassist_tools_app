@@ -1,9 +1,4 @@
-import 'dart:html' as html;
-import 'dart:ui_web' as ui;
-import 'dart:js_interop';
-import 'dart:js_interop_unsafe';
 import 'package:flutter/material.dart';
-import 'package:js/js_util.dart' as js_util;
 import 'package:google_sign_in_web/web_only.dart';
 import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart'
     show GoogleSignInPlatform;

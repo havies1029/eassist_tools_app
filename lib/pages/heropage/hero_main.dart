@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math' show pi;
 
+import 'package:shared_preferences/shared_preferences.dart';    // ← import SharedPreferences
 import '../../repositories/user/user_repository.dart';
 import '../../widgets/section/action_section.dart';
 import '../../widgets/section/carousel_section.dart';
@@ -12,7 +13,8 @@ import '../../widgets/section/navbar/navbar_widget.dart';
 import 'hero_section_heropage.dart';
 import '../../widgets/section/testimonial_section.dart';
 
-// **Tambah import ini agar bisa memanggil dialog login:**
+// **Pastikan method showLoginDialog mengembalikan Future<void>**
+//    (di CustomPopupsLoginUser)
 import 'package:eassist_tools_app/widgets/login/login_gmail/Popup.dart';
 
 class DummyUserRepository extends UserRepository {
@@ -61,14 +63,28 @@ class HeroPage extends StatefulWidget {
 }
 
 class _HeroPageState extends State<HeroPage> {
+  static const String _kShownLoginDialogKey = 'hasShownLoginDialog';
+
   @override
   void initState() {
     super.initState();
+    _checkAndShowLoginDialog();
+  }
 
-    // Memastikan dialog dipanggil setelah frame pertama selesai dirender
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      CustomPopupsLoginUser.showLoginDialog(context);
-    });
+  /// Cek SharedPreferences; jika belum pernah tampil, maka tampilkan dialog
+  Future<void> _checkAndShowLoginDialog() async {
+    final prefs = await SharedPreferences.getInstance();
+    final hasShown = prefs.getBool(_kShownLoginDialogKey) ?? false;
+
+    if (!hasShown) {
+      // Tampilkan dialog setelah frame pertama dirender,
+      // lalu simpan flag hanya setelah dialog ditutup oleh user.
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        await CustomPopupsLoginUser.showLoginDialog(context);
+        // Baru setelah user menutup popup, set supaya tidak muncul lagi
+        await prefs.setBool(_kShownLoginDialogKey, true);
+      });
+    }
   }
 
   @override
@@ -83,7 +99,7 @@ class _HeroPageState extends State<HeroPage> {
               Positioned.fill(
                 child: isMobile
                     ? Container(
-                  color: const Color(0xFF79AB43), // hijau full-screen
+                  color: const Color(0xFF79AB43),
                 )
                     : Image.asset(
                   'assets/images/bg-home.jpg',

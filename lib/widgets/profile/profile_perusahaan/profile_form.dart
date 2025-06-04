@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../PopUp/ConfirmationDialog.dart';
+import '../../PopUp/Popup_Succeed.dart';
+import '../../login/login_client/LoginClientPage.dart';
 import '../profile_perusahaan/form_sections/rekan_general_form_body.dart';
 import '../profile_perusahaan/form_sections/rekan_contact_form_body.dart';
 import '../profile_perusahaan/form_sections/rekan_pajak_form_body.dart';
@@ -28,24 +30,37 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
     showDialog(
       context: context,
       barrierColor: Colors.black54,
-      builder: (context) => AlertDialog(
-        title: const Text('Sukses'),
-        content: const Text(
-          'Register sebagai Client telah sukses.\nSilakan mengecek password di email yang telah didaftarkan.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              // Setelah dialog ditutup, navigasi ke halaman LoginClientPage
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const LoginClientPage()),
-              );
-            },
-            child: const Text('OK'),
-          ),
-        ],
+      builder: (context) => ConfirmationDialog(
+        onConfirm: () {
+          // Ketika tombol "Setuju & Lanjutkan" ditekan:
+          Navigator.of(context).pop(); // Tutup ConfirmationDialog
+
+          // 2) Lalu munculkan PopupSuceedPage
+          showDialog(
+            context: context,
+            barrierColor: Colors.black54,
+            builder: (context) => PopupSuceedPage(
+              message: 'Register sebagai Client telah sukses.\n'
+                  'Silakan mengecek password di email yang telah didaftarkan.',
+              onOk: () {
+                // Ketika tombol "OK" di PopupSuceedPage ditekan:
+                Navigator.of(context).pop(); // Tutup PopupSuceedPage
+
+                // 3) Navigasi ke halaman LoginClientPage
+                //    Jika LoginClientPage punya parameter, boleh ditambahkan di sini:
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const LoginClientPage(
+                      // contoh: passing parameter ke constructor
+                      // email: 'user@example.com',
+                    ),
+                  ),
+                );
+              },
+            ),
+          );
+        },
       ),
     );
   }
@@ -232,19 +247,3 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
   }
 }
 
-// Halaman LoginClientPage sebagai contoh (import sesuai file Anda)
-class LoginClientPage extends StatelessWidget {
-  const LoginClientPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login Client'),
-      ),
-      body: const Center(
-        child: Text('Halaman Login Client'),
-      ),
-    );
-  }
-}

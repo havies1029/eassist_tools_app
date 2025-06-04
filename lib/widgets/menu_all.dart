@@ -4,7 +4,6 @@ import 'package:eassist_tools_app/blocs/home/home_bloc.dart';
 import 'constants.dart';
 import 'menu_item_button.dart' as customWidgets;
 import 'header_section.dart';
-import 'horizontal_divider.dart';
 import 'my_colors.dart';
 
 class MenuAllWidget extends StatelessWidget {

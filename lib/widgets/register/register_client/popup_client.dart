@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../Reusable_OTP/ReusableOTPDialog.dart';
 import 'register_form_dialog.dart';
-import 'register_verification_dialog.dart';
 
 class CustomPopupsClient {
   static const Color primaryGreen = Color(0xFF79AB43);
@@ -26,7 +26,7 @@ class CustomPopupsClient {
     return showDialog(
       context: context,
       barrierDismissible: false, // paksa user menyelesaikan OTP terlebih dahulu
-      builder: (_) => LoginDialog(
+      builder: (_) => ReusableOTPDialog(
         email: email,
         selectedChoice: selectedChoice,
       ),

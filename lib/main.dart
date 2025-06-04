@@ -34,7 +34,6 @@ import 'package:eassist_tools_app/repositories/profile/rekangeneral_repository.d
 import 'package:eassist_tools_app/repositories/profile/rekanpajak_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/rekanpic_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/rekanpiccrud_repository.dart';
-import 'package:eassist_tools_app/repositories/profile/rekanpiclist_repository.dart';
 import 'package:eassist_tools_app/repositories/simulbon/simulboncrud_repository.dart';
 import 'package:eassist_tools_app/repositories/simulcar/simulcarcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/simulcargo/simulcargocrud_repository.dart';

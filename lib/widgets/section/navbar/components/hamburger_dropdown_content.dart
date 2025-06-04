@@ -99,23 +99,23 @@ class _HamburgerDropdownContentState
           SubMenuItem(icon: Icons.person_outline, title: 'Register Gmail', onTap: () {}),
           SubMenuItem(icon: Icons.person_outline, title: 'Register Client', onTap: () {}),
           SubMenuItem(icon: Icons.lock_reset, title: 'Reset Password Page', onTap: () {}),
+          SubMenuItem(icon: Icons.person_outline, title: 'Forget Password Page', onTap: () {}),
 
           // 3. Profil
           SubMenuItem(icon: Icons.person_pin_circle_outlined, title: 'Profile Individu', onTap: () {}),
           SubMenuItem(icon: Icons.business_outlined, title: 'Profile Perusahaan', onTap: () {}),
 
-          // 4. Rekan
-          SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Contact', onTap: () {}),
-          SubMenuItem(icon: Icons.business_outlined, title: 'Rekan General', onTap: () {}),
-          SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pajak', onTap: () {}),
-
-          // 5. Dialog / Popup
+          // 4. Dialog / Popup
           SubMenuItem(icon: Icons.person_outline, title: 'Popup Succeed', onTap: () {}),
           SubMenuItem(icon: Icons.business_outlined, title: 'Dialog Confirmation', onTap: () {}),
 
           SubMenuItem(icon: Icons.business_outlined, title: 'Find Insurance', onTap: () {}),
           SubMenuItem(icon: Icons.business_outlined, title: 'Active Asset', onTap: () {}),
 
+          // 5. Rekan
+          SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Contact', onTap: () {}),
+          SubMenuItem(icon: Icons.business_outlined, title: 'Rekan General', onTap: () {}),
+          SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pajak', onTap: () {}),
           SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Bank', onTap: () {}),
           SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic Form', onTap: () {}),
           SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic Crud Form', onTap: () {}),

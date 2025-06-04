@@ -2,15 +2,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../register/register_gmail/Popup.dart'; // Hanya yang ini
-import '../login_client/ReusableOTPDialog.dart';
+import '../../Reusable_OTP/ReusableOTPDialog.dart';
 import 'Base_Dialog.dart';
 import 'Auth_Api.dart'; // Pastikan AuthService.loginWithGmail menerima idToken
 import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:eassist_tools_app/widgets/google_signin_button_stub.dart'
 if (dart.library.js_interop) 'package:eassist_tools_app/widgets/google_signin_button_web.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
-
 import 'Popup.dart';
 
 // Pastikan ini adalah Web Client ID
@@ -29,8 +27,9 @@ class GeneralLoginDialog extends BaseDialog {
 }
 
 class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
+  // ─────────────────────────────────────────────────────────────────────
+  // 1) Controller, errorText, dan state hovering diletakkan di atas:
   final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
 
   bool _isHovering = false;
   bool _isGmailHovering = false;
@@ -39,8 +38,8 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
   bool _rememberLogin = false;
 
   String? _emailError;
-  String? _passwordError;
   late final Widget _cachedGoogleButton;
+  // ─────────────────────────────────────────────────────────────────────
 
   @override
   void initState() {
@@ -48,17 +47,14 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
     if (AppData.kIsWeb) {
       // Hanya panggil registerGoogleSigninButton() sekali
       registerGoogleSigninButton();
-
       // Cache widget-nya supaya tidak dibuat ulang berulang kali
       _cachedGoogleButton = googleSigninButton();
     }
   }
 
-
   @override
   void dispose() {
     _emailController.dispose();
-    _passwordController.dispose();
     super.dispose();
   }
 
@@ -83,12 +79,7 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  CircleAvatar(
-                    radius: 40,
-                    backgroundColor: Colors.white,
-                    backgroundImage:
-                    const AssetImage('assets/images/jps_logo.png'),
-                  ),
+                  buildLogo(),
                   const SizedBox(height: 24),
                   _buildMobileBody(),
                 ],
@@ -111,7 +102,6 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
       );
     }
 
-
     // ======= DESKTOP =========
     return buildDialogContainer(
       title: 'Login',
@@ -120,7 +110,7 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
           buildLogo(),
           const SizedBox(height: 15),
           const Text(
-            'Masukkan Email dan Password',
+            'Masukkan Email',
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.bold,
@@ -137,191 +127,31 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
           ),
           const SizedBox(height: 35),
 
-          // ––––– Input Email –––––
-          buildTextField(
-            controller: _emailController,
-            hintText: 'Email',
-            keyboardType: TextInputType.emailAddress,
-          ),
-          if (_emailError != null)
-            Padding(
-              padding: const EdgeInsets.only(top: 4, left: 12),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  _emailError!,
-                  style: const TextStyle(color: Colors.red, fontSize: 12),
-                ),
-              ),
-            ),
-          const SizedBox(height: 20),
-
-          // ––––– Input Password –––––
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.1),
-                  blurRadius: 5,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: TextField(
-              controller: _passwordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                hintText: 'Password',
-                hintStyle: TextStyle(color: Colors.grey.shade400),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: Colors.grey.shade300),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: Colors.grey.shade300),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide:
-                  const BorderSide(color: Color(0xFF79AB43), width: 2),
-                ),
-                filled: true,
-                fillColor: Colors.grey.shade50,
-                contentPadding:
-                const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-              ),
-            ),
-          ),
-          if (_passwordError != null)
-            Padding(
-              padding: const EdgeInsets.only(top: 4, left: 12),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  _passwordError!,
-                  style: const TextStyle(color: Colors.red, fontSize: 12),
-                ),
-              ),
-            ),
-          const SizedBox(height: 20),
-
-          buildAnimatedButton(
-            text: 'Masuk',
-            isHovering: _isHovering,
-            onHover: (hovering) => setState(() => _isHovering = hovering),
-            onPressed: () => _handleLogin(),
-          ),
-
-          const SizedBox(height: 20),
-          _buildDivider(),
-          const SizedBox(height: 20),
-
-          // ––––– Gunakan widget Google Sign-In yang sudah di-cache –––––
-          if (kIsWeb && MediaQuery.of(context).size.width > 600)
-            _cachedGoogleButton
-          else
-            _buildIconButton(
-              text: 'Masuk Menggunakan Gmail',
-              iconPath: 'assets/icons/google-icon.svg',
-              isHovering: _isGmailHovering,
-              onHover: (hovering) => setState(() => _isGmailHovering = hovering),
-              onPressed: () => _handleGmailLogin(),
-            ),
-
-          const SizedBox(height: 20),
-          _buildLoginOptions(),
-          const SizedBox(height: 20),
-          _buildRegisterLink(),
+          // ────────────────────────────────────────────────────────────────────
+          // Semua field dan tombol desktop dipisah di bawah
+          ..._buildDesktopFieldsAndButtons(),
+          // ────────────────────────────────────────────────────────────────────
         ],
       ),
     );
   }
 
+  // ─────────────────────────────────────────────────────────────────────────
+  // 2) Body untuk mobile, semua field & tombol ada di sini, modular:
   Widget _buildMobileBody() {
     return Column(
       children: [
-        buildTextField(
-          controller: _emailController,
-          hintText: 'Email',
-          keyboardType: TextInputType.emailAddress,
-        ),
-        if (_emailError != null)
-          Padding(
-            padding: const EdgeInsets.only(top: 4, left: 12),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                _emailError!,
-                style: const TextStyle(color: Colors.red, fontSize: 12),
-              ),
-            ),
-          ),
+        ..._buildMobileFields(),
         const SizedBox(height: 20),
-
-        // ––––– Input Password (mobile) –––––
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.1),
-                blurRadius: 5,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: TextField(
-            controller: _passwordController,
-            obscureText: true,
-            decoration: InputDecoration(
-              hintText: 'Password',
-              hintStyle: TextStyle(color: Colors.grey.shade400),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(color: Colors.grey.shade300),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(color: Colors.grey.shade300),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide:
-                const BorderSide(color: Color(0xFF79AB43), width: 2),
-              ),
-              filled: true,
-              fillColor: Colors.grey.shade50,
-              contentPadding:
-              const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-            ),
-          ),
-        ),
-        if (_passwordError != null)
-          Padding(
-            padding: const EdgeInsets.only(top: 4, left: 12),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                _passwordError!,
-                style: const TextStyle(color: Colors.red, fontSize: 12),
-              ),
-            ),
-          ),
-        const SizedBox(height: 20),
-
-        buildAnimatedButton(
+        _buildLoginButton(
           text: 'Masuk',
           isHovering: _isHovering,
           onHover: (hovering) => setState(() => _isHovering = hovering),
           onPressed: () => _handleLogin(),
         ),
         const SizedBox(height: 20),
-
         _buildDivider(),
         const SizedBox(height: 20),
-
         // ––––– Selalu gunakan custom “Masuk Menggunakan Gmail” di mobile –––––
         _buildIconButton(
           text: 'Masuk Menggunakan Gmail',
@@ -331,25 +161,281 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
           onPressed: () => _handleGmailLogin(),
         ),
         const SizedBox(height: 20),
-
         _buildLoginOptions(),
         const SizedBox(height: 20),
-
         _buildRegisterLink(),
       ],
     );
   }
 
+  // ─────────────────────────────────────────────────────────────────────────
+  // 3) Kombinasi field + tombol untuk desktop:
+  List<Widget> _buildDesktopFieldsAndButtons() {
+    return [
+      // Input Email
+      _buildInputField(
+        controller: _emailController,
+        hintText: 'Email',
+        keyboardType: TextInputType.emailAddress,
+      ),
+      if (_emailError != null) ...[
+        const SizedBox(height: 4),
+        Padding(
+          padding: const EdgeInsets.only(left: 12),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              _emailError!,
+              style: const TextStyle(color: Colors.red, fontSize: 12),
+            ),
+          ),
+        ),
+      ],
+      const SizedBox(height: 20),
+
+      _buildLoginButton(
+        text: 'Masuk',
+        isHovering: _isHovering,
+        onHover: (hovering) => setState(() => _isHovering = hovering),
+        onPressed: () => _handleLogin(),
+      ),
+      const SizedBox(height: 20),
+
+      _buildDivider(),
+      const SizedBox(height: 20),
+
+      // ––––– Gunakan widget Google Sign-In yang sudah di-cache –––––
+      if (kIsWeb && MediaQuery.of(context).size.width > 600)
+        _cachedGoogleButton
+      else
+        _buildIconButton(
+          text: 'Masuk Menggunakan Gmail',
+          iconPath: 'assets/icons/google-icon.svg',
+          isHovering: _isGmailHovering,
+          onHover: (hovering) => setState(() => _isGmailHovering = hovering),
+          onPressed: () => _handleGmailLogin(),
+        ),
+      const SizedBox(height: 20),
+
+      _buildLoginOptions(),
+      const SizedBox(height: 20),
+
+      _buildRegisterLink(),
+    ];
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // 4) List<Widget> field untuk mobile
+  List<Widget> _buildMobileFields() {
+    return [
+      _buildInputField(
+        controller: _emailController,
+        hintText: 'Email',
+        keyboardType: TextInputType.emailAddress,
+      ),
+      if (_emailError != null) ...[
+        const SizedBox(height: 4),
+        Padding(
+          padding: const EdgeInsets.only(left: 12),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              _emailError!,
+              style: const TextStyle(color: Colors.red, fontSize: 12),
+            ),
+          ),
+        ),
+      ],
+    ];
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // 5) _buildInputField: desain tetap sama (rounded, shadow, padding, dst.)
+  Widget _buildInputField({
+    required TextEditingController controller,
+    required String hintText,
+    TextInputType? keyboardType,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 5,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: TextField(
+        controller: controller,
+        keyboardType: keyboardType,
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: TextStyle(color: Colors.grey.shade400),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: Colors.grey.shade300),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: Colors.grey.shade300),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: Color(0xFF79AB43), width: 2),
+          ),
+          filled: true,
+          fillColor: Colors.grey.shade50,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+        ),
+      ),
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // 6) _buildLoginButton: untuk desktop & mobile (animasi hover, rounded, shadow)
+  Widget _buildLoginButton({
+    required String text,
+    required bool isHovering,
+    required Function(bool) onHover,
+    required VoidCallback onPressed,
+  }) {
+    return MouseRegion(
+      onEnter: (_) => onHover(true),
+      onExit: (_) => onHover(false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        width: double.infinity,
+        height: 50,
+        decoration: BoxDecoration(
+          color: const Color(0xFF6B9639),
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: isHovering
+              ? [
+            BoxShadow(
+              color: Colors.green.withOpacity(0.4),
+              blurRadius: 15,
+              offset: const Offset(0, 8),
+            ),
+          ]
+              : [
+            BoxShadow(
+              color: Colors.green.withOpacity(0.2),
+              blurRadius: 5,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(10),
+            onTap: onPressed,
+            child: Center(
+              child: Text(
+                text,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // 7) Divider bertuliskan “Atau”
+  Widget _buildDivider() {
+    return Row(
+      children: [
+        Expanded(child: Container(height: 1, color: Colors.grey.shade300)),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 15),
+          child: Text('Atau', style: TextStyle(color: Colors.grey, fontSize: 14)),
+        ),
+        Expanded(child: Container(height: 1, color: Colors.grey.shade300)),
+      ],
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // 8) Icon button khusus (Google Sign-In / tombol kustom)
+  Widget _buildIconButton({
+    required String text,
+    required String iconPath,
+    required bool isHovering,
+    required Function(bool) onHover,
+    required VoidCallback onPressed,
+  }) {
+    return SizedBox(
+      width: double.infinity,
+      height: 55,
+      child: MouseRegion(
+        onEnter: (_) => onHover(true),
+        onExit: (_) => onHover(false),
+        child: GestureDetector(
+          onTap: onPressed,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            decoration: BoxDecoration(
+              color: isHovering ? Colors.grey.shade100 : Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: isHovering ? Colors.grey.shade400 : Colors.grey.shade300,
+                width: 1.5,
+              ),
+              boxShadow: isHovering
+                  ? [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.2),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                ),
+              ]
+                  : [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.1),
+                  blurRadius: 3,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                const SizedBox(width: 20),
+                SvgPicture.asset(iconPath, width: 24, height: 24),
+                const Spacer(),
+                Text(
+                  text,
+                  style: const TextStyle(
+                    color: Color(0xFF7BA05B),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const Spacer(),
+                const SizedBox(width: 44),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // 9) Opsi “Simpan Login” dan “Lupa Kata Sandi?”
   Widget _buildLoginOptions() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         GestureDetector(
-          onTap: () {
-            setState(() {
-              _rememberLogin = !_rememberLogin;
-            });
-          },
+          onTap: () => setState(() => _rememberLogin = !_rememberLogin),
           child: Row(
             children: [
               SizedBox(
@@ -357,11 +443,8 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
                 height: 20,
                 child: Checkbox(
                   value: _rememberLogin,
-                  onChanged: (bool? value) {
-                    setState(() {
-                      _rememberLogin = value ?? false;
-                    });
-                  },
+                  onChanged: (bool? value) =>
+                      setState(() => _rememberLogin = value ?? false),
                   activeColor: const Color(0xFF7BA05B),
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
@@ -397,163 +480,78 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
     );
   }
 
-  Widget _buildIconButton({
-    required String text,
-    required String iconPath,
-    required bool isHovering,
-    required Function(bool) onHover,
-    required VoidCallback onPressed,
-  }) {
-    return MouseRegion(
-      onEnter: (_) => onHover(true),
-      onExit: (_) => onHover(false),
-      child: GestureDetector(
-        onTap: onPressed,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          width: double.infinity,
-          height: 55,
-          decoration: BoxDecoration(
-            color: isHovering ? Colors.grey.shade100 : Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: isHovering ? Colors.grey.shade400 : Colors.grey.shade300,
-              width: 1.5,
-            ),
-            boxShadow: isHovering
-                ? [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
-                blurRadius: 8,
-                offset: const Offset(0, 4),
-              )
-            ]
-                : [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.1),
-                blurRadius: 3,
-                offset: const Offset(0, 2),
-              )
-            ],
-          ),
-          child: Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: SvgPicture.asset(
-                    iconPath,
-                    width: 24,
-                    height: 24,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Center(
-                  child: Text(
-                    text,
-                    style: const TextStyle(
-                      color: Color(0xFF7BA05B),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 44),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDivider() {
-    return Row(
-      children: [
-        Expanded(child: Container(height: 1, color: Colors.grey.shade300)),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 15),
-          child: Text('Atau', style: TextStyle(color: Colors.grey, fontSize: 14)),
-        ),
-        Expanded(child: Container(height: 1, color: Colors.grey.shade300)),
-      ],
-    );
-  }
-
+  // ─────────────────────────────────────────────────────────────────────────
+  // 10) Link “Daftar” di bagian paling bawah
   Widget _buildRegisterLink() {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: 55,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            'Tidak memiliki akun? ',
-            style: TextStyle(
-              color: Colors.grey.shade600,
-              fontSize: 14,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Tidak memiliki akun? ',
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 14,
+              ),
             ),
-          ),
-          MouseRegion(
-            onEnter: (_) => setState(() => _isHoveringRegister = true),
-            onExit: (_) => setState(() => _isHoveringRegister = false),
-            child: GestureDetector(
-              onTap: () async {
-                Navigator.of(context).pop();
-                await CustomPopupsRegisterUser.showRegisterDialog(context);
-              },
-              child: Text(
-                'Daftar',
-                style: TextStyle(
-                  color: _isHoveringRegister
-                      ? const Color(0xFF7BA05B)
-                      : Colors.blue.shade600,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
+            MouseRegion(
+              onEnter: (_) => setState(() => _isHoveringRegister = true),
+              onExit: (_) => setState(() => _isHoveringRegister = false),
+              child: GestureDetector(
+                onTap: () async {
+                  Navigator.of(context).pop();
+                  await CustomPopupsRegisterUser.showRegisterDialog(context);
+                },
+                child: Text(
+                  'Daftar',
+                  style: TextStyle(
+                    color: _isHoveringRegister
+                        ? const Color(0xFF7BA05B)
+                        : Colors.blue.shade600,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
+  // ─────────────────────────────────────────────────────────────────────────
+  // 11) Logo (dipakai di desktop dan mobile)
+  Widget buildLogo() {
+    return CircleAvatar(
+      radius: 40,
+      backgroundColor: Colors.white,
+      backgroundImage: const AssetImage('assets/images/jps_logo.png'),
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // 12) Handler Login (desktop/mobile)
   void _handleLogin() async {
     final email = _emailController.text.trim();
-    final password = _passwordController.text.trim();
 
     setState(() {
       _emailError = null;
-      _passwordError = null;
     });
 
-    var hasError = false;
     if (email.isEmpty) {
       setState(() => _emailError = 'Email tidak boleh kosong');
-      hasError = true;
+      return;
     } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
       setState(() => _emailError = 'Format email tidak valid');
-      hasError = true;
+      return;
     }
 
-    if (password.isEmpty) {
-      setState(() => _passwordError = 'Password tidak boleh kosong');
-      hasError = true;
-    } else if (password.length < 6) {
-      setState(() => _passwordError = 'Password minimal 6 karakter');
-      hasError = true;
-    }
-
-    if (hasError) return;
-
-    debugPrint(
-      '🔵 Tombol Masuk ditekan dengan email="$email" dan password(tersimpan)"',
-    );
+    debugPrint('🔵 Tombol Masuk ditekan dengan email="$email"');
 
     // Simulasi delay sebelum menampilkan OTP
     final success = await Future.delayed(
@@ -576,6 +574,8 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
     );
   }
 
+  // ─────────────────────────────────────────────────────────────────────────
+  // 13) Handler Google Login
   void _handleGmailLogin() async {
     // Tutup dulu dialog ini
     Navigator.of(context).pop();
@@ -614,6 +614,8 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
     }
   }
 
+  // ─────────────────────────────────────────────────────────────────────────
+  // 14) Handler Forgot Password
   void _handleForgotPassword() {
     Navigator.of(context).pop();
     ScaffoldMessenger.of(context).showSnackBar(
@@ -625,6 +627,7 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
   }
 }
 
+// ─────────────────────────────────────────────────────────────────────────
 // Register Dialog
 class RegisterDialog extends BaseDialog {
   const RegisterDialog({super.key});
@@ -729,7 +732,9 @@ class _RegisterDialogState extends BaseDialogState<RegisterDialog> {
       if (success) {
         Navigator.of(context).pop();
         CustomPopupsLoginUser.showLoginDialog(
-            context, email: _emailController.text);
+          context,
+          email: _emailController.text,
+        );
       }
     });
   }
@@ -748,8 +753,7 @@ class OTPLoginDialog extends BaseDialog {
 class _OTPLoginDialogState extends BaseDialogState<OTPLoginDialog> {
   final List<TextEditingController> _codeControllers =
   List.generate(4, (index) => TextEditingController());
-  final List<FocusNode> _focusNodes =
-  List.generate(4, (index) => FocusNode());
+  final List<FocusNode> _focusNodes = List.generate(4, (index) => FocusNode());
   bool _isHovering = false;
 
   @override
@@ -823,33 +827,32 @@ class _OTPLoginDialogState extends BaseDialogState<OTPLoginDialog> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: List.generate(4, (index) {
         return Container(
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey.shade300),
-              color: Colors.grey.shade50,
+          width: 60,
+          height: 60,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.grey.shade300),
+            color: Colors.grey.shade50,
+          ),
+          child: TextField(
+            controller: _codeControllers[index],
+            focusNode: _focusNodes[index],
+            textAlign: TextAlign.center,
+            keyboardType: TextInputType.number,
+            maxLength: 1,
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              counterText: '',
             ),
-            child: TextField(
-              controller: _codeControllers[index],
-              focusNode: _focusNodes[index],
-              textAlign: TextAlign.center,
-              keyboardType: TextInputType.number,
-              maxLength: 1,
-              style:
-              const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-                counterText: '',
-              ),
-              onChanged: (value) {
-                if (value.isNotEmpty && index < 3) {
-                  _focusNodes[index + 1].requestFocus();
-                } else if (value.isEmpty && index > 0) {
-                  _focusNodes[index - 1].requestFocus();
-                }
-              },
-            )
+            onChanged: (value) {
+              if (value.isNotEmpty && index < 3) {
+                _focusNodes[index + 1].requestFocus();
+              } else if (value.isEmpty && index > 0) {
+                _focusNodes[index - 1].requestFocus();
+              }
+            },
+          ),
         );
       }),
     );

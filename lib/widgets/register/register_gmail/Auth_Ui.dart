@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart'; // Add this import for SVG support
+import 'package:flutter_svg/flutter_svg.dart'; // Untuk SVG support
 import '../../login/login_gmail/Popup.dart';
 import '../../reset_password/reset_password_page.dart';
 import 'Base_Dialog.dart';
@@ -16,6 +16,7 @@ class GeneralRegisterDialog extends BaseDialog {
 
 class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog> {
   final _emailController = TextEditingController();
+  final _passwordController = TextEditingController(); // Controller untuk password
 
   bool _isHovering = false;
   bool _isHoveringLogin = false;
@@ -25,6 +26,7 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
   @override
   void dispose() {
     _emailController.dispose();
+    _passwordController.dispose(); // Dispose controller password
     super.dispose();
   }
 
@@ -68,7 +70,9 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      _buildMobileBody(),
+                      _buildFields(),     // Semua field (email + password) di sini
+                      const SizedBox(height: 35),
+                      _buildButtons(),    // Semua button dan opsi di sini
                     ],
                   ),
                 ),
@@ -82,22 +86,30 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
     // Default untuk Desktop/Web
     return buildDialogContainer(
       title: 'Register',
-      body: _buildMobileBody(),
+      body: Column(
+        children: [
+          _buildFields(),     // Semua field (email + password) di sini
+          const SizedBox(height: 35),
+          _buildButtons(),    // Semua button dan opsi di sini
+        ],
+      ),
     );
   }
 
-  Widget _buildMobileBody() {
+  // ─────────────────────────────────────────────────────────────────────────
+  // 1) Kumpulan field (email + password + judul + logo) – letakkan di sini agar mudah diubah
+  Widget _buildFields() {
     return Column(
       children: [
         buildLogo(),
         const SizedBox(height: 15),
 
         const Text(
-          'Masukkan Email',
+          'Masukkan Email & Password',
           style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.bold,
-            color: Colors.black87, // warna lebih gelap
+            color: Colors.black87,
           ),
         ),
 
@@ -107,7 +119,7 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
           'Yuk, daftar dulu biar bisa akses semuanya!',
           style: TextStyle(
             fontSize: 12,
-            color: Colors.black54, // warna sedikit lebih terang
+            color: Colors.black54,
           ),
         ),
 
@@ -121,6 +133,22 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
         ),
         const SizedBox(height: 20),
 
+        // Input Password
+        buildTextField(
+          controller: _passwordController,
+          hintText: 'Password',
+          obscureText: true, // Sembunyikan teks
+        ),
+      ],
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // 2) Kumpulan button dan opsi (daftar, divider, Gmail, checkbox, lupa, login) – di sini saja
+  Widget _buildButtons() {
+    return Column(
+      children: [
+        // Tombol Daftar utama
         buildAnimatedButton(
           text: 'Daftar',
           isHovering: _isHovering,
@@ -132,6 +160,7 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
         _buildDivider(),
         const SizedBox(height: 20),
 
+        // Tombol Daftar via Gmail
         _buildIconButton(
           text: 'Daftar Menggunakan Gmail',
           iconPath: 'assets/icons/google-icon.svg',
@@ -149,7 +178,8 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
     );
   }
 
-  // Widget untuk checkbox simpan Register dan lupa kata sandi
+  // ─────────────────────────────────────────────────────────────────────────
+  // Widget untuk checkbox Simpan Register dan Lupa Kata Sandi
   Widget _buildRegisterOptions() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -205,7 +235,9 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
             child: Text(
               'Lupa Kata Sandi?',
               style: TextStyle(
-                color: _isHoveringLogin ? const Color(0xFF7BA05B) : Colors.blue.shade600,
+                color: _isHoveringLogin
+                    ? const Color(0xFF7BA05B)
+                    : Colors.blue.shade600,
                 fontSize: 14,
               ),
             ),
@@ -215,6 +247,8 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
     );
   }
 
+  // ─────────────────────────────────────────────────────────────────────────
+  // Icon button kustom (Google Sign-In)
   Widget _buildIconButton({
     required String text,
     required String iconPath,
@@ -239,8 +273,20 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
               width: 1.5,
             ),
             boxShadow: isHovering
-                ? [BoxShadow(color: Colors.grey.withOpacity(0.2), blurRadius: 8, offset: const Offset(0, 4))]
-                : [BoxShadow(color: Colors.grey.withOpacity(0.1), blurRadius: 3, offset: const Offset(0, 2))],
+                ? [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                blurRadius: 8,
+                offset: const Offset(0, 4),
+              )
+            ]
+                : [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.1),
+                blurRadius: 3,
+                offset: const Offset(0, 2),
+              )
+            ],
           ),
           child: Row(
             children: [
@@ -257,21 +303,21 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
                   ),
                 ),
               ),
-              // Text centered in remaining space
+              // Text centered
               Expanded(
                 child: Center(
                   child: Text(
                     text,
-                    style: TextStyle(
-                      color: const Color(0xFF7BA05B), // Light green color
+                    style: const TextStyle(
+                      color: Color(0xFF7BA05B),
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
               ),
-              // Empty space to balance the icon on the left
-              const SizedBox(width: 44), // 20 (padding) + 24 (icon width)
+              // Kosong agar rata dengan icon
+              const SizedBox(width: 44), // 20 (padding) + 24 (icon)
             ],
           ),
         ),
@@ -279,19 +325,26 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
     );
   }
 
+  // ─────────────────────────────────────────────────────────────────────────
+  // Divider bertuliskan “Atau”
   Widget _buildDivider() {
     return Row(
       children: [
         Expanded(child: Container(height: 1, color: Colors.grey.shade300)),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: Text('Atau', style: TextStyle(color: Colors.grey.shade500, fontSize: 14)),
+          child: Text(
+            'Atau',
+            style: TextStyle(color: Colors.grey.shade500, fontSize: 14),
+          ),
         ),
         Expanded(child: Container(height: 1, color: Colors.grey.shade300)),
       ],
     );
   }
 
+  // ─────────────────────────────────────────────────────────────────────────
+  // Link “Login” di bagian paling bawah
   Widget _buildLoginLink() {
     return Container(
       width: double.infinity,
@@ -318,7 +371,9 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
               child: Text(
                 'Login',
                 style: TextStyle(
-                  color: _isHoveringLogin ? const Color(0xFF7BA05B) : Colors.blue.shade600,
+                  color: _isHoveringLogin
+                      ? const Color(0xFF7BA05B)
+                      : Colors.blue.shade600,
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                 ),
@@ -330,11 +385,16 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
     );
   }
 
-  // Fungsi yang akan disambungkan ke API
+  // ─────────────────────────────────────────────────────────────────────────
+  // Fungsi yang akan disambungkan ke API untuk Register
   void _handleRegister() {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text; // Ambil password
+
+    // Pastikan Anda mengubah AuthService.Register agar menerima parameter password.
     Navigator.of(context).pop();
     AuthService.Register(
-      _emailController.text,
+      email,
       rememberRegister: _rememberRegister,
     ).then((success) {
       if (success) {
@@ -348,6 +408,8 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
     });
   }
 
+  // ─────────────────────────────────────────────────────────────────────────
+  // Fungsi untuk Register dengan Gmail
   void _handleGmailRegister() {
     Navigator.of(context).pop();
     AuthService.RegisterWithGmail().then((success) {
@@ -362,6 +424,7 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
     });
   }
 }
+
 
 // Login Dialog
 class LoginDialog extends BaseDialog {
@@ -417,7 +480,8 @@ class _LoginDialogState extends BaseDialogState<LoginDialog> {
             text: 'Daftar',
             isHovering: _isHovering,
             onHover: (hovering) => setState(() => _isHovering = hovering),
-            backgroundColor: _isHovering ? const Color(0xFF6B9639) : Colors.grey.shade400,
+            backgroundColor:
+            _isHovering ? const Color(0xFF6B9639) : Colors.grey.shade400,
             onPressed: () => _handleLogin(),
           ),
         ],
@@ -465,7 +529,8 @@ class _LoginDialogState extends BaseDialogState<LoginDialog> {
     ).then((success) {
       if (success) {
         Navigator.of(context).pop();
-        CustomPopupsRegisterUser.showRegisterDialog(context, email: _emailController.text);
+        CustomPopupsRegisterUser.showRegisterDialog(
+            context, email: _emailController.text);
       }
     });
   }
@@ -482,7 +547,8 @@ class OTPRegisterDialog extends BaseDialog {
 }
 
 class _OTPRegisterDialogState extends BaseDialogState<OTPRegisterDialog> {
-  final List<TextEditingController> _codeControllers = List.generate(4, (index) => TextEditingController());
+  final List<TextEditingController> _codeControllers =
+  List.generate(4, (index) => TextEditingController());
   final List<FocusNode> _focusNodes = List.generate(4, (index) => FocusNode());
   bool _isHovering = false;
 
@@ -590,7 +656,8 @@ class _OTPRegisterDialogState extends BaseDialogState<OTPRegisterDialog> {
 
   // Fungsi yang akan disambungkan ke API
   void _handleOTPRegister() {
-    String otpCode = _codeControllers.map((controller) => controller.text).join();
+    String otpCode =
+    _codeControllers.map((controller) => controller.text).join();
 
     AuthService.verifyOTP(widget.email, otpCode).then((success) {
       if (success) {
