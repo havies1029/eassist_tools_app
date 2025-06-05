@@ -4,7 +4,7 @@ import '../../widgets/section/navbar/navbar_widget.dart';
 import '../../widgets/section/about/floating_buttons_about.dart';
 import '../../widgets/section/footer_section.dart';
 import '../../widgets/section/about/hero_section_about.dart';
-import 'action_testimony_section.dart';
+import '../../widgets/section/testimoni/action_testimony_section.dart';
 
 class DummyUserRepository extends UserRepository {
   // Override semua method yang dibutuhkan dengan return dummy data atau kosong

@@ -10,7 +10,7 @@ import '../../widgets/section/feature_section.dart';
 import '../../widgets/section/floating_buttons.dart';
 import '../../widgets/section/footer_section.dart';
 import '../../widgets/section/navbar/navbar_widget.dart';
-import 'hero_section_heropage.dart';
+import '../../widgets/heropage/hero_section_heropage.dart';
 import '../../widgets/section/testimonial_section.dart';
 
 // **Pastikan method showLoginDialog mengembalikan Future<void>**

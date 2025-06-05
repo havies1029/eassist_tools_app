@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:math' show pi;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../pages/testimony_page/action_testimony_section.dart';
+import 'testimoni/action_testimony_section.dart';
 import '../../pages/testimony_page/testimony_main.dart';
 
 class TestimonialSection extends StatefulWidget {
