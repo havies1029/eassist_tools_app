@@ -5,152 +5,106 @@ class HeroSection extends StatelessWidget {
 
   const HeroSection({super.key, required this.constraints});
 
-  bool get isMobile => constraints.maxWidth < 768;
-  bool get isSmallMobile => constraints.maxWidth < 400;
-  double get maxWidth =>
-      constraints.maxWidth > 1200 ? 1200 : constraints.maxWidth * 0.9;
-
   @override
   Widget build(BuildContext context) {
+    final double horizontalMargin = _calculateHorizontalMargin();
+    final double verticalMargin = isMobile ? 20 : 30;
+    final double horizontalPadding = isMobile ? 16.0 : 32.0;
+    final double verticalPadding = isMobile ? 24.0 : 48.0;
+
     return Align(
-      alignment: isMobile ? Alignment.center : Alignment.centerLeft,
+      alignment: Alignment.centerLeft,
       child: Container(
-        width: maxWidth,
-        margin: EdgeInsets.only(top: isMobile ? 30 : 50),
+        constraints: BoxConstraints(maxWidth: maxWidth),
+        margin: EdgeInsets.symmetric(
+          vertical: verticalMargin,
+          horizontal: horizontalMargin,
+        ),
         padding: EdgeInsets.symmetric(
-          horizontal: isMobile ? (isSmallMobile ? 16.0 : 20.0) : 40.0,
-          vertical: isMobile ? (isSmallMobile ? 16.0 : 20.0) : 50.0,
+          horizontal: horizontalPadding,
+          vertical: verticalPadding,
         ),
         decoration: const BoxDecoration(
           color: Colors.transparent,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          ),
         ),
-        child: _buildHeroText(
-          isMobile ? TextAlign.center : TextAlign.left,
-          paddingLeft: isMobile ? 0 : 320,
-          paddingBottom: isMobile ? (isSmallMobile ? 16 : 20) : 40,
-        ),
+        child: _buildHeroText(),
       ),
     );
   }
 
-  Widget _buildHeroText(TextAlign align, {double paddingLeft = 0, double paddingBottom = 0}) {
-    // Responsive font size dengan gradasi yang lebih halus
-    final double titleSize = isMobile
-        ? (isSmallMobile ? 22 : 26)
-        : 40;
-    final double subtitleSize = isMobile
-        ? (isSmallMobile ? 14 : 16)
-        : 23;
-    final double descSize = isMobile
-        ? (isSmallMobile ? 12 : 13)
-        : 15;
-    final double spacing = isMobile
-        ? (isSmallMobile ? 8 : 12)
-        : 20;
+  Widget _buildHeroText() {
+    final double titleSize = isMobile ? 25 : 45;
+    final double descSize = 15;
+    final double spacing = isMobile ? 14 : 22;
 
-    return Padding(
-      padding: EdgeInsets.only(left: paddingLeft, bottom: paddingBottom),
-      child: Column(
-        crossAxisAlignment: align == TextAlign.left
-            ? CrossAxisAlignment.start
-            : CrossAxisAlignment.center,
-        children: [
-          // Judul dengan improved mobile typography
-          Text(
-            'Selamat Datang, [Nama User]',
-            textAlign: align,
-            style: TextStyle(
-              fontFamily: 'Satoshi-Regular',
-              fontSize: titleSize,
-              fontWeight: FontWeight.w700,
-              color: Colors.white,
-              height: isMobile
-                  ? (isSmallMobile ? 1.25 : 1.3)
-                  : 1.18,
-              letterSpacing: isMobile ? -0.5 : 0,
-            ),
+    final titleStyle = TextStyle(
+      fontFamily: 'Satoshi-Regular',
+      fontSize: titleSize,
+      fontWeight: FontWeight.w400,
+      color: Colors.white,
+      height: 1.3,
+    );
+
+    final boldTitleStyle = titleStyle.copyWith(fontWeight: FontWeight.w700);
+
+    final descStyle = TextStyle(
+      fontFamily: 'Satoshi-Regular',
+      fontSize: descSize,
+      fontWeight: FontWeight.w400,
+      height: 1.6,
+      color: Colors.white.withOpacity(0.85),
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        RichText(
+          textAlign: TextAlign.left,
+          text: TextSpan(
+            style: titleStyle,
+            children: isMobile
+                ? [
+              TextSpan(text: 'Mengenal JPS: ', style: boldTitleStyle),
+              TextSpan(text: 'Klaim mudah, perlindungan aman'),
+            ]
+                : [
+              TextSpan(text: 'Mengenal JPS: ', style: boldTitleStyle),
+              TextSpan(text: 'Klaim mudah, perlindungan \naman'),
+            ],
           ),
-          SizedBox(height: isMobile ? 6 : 4),
-          // Subjudul dengan better mobile spacing
-          Text(
-            'Berikut ringkasan polis Anda hari ini:',
-            textAlign: align,
-            style: TextStyle(
-              fontFamily: 'Satoshi-Regular',
-              fontSize: subtitleSize,
-              fontWeight: FontWeight.w400,
-              color: Colors.white.withOpacity(0.9),
-              height: isMobile
-                  ? (isSmallMobile ? 1.4 : 1.35)
-                  : 1.25,
-              letterSpacing: 0.1,
-            ),
-          ),
-          SizedBox(height: spacing),
-          // Deskripsi dengan improved mobile readability
-          Container(
-            width: isMobile ? double.infinity : 520,
-            constraints: isMobile
-                ? BoxConstraints(maxWidth: constraints.maxWidth - 40)
-                : null,
-            child: RichText(
-              textAlign: align,
-              text: TextSpan(
-                style: TextStyle(
-                  fontFamily: 'Satoshi-Regular',
-                  fontSize: descSize,
-                  fontWeight: FontWeight.w400,
-                  height: isMobile
-                      ? (isSmallMobile ? 1.6 : 1.65)
-                      : 1.65,
-                  color: Colors.white.withOpacity(0.85),
-                  letterSpacing: isMobile ? 0.2 : 0,
-                ),
-                children: [
-                  TextSpan(
-                    text: 'JPS',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const TextSpan(
-                    text: ' adalah platform asuransi pintar yang memudahkan kamu mencari, memilih, dan klaim asuransi hanya dalam hitungan menit ',
-                  ),
-                  TextSpan(
-                    text: 'cepat',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const TextSpan(text: ', '),
-                  TextSpan(
-                    text: 'aman',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const TextSpan(text: ', dan '),
-                  TextSpan(
-                    text: 'terdaftar OJK',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const TextSpan(text: '.'),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
+        ),
+        SizedBox(height: spacing),
+        Text(
+          heroDescription,
+          style: descStyle,
+        ),
+      ],
     );
   }
+
+  // ===== Layout & Responsive Helper =====
+  bool get isMobile => constraints.maxWidth < 768;
+  bool get isSmallMobile => constraints.maxWidth < 400;
+
+  double get maxWidth =>
+      constraints.maxWidth > 1200 ? 1200 : constraints.maxWidth * 0.95;
+
+  double _calculateHorizontalMargin() {
+    if (isSmallMobile) {
+      return 12.0;
+    } else if (isMobile) {
+      return constraints.maxWidth * 0.04;
+    } else if (constraints.maxWidth < 1000) {
+      return constraints.maxWidth * 0.08;
+    } else {
+      return 135.0;
+    }
+  }
+
+  // === API or dynamic data section ===
+  // Simulasi sementara, nanti bisa diganti ambil dari API
+  final String heroDescription =
+      'JPS hadir memberikan informasi yang jelas, layanan yang praktis, '
+      'dan solusi yang tepat untuk membantu Anda memilih perlindungan\n'
+      'terbaik dengan cara paling mudah';
 }
