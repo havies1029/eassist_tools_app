@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'dart:math' show pi;
+
 import '../../repositories/user/user_repository.dart';
 import '../../widgets/section/about/abous_jps.dart';
 import '../../widgets/section/about/action_about_section.dart';
 import '../../widgets/section/about/artikel_card.dart';
+import '../../widgets/section/about/management_profile_section.dart';
 import '../../widgets/section/about/floating_buttons_about.dart';
 import '../../widgets/section/footer_section.dart';
 import '../../widgets/section/navbar/navbar_widget.dart';
 import '../../widgets/section/about/hero_section_about.dart';
 
-
+// ========================
+// Dummy Repository (API placeholder)
+// ========================
 class DummyUserRepository extends UserRepository {
   // Override semua method yang dibutuhkan dengan return dummy data atau kosong
 }
@@ -27,13 +32,13 @@ class AboutMain extends StatelessWidget {
         fontFamily: 'Satoshi-Regular',
         textTheme: const TextTheme(
           bodyMedium: TextStyle(
-            fontFamily: 'Satoshi-Regular',
             fontSize: 16.0,
+            color: Colors.black,
           ),
           titleLarge: TextStyle(
-            fontFamily: 'Satoshi-Regular',
             fontSize: 28.0,
             fontWeight: FontWeight.bold,
+            color: Colors.black,
           ),
         ),
         buttonTheme: const ButtonThemeData(
@@ -58,13 +63,10 @@ class AboutPage extends StatelessWidget {
             children: [
               // Layer 1: Background Image
               Positioned.fill(
-                child: Image.asset(
-                  'assets/images/about_jps.png',
-                  fit: BoxFit.fill,
-                  alignment: const Alignment(0, 3),
-                  cacheWidth: 1440,
-                  cacheHeight: 800,
-                ),
+                child: _buildBackgroundImage(constraints),
+              ),
+              Container(
+                color: Colors.black.withOpacity(0.4),
               ),
 
               // Layer 2: Scrollable content (tanpa navbar)
@@ -77,6 +79,7 @@ class AboutPage extends StatelessWidget {
                       FloatingButtons(constraints: constraints),
                       ActionSection(constraints: constraints),
                       AboutJps(constraints: constraints),
+                      ManagementProfileSection(constraints: constraints),
                       ArtikelCard(constraints: constraints),
                       FooterSection(constraints: constraints),
                     ],
@@ -104,7 +107,7 @@ class _FixedNavbarOverlay extends StatelessWidget {
       left: 0,
       right: 0,
       child: Stack(
-        clipBehavior: Clip.none, // ini penting agar pop-up bisa muncul di luar batas
+        clipBehavior: Clip.none,
         children: [
           Material(
             color: Colors.transparent,
@@ -119,4 +122,16 @@ class _FixedNavbarOverlay extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget _buildBackgroundImage(BoxConstraints constraints) {
+  final bool isMobile = constraints.maxWidth < 768;
+
+  return Image.asset(
+    'assets/images/about_jps.png',
+    fit: BoxFit.cover,
+    alignment: isMobile ? Alignment.topCenter : const Alignment(0, 3),
+    cacheWidth: isMobile ? 720 : 1440,
+    cacheHeight: isMobile ? 960 : 800,
+  );
 }

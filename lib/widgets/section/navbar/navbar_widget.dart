@@ -37,6 +37,7 @@ import '../../../pages/profile/rekancontact_form.dart';
 import '../../../pages/profile/rekangeneral_form.dart';
 import '../../../pages/profile/rekanpajak_form.dart';
 import '../../../pages/testimony_page/testimony_main.dart';
+import '../../../pages/customer_service/cs_main.dart';
 import '../../../repositories/user/user_repository.dart';
 // import '../../login/login_client/popup_client.dart';
 import '../../login/login_gmail/Popup.dart';
@@ -294,6 +295,11 @@ class _NavbarWidgetState extends State<NavbarWidget> {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const AboutMain()),
+      );
+    }else if (title == 'Customer Service') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const CSMain()),
       );
     }else if (title == 'Article Page') {
       Navigator.push(

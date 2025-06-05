@@ -90,6 +90,7 @@ class _HamburgerDropdownContentState
           SubMenuItem(icon: Icons.home_outlined, title: 'Home Page', onTap: () {}),
           SubMenuItem(icon: Icons.supervised_user_circle_outlined, title: 'Hero User Page', onTap: () {}),
           SubMenuItem(icon: Icons.info_outline, title: 'About JPS', onTap: () {}),
+          SubMenuItem(icon: Icons.support_agent, title: 'Customer Service', onTap: () {}),
           SubMenuItem(icon: Icons.article, title: 'Article Page', onTap: () {}),
           SubMenuItem(icon: Icons.record_voice_over, title: 'Testimoni', onTap: () {}),
 
