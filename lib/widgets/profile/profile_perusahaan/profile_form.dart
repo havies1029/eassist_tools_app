@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../PopUp/ConfirmationDialog.dart';
-import '../../PopUp/Popup_Succeed.dart';
-import '../../login/login_client/LoginClientPage.dart';
+import '../../dialog/PopUp/confirmation_dialog.dart';
+import '../../dialog/PopUp/success_popup.dart';
+import '../../login/login_client/login_client_dialog.dart';
 import '../profile_perusahaan/form_sections/rekan_general_form_body.dart';
 import '../profile_perusahaan/form_sections/rekan_contact_form_body.dart';
 import '../profile_perusahaan/form_sections/rekan_pajak_form_body.dart';

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../../widgets/section/about/hero_section_about.dart';
-import '../../widgets/section/action_section.dart';
+import '../../widgets/content/action/action_section.dart';
 import '../../widgets/section/navbar/navbar_widget.dart';
-import '../../widgets/section/signature/AssetDashboard.dart';
+import '../../widgets/section/assets/AssetDashboard.dart';
 import '../../widgets/section/about/floating_buttons_about.dart';
-import '../../widgets/section/footer_section.dart';
+import '../../widgets/section/footer/footer_section.dart';
 
 class ActiveAssetMain extends StatelessWidget {
   const ActiveAssetMain({super.key});

@@ -83,7 +83,7 @@ class _FloatingButtonsState extends State<FloatingButtons>
   @override
   Widget build(BuildContext context) {
     return Transform.translate(
-      offset: Offset(0, isMobile ? -30 : -50),
+      offset: Offset(0, isMobile ? -30 : -60),
       child: Align(
         alignment: Alignment.center,
         child: Container(

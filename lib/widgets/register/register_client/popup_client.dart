@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../Reusable_OTP/ReusableOTPDialog.dart';
-import 'register_form_dialog.dart';
+import '../../dialog/Reusable_OTP/reusable_otp_dialog.dart';
+import 'register_client_dialog.dart';
 
 class CustomPopupsClient {
   static const Color primaryGreen = Color(0xFF79AB43);

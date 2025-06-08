@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart'; // Untuk SVG support
 import '../../login/login_gmail/Popup.dart';
-import '../../reset_password/reset_password_page.dart';
+import '../../dialog/reset_password/reset_password_page.dart';
 import 'Base_Dialog.dart';
 import 'Popup.dart';
 import 'Auth_Api.dart'; // Import service untuk API calls

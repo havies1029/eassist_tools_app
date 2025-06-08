@@ -4,10 +4,12 @@ import 'sub_menu_item.dart';
 /// Tile untuk setiap entri submenu
 class DropdownSubMenuTile extends StatefulWidget {
   final SubMenuItem subItem;
+  final VoidCallback onTap;
 
   const DropdownSubMenuTile({
     Key? key,
     required this.subItem,
+    required this.onTap,
   }) : super(key: key);
 
   @override
@@ -21,7 +23,7 @@ class _DropdownSubMenuTileState extends State<DropdownSubMenuTile> {
   Widget build(BuildContext context) {
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
-      onExit:  (_) => setState(() => _isHovered = false),
+      onExit: (_) => setState(() => _isHovered = false),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 120),
         margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
@@ -52,7 +54,7 @@ class _DropdownSubMenuTileState extends State<DropdownSubMenuTile> {
                   : Colors.black.withOpacity(0.8),
             ),
           ),
-          onTap: widget.subItem.onTap,
+          onTap: widget.onTap, // gunakan onTap dari parent
         ),
       ),
     );

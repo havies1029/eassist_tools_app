@@ -17,9 +17,21 @@ class HamburgerDropdownContent extends StatefulWidget {
       _HamburgerDropdownContentState();
 }
 
-class _HamburgerDropdownContentState
-    extends State<HamburgerDropdownContent> {
-  int _expandedIndex = -1;
+class _HamburgerDropdownContentState extends State<HamburgerDropdownContent> {
+  List<int> _activePath = [];
+
+  void _handleExpand(List<int> path) {
+    setState(() {
+      if (_isExpanded(path)) {
+        _activePath = [];
+      } else {
+        _activePath = path;
+      }
+    });
+  }
+
+  bool _isExpanded(List<int> path) => _activePath.length >= path.length &&
+      List.generate(path.length, (i) => _activePath[i] == path[i]).every((b) => b);
 
   final List<Map<String, dynamic>> _menus = [
     {
@@ -81,82 +93,126 @@ class _HamburgerDropdownContentState
         SubMenuItem(icon: Icons.reviews, title: 'Testimoni', onTap: () {}),
       ],
     },
-      {
-        'icon': Icons.layers,
-        'title': 'Semua Page yang telah dibuat',
-        'subs': [
-          // 1. Halaman Umum
-          SubMenuItem(icon: Icons.business_outlined, title: 'Splash Screen', onTap: () {}),
-          SubMenuItem(icon: Icons.home_outlined, title: 'Home Page', onTap: () {}),
-          SubMenuItem(icon: Icons.supervised_user_circle_outlined, title: 'Hero User Page', onTap: () {}),
-          SubMenuItem(icon: Icons.info_outline, title: 'About JPS', onTap: () {}),
-          SubMenuItem(icon: Icons.support_agent, title: 'Customer Service', onTap: () {}),
-          SubMenuItem(icon: Icons.article, title: 'Article Page', onTap: () {}),
-          SubMenuItem(icon: Icons.record_voice_over, title: 'Testimoni', onTap: () {}),
-
-          // 2. Autentikasi (Login / Register)
-          SubMenuItem(icon: Icons.login_outlined, title: 'Login Gmail', onTap: () {}),
-          SubMenuItem(icon: Icons.login_outlined, title: 'Login Client', onTap: () {}),
-          SubMenuItem(icon: Icons.person_outline, title: 'Register Gmail', onTap: () {}),
-          SubMenuItem(icon: Icons.person_outline, title: 'Register Client', onTap: () {}),
-          SubMenuItem(icon: Icons.lock_reset, title: 'Reset Password Page', onTap: () {}),
-          SubMenuItem(icon: Icons.person_outline, title: 'Forget Password Page', onTap: () {}),
-
-          // 3. Profil
-          SubMenuItem(icon: Icons.person_pin_circle_outlined, title: 'Profile Individu', onTap: () {}),
-          SubMenuItem(icon: Icons.business_outlined, title: 'Profile Perusahaan', onTap: () {}),
-
-          // 4. Dialog / Popup
-          SubMenuItem(icon: Icons.person_outline, title: 'Popup Succeed', onTap: () {}),
-          SubMenuItem(icon: Icons.business_outlined, title: 'Dialog Confirmation', onTap: () {}),
-
-          SubMenuItem(icon: Icons.business_outlined, title: 'Find Insurance', onTap: () {}),
-          SubMenuItem(icon: Icons.business_outlined, title: 'Active Asset', onTap: () {}),
-
-          // 5. Rekan
-          SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Contact', onTap: () {}),
-          SubMenuItem(icon: Icons.business_outlined, title: 'Rekan General', onTap: () {}),
-          SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pajak', onTap: () {}),
-          SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Bank', onTap: () {}),
-          SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic Form', onTap: () {}),
-          SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic Crud Form', onTap: () {}),
-          SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic Crud Main', onTap: () {}),
-          SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic List List', onTap: () {}),
-          SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic List List Widget', onTap: () {}),
-          SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic List Main', onTap: () {}),
-          SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic List Title Widget', onTap: () {}),
-          SubMenuItem(icon: Icons.business_outlined, title: 'Rekan General V2', onTap: () {}),
-        ],
-      },
+    {
+      'icon': Icons.layers,
+      'title': 'Semua Desain yang telah dibuat',
+      'subs': [
+        {
+          'icon': Icons.dashboard,
+          'title': 'Halaman Umum',
+          'subs': [
+            SubMenuItem(icon: Icons.business_outlined, title: 'Splash Screen', onTap: () {}),
+            SubMenuItem(icon: Icons.home_outlined, title: 'Home Page', onTap: () {}),
+            SubMenuItem(icon: Icons.supervised_user_circle_outlined, title: 'Hero User Page', onTap: () {}),
+            SubMenuItem(icon: Icons.info_outline, title: 'About JPS', onTap: () {}),
+            SubMenuItem(icon: Icons.support_agent, title: 'Customer Service', onTap: () {}),
+            SubMenuItem(icon: Icons.article, title: 'Article Page', onTap: () {}),
+            SubMenuItem(icon: Icons.record_voice_over, title: 'Testimoni', onTap: () {}),
+          ],
+        },
+        {
+          'icon': Icons.lock_outline,
+          'title': 'Authentication',
+          'subs': [
+            SubMenuItem(icon: Icons.login_outlined, title: 'Login Gmail', onTap: () {}),
+            SubMenuItem(icon: Icons.login_outlined, title: 'Login Client', onTap: () {}),
+            SubMenuItem(icon: Icons.person_outline, title: 'Register Gmail', onTap: () {}),
+            SubMenuItem(icon: Icons.person_outline, title: 'Register Client', onTap: () {}),
+            SubMenuItem(icon: Icons.lock_reset, title: 'Reset Password Page', onTap: () {}),
+            SubMenuItem(icon: Icons.person_outline, title: 'Forget Password Page', onTap: () {}),
+          ],
+        },
+        {
+          'icon': Icons.account_circle_outlined,
+          'title': 'Profil',
+          'subs': [
+            SubMenuItem(icon: Icons.person_pin_circle_outlined, title: 'Profile Individu', onTap: () {}),
+            SubMenuItem(icon: Icons.business_outlined, title: 'Profile Perusahaan', onTap: () {}),
+          ],
+        },
+        {
+          'icon': Icons.chat_bubble_outline,
+          'title': 'Dialog/Popup',
+          'subs': [
+            SubMenuItem(icon: Icons.person_outline, title: 'Popup Succeed', onTap: () {}),
+            SubMenuItem(icon: Icons.business_outlined, title: 'Dialog Confirmation', onTap: () {}),
+          ],
+        },
+        {
+          'icon': Icons.group,
+          'title': 'Rekan',
+          'subs': [
+            SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Contact', onTap: () {}),
+            SubMenuItem(icon: Icons.business_outlined, title: 'Rekan General', onTap: () {}),
+            SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pajak', onTap: () {}),
+            SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Bank', onTap: () {}),
+            SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic Form', onTap: () {}),
+            SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic Crud Form', onTap: () {}),
+            SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic Crud Main', onTap: () {}),
+            SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic List List', onTap: () {}),
+            SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic List List Widget', onTap: () {}),
+            SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic List Main', onTap: () {}),
+            SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic List Title Widget', onTap: () {}),
+            SubMenuItem(icon: Icons.business_outlined, title: 'Rekan General V2', onTap: () {}),
+          ],
+        },
+        {
+          'icon': Icons.inventory_2,
+          'title': 'Assets',
+          'subs': [
+            SubMenuItem(icon: Icons.business_outlined, title: 'Find Insurance', onTap: () {}),
+            SubMenuItem(icon: Icons.business_outlined, title: 'Active Asset', onTap: () {}),
+          ],
+        },
+      ],
+    },
   ];
-
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 320, height: 500,
+      width: 320,
+      height: 500,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.15), blurRadius: 10, offset: const Offset(0,4))],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.15),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          )
+        ],
       ),
       child: Column(
         children: [
-          // header…
+          // Header
           Container(
             padding: const EdgeInsets.all(16),
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 colors: [Color(0xFF79AB43), Color(0xFF8BBD54)],
-                begin: Alignment.topLeft, end: Alignment.bottomRight,
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(12),
+                topRight: Radius.circular(12),
+              ),
             ),
             child: Row(
               children: [
                 Image.asset('assets/images/jps_logo.png', height: 30),
                 const SizedBox(width: 10),
-                const Text('Menu JPS', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'Satoshi-Regular')),
+                const Text(
+                  'Menu JPS',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Satoshi-Regular',
+                  ),
+                ),
                 const Spacer(),
                 IconButton(
                   icon: const Icon(Icons.close, color: Colors.white, size: 20),
@@ -168,7 +224,7 @@ class _HamburgerDropdownContentState
             ),
           ),
 
-          // daftar menu
+          // Menu List
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.symmetric(vertical: 8),
@@ -176,18 +232,14 @@ class _HamburgerDropdownContentState
               itemBuilder: (ctx, i) {
                 final m = _menus[i];
                 return DropdownExpandableItem(
-                  key: ValueKey(m['title']),
-                  icon: m['icon'] as IconData,
-                  title: m['title'] as String,
-                  subItems: (m['subs'] as List<SubMenuItem>).map((sub) {
-                    return SubMenuItem(icon: sub.icon, title: sub.title, onTap: () => widget.onMenuTap(sub.title));
-                  }).toList(),
-                  isExpanded: _expandedIndex == i,
-                  onHeaderTap: () {
-                    setState(() {
-                      _expandedIndex = (_expandedIndex == i) ? -1 : i;
-                    });
-                  },
+                  icon: m['icon'],
+                  title: m['title'],
+                  subItems: m['subs'],
+                  indexPath: [i],
+                  isExpanded: _isExpanded([i]),
+                  activePath: _activePath,
+                  onHeaderTap: _handleExpand,
+                  onMenuTap: widget.onMenuTap, // ✔️ tambahan penting!
                 );
               },
             ),

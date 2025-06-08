@@ -6,9 +6,9 @@ import '../../widgets/section/navbar/navbar_widget.dart';
 import '../../widgets/section/customer_service/cs_section.dart';
 import '../../widgets/section/customer_service/floating_buttons_cs.dart';
 import '../../widgets/section/customer_service/action_section_cs.dart';
-import '../../widgets/section/testimonial_section.dart';
-import '../../widgets/section/client_section.dart';
-import '../../widgets/section/footer_section.dart';
+import '../../widgets/section/testimoni/testimonial_section.dart';
+import '../../widgets/section/homeclientpage/client_section.dart';
+import '../../widgets/section/footer/footer_section.dart';
 
 class CSMain extends StatelessWidget {
   const CSMain({super.key});

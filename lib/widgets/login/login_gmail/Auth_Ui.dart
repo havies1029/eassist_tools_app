@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../register/register_gmail/Popup.dart'; // Hanya yang ini
-import '../../Reusable_OTP/ReusableOTPDialog.dart';
+import '../../dialog/Reusable_OTP/reusable_otp_dialog.dart';
 import 'Base_Dialog.dart';
 import 'Auth_Api.dart'; // Pastikan AuthService.loginWithGmail menerima idToken
 import 'package:eassist_tools_app/common/app_data.dart';

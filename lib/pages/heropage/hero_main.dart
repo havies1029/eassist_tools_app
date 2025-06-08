@@ -3,15 +3,15 @@ import 'dart:math' show pi;
 
 import 'package:shared_preferences/shared_preferences.dart';    // ← import SharedPreferences
 import '../../repositories/user/user_repository.dart';
-import '../../widgets/section/action_section.dart';
-import '../../widgets/section/carousel_section.dart';
-import '../../widgets/section/client_section.dart';
-import '../../widgets/section/feature_section.dart';
-import '../../widgets/section/floating_buttons.dart';
-import '../../widgets/section/footer_section.dart';
+import '../../widgets/section/homepage/hero_section_heropage.dart';
+import '../../widgets/content/action/action_section.dart';
+import '../../widgets/content/carousel/carousel_section.dart';
+import '../../widgets/section/homeclientpage/client_section.dart';
+import '../../widgets/content/feature/feature_section.dart';
+import '../../widgets/content/floating_button/floating_buttons.dart';
+import '../../widgets/section/footer/footer_section.dart';
 import '../../widgets/section/navbar/navbar_widget.dart';
-import '../../widgets/heropage/hero_section_heropage.dart';
-import '../../widgets/section/testimonial_section.dart';
+import '../../widgets/section/testimoni/testimonial_section.dart';
 
 // **Pastikan method showLoginDialog mengembalikan Future<void>**
 //    (di CustomPopupsLoginUser)

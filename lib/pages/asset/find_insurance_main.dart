@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../../widgets/section/about/hero_section_about.dart';
-import '../../widgets/section/about/paragraf_about.dart';
-import '../../widgets/section/signature/action_find_section.dart';
+import '../../widgets/section/assets/paragraf_about.dart';
+import '../../widgets/section/assets/action_find_section.dart';
 import '../../widgets/section/navbar/navbar_widget.dart';
 import '../../widgets/section/about/floating_buttons_about.dart';
-import '../../widgets/section/footer_section.dart';
+import '../../widgets/section/footer/footer_section.dart';
 
 class FindInsuranceMain extends StatelessWidget {
   const FindInsuranceMain({super.key});

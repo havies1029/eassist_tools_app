@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'dart:math' show pi;
 
 import '../../repositories/user/user_repository.dart';
-import '../../widgets/section/about/abous_jps.dart';
+import '../../widgets/section/about/jps_intro_description_section.dart';
 import '../../widgets/section/about/action_about_section.dart';
 import '../../widgets/section/about/artikel_card.dart';
 import '../../widgets/section/about/management_profile_section.dart';
 import '../../widgets/section/about/floating_buttons_about.dart';
-import '../../widgets/section/footer_section.dart';
+import '../../widgets/section/footer/footer_section.dart';
 import '../../widgets/section/navbar/navbar_widget.dart';
 import '../../widgets/section/about/hero_section_about.dart';
 

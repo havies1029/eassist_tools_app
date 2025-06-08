@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'dart:math' show pi;
+
 import '../../repositories/user/user_repository.dart';
+import '../../widgets/content/action/action_section.dart';
 import '../../widgets/section/navbar/navbar_widget.dart';
-import '../../widgets/section/about/floating_buttons_about.dart';
+import '../../widgets/content/carousel/carousel_section.dart';
+import '../../widgets/section/homeclientpage/client_section.dart';
+import '../../widgets/content/feature/feature_section.dart';
+import '../../widgets/section/homeclientpage/floating_buttons_user.dart';
 import '../../widgets/section/footer/footer_section.dart';
-import '../../widgets/section/about/hero_section_about.dart';
-import '../../widgets/section/testimoni/testimonial_page.dart';
+import '../../widgets/section/homeclientpage/hero_section_heropage.dart';
+import '../../widgets/section/testimoni/testimonial_section.dart';
 
-class DummyUserRepository extends UserRepository {
-  // Override semua method yang dibutuhkan dengan return dummy data atau kosong
-}
-
-class TestimonyMain extends StatelessWidget {
-  const TestimonyMain({super.key});
+class HeroUserMain extends StatelessWidget {
+  const HeroUserMain({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,40 +25,37 @@ class TestimonyMain extends StatelessWidget {
         scaffoldBackgroundColor: const Color(0xFFD5F4B4),
         fontFamily: 'Satoshi-Regular',
         textTheme: const TextTheme(
-          bodyMedium: TextStyle(
-            fontFamily: 'Satoshi-Regular',
-            fontSize: 16.0,
-          ),
-          titleLarge: TextStyle(
-            fontFamily: 'Satoshi-Regular',
-            fontSize: 28.0,
-            fontWeight: FontWeight.bold,
-          ),
+          bodyMedium: TextStyle(fontSize: 16.0),
+          titleLarge: TextStyle(fontSize: 28.0, fontWeight: FontWeight.bold),
         ),
         buttonTheme: const ButtonThemeData(
           buttonColor: Color(0xFF79AB43),
           textTheme: ButtonTextTheme.primary,
         ),
       ),
-      home: const TestimonyPage(),
+      home: const HeroUserPage(),
     );
   }
 }
 
-class TestimonyPage extends StatelessWidget {
-  const TestimonyPage({super.key});
+class HeroUserPage extends StatelessWidget {
+  const HeroUserPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: LayoutBuilder(
         builder: (context, constraints) {
+          final isMobile = MediaQuery.of(context).size.width < 768;
+
           return Stack(
             children: [
-              // Layer 1: Background Image
+              // Layer 1: Background
               Positioned.fill(
-                child: Image.asset(
-                  'assets/images/article_3.png',
+                child: isMobile
+                    ? Container(color: const Color(0xFF79AB43))
+                    : Image.asset(
+                  'assets/images/home_3.jpg',
                   fit: BoxFit.cover,
                   alignment: const Alignment(0, 3),
                   cacheWidth: 1440,
@@ -64,22 +63,26 @@ class TestimonyPage extends StatelessWidget {
                 ),
               ),
 
-              // Layer 2: Scrollable content (tanpa navbar)
+              // Layer 2: Content Scroll
               Positioned.fill(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.only(top: 88), // space for navbar
+                  padding: const EdgeInsets.only(top: 88),
                   child: Column(
                     children: [
                       HeroSection(constraints: constraints),
                       FloatingButtons(constraints: constraints),
                       ActionSection(constraints: constraints),
+                      FeatureSection(constraints: constraints),
+                      CarouselSection(constraints: constraints),
+                      TestimonialSection(constraints: constraints),
+                      ClientSection(constraints: constraints),
                       FooterSection(constraints: constraints),
                     ],
                   ),
                 ),
               ),
 
-              // Layer 3: Always-on-top Navbar with overlay support
+              // Layer 3: Navbar
               const _FixedNavbarOverlay(),
             ],
           );
@@ -99,7 +102,7 @@ class _FixedNavbarOverlay extends StatelessWidget {
       left: 0,
       right: 0,
       child: Stack(
-        clipBehavior: Clip.none, // ini penting agar pop-up bisa muncul di luar batas
+        clipBehavior: Clip.none,
         children: [
           Material(
             color: Colors.transparent,
@@ -114,4 +117,15 @@ class _FixedNavbarOverlay extends StatelessWidget {
       ),
     );
   }
+}
+
+// ============================
+// === API or dynamic data section ===
+// ============================
+
+class DummyUserRepository extends UserRepository {
+  // Override semua method jika diperlukan
+  // Contoh:
+  // @override
+  // Future<User> getUser() async => User(id: 1, name: "Dummy");
 }

@@ -5,11 +5,13 @@ import 'sub_menu_item.dart';
 class DropdownExpandableItem extends StatefulWidget {
   final IconData icon;
   final String title;
-  final List<SubMenuItem> subItems;
+  final List<dynamic> subItems;
 
-  /// Controlled from parent:
   final bool isExpanded;
-  final VoidCallback onHeaderTap;
+  final void Function(List<int> indexPath) onHeaderTap;
+  final void Function(String title) onMenuTap;
+  final List<int> indexPath;
+  final List<int> activePath;
 
   const DropdownExpandableItem({
     Key? key,
@@ -18,11 +20,13 @@ class DropdownExpandableItem extends StatefulWidget {
     required this.subItems,
     required this.isExpanded,
     required this.onHeaderTap,
+    required this.onMenuTap,
+    required this.indexPath,
+    required this.activePath,
   }) : super(key: key);
 
   @override
-  _DropdownExpandableItemState createState() =>
-      _DropdownExpandableItemState();
+  _DropdownExpandableItemState createState() => _DropdownExpandableItemState();
 }
 
 class _DropdownExpandableItemState extends State<DropdownExpandableItem>
@@ -32,6 +36,7 @@ class _DropdownExpandableItemState extends State<DropdownExpandableItem>
     duration: const Duration(milliseconds: 250),
     value: widget.isExpanded ? 1.0 : 0.0,
   );
+
   late final Animation<double> _expandAnim =
   CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut);
   late final Animation<double> _rotateAnim = Tween(begin: 0.0, end: 0.5)
@@ -40,9 +45,9 @@ class _DropdownExpandableItemState extends State<DropdownExpandableItem>
   bool _isHovered = false;
 
   @override
-  void didUpdateWidget(covariant DropdownExpandableItem old) {
-    super.didUpdateWidget(old);
-    if (widget.isExpanded != old.isExpanded) {
+  void didUpdateWidget(covariant DropdownExpandableItem oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.isExpanded != oldWidget.isExpanded) {
       widget.isExpanded ? _ctrl.forward() : _ctrl.reverse();
     }
   }
@@ -53,13 +58,21 @@ class _DropdownExpandableItemState extends State<DropdownExpandableItem>
     super.dispose();
   }
 
+  bool isSubItemExpanded(List<int> path) {
+    if (widget.activePath.length < path.length) return false;
+    for (int i = 0; i < path.length; i++) {
+      if (widget.activePath[i] != path[i]) return false;
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         MouseRegion(
           onEnter: (_) => setState(() => _isHovered = true),
-          onExit:  (_) => setState(() => _isHovered = false),
+          onExit: (_) => setState(() => _isHovered = false),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 150),
             margin: const EdgeInsets.symmetric(vertical: 1, horizontal: 8),
@@ -73,8 +86,7 @@ class _DropdownExpandableItemState extends State<DropdownExpandableItem>
               dense: true,
               contentPadding:
               const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-              leading: Icon(widget.icon,
-                  size: 18, color: const Color(0xFF79AB43)),
+              leading: Icon(widget.icon, size: 18, color: const Color(0xFF79AB43)),
               title: Text(
                 widget.title,
                 style: const TextStyle(
@@ -89,18 +101,49 @@ class _DropdownExpandableItemState extends State<DropdownExpandableItem>
                 child: Icon(Icons.keyboard_arrow_down,
                     size: 16, color: Colors.grey.shade600),
               ),
-              onTap: widget.onHeaderTap,
+              onTap: () => widget.onHeaderTap(widget.indexPath),
             ),
           ),
         ),
+
         SizeTransition(
           sizeFactor: _expandAnim,
           child: Container(
             margin: const EdgeInsets.only(left: 16),
             child: Column(
-              children: widget.subItems
-                  .map((sub) => DropdownSubMenuTile(subItem: sub))
-                  .toList(),
+              children: widget.subItems.asMap().entries.map((entry) {
+                final i = entry.key;
+                final item = entry.value;
+
+                if (item is SubMenuItem) {
+                  return DropdownSubMenuTile(
+                    subItem: item,
+                    onTap: () => widget.onMenuTap(item.title),
+                  );
+                }
+
+                if (item is Map<String, dynamic> && item['subs'] != null) {
+                  final nestedIcon = item['icon'] is IconData
+                      ? item['icon'] as IconData
+                      : Icons.folder;
+                  final nestedTitle = item['title']?.toString() ?? 'Untitled';
+                  final nestedSubs = item['subs'] as List<dynamic>;
+                  final nestedPath = [...widget.indexPath, i];
+
+                  return DropdownExpandableItem(
+                    icon: nestedIcon,
+                    title: nestedTitle,
+                    subItems: nestedSubs,
+                    indexPath: nestedPath,
+                    isExpanded: isSubItemExpanded(nestedPath),
+                    activePath: widget.activePath,
+                    onHeaderTap: widget.onHeaderTap,
+                    onMenuTap: widget.onMenuTap, // penting!
+                  );
+                }
+
+                return const SizedBox.shrink();
+              }).toList(),
             ),
           ),
         ),
