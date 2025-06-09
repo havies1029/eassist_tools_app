@@ -26,6 +26,7 @@ class LoginFailure extends LoginState {
   String toString() => ' LoginFailure { error: $error }';
 }
 
+/*
 class LoginRequiresPinVerification extends LoginState {
   final dynamic user;
   const LoginRequiresPinVerification({required this.user});
@@ -33,3 +34,4 @@ class LoginRequiresPinVerification extends LoginState {
   @override
   List<Object> get props => [user];
 }
+*/

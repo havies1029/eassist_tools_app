@@ -15,27 +15,21 @@ class EmailVerificationTambahEvent extends EmailVerificationEvents {
 	List<Object> get props => [record];
 }
 
-class EmailVerificationUbahEvent extends EmailVerificationEvents {
+
+class ValidasiPinEmailEvent extends EmailVerificationEvents {
 	final EmailVerificationModel record;
-	const EmailVerificationUbahEvent({required this.record});
+	const ValidasiPinEmailEvent({required this.record});
 
 	@override
 	List<Object> get props => [record];
 }
 
-class EmailVerificationHapusEvent extends EmailVerificationEvents {
-	final String recordId;
-	const EmailVerificationHapusEvent({required this.recordId});
+class FieldSimpanPasswordChangedEvent extends EmailVerificationEvents {
+	final bool isSimpanPassword;
+	const FieldSimpanPasswordChangedEvent({required this.isSimpanPassword});
 
 	@override
-	List<Object> get props => [recordId];
+	List<Object> get props => [isSimpanPassword];
 }
 
-class EmailVerificationLihatEvent extends EmailVerificationEvents {
-	final String recordId;
-	const EmailVerificationLihatEvent({required this.recordId});
-
-	@override
-	List<Object> get props => [recordId];
-}
 

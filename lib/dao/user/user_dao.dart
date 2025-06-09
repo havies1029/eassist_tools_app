@@ -1,34 +1,36 @@
-import 'package:flutter/services.dart';
+import 'package:eassist_tools_app/models/user/user_token_model.dart';
 import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:eassist_tools_app/database/user/user_database.dart';
-import 'package:eassist_tools_app/models/user/user_model.dart';
+import 'package:flutter/material.dart';
 
 class UserDao {
   final dbProvider = DatabaseProvider.dbProvider;
-  String userTable = 'userProfile';
+  String userTable = 'userToken';
 
-  Future<int?> createUser(User user) async {
-    //debugPrint("UserDao -> createUser");
+  Future<int?> createUser(UserToken userToken) async {
+    debugPrint("UserDao -> createUser");
     final db = await dbProvider.database;
 
-/*
+
     if (db == null) {
       debugPrint("createUser db is null");
     } else {
       debugPrint("createUser db is not null");
     }
-  */
+  
 
     Future<int>? result;
     try {
-      result = db?.insert(userTable, user.toDatabaseJson());
-      //debugPrint("user. : ${user.toDatabaseJson().toString()}");
+      result = db?.insert(userTable, userToken.toDatabaseJson());
+      debugPrint("user. : ${userToken.toDatabaseJson().toString()}");
     } catch (e) {
-      //debugPrint("error ==>> db?.insert(userTable, user.toDatabaseJson());");
-      //debugPrint("createUser error : ${e.toString()}");
+      debugPrint("error ==>> db?.insert(userTable, user.toDatabaseJson());");
+      debugPrint("createUser error : ${e.toString()}");
     }
-    //bool hasUser = await checkUser(0);
-    //debugPrint("hasUser? : $hasUser");
+    //jangan lupa matikan script ini jika sudah selesai testing
+    bool hasUser = await checkUser(0);
+    debugPrint("hasUser? : $hasUser");
+    
     return result;
   }
 
@@ -77,11 +79,6 @@ class UserDao {
         //debugPrint("func checkUser -> has user #10");
 
         AppData.userToken = users[0]["token"];
-        AppData.userid = users[0]["username"];
-        AppData.personId = users[0]["personId"];
-        AppData.personName = users[0]["nama"] ?? "";
-        AppData.userCabang = users[0]["userCabang"] ?? "";
-        AppData.hasDownline = users[0]["hasDownline"] == 1;
         AppData.httpHeaders = <String, String>{
           'Content-Type': 'application/json; odata=verbos',
           'Accept': 'application/json; odata=verbos',
@@ -102,7 +99,7 @@ class UserDao {
     }
   }
 
-  Future<bool> updateUser(User user) async {
+  Future<bool> updateUser(UserToken user) async {
     //debugPrint("user_dao -> updateUser #10");
 
     final db = await dbProvider.database;
@@ -119,92 +116,22 @@ class UserDao {
     return true;
   }
 
-  Future<bool> updateFoto(User user) async {
-    //debugPrint("user_dao -> updateFoto #10");
+  
 
-    //debugPrint(user.id.toString());
-
-    //debugPrint("user_dao -> updateFoto #20");
-
-    //debugPrint(user.foto.toString());
-
-    //debugPrint("user_dao -> updateFoto #30");
-
-    final db = await dbProvider.database;
-    try {
-      await db!.update(
-        userTable,
-        user.toDatabaseJson(),
-        where: "id = ?",
-        whereArgs: [user.id],
-      );
-    } catch (error) {
-      return false;
-    }
-
-    //debugPrint("user_dao -> updateFoto #40");
-
-    return true;
-  }
-
-  Future<User> getUser(int id) async {
+  Future<UserToken> getUser(int id) async {
     final db = await dbProvider.database;
 
-    User user;
+    UserToken user;
 
     List<Map> users =
         await db!.query(userTable, where: 'id = ?', whereArgs: [id]);
 
-    user = User(
+    user = UserToken(
         id: users[0]["id"],
-        username: users[0]["username"],
-        nama: users[0]["nama"],
-        personId: users[0]["personId"],
-        hp: users[0]["hp"],
-        email: users[0]["email"],
-        alamat1: users[0]["alamat1"],
-        alamat2: users[0]["alamat2"],
-        propinsiId: users[0]["propinsiId"],
-        propinsiDesc: users[0]["propinsiDesc"],
-        jnskel: users[0]["jnskel"],
-        userCabang: users[0]["userCabang"],
-        hasDownline: users[0]["hasDownline"],
         token: users[0]["token"],
-        foto: users[0]["foto"]);
+        custType: users[0]["custType"]);
 
     return user;
   }
 
-  Future<Uint8List> getUserFoto(int id) async {
-    //debugPrint("user_dao -> getUserFoto #10");
-
-    Uint8List foto;
-
-    User user = await getUser(0);
-
-    //debugPrint(user.nama);
-    //debugPrint("user_dao -> getUserFoto #20");
-
-    //debugPrint(user.toDatabaseJson().toString());
-
-    //debugPrint("user_dao -> getUserFoto #30");
-
-    if ((user.foto != null) && (user.foto!.isNotEmpty)) {
-      //debugPrint("getUserFoto -> FOTO -> not NULL #32");
-      foto = user.foto!;
-      //debugPrint("getUserFoto -> FOTO -> not NULL #33");
-      //debugPrint(foto.toString());
-      //debugPrint("getUserFoto -> FOTO -> not NULL #34");
-      //debugPrint(foto.lengthInBytes.toString());
-    } else {
-      ByteData bytes =
-          await rootBundle.load("assets/images/icon-user-default.png");
-      foto = bytes.buffer.asUint8List();
-      //debugPrint("getUserFoto -> FOTO -> NULL #36");
-    }
-
-    //debugPrint("user_dao -> getUserFoto #40");
-
-    return foto;
-  }
 }

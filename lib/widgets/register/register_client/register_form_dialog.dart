@@ -1,9 +1,7 @@
 import 'package:eassist_tools_app/widgets/register/register_client/popup_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // untuk FilteringTextInputFormatter
-import '../../../pages/profile/profile_main_page.dart';
 import '../../../repositories/user/user_repository.dart';
-import '../../profile/profile_individu/profile_individu_main_page.dart';
 import 'register_verification_dialog.dart'; // Import LoginDialog
 
 // Dummy repository (bisa diganti implementasi sungguhan)

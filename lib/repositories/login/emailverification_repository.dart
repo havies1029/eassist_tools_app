@@ -9,4 +9,9 @@ class EmailVerificationRepository {
 	Future<ReturnDataAPI> emailVerificationTambah(EmailVerificationModel record) async {
 		return await api.emailVerificationTambahAPI(record);
 	}
+
+	Future<ReturnDataAPI> validasiPinEmail(EmailVerificationModel record) async {
+		return await api.validasiPinEmailAPI(record);
+	}
+
 }

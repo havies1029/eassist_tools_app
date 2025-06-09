@@ -14,7 +14,7 @@ Future<void> uploadImage2API(filepath) async {
   //debugPrint("uploadImage2API #10");
 
   UserRepository userRepo = UserRepository();
-  String token = await userRepo.getUserToken();
+  String token = await userRepo.getToken();
 
   var request = http.MultipartRequest('POST', Uri.parse(_uploadFotoURL));
 
@@ -33,7 +33,7 @@ Future<void> uploadImage2API(filepath) async {
 
 Future<void> postImage(File image) async {
   UserRepository userRepo = UserRepository();
-  String token = await userRepo.getUserToken();
+  String token = await userRepo.getToken();
 
   String fileName = image.path.split('/').last;
 

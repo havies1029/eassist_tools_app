@@ -14,7 +14,7 @@ import 'package:eassist_tools_app/widgets/google_signin_button_stub.dart'
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
 
-import 'Popup.dart';
+import 'popup_dialog_login.dart';
 
 // Pastikan ini adalah Web Client ID
 final GoogleSignIn _googleSignIn = GoogleSignIn(
@@ -68,37 +68,11 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 600;
 
-    return BlocListener<LoginBloc, LoginState>(
-      listener: (context, state) {
-        if (state is LoginFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Login gagal: ${state.error}')),
-          );
-        } else if (state is LoginRequiresPinVerification) {
-          // Navigasi ke halaman verifikasi PIN
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (_) => ReusableOTPDialog(
-              email: state.user.email,
-              onSubmit: (code) async {
-                final otpSuccess = await AuthService.verifyOTP(state.user.email, code);
-                if (!otpSuccess) throw 'Kode OTP salah';
-              },
-            ),
-        );
-        }
-      },
-      child: BlocBuilder<LoginBloc, LoginState>(
-        builder: (context, state) {          
-          if (isMobile) {
-            return buildDialogMobile();
-          } else {
-            return buildDialogDesktop();
-          }
-        },
-      ),
-    );
+    if (isMobile) {
+      return buildDialogLoginMobile();
+    } else {
+      return buildDialogLoginDesktop();
+    }
 
   }
 
@@ -184,16 +158,7 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
 
         _buildDivider(),
         const SizedBox(height: 20),
-
-        // ––––– Selalu gunakan custom “Masuk Menggunakan Gmail” di mobile –––––
-        _buildIconButton(
-          text: 'Masuk Menggunakan Gmail',
-          iconPath: 'assets/icons/google-icon.svg',
-          isHovering: _isGmailHovering,
-          onHover: (hovering) => setState(() => _isGmailHovering = hovering),
-          onPressed: () => _handleGmailLogin(),
-        ),
-        const SizedBox(height: 20),
+        
 
         _buildLoginOptions(),
         const SizedBox(height: 20),
@@ -337,12 +302,6 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
     return Row(
       children: [
         Expanded(child: Container(height: 1, color: Colors.grey.shade300)),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 15),
-          child:
-              Text('Atau', style: TextStyle(color: Colors.grey, fontSize: 14)),
-        ),
-        Expanded(child: Container(height: 1, color: Colors.grey.shade300)),
       ],
     );
   }
@@ -368,7 +327,7 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
             child: GestureDetector(
               onTap: () async {
                 Navigator.of(context).pop();
-                await CustomPopupsRegisterUser.showRegisterDialog(context);
+                await CustomPopupsLoginUser.showRegisterUserDialog(context);
               },
               child: Text(
                 'Daftar',
@@ -488,7 +447,7 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
     );
   }
 
-  Widget buildDialogMobile() {
+  Widget buildDialogLoginMobile() {
     return Dialog(
       insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -514,25 +473,13 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
                 _buildMobileBody(),
               ],
             ),
-          ),
-          // Tombol X di kiri atas
-          Positioned(
-            top: 12,
-            left: 12,
-            child: IconButton(
-              icon: const Icon(Icons.close),
-              color: Colors.green,
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ),
+          ),          
         ],
       ),
     );
   }
 
-  Widget buildDialogDesktop() {
+  Widget buildDialogLoginDesktop() {
     return buildDialogContainer(
       title: 'Login',
       body: Column(
@@ -661,248 +608,4 @@ class _GeneralLoginDialogState extends BaseDialogState<GeneralLoginDialog> {
   }
 }
 
-// Register Dialog
-class RegisterDialog extends BaseDialog {
-  const RegisterDialog({super.key});
 
-  @override
-  State<RegisterDialog> createState() => _RegisterDialogState();
-}
-
-class _RegisterDialogState extends BaseDialogState<RegisterDialog> {
-  final _nameController = TextEditingController();
-  final _emailController = TextEditingController();
-  String _selectedChoice = 'Pilihan';
-  bool _isHovering = false;
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _emailController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return buildDialogContainer(
-      title: 'Daftar Klien',
-      body: Column(
-        children: [
-          buildLogo(),
-          const SizedBox(height: 30),
-
-          // Input Nama
-          buildTextField(
-            controller: _nameController,
-            hintText: 'Nama Lengkap',
-          ),
-          const SizedBox(height: 20),
-
-          // Input Email
-          buildTextField(
-            controller: _emailController,
-            hintText: 'Email',
-            keyboardType: TextInputType.emailAddress,
-          ),
-          const SizedBox(height: 20),
-
-          // Dropdown
-          _buildDropdown(),
-          const SizedBox(height: 40),
-
-          // Tombol Daftar
-          buildAnimatedButton(
-            text: 'Daftar',
-            isHovering: _isHovering,
-            onHover: (hovering) => setState(() => _isHovering = hovering),
-            backgroundColor:
-                _isHovering ? const Color(0xFF6B9639) : Colors.grey.shade400,
-            onPressed: () => _handleRegister(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDropdown() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<String>(
-          value: _selectedChoice,
-          hint: const Text('Pilihan'),
-          isExpanded: true,
-          icon: const Icon(Icons.keyboard_arrow_down),
-          items: ['Pilihan', 'Individual', 'Perusahaan', 'Organisasi']
-              .map((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-          onChanged: (String? newValue) {
-            setState(() {
-              _selectedChoice = newValue!;
-            });
-          },
-        ),
-      ),
-    );
-  }
-
-  // Fungsi yang akan disambungkan ke API
-  void _handleRegister() {
-    AuthService.register(
-      _nameController.text,
-      _emailController.text,
-      _selectedChoice,
-    ).then((success) {
-      if (success) {
-        Navigator.of(context).pop();
-        CustomPopupsLoginUser.showLoginDialog(context,
-            email: _emailController.text);
-      }
-    });
-  }
-}
-
-// OTP Login Dialog
-class OTPLoginDialog extends BaseDialog {
-  final String email;
-
-  const OTPLoginDialog({super.key, required this.email});
-
-  @override
-  State<OTPLoginDialog> createState() => _OTPLoginDialogState();
-}
-
-class _OTPLoginDialogState extends BaseDialogState<OTPLoginDialog> {
-  final List<TextEditingController> _codeControllers =
-      List.generate(4, (index) => TextEditingController());
-  final List<FocusNode> _focusNodes = List.generate(4, (index) => FocusNode());
-  bool _isHovering = false;
-
-  @override
-  void dispose() {
-    for (var controller in _codeControllers) {
-      controller.dispose();
-    }
-    for (var node in _focusNodes) {
-      node.dispose();
-    }
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return buildDialogContainer(
-      title: 'Login',
-      body: Column(
-        children: [
-          buildLogo(),
-          const SizedBox(height: 30),
-
-          // Judul
-          const Text(
-            'Berikut Kode Login Anda',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
-          ),
-          const SizedBox(height: 10),
-
-          // Deskripsi
-          const Text(
-            'Kode ini akan digunakan untuk masuk dengan aman menggunakan',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14, color: Colors.grey),
-          ),
-          const SizedBox(height: 5),
-
-          // Email
-          Text(
-            widget.email.isEmpty ? 'deandra1005@gmail.com' : widget.email,
-            style: const TextStyle(
-              fontSize: 14,
-              color: Colors.blue,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 30),
-
-          // Input Kode OTP
-          _buildOTPInputs(),
-          const SizedBox(height: 40),
-
-          // Tombol Masuk
-          buildAnimatedButton(
-            text: 'Masuk',
-            isHovering: _isHovering,
-            onHover: (hovering) => setState(() => _isHovering = hovering),
-            onPressed: () => _handleOTPLogin(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildOTPInputs() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: List.generate(4, (index) {
-        return Container(
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey.shade300),
-              color: Colors.grey.shade50,
-            ),
-            child: TextField(
-              controller: _codeControllers[index],
-              focusNode: _focusNodes[index],
-              textAlign: TextAlign.center,
-              keyboardType: TextInputType.number,
-              maxLength: 1,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-                counterText: '',
-              ),
-              onChanged: (value) {
-                if (value.isNotEmpty && index < 3) {
-                  _focusNodes[index + 1].requestFocus();
-                } else if (value.isEmpty && index > 0) {
-                  _focusNodes[index - 1].requestFocus();
-                }
-              },
-            ));
-      }),
-    );
-  }
-
-  // Fungsi yang akan disambungkan ke API
-  void _handleOTPLogin() {
-    String otpCode =
-        _codeControllers.map((controller) => controller.text).join();
-
-    AuthService.verifyOTP(widget.email, otpCode).then((success) {
-      if (success) {
-        Navigator.of(context).pop();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Login berhasil!'),
-            backgroundColor: CustomPopupsLoginUser.primaryGreen,
-          ),
-        );
-      }
-    });
-  }
-}

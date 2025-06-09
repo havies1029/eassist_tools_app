@@ -1,10 +1,11 @@
 import 'dart:async';
 
 import 'package:eassist_tools_app/common/app_data.dart';
+import 'package:eassist_tools_app/models/user/user_model.dart';
+import 'package:eassist_tools_app/models/user/user_token_model.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:eassist_tools_app/repositories/user/user_repository.dart';
-import 'package:eassist_tools_app/models/user/user_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,6 +21,20 @@ class AuthenticationBloc
     on<AppStarted>(_onAppStarted);
     on<LoggedIn>(_onLoggedIn);
     on<LoggedOut>(_onLoggedOut);
+    on<RequirePinEmailVerification>(_onRequirePinEmailVerification);
+    on<RequireLoginClient>((event, emit) {
+      emit(AuthenticationRequireLoginClient());
+    });
+    on<ForgotPasword>((event, emit) {
+      emit(AuthenticationForgotPassword());
+    });
+    on<RequireLoginUser>((event, emit) {
+      emit(AuthenticationUnauthenticated());
+    });
+    on<UserAuthenticated>(_onUserAuthenticated);
+    on<RequireRegisterClient>((event, emit) {
+      emit(AuthenticationRequireRegisterClient());
+    });
   }
 
   Future<void> _onAppStarted(
@@ -27,12 +42,18 @@ class AuthenticationBloc
     debugPrint("_onAppStarted");
 
     emit(AuthenticationPreCheckHasToken());
-    bool hasToken = AppData.kIsWeb ? false : await userRepository.hasToken();
+    String token = AppData.kIsWeb ? "" : await userRepository.getToken();
     emit(AuthenticationPostCheckHasToken());
 
-    //debugPrint("hasToken ?");
-    if (hasToken) {
-      emit(AuthenticationAuthenticated());
+    debugPrint("hasToken ?");
+    if (token.isNotEmpty) {
+
+      final user = await userRepository.getUserByToken(token);
+
+      AppData.user = user;
+
+      emit(AuthenticationAuthenticated(user: user));
+
       //debugPrint("hasToken ? yes -> ${AppData.userToken}");
     } else {
       //debugPrint("hasToken ? no");
@@ -44,13 +65,8 @@ class AuthenticationBloc
   Future<void> _onLoggedIn(
       LoggedIn event, Emitter<AuthenticationState> emit) async {
     emit(AuthenticationLoading());
-    if (!AppData.kIsWeb) {
-      await userRepository.persistToken(user: event.user);
-    }
 
-    AppData.user = event.user;
-
-    emit(AuthenticationAuthenticated());
+    emit(AuthenticationAuthenticated(user: event.user));
   }
 
   Future<void> _onLoggedOut(
@@ -58,8 +74,20 @@ class AuthenticationBloc
     emit(AuthenticationLoading());
     if (!AppData.kIsWeb) {
       await userRepository.deleteToken(id: 0);
-      //userRepository.dropTableUser();
     }
     emit(AuthenticationUnauthenticated());
+  }
+
+  Future<void> _onRequirePinEmailVerification(RequirePinEmailVerification event,
+      Emitter<AuthenticationState> emit) async {
+    emit(AuthenticationLoading());
+    emit(AuthenticationRequirePinEmailVerification(email: event.email));
+  }
+
+  Future<void> _onUserAuthenticated(
+      UserAuthenticated event, Emitter<AuthenticationState> emit) async {
+    emit(AuthenticationLoading());
+    
+    emit(AuthenticationUserAuthenticated(user: event.user));
   }
 }

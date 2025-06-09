@@ -27,7 +27,7 @@ import '../../../pages/profile/rekanpajak_form.dart';
 import '../../../pages/testimony_page/testimony_main.dart';
 import '../../../repositories/user/user_repository.dart';
 // import '../../login/login_client/popup_client.dart';
-import '../../login/login_gmail/Popup.dart';
+import '../../login/login_gmail/popup_dialog_login.dart';
 import '../../register/register_client/popup_client.dart';
 
 
@@ -339,7 +339,7 @@ class _NavbarWidgetState extends State<NavbarWidget> {
         ),
       );
     }else if (title == 'Login Gmail') {
-      await CustomPopupsLoginUser.showLoginDialog(context);
+      await CustomPopupsLoginUser.showLoginUserDialog(context);
     }else if (title == 'Login Client') {
       // Jika ingin push ke halaman baru:
       // Navigator.of(context).push(

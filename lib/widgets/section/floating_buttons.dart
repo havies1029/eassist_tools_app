@@ -4,7 +4,7 @@ import 'package:eassist_tools_app/widgets/google_signin_button_stub.dart'
 if (dart.library.js_interop) 'package:eassist_tools_app/widgets/google_signin_button_web.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
-import '../login/login_gmail/Popup.dart';
+import '../login/login_gmail/popup_dialog_login.dart';
 import '../register/register_client/popup_client.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
@@ -172,7 +172,7 @@ class _FloatingButtonsState extends State<FloatingButtons>
                   child: EnhancedHoverButton(
                     onPressed: () async {
                       if (isLogin) {
-                        await CustomPopupsLoginUser.showLoginDialog(context);
+                        await CustomPopupsLoginUser.showLoginUserDialog(context);
                       } else {
                         await CustomPopupsClient.showRegisterDialog(context);
                       }

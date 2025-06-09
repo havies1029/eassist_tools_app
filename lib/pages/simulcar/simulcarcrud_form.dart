@@ -132,7 +132,7 @@ class SimulcarCrudFormPageFormState extends State<SimulcarCrudFormPage> {
 									buildFieldPremi(),
 									const SizedBox(height: 25),
 									FormError(
-										errors: state.errors ?? [],
+										errors: state.errors,
 										key: null,
 									),
 									Row(

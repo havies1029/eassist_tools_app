@@ -18,25 +18,26 @@ class User {
   bool hasDownline;
   Uint8List? foto;
   String? personId;
-  bool requiresPinVerification;
+  String custType;
 
-  User(
-      {this.id,
-      this.username,
-      this.nama,
-      this.hp,
-      this.email,
-      this.alamat1,
-      this.alamat2,
-      this.propinsiId,
-      this.propinsiDesc,
-      this.jnskel,
-      this.token,
-      this.userCabang,
-      this.hasDownline = false,
-      this.foto,
-      this.personId,
-      this.requiresPinVerification = true,});
+  User({
+    this.id,
+    this.username,
+    this.nama,
+    this.hp,
+    this.email,
+    this.alamat1,
+    this.alamat2,
+    this.propinsiId,
+    this.propinsiDesc,
+    this.jnskel,
+    this.token,
+    this.userCabang,
+    this.hasDownline = false,
+    this.foto,
+    this.personId,
+    this.custType = '',
+  });
 
   factory User.fromDatabaseJson(Map<String, dynamic> data) => User(
         id: data['id'],
@@ -54,13 +55,13 @@ class User {
         foto: data['foto'] ?? '',
         token: data['token'],
         personId: data['personId'],
-        requiresPinVerification: data['requiresPinVerification'] ?? false,
+        custType: data['custType'] ?? '',
       );
 
   Map<String, dynamic> toDatabaseJson() => {
         "id": id,
         "username": username,
-        "nama": nama,        
+        "nama": nama,
         "personId": personId,
         "hp": hp,
         "email": email,
@@ -70,9 +71,9 @@ class User {
         "propinsiDesc": propinsiDesc,
         "jnskel": jnskel,
         "userCabang": userCabang,
-        "hasDownline": hasDownline?1:0,
+        "hasDownline": hasDownline ? 1 : 0,
         "token": token,
         "foto": foto,
-        'requiresPinVerification': requiresPinVerification,
+        "custType": custType,
       };
 }

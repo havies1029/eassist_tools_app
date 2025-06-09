@@ -12,6 +12,7 @@ import 'package:eassist_tools_app/blocs/networkconnection/network_bloc.dart';
 import 'package:eassist_tools_app/blocs/onboardmenu/onboardmenucari_bloc.dart';
 import 'package:eassist_tools_app/blocs/profile/rekancontact_bloc.dart';
 import 'package:eassist_tools_app/blocs/progressindicator/progressindicator_bloc.dart';
+import 'package:eassist_tools_app/blocs/reguser/reguser_bloc.dart';
 import 'package:eassist_tools_app/blocs/simuleei/simuleeicrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/simuleei/simuleeilist_bloc.dart';
 import 'package:eassist_tools_app/blocs/simulgis/simulgiscrud_bloc.dart';
@@ -24,17 +25,14 @@ import 'package:eassist_tools_app/blocs/simulbon/simulboncrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/simulwp/simulwpcrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/takeimage/takeimage_cubit.dart';
 import 'package:eassist_tools_app/common/app_data.dart';
-import 'package:eassist_tools_app/common/loading_indicator.dart';
 import 'package:eassist_tools_app/pages/heropage/hero_main.dart';
-import 'package:eassist_tools_app/pages/home/home_page.dart';
-import 'package:eassist_tools_app/pages/login/login_page.dart';
-import 'package:eassist_tools_app/pages/splash/splash_page.dart';
 import 'package:eassist_tools_app/repositories/chatting/guestscrud_repository.dart';
 import 'package:eassist_tools_app/repositories/login/change_password_repository.dart';
 import 'package:eassist_tools_app/repositories/login/emailverification_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/rekancontact_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/rekangeneral_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/rekanpajak_repository.dart';
+import 'package:eassist_tools_app/repositories/reguser/reguser_repository.dart';
 import 'package:eassist_tools_app/repositories/simulbon/simulboncrud_repository.dart';
 import 'package:eassist_tools_app/repositories/simulcar/simulcarcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/simulcargo/simulcargocrud_repository.dart';
@@ -92,7 +90,9 @@ class App extends StatelessWidget {
         ),
         BlocProvider<EmailVerificationBloc>(
           create: (context) =>
-              EmailVerificationBloc(repository: EmailVerificationRepository())),
+              EmailVerificationBloc(
+                repository: EmailVerificationRepository(), 
+              authenticationBloc: BlocProvider.of<AuthenticationBloc>(context))),
         BlocProvider<ChangePasswordBloc>(
           create: (context) =>
               ChangePasswordBloc(repository: ChangePasswordRepository())),
@@ -173,7 +173,10 @@ class App extends StatelessWidget {
                 RekanPajakBloc(repository: RekanPajakRepository())),        
         BlocProvider<GallerymemberCariBloc>(
           create: (context) =>
-              GallerymemberCariBloc()),
+              GallerymemberCariBloc()),        
+        BlocProvider<RegUserBloc>(
+            create: (context) =>
+                RegUserBloc(repository: RegUserRepository())),        
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -185,48 +188,9 @@ class App extends StatelessWidget {
         themeMode: ThemeMode.light,
 
         routes: const {},
-
-        home: HeroMain(),
-        /*
-        home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
-          builder: (context, state) {
-            if (state is AuthenticationUninitialized) {
-              debugPrint("AuthenticationUninitialized #10");
         
-              return const SplashPage();
-            }
+        home: const HeroMain(),   
         
-            if (state is AuthenticationAuthenticated) {
-              debugPrint("AuthenticationAuthenticated #20");
-        
-              return HomePage(
-                userRepository: userRepository,
-                userid: 0,
-                key: null,
-              );
-               
-            }
-        
-            if (state is AuthenticationUnauthenticated) {
-              debugPrint("AuthenticationUnauthenticated #30");
-              return HomePage(
-                userRepository: userRepository,
-                userid: 0,
-                key: null,
-              );
-            }
-        
-            if (AppData.kIsWeb) {
-              debugPrint("AppData.kIsWeb #40");
-              return LoginPage(
-                userRepository: userRepository,
-              );
-            } else {
-              return const LoadingIndicator();
-            }
-          },
-        ),
-        */
       ),
     );
   }
