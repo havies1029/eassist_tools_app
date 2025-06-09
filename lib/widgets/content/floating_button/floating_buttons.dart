@@ -3,7 +3,6 @@ import '../../login/login_gmail/Popup.dart';
 import '../../register/register_client/popup_client.dart';
 import 'decorations/EnhancedHoverButton.dart';
 
-
 class FloatingButtons extends StatefulWidget {
   final BoxConstraints constraints;
   const FloatingButtons({super.key, required this.constraints});
@@ -52,25 +51,36 @@ class _FloatingButtonsState extends State<FloatingButtons>
 
   @override
   Widget build(BuildContext context) {
-    final Offset translateOffset = isMobile
-        ? const Offset(0, -50)
-        : const Offset(0, -80);
-    final bool isExact1900x1200 = MediaQuery.of(context).size.width >= 1500.0;
+    if (isMobile) {
+      // Untuk mobile, gunakan Positioned untuk floating effect
+      return Positioned(
+        top: MediaQuery.of(context).padding.top + (130 * 3), // Adjust sesuai kebutuhan
+        left: 25,
+        right: 25,
+        child: FractionallySizedBox(
+          widthFactor: 0.8,      // Container akan 90% lebar layar
+          child: _buildMobileFloatingLayout(),
+        ),
+      );
+    } else {
+      // Untuk desktop, tetap gunakan layout normal
+      final Offset translateOffset = const Offset(0, -80);
+      final bool isExact1900x1200 = MediaQuery.of(context).size.width >= 1500.0;
 
-    return Transform.translate(
-      offset: translateOffset,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: sidePadding),
-        child: isMobile ? _buildMobileLayout() : _buildDesktopLayout(isExact1900x1200),
-      ),
-    );
+      return Transform.translate(
+        offset: translateOffset,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: sidePadding),
+          child: _buildDesktopLayout(isExact1900x1200),
+        ),
+      );
+    }
   }
 
-  Widget _buildMobileLayout() {
-    return Align(
-      alignment: Alignment.centerLeft,
+  Widget _buildMobileFloatingLayout() {
+    return Material(
+      color: Colors.transparent,
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 25),
         decoration: _boxDecoration(),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: innerPadding, vertical: 10.0),

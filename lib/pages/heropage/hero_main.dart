@@ -116,8 +116,25 @@ class _HeroPageState extends State<HeroPage> {
                   padding: const EdgeInsets.only(top: 88), // ruang untuk navbar
                   child: Column(
                     children: [
-                      HeroSection(constraints: constraints),
-                      FloatingButtons(constraints: constraints),
+                      if (isMobile)
+                      // ─── Mobile: Hero + Floating dalam Stack ─────────────────
+                        Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            HeroSection(constraints: constraints),
+                            FloatingButtons(constraints: constraints),
+                          ],
+                        )
+                      else
+                      // ─── Desktop: tampil berurutan biasa ─────────────────────
+                        Column(
+                          children: [
+                            HeroSection(constraints: constraints),
+                            FloatingButtons(constraints: constraints),
+                          ],
+                        ),
+                      // HeroSection(constraints: constraints),
+                      // FloatingButtons(constraints: constraints),
                       ActionSection(constraints: constraints),
                       CarouselSection(constraints: constraints),
                       FeatureSection(constraints: constraints),

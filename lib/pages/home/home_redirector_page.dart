@@ -31,7 +31,7 @@ class HomeRedirectorPage extends StatelessWidget {
       return const SplashPage();
     } else {
       // return const HeroMain();
-      return const FindInsuranceMain();
+      return const HeroPage();
     }
   }
 }
