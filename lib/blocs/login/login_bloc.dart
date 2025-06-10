@@ -59,7 +59,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
       emit(LoginPostAuthenticate());            
     } catch (error) {      
-      emit(LoginFailure(error: error.toString()));
+      emit(LoginFailure(error: "username atau password salah"));
     }
   }
 

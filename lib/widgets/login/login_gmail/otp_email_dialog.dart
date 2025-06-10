@@ -95,11 +95,7 @@ class OtpEmailDialogState extends BaseDialogState<OtpEmailDialog> {
         );
       },
       listener: (BuildContext context, EmailVerificationState state) {
-        if (state.isLoaded && !state.hasFailure) {
-          if (state.token.isNotEmpty) {
-            //Navigator.of(context).pop();
-          }
-        } else if (state.errors.isNotEmpty) {
+        if (state.errors.isNotEmpty) {
           debugPrint("OTP Login Failed: ${state.errors}");          
         }
       },

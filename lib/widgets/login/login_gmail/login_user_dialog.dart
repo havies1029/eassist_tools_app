@@ -152,15 +152,15 @@ class LoginUserDialogState extends BaseDialogState<LoginUserDialog> {
           onHover: (hovering) => setState(() => _isHoveringGmail = hovering),
           onPressed: () => _handleGmailRegister(),
         ),
-        //const SizedBox(height: 20),
-        //_buildLoginOptions(context),
+        const SizedBox(height: 20),
+        _buildLoginOptions(context),
         const SizedBox(height: 20),
         _buildRegisterLink(context),
       ],
     );
   }
 
-  /*
+  
   Widget _buildLoginOptions(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -206,7 +206,7 @@ class LoginUserDialogState extends BaseDialogState<LoginUserDialog> {
       ],
     );
   }
-  */
+  
 
   Widget _buildIconButton({
     required String text,

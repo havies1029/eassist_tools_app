@@ -35,6 +35,12 @@ class AuthenticationBloc
     on<RequireRegisterClient>((event, emit) {
       emit(AuthenticationRequireRegisterClient());
     });
+    on<RequirePinHPVerification>((event, emit) {
+      emit(AuthenticationRequirePinHPVerification(hpno: event.hpno));
+    });
+    on<PhonePinVerified>((event, emit) {
+      emit(AuthenticationPhonePinVerified());
+    });
   }
 
   Future<void> _onAppStarted(
@@ -48,7 +54,7 @@ class AuthenticationBloc
     debugPrint("hasToken ?");
     if (token.isNotEmpty) {
 
-      final user = await userRepository.getUserByToken(token);
+      final user = await userRepository.getUserByToken(token);     
 
       AppData.user = user;
 

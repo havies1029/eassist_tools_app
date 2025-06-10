@@ -50,3 +50,4 @@ class AuthenticationRequirePinHPVerification extends AuthenticationState {
 
 class AuthenticationForgotPassword extends AuthenticationState {}
 class AuthenticationRequireRegisterClient extends AuthenticationState {}
+class AuthenticationPhonePinVerified  extends AuthenticationState {}

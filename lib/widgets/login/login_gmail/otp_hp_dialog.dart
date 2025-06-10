@@ -1,6 +1,9 @@
 // OTP Login Dialog
+import 'package:eassist_tools_app/blocs/reguser/reguser_bloc.dart';
+import 'package:eassist_tools_app/models/reguser/reguser_model.dart';
 import 'package:eassist_tools_app/widgets/login/login_gmail/Base_Dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class OtpHpDialog extends BaseDialog {
   final String hpno;
@@ -30,56 +33,71 @@ class OtpHpDialogState extends BaseDialogState<OtpHpDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return buildDialogContainer(
-      title: 'Login',
-      body: Column(
-        children: [
-          buildLogo(),
-          const SizedBox(height: 30),
+    return BlocConsumer<RegUserBloc, RegUserState>(
+      builder: (context, state) {
+        return buildDialogContainer(
+          title: 'Login',
+          body: Column(
+            children: [
+              buildLogo(),
+              const SizedBox(height: 30),
+        
+              // Judul
+              const Text(
+                'Berikut Kode Login Anda',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 10),
+        
+              // Deskripsi
+              const Text(
+                'Kode ini akan digunakan untuk masuk dengan aman menggunakan',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 14, color: Colors.grey),
+              ),
+              const SizedBox(height: 5),
+        
+              // Email
+              Text(
+                widget.hpno,
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: Colors.blue,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 30),
+        
+              // Input Kode OTP
+              _buildOTPInputs(),
+              const SizedBox(height: 40),
 
-          // Judul
-          const Text(
-            'Berikut Kode Login Anda',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
+              if (state.hasFailure)
+                Text(
+                  state.errors[0],
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 14, color: Colors.red),
+                ),
+        
+              // Tombol Masuk
+              buildAnimatedButton(
+                text: 'Masuk',
+                isHovering: _isHovering,
+                onHover: (hovering) => setState(() => _isHovering = hovering),
+                onPressed: () => _handleOTPLogin(),
+              ),
+            ],
           ),
-          const SizedBox(height: 10),
-
-          // Deskripsi
-          const Text(
-            'Kode ini akan digunakan untuk masuk dengan aman menggunakan',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14, color: Colors.grey),
-          ),
-          const SizedBox(height: 5),
-
-          // Email
-          Text(
-            widget.hpno,
-            style: const TextStyle(
-              fontSize: 14,
-              color: Colors.blue,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 30),
-
-          // Input Kode OTP
-          _buildOTPInputs(),
-          const SizedBox(height: 40),
-
-          // Tombol Masuk
-          buildAnimatedButton(
-            text: 'Masuk',
-            isHovering: _isHovering,
-            onHover: (hovering) => setState(() => _isHovering = hovering),
-            onPressed: () => _handleOTPLogin(),
-          ),
-        ],
-      ),
+        );
+      }, listener: (BuildContext context, RegUserState state) { 
+          if (state.errors.isNotEmpty) {
+            debugPrint("OTP Login Failed: ${state.errors}");          
+          }
+       },
     );
   }
 
@@ -123,7 +141,14 @@ class OtpHpDialogState extends BaseDialogState<OtpHpDialog> {
     String otpCode =
         _codeControllers.map((controller) => controller.text).join();
 
-    // cek otp di server
+    RegUserModel? record = context.read<RegUserBloc>().state.record;
+    record?.kodePin = otpCode;
+    
+    context.read<RegUserBloc>().add(
+      ValidasiPinHPEvent(
+        record: record!
+      ),
+    );  
     
   }
 }

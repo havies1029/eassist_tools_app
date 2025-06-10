@@ -1,13 +1,8 @@
 import 'package:eassist_tools_app/models/user/user_model.dart';
 
 class AppData {
-  static String userName = "";
-  static String userid = "";
-  static String userCabang = "";
+  
   static String userToken = "";
-  static String personId = "";
-  static String personName = "";
-  static bool hasDownline = false;
   static int chatRefresh = 10;
   static bool kIsWeb = false;
   static User user = User();

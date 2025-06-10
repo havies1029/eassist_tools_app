@@ -33,7 +33,7 @@ class AppMenuState extends State<AppMenu> with RouteAware {
                             AssetImage('assets/images/login_logo.png'),
                       ),
                       accountEmail: const Text("support@ptssk.id"),
-                      accountName: Text(AppData.personName),
+                      accountName: Text(AppData.user.username ?? "User"),
                       onDetailsPressed: () {
                         SchedulerBinding.instance
                             .addPostFrameCallback((timeStamp) {

@@ -9,7 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.8 #baru
+    
+  cupertino_icons: ^1.0.8 #baru  
   flutter_svg: ^2.0.17 #baru
   flutter_animate: ^3.0.0 #baru
   google_fonts: ^6.1.0 #baru
@@ -22,7 +23,7 @@ dev_dependencies:
   flutter_lints: ^5.0.0
   google_fonts: ^6.1.0
   
-  accordion: ^2.6.0
+  accordion: ^2.6.0  
   connectivity_plus: ^6.0.2
   collection: ^1.18.0
   const_date_time: ^1.1.0
@@ -35,7 +36,7 @@ dev_dependencies:
   flutter_chat_ui: ^1.6.12
   flutter_chat_types: ^3.6.2
   flutter_launcher_icons: ^0.14.2
-  flutter_bloc: ^8.0.0
+  flutter_bloc: ^9.1.1
   flutter_slidable: ^3.1.2
   flutter_speed_dial: ^7.0.0
   foundation: ^0.0.5
@@ -49,7 +50,7 @@ dev_dependencies:
   introduction_screen: ^3.1.14
   js: ^0.6.7
   mime: ^2.0.0
-  meta: ^1.10.0
+  meta: ^1.10.0  
   open_filex: ^4.6.0
   path: ^1.9.0
   permission_handler: ^11.3.1

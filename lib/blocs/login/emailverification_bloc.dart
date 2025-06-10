@@ -1,6 +1,5 @@
 import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
 import 'package:eassist_tools_app/common/app_data.dart';
-import 'package:eassist_tools_app/main.dart';
 import 'package:eassist_tools_app/models/authentication/auth_model.dart';
 import 'package:eassist_tools_app/models/user/user_model.dart';
 import 'package:eassist_tools_app/models/user/user_token_model.dart';

@@ -1,4 +1,5 @@
 import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
+import 'package:eassist_tools_app/blocs/login/login_bloc.dart';
 import 'package:eassist_tools_app/widgets/login/login_gmail/Base_Dialog.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
@@ -34,40 +35,44 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Dialog(
-        insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: Stack(
-          children: [
-            // Konten utama dialog
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              padding: const EdgeInsets.fromLTRB(24, 60, 24, 24),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CircleAvatar(
-                    radius: 40,
-                    backgroundColor: Colors.white,
-                    backgroundImage:
-                        const AssetImage('assets/images/jps_logo.png'),
+    return BlocConsumer<LoginBloc, LoginState>(
+      builder: (context, state) {
+        return SingleChildScrollView(
+          child: Dialog(
+            insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            child: Stack(
+              children: [
+                // Konten utama dialog
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                  const SizedBox(height: 24),
-                  _buildMobileBody(),
-                ],
-              ),
+                  padding: const EdgeInsets.fromLTRB(24, 60, 24, 24),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CircleAvatar(
+                        radius: 40,
+                        backgroundColor: Colors.white,
+                        backgroundImage:
+                            const AssetImage('assets/images/jps_logo.png'),
+                      ),
+                      const SizedBox(height: 24),
+                      _buildMobileBody(state),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      }, listener: (BuildContext context, LoginState state) {  },
     );
   }
 
-  Widget _buildMobileBody() {
+  Widget _buildMobileBody(LoginState state) {
     return Column(
       children: [
         buildTextField(
@@ -137,7 +142,21 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
               ),
             ),
           ),
+
+          if (state is LoginFailure)
+          Padding(
+            padding: const EdgeInsets.only(top: 4, left: 12),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                state.error,
+                style: const TextStyle(color: Colors.red, fontSize: 12),
+              ),
+            ),
+          ),
         const SizedBox(height: 20),
+
+        
 
         buildAnimatedButton(
           text: 'Masuk',
@@ -320,10 +339,10 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
       '🔵 Tombol Masuk ditekan dengan email="$email" dan password(tersimpan)"',
     );
 
-    // Simulasi delay sebelum menampilkan OTP
-    final success = await Future.delayed(
-      const Duration(milliseconds: 300),
-      () => true,
-    );
+    BlocProvider.of<LoginBloc>(context).add(LoginButtonPressed(
+      username: email,
+      password: password,
+    ));
   }
+
 }

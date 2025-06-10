@@ -1,41 +1,45 @@
-
 class RegUserModel {
-	String confirmPwd;
-	String email;
-	String kodePin;
-	String password;
-	String personalNama;
-	String reguserId;
-	String telepon;
-	String userNama;
+  String email;
+  String? kodePin;
+  String password;
+  String personalNama;
+  String? reguserId;
+  String telepon;
+  String userNama;
+  String jnsClientId;
 
-	RegUserModel({required this.confirmPwd, required this.email, required this.kodePin, 
-    required this.password, required this.personalNama, required this.reguserId, 
-		required this.telepon, required this.userNama, });
+  RegUserModel({
+    required this.email,
+    this.kodePin,
+    required this.password,
+    required this.personalNama,
+    this.reguserId,
+    required this.telepon,
+    required this.userNama,
+    required this.jnsClientId,
+  });
 
-	factory RegUserModel.fromJson(Map<String, dynamic> data) {
-		return RegUserModel(
-			confirmPwd: data['confirmPwd']??'',
-			email: data['email']??'',
-			kodePin: data['kodePin']??'',
-			password: data['password']??'',
-			personalNama: data['personalNama']??'',
-			reguserId: data['reguserId']??'',
-			telepon: data['telepon']??'',
-			userNama: data['userNama']??'',			
-		);
+  factory RegUserModel.fromJson(Map<String, dynamic> data) {
+    return RegUserModel(
+      email: data['email'] ?? '',
+      kodePin: data['kodePin'] ?? '',
+      password: data['password'] ?? '',
+      personalNama: data['personalNama'] ?? '',
+      reguserId: data['reguserId'] ?? '',
+      telepon: data['telepon'] ?? '',
+      userNama: data['userNama'] ?? '',
+      jnsClientId: data['jnsClientId'] ?? '',
+    );
+  }
 
-	}
-
-	Map<String, dynamic> toJson() =>
-		{'confirmPwd': confirmPwd,
-		'email': email,
-		'kodePin': kodePin,
-		'password': password,
-		'personalNama': personalNama,
-		'reguserId': reguserId,
-		'telepon': telepon,
-		'userNama': userNama,
-		};
-
+  Map<String, dynamic> toJson() => {
+        'email': email,
+        'kodePin': kodePin,
+        'password': password,
+        'personalNama': personalNama,
+        'reguserId': reguserId,
+        'telepon': telepon,
+        'userNama': userNama,
+        'jnsClientId': jnsClientId,
+      };
 }

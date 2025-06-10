@@ -1,5 +1,9 @@
 import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
 import 'package:eassist_tools_app/blocs/reguser/reguser_bloc.dart';
+import 'package:eassist_tools_app/common/app_data.dart';
+import 'package:eassist_tools_app/models/combobox/combomjnsclient_model.dart';
+import 'package:eassist_tools_app/models/reguser/reguser_model.dart';
+import 'package:eassist_tools_app/widgets/combobox/combomjnsclient_widget.dart';
 import 'package:eassist_tools_app/widgets/login/login_gmail/Base_Dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,8 +19,9 @@ class _RegisterClientDialogState extends BaseDialogState<RegisterClientDialog> {
   final _nameController = TextEditingController();
   final hpController = TextEditingController();
   final pswdController = TextEditingController();
-  final confirmPswdController = TextEditingController();
-  String _selectedChoice = 'Pilihan';
+  final confirmPswdController = TextEditingController();  
+	ComboMJnsclientModel? fieldComboJnsClient;
+  String _selectedChoice = '';
   bool _isHovering = false;  
 	final _formKey = GlobalKey<FormState>();
 
@@ -73,8 +78,15 @@ class _RegisterClientDialogState extends BaseDialogState<RegisterClientDialog> {
                   const SizedBox(height: 20),
               
                   // Dropdown
-                  _buildDropdown(),
+                  buildFieldJenisClient(),
                   const SizedBox(height: 40),
+
+                  // Pesan kesalahan jika ada
+                  if (state.hasFailure)
+                    Text(
+                      state.errors[0],
+                      style: const TextStyle(color: Colors.red),
+                    ),
               
                   // Tombol Daftar
                   buildAnimatedButton(
@@ -94,44 +106,53 @@ class _RegisterClientDialogState extends BaseDialogState<RegisterClientDialog> {
     );
   }
 
-  Widget _buildDropdown() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<String>(
-          value: _selectedChoice,
-          hint: const Text('Pilihan'),
-          isExpanded: true,
-          icon: const Icon(Icons.keyboard_arrow_down),
-          items: ['Pilihan', 'Individual', 'Perusahaan', 'Organisasi']
-              .map((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-          onChanged: (String? newValue) {
-            setState(() {
-              _selectedChoice = newValue!;
-            });
-          },
-        ),
-      ),
-    );
-  }
+  Widget buildFieldJenisClient() {
+		return buildFieldComboMJnsclient(
+			labelText: 'Jenis Client',
+			initItem: fieldComboJnsClient,
+			onChangedCallback: (value) {
+				if (value != null) {
+					//fieldComboJnsClient = value;
+          _selectedChoice = value.mjnsclientId;
+          debugPrint("fieldComboJnsClient: $_selectedChoice}");
+				}
+			},
+			onSaveCallback: (value) {},
+		);
+	}
 
   // Fungsi yang akan disambungkan ke API
   void _handleRegister() {
 
-    Navigator.of(context).pop();
+    debugPrint("AppData.userToken.token : ${AppData.userToken}");
 
-    context.read<AuthenticationBloc>().add(
-      RequirePinHPVerification(hpno: hpController.text)
-    );
+    
+    if (_formKey.currentState!.validate()) {
+      if (pswdController.text != confirmPswdController.text) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Password tidak cocok'))
+        );
+        return;
+      }
+
+      RegUserModel record = RegUserModel(
+        userNama: AppData.user.username??"",
+        personalNama: _nameController.text,
+        telepon: hpController.text,
+        password: pswdController.text,
+        jnsClientId: _selectedChoice,
+        email: AppData.user.username??""
+      );
+
+      context.read<RegUserBloc>().add(
+        RegUserTambahEvent(record: record)
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Isi semua field dengan benar'))
+      );
+     }
+
+    
   }
 }

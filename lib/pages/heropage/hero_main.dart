@@ -43,6 +43,7 @@ class HeroMainState extends State<HeroMain> {
             }            
             else if (state is AuthenticationRequirePinHPVerification) {
               debugPrint("AuthenticationRequirePinVerification");
+              Navigator.of(context).pop();
               CustomPopupsLoginUser.showRequestOTPHPDialog(context, state.hpno);
             }
             else if (state is AuthenticationRequirePinEmailVerification) {
@@ -53,6 +54,16 @@ class HeroMainState extends State<HeroMain> {
             else if (state is AuthenticationUserAuthenticated){
               debugPrint("AuthenticationUserAuthenticated");
               Navigator.of(context).pop();
+            }
+            else if (state is AuthenticationPhonePinVerified) {
+              debugPrint("AuthenticationPhonePinVerified");
+              Navigator.of(context).pop();
+              
+              debugPrint("Log out user");
+              // force login user
+              BlocProvider.of<AuthenticationBloc>(context).add(
+                LoggedOut(),
+              );
             }
                    
           },
