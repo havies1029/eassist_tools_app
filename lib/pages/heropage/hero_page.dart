@@ -34,103 +34,69 @@ class _HeroPageState extends State<HeroPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocListener<AuthenticationBloc, AuthenticationState>(
-        listener: (context, state) {
-          if (state is AuthenticationAuthenticated) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Row(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(right: 12.0),
-                    child:
-                        Icon(Icons.check_circle_outline, color: Colors.white),
-                  ),
-                  Expanded(
-                    child: Text(
-                      "state is AuthenticationAuthenticated",
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final bool isMobile = constraints.maxWidth < 768;
+          return Stack(
+            children: [
+              // Layer 1: Background (Image untuk non-mobile, hijau untuk mobile)
+              Positioned.fill(
+                child: isMobile
+                    ? Container(
+                        color: const Color(0xFF79AB43), // hijau full-screen
+                      )
+                    : Image.asset(
+                        'assets/images/bg-home.jpg',
+                        fit: BoxFit.cover,
+                        alignment: const Alignment(0, 3),
+                        cacheWidth: 1440,
+                        cacheHeight: 800,
                       ),
-                    ),
+              ),
+      
+              // Layer 2: Konten scrollable
+              Positioned.fill(
+                child: SingleChildScrollView(
+                  padding:
+                      const EdgeInsets.only(top: 88), // ruang untuk navbar
+                  child: Column(
+                    children: [
+                      TextButton(
+                          onPressed: () {
+                            context
+                                .read<AuthenticationBloc>()
+                                .add(LoggedOut());
+                          },
+                          child: Text("Logout",
+                              style: TextStyle(
+                                  color: Colors.white))),
+                      TextButton(
+                          onPressed: () {
+                            context
+                                .read<AuthenticationBloc>()
+                                .add(RequireRegisterClient());
+                          },
+                          child: Text("Register Client",
+                              style: TextStyle(
+                                  color: Colors.white))),
+                      HeroSection(constraints: constraints),
+                      FloatingButtons(constraints: constraints),
+                      ActionSection(constraints: constraints),
+                      CarouselSection(constraints: constraints),
+                      FeatureSection(constraints: constraints),
+                      TestimonialSection(constraints: constraints),
+                      ClientSection(constraints: constraints),
+                      FooterSection(constraints: constraints),
+                    ],
                   ),
-                ],
+                ),
               ),
-              backgroundColor: Colors.red[600],
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              margin: const EdgeInsets.all(16),
-              elevation: 3,
-              duration: const Duration(seconds: 3),
-            ));
-          }
+      
+              // Layer 3: Navbar overlay di atas semua
+              const FixedNavbarOverlay(),
+            ],
+          );
         },
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final bool isMobile = constraints.maxWidth < 768;
-            return Stack(
-              children: [
-                // Layer 1: Background (Image untuk non-mobile, hijau untuk mobile)
-                Positioned.fill(
-                  child: isMobile
-                      ? Container(
-                          color: const Color(0xFF79AB43), // hijau full-screen
-                        )
-                      : Image.asset(
-                          'assets/images/bg-home.jpg',
-                          fit: BoxFit.cover,
-                          alignment: const Alignment(0, 3),
-                          cacheWidth: 1440,
-                          cacheHeight: 800,
-                        ),
-                ),
-
-                // Layer 2: Konten scrollable
-                Positioned.fill(
-                  child: SingleChildScrollView(
-                    padding:
-                        const EdgeInsets.only(top: 88), // ruang untuk navbar
-                    child: Column(
-                      children: [
-                        TextButton(
-                            onPressed: () {
-                              context
-                                  .read<AuthenticationBloc>()
-                                  .add(LoggedOut());
-                            },
-                            child: Text("Logout",
-                                style: TextStyle(
-                                    color: Colors.white))),
-                        TextButton(
-                            onPressed: () {
-                              context
-                                  .read<AuthenticationBloc>()
-                                  .add(RequireRegisterClient());
-                            },
-                            child: Text("Register Client",
-                                style: TextStyle(
-                                    color: Colors.white))),
-                        HeroSection(constraints: constraints),
-                        FloatingButtons(constraints: constraints),
-                        ActionSection(constraints: constraints),
-                        CarouselSection(constraints: constraints),
-                        FeatureSection(constraints: constraints),
-                        TestimonialSection(constraints: constraints),
-                        ClientSection(constraints: constraints),
-                        FooterSection(constraints: constraints),
-                      ],
-                    ),
-                  ),
-                ),
-
-                // Layer 3: Navbar overlay di atas semua
-                const FixedNavbarOverlay(),
-              ],
-            );
-          },
-        ),
       ),
     );
   }

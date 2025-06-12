@@ -65,7 +65,22 @@ class HeroMainState extends State<HeroMain> {
                 LoggedOut(),
               );
             }
-                   
+            else if (state is AuthenticationGoogleUserAuthenticated) {
+              debugPrint("AuthenticationGoogleUserAuthenticated");
+              Navigator.of(context).pop();
+            }
+            else if (state is AuthenticationLoading) {
+              debugPrint("AuthenticationLoading");
+            }
+            else if (state is AuthenticationPreCheckHasToken) {
+              debugPrint("AuthenticationPreCheckHasToken");
+            }
+            else if (state is AuthenticationPostCheckHasToken) {
+              debugPrint("AuthenticationPostCheckHasToken");
+            }
+            else if (state is AuthenticationAuthenticated) {
+              debugPrint("AuthenticationAuthenticated");
+            }
           },
         ),        
 

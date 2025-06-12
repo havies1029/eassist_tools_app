@@ -6,12 +6,10 @@ import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:eassist_tools_app/models/user/user_model.dart';
 import 'package:eassist_tools_app/models/authentication/auth_model.dart';
 import 'package:eassist_tools_app/apis/login/login_api.dart';
-import 'package:eassist_tools_app/dao/user/user_dao.dart';
-import 'package:eassist_tools_app/models/user/user_token_model.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserRepository {
-  final userDao = UserDao();
 
   Future<User> authenticate({
     String? username,
@@ -24,62 +22,33 @@ class UserRepository {
     return user;
   }
 
-  Future<void> persistToken({required UserToken userToken}) async {
-    // write token with the user to the database
-
-    debugPrint("-- persistToken --");
-
-    await userDao.createUser(userToken);
-
-    debugPrint("-- persistToken hasil --");
+  Future<void> persistToken({required String userToken}) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('user_token', userToken);
   }
+  
 
   Future<void> deleteToken({required int id}) async {
-    await userDao.deleteUser(id);
-  }
-
-  Future<void> dropTableUser() async {
-    await userDao.dropTableUser();
-  }
-
-  Future<bool> hasToken() async {
-    debugPrint("func hasToken() a");
-    bool result = await userDao.checkUser(0);
-
-    debugPrint("func hasToken() b");
-    return result;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('user_token');
   }
 
   Future<String> getToken() async {
-    String token = await userDao.getUserToken(0);
-    return token;
-  }
-
-
-
-  Future<bool?> createUser(UserToken user) async {
-    int? id = await userDao.createUser(user);
-    return id != -1;
+    final prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('user_token');
+    return token?? "";	
   }
 
   Future<bool> updateUser(User user) async {
     //debugPrint("user_repository : updateUser #10");
 
     bool isValid = await updateUserProfile(user);
-    if (!AppData.kIsWeb) {
-      if (isValid) {
-        //await userDao.updateUser(user);
-      }
-    } else {
-      AppData.user = user;
-    }
+
+    AppData.user = user;
 
     return isValid;
   }
 
-  Future<bool> deleteUser(int id) async {
-    return (await userDao.deleteUser(id) != 0);
-  }
 
   Future<void> uploadFotoProfile(File fileFoto) async {    
     await uploadImage2API(fileFoto.path);

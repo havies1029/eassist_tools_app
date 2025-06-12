@@ -4,7 +4,6 @@ import 'package:eassist_tools_app/widgets/login/login_gmail/lupa_sandi_dialog.da
 import 'package:eassist_tools_app/widgets/login/login_gmail/otp_email_dialog.dart';
 import 'package:eassist_tools_app/widgets/login/login_gmail/otp_hp_dialog.dart';
 import 'package:eassist_tools_app/widgets/login/login_gmail/register_client_dialog.dart';
-import 'package:eassist_tools_app/widgets/login/login_gmail/x_register_user_dialog.dart';
 import 'package:flutter/material.dart';
 
 class CustomPopupsLoginUser {
@@ -59,16 +58,6 @@ class CustomPopupsLoginUser {
       },
     );
 
-    /*
-    if (result == null) {
-      if (! context.mounted) return;
-      context.read<AuthenticationBloc>().add(RequireLoginUser());
-    }
-    else if (!result) {
-      if (! context.mounted) return;
-      context.read<AuthenticationBloc>().add(RequirePinEmailVerification(email: email));
-    }
-    */
   }
 
   // Popup untuk Request OTP Email
@@ -95,14 +84,5 @@ class CustomPopupsLoginUser {
     );
   }
     // Popup untuk Register User
-  static Future<void> showRegisterUserDialog(BuildContext context) async {
-    debugPrint("showRegisterUserDialog called");
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return const RegisterUserDialog();
-      },
-    );
-  }
+  
 }

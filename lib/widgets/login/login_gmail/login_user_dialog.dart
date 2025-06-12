@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
 import 'package:eassist_tools_app/blocs/login/emailverification_bloc.dart';
 import 'package:eassist_tools_app/models/login/emailverification_model.dart';
@@ -11,13 +13,27 @@ import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:eassist_tools_app/widgets/google_signin_button_stub.dart'
     if (dart.library.js_interop) 'package:eassist_tools_app/widgets/google_signin_button_web.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert' show json;
 
+const List<String> scopes = <String>[
+  'email',
+];
 // Pastikan ini adalah Web Client ID
+/*
 final GoogleSignIn _googleSignIn = GoogleSignIn(
-  scopes: ['email', 'profile'],
+  scopes: scopes,
   hostedDomain: '',
+  clientId: '217496566954-tiqmna993j1a943i9d86chpas0ipktle.apps.googleusercontent.com',
   serverClientId:
       '217496566954-tiqmna993j1a943i9d86chpas0ipktle.apps.googleusercontent.com',
+);
+*/
+
+GoogleSignIn _googleSignIn = GoogleSignIn(
+  // Optional clientId
+   clientId: '217496566954-tiqmna993j1a943i9d86chpas0ipktle.apps.googleusercontent.com',
+  scopes: scopes,
 );
 
 class LoginUserDialog extends BaseDialog {
@@ -38,18 +54,32 @@ class LoginUserDialogState extends BaseDialogState<LoginUserDialog> {
   bool _isHoveringGmail = false;
 
   String? _emailError;
-  late final Widget _cachedGoogleButton;
 
   @override
   void initState() {
     super.initState();
-    if (AppData.kIsWeb) {
+    
       // Hanya panggil registerGoogleSigninButton() sekali
-      registerGoogleSigninButton();
+      //registerGoogleSigninButton();
 
-      // Cache widget-nya supaya tidak dibuat ulang berulang kali
-      _cachedGoogleButton = googleSigninButton();
-    }
+       _googleSignIn.onCurrentUserChanged
+        .listen((GoogleSignInAccount? account) async {
+ 
+          debugPrint('User email: ${account?.email}');
+          debugPrint('User display name: ${account?.displayName}');
+
+          if (! context.mounted) return;
+          // ignore: use_build_context_synchronously
+          context.read<EmailVerificationBloc>().add(
+            EmailVerificationTambahEvent(
+              record: EmailVerificationModel(email: account?.email ?? '', requestFrom: 'google'),
+            ),
+          );
+
+    });
+    
+    _googleSignIn.signInSilently();
+    
   }
 
   @override
@@ -87,9 +117,7 @@ class LoginUserDialogState extends BaseDialogState<LoginUserDialog> {
                             const AssetImage('assets/images/jps_logo.png'),
                       ),
                       const SizedBox(height: 24),
-                      AppData.kIsWeb
-                          ? _cachedGoogleButton
-                          : _buildMobileBody(context),
+                      _buildMobileBody(context),
                     ],
                   ),
                 ),
@@ -98,19 +126,7 @@ class LoginUserDialogState extends BaseDialogState<LoginUserDialog> {
           ),
         );
       },
-      listener: (BuildContext context, EmailVerificationState state) {
-        if (state.isLoaded){
-
-          /*
-          if (context.read<AuthenticationBloc>().state is AuthenticationRequirePinEmailVerification) {            
-            Navigator.of(context).pop();
-          }
-          */
-
-
-          //Navigator.of(context).pop();
-        }
-      },
+      listener: (BuildContext context, EmailVerificationState state) {},
     );
   }
 
@@ -145,13 +161,17 @@ class LoginUserDialogState extends BaseDialogState<LoginUserDialog> {
         const SizedBox(height: 20),
         _buildDivider(),
         const SizedBox(height: 20),
-        _buildIconButton(
-          text: 'Daftar Menggunakan Gmail',
-          iconPath: 'assets/icons/google-icon.svg',
-          isHovering: _isHoveringGmail,
-          onHover: (hovering) => setState(() => _isHoveringGmail = hovering),
-          onPressed: () => _handleGmailRegister(),
-        ),
+        AppData.kIsWeb
+          ? googleSigninButton()
+          : _buildIconButton(
+              text: 'Daftar Menggunakan Gmail',
+              iconPath: 'assets/icons/google-icon.svg',
+              isHovering: _isHoveringGmail,
+              onHover: (hovering) =>
+                  setState(() => _isHoveringGmail = hovering),
+              onPressed: () => _handleGmailRegisterForMobile(context),
+            ),
+       
         const SizedBox(height: 20),
         _buildLoginOptions(context),
         const SizedBox(height: 20),
@@ -160,7 +180,6 @@ class LoginUserDialogState extends BaseDialogState<LoginUserDialog> {
     );
   }
 
-  
   Widget _buildLoginOptions(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -182,11 +201,10 @@ class LoginUserDialogState extends BaseDialogState<LoginUserDialog> {
                     setState(() {
                       _rememberLogin = value ?? false;
 
-                      context
-                        .read<EmailVerificationBloc>()
-                        .add(FieldSimpanPasswordChangedEvent(isSimpanPassword: _rememberLogin));
+                      context.read<EmailVerificationBloc>().add(
+                          FieldSimpanPasswordChangedEvent(
+                              isSimpanPassword: _rememberLogin));
                     });
-                    
                   },
                   activeColor: const Color(0xFF7BA05B),
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -206,7 +224,6 @@ class LoginUserDialogState extends BaseDialogState<LoginUserDialog> {
       ],
     );
   }
-  
 
   Widget _buildIconButton({
     required String text,
@@ -348,9 +365,9 @@ class LoginUserDialogState extends BaseDialogState<LoginUserDialog> {
     }
 
     if (!hasError) {
-
       EmailVerificationModel record = EmailVerificationModel(
         email: email,
+        requestFrom: 'email',
       );
 
       context
@@ -359,7 +376,18 @@ class LoginUserDialogState extends BaseDialogState<LoginUserDialog> {
     }
   }
 
-  void _handleGmailRegister() {
-    Navigator.of(context).pop();
+  void _handleGmailRegisterForMobile(BuildContext context) async {
+    GoogleSignInAccount? user = await _googleSignIn.signInSilently();
+    user ??= await _googleSignIn.signIn();
+
+/*
+    if (user != null) {
+      if (!context.mounted) return;
+      context.read<AuthenticationBloc>().add(
+            GoogleUserAuthenticated(user: user),
+      );
+    }
+*/
   }
+
 }

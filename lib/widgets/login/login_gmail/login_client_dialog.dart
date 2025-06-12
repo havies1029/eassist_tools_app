@@ -4,7 +4,6 @@ import 'package:eassist_tools_app/widgets/login/login_gmail/Base_Dialog.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:eassist_tools_app/widgets/google_signin_button_stub.dart'
     if (dart.library.js_interop) 'package:eassist_tools_app/widgets/google_signin_button_web.dart';
 
@@ -21,7 +20,7 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
 
   bool _isHovering = false;
   bool _isHoveringRegister = false;
-  bool _rememberLogin = false;
+  bool _rememberLogin = true;
 
   String? _emailError;
   String? _passwordError;
@@ -342,6 +341,7 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
     BlocProvider.of<LoginBloc>(context).add(LoginButtonPressed(
       username: email,
       password: password,
+      rememberMe: _rememberLogin,
     ));
   }
 

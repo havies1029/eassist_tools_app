@@ -1,4 +1,3 @@
-import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
 import 'package:eassist_tools_app/blocs/reguser/reguser_bloc.dart';
 import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:eassist_tools_app/models/combobox/combomjnsclient_model.dart';

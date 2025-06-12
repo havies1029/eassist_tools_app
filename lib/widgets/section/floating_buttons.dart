@@ -57,10 +57,6 @@ class _FloatingButtonsState extends State<FloatingButtons>
 
     _startAnimations();
 
-    if (AppData.kIsWeb) {
-      // Register the Google Sign-In button for we
-      registerGoogleSigninButton();
-    }
   }
 
   void _startAnimations() async {

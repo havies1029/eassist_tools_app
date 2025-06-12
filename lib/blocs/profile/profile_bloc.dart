@@ -16,7 +16,6 @@ class ProfileBloc extends Bloc<UserEvents, UserState> {
       : super(UserState(isLoading: true)) {
     on<GetUserEvent>(_onGetUser);
     on<UpdateUserEvent>(_onUpdateUser);
-    on<DeleteUserEvent>(_onDeleteUser);
   }
 
   Future<void> _onGetUser(GetUserEvent event, Emitter<UserState> emit) async {
@@ -47,21 +46,5 @@ class ProfileBloc extends Bloc<UserEvents, UserState> {
 
     //debugPrint("profile_block -> _onUpdateUser #30");
   }
-
-  Future<void> _onDeleteUser(
-      DeleteUserEvent event, Emitter<UserState> emit) async {
-    emit(UserState(
-      isDeleting: true,
-      isDeleted: false,
-    ));
-
-    bool isSuccessful =
-        AppData.kIsWeb ? true : await userRepository.deleteUser(id);
-
-    emit(UserState(
-      isDeleting: false,
-      isDeleted: isSuccessful,
-      hasFailure: !isSuccessful,
-    ));
-  }
+  
 }

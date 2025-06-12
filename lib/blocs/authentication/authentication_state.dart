@@ -21,6 +21,13 @@ class AuthenticationUserAuthenticated extends AuthenticationState {
   List<Object> get props => [user];
 }
 
+class AuthenticationGoogleUserAuthenticated extends AuthenticationState {
+  final GoogleSignInAccount user;
+  AuthenticationGoogleUserAuthenticated({required this.user});
+  @override
+  List<Object> get props => [user];
+}
+
 class AuthenticationUnauthenticated extends AuthenticationState {}
 
 class AuthenticationLoading extends AuthenticationState {}
