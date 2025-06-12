@@ -1,9 +1,7 @@
 import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
 import 'package:eassist_tools_app/common/app_data.dart';
-import 'package:eassist_tools_app/main.dart';
 import 'package:eassist_tools_app/models/authentication/auth_model.dart';
 import 'package:eassist_tools_app/models/user/user_model.dart';
-import 'package:eassist_tools_app/models/user/user_token_model.dart';
 import 'package:eassist_tools_app/repositories/user/user_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -40,26 +38,24 @@ class EmailVerificationBloc
       
       List<String> infoData = returnData.data.split(";");
 
-      if (infoData[0] == '1') {
+      if ((infoData[0] == '1') || (infoData[0] == '3')) {
 
         Token token = Token.split(event.record.email, infoData[1]);
 
         UserRepository userRepository = UserRepository();
-        UserToken userToken = UserToken(id: 0, token: token.token, custType: 'U');
 
         User user = User(
           id: 0,
           username: event.record.email,
           email: event.record.email,
           token: token.token,
+          custType: 'U',
         );
 
+        AppData.user = user;
+
         if (state.isSimpanPassword) {
-          if (AppData.kIsWeb) {
-            //userRepository.persistTokenWeb(userToken: userToken);
-          } else {
-            userRepository.persistToken(userToken: userToken);
-          }
+          userRepository.persistToken(userToken: token.token!);
         }      
 
         authenticationBloc.add(UserAuthenticated(user: user));
@@ -103,7 +99,6 @@ class EmailVerificationBloc
       Token token = Token.split(event.record.email, returnData.data);
 
       UserRepository userRepository = UserRepository();
-      UserToken userToken = UserToken(id: 0, token: token.token, custType: 'U');
 
       User user = User(
         id: 0,
@@ -113,11 +108,7 @@ class EmailVerificationBloc
       );
 
       if (state.isSimpanPassword) {
-        if (AppData.kIsWeb) {
-          //userRepository.persistTokenWeb(userToken: userToken);
-        } else {
-          userRepository.persistToken(userToken: userToken);
-        }
+        userRepository.persistToken(userToken: token.token!);
       }      
 
       authenticationBloc.add(UserAuthenticated(user: user));

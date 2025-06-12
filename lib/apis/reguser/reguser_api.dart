@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:eassist_tools_app/common/app_data.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:eassist_tools_app/models/responseAPI/returndataapi_model.dart';
 import 'package:eassist_tools_app/models/reguser/reguser_model.dart';
@@ -8,9 +9,14 @@ class RegUserAPI {
 
 	Future<ReturnDataAPI> regUserTambahAPI(RegUserModel record) async {
 		String tambahEndpoint =
-			"${AppData.prefixEndPoint}/api/reguser/reguser/create";
+			"${AppData.prefixEndPoint}/api/reguser/create";
 		Map<String, String> queryParams = {"modul_id": "regUserTambahAPI"};
 		var uri = AppData.uriHtpp(AppData.httpAuthority, tambahEndpoint, queryParams);
+
+    debugPrint("emailVerificationTambahAPI #10");
+    debugPrint("URI: $uri");
+    debugPrint("Request Body: ${jsonEncode(record.toJson())}");
+    debugPrint("AppData.userToken: ${AppData.userToken}");
 
 		ReturnDataAPI returnData;
 		final http.Response response = await http.post(uri,
@@ -30,7 +36,7 @@ class RegUserAPI {
 	}
 	Future<bool> regUserUbahAPI(RegUserModel record) async {
 		String ubahEndpoint =
-			"${AppData.prefixEndPoint}/api/reguser/reguser/update";
+			"${AppData.prefixEndPoint}/api/reguser/update";
 		Map<String, String> queryParams = {"modul_id": "regUserUbahAPI"};
 
 		var uri = AppData.uriHtpp(AppData.httpAuthority, ubahEndpoint, queryParams);
@@ -52,7 +58,7 @@ class RegUserAPI {
 		return returnData.success;
 	}
 	Future<bool> regUserHapusAPI(String reguserId) async {
-		String hapusEndpoint = "${AppData.prefixEndPoint}/api/reguser/reguser/delete";
+		String hapusEndpoint = "${AppData.prefixEndPoint}/api/reguser/delete";
 		Map<String, String> queryParams = {
 			'reguserId': reguserId,
 			'modul_id': 'regUserHapusAPI'};
@@ -73,7 +79,7 @@ class RegUserAPI {
 		return returnData.success;
 	}
 	Future<RegUserModel> regUserLihatAPI(String reguserId) async {
-		String lihatEndpoint = "${AppData.prefixEndPoint}/api/reguser/reguser/read";
+		String lihatEndpoint = "${AppData.prefixEndPoint}/api/reguser/read";
 		Map<String, String> queryParams = {'reguserId': reguserId};
 		var uri = AppData.uriHtpp(AppData.httpAuthority, lihatEndpoint, queryParams);
 		final http.Response response =
@@ -90,4 +96,24 @@ class RegUserAPI {
 			return throw Exception("Failed to load data");
 		}
 	}
+
+  Future<ReturnDataAPI> validasiPinHP(RegUserModel record) async {
+    String endpoint = "${AppData.prefixEndPoint}/api/reguser/validasipin";
+    Map<String, String> queryParams = {"modul_id": "validasiPinHP"};
+    var uri = AppData.uriHtpp(AppData.httpAuthority, endpoint, queryParams);
+
+    final http.Response response = await http.post(uri,
+      headers: <String, String>{
+        'Content-Type': 'application/json; odata=verbos',
+        'Accept': 'application/json; odata=verbos',
+        'Authorization': 'Bearer ${AppData.userToken}'
+      },
+      body: jsonEncode(record.toJson()));
+
+    if (response.statusCode == 200) {
+      return ReturnDataAPI.fromDatabaseJson(jsonDecode(response.body));
+    } else {
+      return ReturnDataAPI(success: false, data: "", rowcount: 0);
+    }
+  } 
 }

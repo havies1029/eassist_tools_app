@@ -18,4 +18,8 @@ class RegUserRepository {
 	Future<RegUserModel> regUserLihat(String reguserId) async {
 		return await api.regUserLihatAPI(reguserId);
 	}
+
+  Future<ReturnDataAPI> validasiPinHP(RegUserModel record) async {
+    return await api.validasiPinHP(record);
+  }
 }

@@ -12,12 +12,24 @@ import 'package:eassist_tools_app/widgets/google_signin_button_stub.dart'
 if (dart.library.js_interop) 'package:eassist_tools_app/widgets/google_signin_button_web.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+const List<String> scopes = <String>[
+  'email',
+];
 // Pastikan ini adalah Web Client ID
+/*
 final GoogleSignIn _googleSignIn = GoogleSignIn(
-  scopes: ['email', 'profile'],
+  scopes: scopes,
   hostedDomain: '',
+  clientId: '217496566954-tiqmna993j1a943i9d86chpas0ipktle.apps.googleusercontent.com',
   serverClientId:
-  '217496566954-tiqmna993j1a943i9d86chpas0ipktle.apps.googleusercontent.com',
+      '217496566954-tiqmna993j1a943i9d86chpas0ipktle.apps.googleusercontent.com',
+);
+*/
+
+GoogleSignIn _googleSignIn = GoogleSignIn(
+  // Optional clientId
+  clientId: '217496566954-tiqmna993j1a943i9d86chpas0ipktle.apps.googleusercontent.com',
+  scopes: scopes,
 );
 
 class LoginUserDialog extends BaseDialog {
@@ -43,13 +55,28 @@ class LoginUserDialogState extends BaseDialogState<LoginUserDialog> {
   @override
   void initState() {
     super.initState();
-    if (AppData.kIsWeb) {
-      // Hanya panggil registerGoogleSigninButton() sekali
-      registerGoogleSigninButton();
 
-      // Cache widget-nya supaya tidak dibuat ulang berulang kali
-      _cachedGoogleButton = googleSigninButton();
-    }
+    // Hanya panggil registerGoogleSigninButton() sekali
+    //registerGoogleSigninButton();
+
+    _googleSignIn.onCurrentUserChanged
+        .listen((GoogleSignInAccount? account) async {
+
+      debugPrint('User email: ${account?.email}');
+      debugPrint('User display name: ${account?.displayName}');
+
+      if (! context.mounted) return;
+      // ignore: use_build_context_synchronously
+      context.read<EmailVerificationBloc>().add(
+        EmailVerificationTambahEvent(
+          record: EmailVerificationModel(email: account?.email ?? '', requestFrom: 'google'),
+        ),
+      );
+
+    });
+
+    _googleSignIn.signInSilently();
+
   }
 
   @override
@@ -301,55 +328,22 @@ class LoginUserDialogState extends BaseDialogState<LoginUserDialog> {
 
         // Tombol Google
         AppData.kIsWeb
-            ? _cachedGoogleButton
-            : _buildGoogleButton(),
+            ? googleSigninButton()
+            : _buildIconButton(
+          text: 'Daftar Menggunakan Gmail',
+          iconPath: 'assets/icons/google-icon.svg',
+          isHovering: _isHoveringGmail,
+          onHover: (hovering) =>
+              setState(() => _isHoveringGmail = hovering),
+          onPressed: () => _handleGmailRegisterForMobile(context),
+        ),
+
 
         const SizedBox(height: 24),
         _buildLoginOptions(context),
         const SizedBox(height: 16),
         _buildRegisterLink(context),
       ],
-    );
-  }
-
-  Widget _buildGoogleButton() {
-    return GestureDetector(
-      onTap: () => _handleGmailRegister(),
-      child: Container(
-        width: double.infinity,
-        height: 50,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey.shade300),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SvgPicture.asset(
-              'assets/icons/google-icon.svg',
-              width: 20,
-              height: 20,
-            ),
-            const SizedBox(width: 12),
-            const Text(
-              'Login dengan Google',
-              style: TextStyle(
-                color: Colors.black87,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -374,9 +368,9 @@ class LoginUserDialogState extends BaseDialogState<LoginUserDialog> {
                     setState(() {
                       _rememberLogin = value ?? false;
 
-                      context
-                          .read<EmailVerificationBloc>()
-                          .add(FieldSimpanPasswordChangedEvent(isSimpanPassword: _rememberLogin));
+                      context.read<EmailVerificationBloc>().add(
+                          FieldSimpanPasswordChangedEvent(
+                              isSimpanPassword: _rememberLogin));
                     });
                   },
                   activeColor: const Color(0xFF7BA05B),
@@ -398,69 +392,168 @@ class LoginUserDialogState extends BaseDialogState<LoginUserDialog> {
     );
   }
 
-  Widget _buildRegisterLink(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          'Apabila sudah menjadi client : ',
-          style: TextStyle(
-            color: Colors.grey.shade600,
-            fontSize: 14,
+  Widget _buildIconButton({
+    required String text,
+    required String iconPath,
+    required bool isHovering,
+    required Function(bool) onHover,
+    required VoidCallback onPressed,
+  }) {
+    return MouseRegion(
+      onEnter: (_) => onHover(true),
+      onExit: (_) => onHover(false),
+      child: GestureDetector(
+        onTap: onPressed,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          width: double.infinity,
+          height: 55,
+          decoration: BoxDecoration(
+            color: isHovering ? Colors.grey.shade100 : Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: isHovering ? Colors.grey.shade400 : Colors.grey.shade300,
+              width: 1.5,
+            ),
+            boxShadow: isHovering
+                ? [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                blurRadius: 8,
+                offset: const Offset(0, 4),
+              )
+            ]
+                : [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.1),
+                blurRadius: 3,
+                offset: const Offset(0, 2),
+              )
+            ],
+          ),
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: SvgPicture.asset(
+                    iconPath,
+                    width: 24,
+                    height: 24,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Center(
+                  child: Text(
+                    text,
+                    style: const TextStyle(
+                      color: Color(0xFF7BA05B),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 44),
+            ],
           ),
         ),
-        MouseRegion(
-          onEnter: (_) => setState(() => _isHoveringRegister = true),
-          onExit: (_) => setState(() => _isHoveringRegister = false),
-          child: GestureDetector(
-            onTap: () async {
-              Navigator.of(context).pop();
-              context.read<AuthenticationBloc>().add(RequireLoginClient());
-            },
-            child: Text(
-              'Login Client',
-              style: TextStyle(
-                color: _isHoveringRegister
-                    ? const Color(0xFF7BA05B)
-                    : Colors.blue.shade600,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
+      ),
+    );
+  }
+
+  Widget _buildDivider() {
+    return Row(
+      children: [
+        Expanded(child: Container(height: 1, color: Colors.grey.shade300)),
+      ],
+    );
+  }
+
+  Widget _buildRegisterLink(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: 55,
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Apabila sudah menjadi client : ',
+            style: TextStyle(
+              color: Colors.grey.shade600,
+              fontSize: 14,
+            ),
+          ),
+          MouseRegion(
+            onEnter: (_) => setState(() => _isHoveringRegister = true),
+            onExit: (_) => setState(() => _isHoveringRegister = false),
+            child: GestureDetector(
+              onTap: () async {
+                Navigator.of(context).pop();
+                //await CustomPopupsLoginUser.showRegisterUserDialog(context);
+
+                context.read<AuthenticationBloc>().add(RequireLoginClient());
+              },
+              child: Text(
+                'Login Client',
+                style: TextStyle(
+                  color: _isHoveringRegister
+                      ? const Color(0xFF7BA05B)
+                      : Colors.blue.shade600,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   void _handleLogin() {
     final email = _emailController.text.trim();
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$');
 
-    setState(() {
-      _emailError = null;
-    });
-
-    var hasError = false;
+    String? error;
     if (email.isEmpty) {
-      setState(() => _emailError = 'Email tidak boleh kosong');
-      hasError = true;
-    } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
-      setState(() => _emailError = 'Format email tidak valid');
-      hasError = true;
+      error = 'Email tidak boleh kosong';
+    } else if (!emailRegex.hasMatch(email)) {
+      error = 'Format email tidak valid';
     }
 
-    if (!hasError) {
-      EmailVerificationModel record = EmailVerificationModel(
-        email: email,
-      );
-
-      context
-          .read<EmailVerificationBloc>()
-          .add(EmailVerificationTambahEvent(record: record));
+    if (error != null) {
+      setState(() => _emailError = error);
+      return;
     }
+
+    setState(() => _emailError = null); // Bersihkan error jika valid
+
+    final record = EmailVerificationModel(
+      email: email,
+      requestFrom: 'email',
+    );
+
+    context
+        .read<EmailVerificationBloc>()
+        .add(EmailVerificationTambahEvent(record: record));
   }
 
-  void _handleGmailRegister() {
-    Navigator.of(context).pop();
+  void _handleGmailRegisterForMobile(BuildContext context) async {
+    GoogleSignInAccount? user = await _googleSignIn.signInSilently();
+    user ??= await _googleSignIn.signIn();
+
+/*
+    if (user != null) {
+      if (!context.mounted) return;
+      context.read<AuthenticationBloc>().add(
+            GoogleUserAuthenticated(user: user),
+      );
+    }
+*/
   }
 }

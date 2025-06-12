@@ -57,6 +57,7 @@ class HeroMain extends StatelessWidget {
             }
             else if (state is AuthenticationRequirePinHPVerification) {
               debugPrint("AuthenticationRequirePinVerification");
+              Navigator.of(context).pop();
               CustomPopupsLoginUser.showRequestOTPHPDialog(context, state.hpno);
             }
             else if (state is AuthenticationRequirePinEmailVerification) {
@@ -67,13 +68,38 @@ class HeroMain extends StatelessWidget {
             else if (state is AuthenticationUserAuthenticated){
               debugPrint("AuthenticationUserAuthenticated");
 
-              Navigator.of(context, rootNavigator: true).maybePop();
+              // Navigator.of(context, rootNavigator: true).maybePop();
+              //
+              // Navigator.pushReplacement(
+              //   context,
+              //   MaterialPageRoute(builder: (_) => HeroUserMain()),
+              // );
+              Navigator.of(context).pop();
+            }else if (state is AuthenticationPhonePinVerified) {
+              debugPrint("AuthenticationPhonePinVerified");
+              Navigator.of(context).pop();
 
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (_) => HeroUserMain()),
+              debugPrint("Log out user");
+              // force login user
+              BlocProvider.of<AuthenticationBloc>(context).add(
+                LoggedOut(),
               );
-
+            }
+            else if (state is AuthenticationGoogleUserAuthenticated) {
+              debugPrint("AuthenticationGoogleUserAuthenticated");
+              Navigator.of(context).pop();
+            }
+            else if (state is AuthenticationLoading) {
+              debugPrint("AuthenticationLoading");
+            }
+            else if (state is AuthenticationPreCheckHasToken) {
+              debugPrint("AuthenticationPreCheckHasToken");
+            }
+            else if (state is AuthenticationPostCheckHasToken) {
+              debugPrint("AuthenticationPostCheckHasToken");
+            }
+            else if (state is AuthenticationAuthenticated) {
+              debugPrint("AuthenticationAuthenticated");
             }
 
           },

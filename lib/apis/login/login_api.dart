@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:eassist_tools_app/models/user/user_token_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:eassist_tools_app/models/authentication/auth_model.dart';
@@ -70,7 +69,7 @@ class LoginApi {
             email: info[5],
             personId: info[12],
             userCabang: info[1],
-            hasDownline: toBoolean(info[6], false));
+            custType: "C",);
         return user;
       } on Exception catch (e) {
         //debugPrint("Error : ${e.toString()}");
@@ -103,6 +102,15 @@ class LoginApi {
             token: token,
             username: info[1],
             nama: info[1],
+            email: info[1],
+            custType: info[0],);
+        return user;
+      } else if (info[0] == "C") {
+        User user = User(
+            id: 0,
+            token: token,
+            username: info[1],
+            nama: info[2],
             email: info[1],
             custType: info[0],);
         return user;

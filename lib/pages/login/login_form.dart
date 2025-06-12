@@ -192,6 +192,7 @@ class _LoginFormState extends State<LoginForm>
     BlocProvider.of<LoginBloc>(context).add(LoginButtonPressed(
       username: _usernameController.text,
       password: _passwordController.text,
+      rememberMe: true
     ));
   }
 

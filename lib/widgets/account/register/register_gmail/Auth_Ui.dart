@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart'; // Untuk SVG support
-import '../../../account/login/login_gmail/Popup.dart';
 import '../../../dialog/reset_password/reset_password_dialog.dart';
 import 'Base_Dialog.dart';
 import 'Popup.dart';
@@ -366,7 +365,6 @@ class _GeneralRegisterDialogState extends BaseDialogState<GeneralRegisterDialog>
             child: GestureDetector(
               onTap: () async {
                 Navigator.of(context).pop();
-                await CustomPopupsLoginUser.showLoginDialog(context);
               },
               child: Text(
                 'Login',

@@ -2,12 +2,13 @@ import 'dart:async';
 
 import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:eassist_tools_app/models/user/user_model.dart';
-import 'package:eassist_tools_app/models/user/user_token_model.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:eassist_tools_app/repositories/user/user_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:google_sign_in/google_sign_in.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
@@ -35,6 +36,17 @@ class AuthenticationBloc
     on<RequireRegisterClient>((event, emit) {
       emit(AuthenticationRequireRegisterClient());
     });
+    on<RequirePinHPVerification>((event, emit) {
+      emit(AuthenticationRequirePinHPVerification(hpno: event.hpno));
+    });
+    on<PhonePinVerified>((event, emit) {
+      emit(AuthenticationPhonePinVerified());
+    });
+    on<GoogleUserAuthenticated>((event, emit) {
+      debugPrint("_onLoggedIn dari Form Login Google");
+      emit(AuthenticationGoogleUserAuthenticated(user: event.user));
+
+    });
   }
 
   Future<void> _onAppStarted(
@@ -42,13 +54,14 @@ class AuthenticationBloc
     debugPrint("_onAppStarted");
 
     emit(AuthenticationPreCheckHasToken());
-    String token = AppData.kIsWeb ? "" : await userRepository.getToken();
+    //String token = AppData.kIsWeb ? "" : await userRepository.getToken();    
+    String token = await userRepository.getToken();
     emit(AuthenticationPostCheckHasToken());
 
     debugPrint("hasToken ?");
     if (token.isNotEmpty) {
 
-      final user = await userRepository.getUserByToken(token);
+      final user = await userRepository.getUserByToken(token);     
 
       AppData.user = user;
 
@@ -64,6 +77,9 @@ class AuthenticationBloc
 
   Future<void> _onLoggedIn(
       LoggedIn event, Emitter<AuthenticationState> emit) async {
+
+    debugPrint("_onLoggedIn dari Form Login Client");
+
     emit(AuthenticationLoading());
 
     emit(AuthenticationAuthenticated(user: event.user));
@@ -72,9 +88,7 @@ class AuthenticationBloc
   Future<void> _onLoggedOut(
       LoggedOut event, Emitter<AuthenticationState> emit) async {
     emit(AuthenticationLoading());
-    if (!AppData.kIsWeb) {
-      await userRepository.deleteToken(id: 0);
-    }
+    await userRepository.deleteToken(id: 0);
     emit(AuthenticationUnauthenticated());
   }
 
@@ -86,8 +100,13 @@ class AuthenticationBloc
 
   Future<void> _onUserAuthenticated(
       UserAuthenticated event, Emitter<AuthenticationState> emit) async {
+
+    debugPrint("_onLoggedIn dari Form Login User");
+
     emit(AuthenticationLoading());
     
     emit(AuthenticationUserAuthenticated(user: event.user));
+    
+    emit(AuthenticationAuthenticated(user: event.user));
   }
 }

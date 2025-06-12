@@ -2,10 +2,14 @@ import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart'
 import 'package:eassist_tools_app/widgets/account/login/login_gmail/Base_Dialog.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
+import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
+import 'package:eassist_tools_app/blocs/login/login_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:eassist_tools_app/widgets/google_signin_button_stub.dart'
 if (dart.library.js_interop) 'package:eassist_tools_app/widgets/google_signin_button_web.dart';
+
+import '../../../../pages/hero_client_page/hero_user_main.dart';
 
 class LoginClientDialog extends BaseDialog {
   const LoginClientDialog({super.key});
@@ -36,122 +40,137 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final isMobile = constraints.maxWidth < 768;
+    return BlocConsumer<LoginBloc, LoginState>(
+      builder: (context, state) {
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final isMobile = constraints.maxWidth < 768;
 
-        return SingleChildScrollView(
-          child: Dialog(
-            insetPadding: EdgeInsets.symmetric(
-                horizontal: isMobile ? 20 : 40,
-                vertical: 40
-            ),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            child: Container(
-              width: isMobile ? double.infinity : null,
-              constraints: BoxConstraints(
-                maxWidth: isMobile
-                    ? MediaQuery.of(context).size.width - 40
-                    : 450,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Header hijau dengan tombol close dan judul
-                  Container(
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF7BA05B),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20),
-                      ),
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                    child: Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () => Navigator.of(context).pop(),
-                          child: Container(
-                            width: 28,
-                            height: 28,
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.close,
-                              size: 18,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        const Text(
-                          'Login Client',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
+            return SingleChildScrollView(
+              child: Dialog(
+                insetPadding: EdgeInsets.symmetric(
+                  horizontal: isMobile ? 20 : 40,
+                  vertical: 40,
+                ),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+                child: Container(
+                  width: isMobile ? double.infinity : null,
+                  constraints: BoxConstraints(
+                    maxWidth: isMobile
+                        ? MediaQuery.of(context).size.width - 40
+                        : 450,
                   ),
-                  // Body putih
-                  Container(
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(20),
-                        bottomRight: Radius.circular(20),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Header hijau dengan tombol close dan judul
+                      Container(
+                        decoration: const BoxDecoration(
+                          color: Color(0xFF7BA05B),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20),
+                          ),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 16),
+                        child: Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () => Navigator.of(context).pop(),
+                              child: Container(
+                                width: 28,
+                                height: 28,
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.2),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.close,
+                                  size: 18,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            const Text(
+                              'Login Client',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    padding: const EdgeInsets.all(32),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        // Logo
-                        const CircleAvatar(
-                          radius: 40,
-                          backgroundColor: Colors.white,
-                          backgroundImage: AssetImage('assets/images/jps_logo.png'),
-                        ),
-                        const SizedBox(height: 24),
 
-                        // Judul dan subtitle
-                        const Text(
-                          'Login Client',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black87,
+                      // Body putih
+                      Container(
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(20),
+                            bottomRight: Radius.circular(20),
                           ),
                         ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Masukkan kredensial untuk mengakses akun client',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey.shade600,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 32),
+                        padding: const EdgeInsets.all(32),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const CircleAvatar(
+                              radius: 40,
+                              backgroundColor: Colors.white,
+                              backgroundImage: AssetImage(
+                                  'assets/images/jps_logo.png'),
+                            ),
+                            const SizedBox(height: 24),
 
-                        _buildLoginForm(context, isMobile),
-                      ],
-                    ),
+                            const Text(
+                              'Login Client',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Masukkan kredensial untuk mengakses akun client',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey.shade600,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 32),
+
+                            // Form login menyesuaikan state
+                            _buildLoginForm(context, isMobile, state),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
+            );
+          },
         );
+      },
+      listener: (context, state) {
+        if (state is LoginPostAuthenticate) {
+          Navigator.of(context).pop();
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (_) => const HeroUserMain()),
+          );
+        }
       },
     );
   }
 
-  Widget _buildLoginForm(BuildContext context, bool isMobile) {
+  Widget _buildLoginForm(BuildContext context, bool isMobile, LoginState state) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -230,12 +249,23 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
             ),
           ),
 
+        // Error dari state Bloc
+        if (state is LoginFailure)
+          Padding(
+            padding: const EdgeInsets.only(top: 8, left: 4),
+            child: Text(
+              state.error,
+              style: const TextStyle(color: Colors.red, fontSize: 12),
+            ),
+          ),
+
         const SizedBox(height: 24),
 
         // Tombol Masuk
         GestureDetector(
-          onTap: () => _handleLogin(),
-          child: Container(
+          onTap: _handleLogin,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
             width: double.infinity,
             height: 50,
             decoration: BoxDecoration(
@@ -262,20 +292,30 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
           ),
         ),
 
-        const SizedBox(height: 24),
+        const SizedBox(height: 20),
 
-        _buildLoginOptions(context),
-        const SizedBox(height: 24),
-
-        // Divider
+        // Divider dan Login Options
         Row(
           children: [
             Expanded(child: Container(height: 1, color: Colors.grey.shade300)),
           ],
         ),
 
-        const SizedBox(height: 24),
-        _buildFooterLinks(context),
+        const SizedBox(height: 20),
+        _buildLoginOptions(context),
+        const SizedBox(height: 20),
+
+        // Hyperlink: Lupa sandi dan Belum punya user
+        Row(
+          children: [
+            Expanded(child: buildLinkLupaSandi(context)),
+            Text(
+              '/',
+              style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+            ),
+            Expanded(child: buildLinkBelumPunyaUser(context)),
+          ],
+        ),
       ],
     );
   }
@@ -318,6 +358,78 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildDivider() {
+    return Row(
+      children: [
+        Expanded(child: Container(height: 1, color: Colors.grey.shade300)),
+      ],
+    );
+  }
+
+  Widget buildLinkLupaSandi(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: 55,
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          MouseRegion(
+            onEnter: (_) => setState(() => _isHoveringRegister = true),
+            onExit: (_) => setState(() => _isHoveringRegister = false),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop();
+                context.read<AuthenticationBloc>().add(
+                  ForgotPasword(email: _emailController.text.trim()),
+                );
+              },
+              child: Text(
+                'Lupa Kata Sandi',
+                style: TextStyle(
+                  color: _isHoveringRegister ? const Color(0xFF7BA05B) : Colors.blue.shade600,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildLinkBelumPunyaUser(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: 55,
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          MouseRegion(
+            onEnter: (_) => setState(() => _isHoveringRegister = true),
+            onExit: (_) => setState(() => _isHoveringRegister = false),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop();
+                context.read<AuthenticationBloc>().add(RequireLoginUser());
+              },
+              child: Text(
+                'no akun?',
+                style: TextStyle(
+                  color: _isHoveringRegister ? const Color(0xFF7BA05B) : Colors.blue.shade600,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -390,7 +502,7 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
     );
   }
 
-  void _handleLogin() async {
+  void _handleLogin() {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
 
@@ -399,7 +511,8 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
       _passwordError = null;
     });
 
-    var hasError = false;
+    bool hasError = false;
+
     if (email.isEmpty) {
       setState(() => _emailError = 'Email tidak boleh kosong');
       hasError = true;
@@ -418,14 +531,12 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
 
     if (hasError) return;
 
-    debugPrint(
-      '🔵 Tombol Masuk ditekan dengan email="$email" dan password(tersimpan)"',
-    );
+    debugPrint('🔵 Tombol Masuk ditekan dengan email="$email"');
 
-    // Simulasi delay sebelum menampilkan OTP
-    final success = await Future.delayed(
-      const Duration(milliseconds: 300),
-          () => true,
-    );
+    BlocProvider.of<LoginBloc>(context).add(LoginButtonPressed(
+      username: email,
+      password: password,
+      rememberMe: _rememberLogin,
+    ));
   }
 }

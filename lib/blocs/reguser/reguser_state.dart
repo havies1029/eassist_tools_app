@@ -8,6 +8,8 @@ class RegUserState extends Equatable {
 	final bool isSaving;
 	final bool isSaved;
 	final bool hasFailure;
+  final bool verificationFailed;  
+	final List<String> errors;
 	const RegUserState(
 		{this.record,
 		this.isLoading = false,
@@ -15,6 +17,8 @@ class RegUserState extends Equatable {
 		this.isSaving = false,
 		this.isSaved = false,
 		this.hasFailure = false,
+    this.verificationFailed = false,
+    this.errors = const []
 });
 
 	RegUserState copyWith({
@@ -24,6 +28,8 @@ class RegUserState extends Equatable {
 		bool? isSaving,
 		bool? isSaved,
 		bool? hasFailure,
+    bool? verificationFailed,
+    List<String>? errors,
 	}){
 		return RegUserState(
 			record: record ?? this.record,
@@ -32,9 +38,12 @@ class RegUserState extends Equatable {
 			isSaving: isSaving ?? this.isSaving,
 			isSaved: isSaved ?? this.isSaved,
 			hasFailure: hasFailure ?? this.hasFailure,
+      verificationFailed: verificationFailed ?? this.verificationFailed,
+      errors: errors ?? this.errors,
 		);
 	}
 
 	@override
-	List<Object> get props => [isLoading, isLoaded, isSaving, isSaved, hasFailure];
+	List<Object> get props => [isLoading, isLoaded, isSaving, isSaved, hasFailure,
+    verificationFailed, errors];
 }

@@ -21,7 +21,7 @@ class EmailVerificationState extends Equatable {
       this.token = '',
       this.verificationFailed = false,      
 		  this.errors = const [],
-      this.isSimpanPassword = false});
+      this.isSimpanPassword = true});
 
   EmailVerificationState copyWith({
     EmailVerificationModel? record,

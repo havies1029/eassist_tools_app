@@ -46,7 +46,6 @@ import '../../../pages/testimony_page/testimony_main.dart';
 import '../../../pages/customer_service/cs_main.dart';
 import '../../../repositories/user/user_repository.dart';
 // import '../../login/login_client/popup_client.dart';
-import '../../account/login/login_gmail/Popup.dart';
 import '../../account/register/register_client/popup_client.dart';
 
 
@@ -516,8 +515,6 @@ class _NavbarWidgetState extends State<NavbarWidget> {
           },
         ),
       );
-    }else if (title == 'Login Gmail') {
-      await CustomPopupsLoginUser.showLoginDialog(context);
     }else if (title == 'Login Client') {
       // Jika ingin push ke halaman baru:
       // Navigator.of(context).push(

@@ -63,4 +63,15 @@ class UserAuthenticated extends AuthenticationEvent {
   List<Object> get props => [user];
 }
 
+class GoogleUserAuthenticated extends AuthenticationEvent {
+  final GoogleSignInAccount user;
+
+  const GoogleUserAuthenticated({required this.user});
+
+  @override
+  List<Object> get props => [user];
+}
+
 class RequireRegisterClient extends AuthenticationEvent {}
+
+class PhonePinVerified extends AuthenticationEvent {}

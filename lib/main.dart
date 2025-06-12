@@ -178,7 +178,7 @@ class App extends StatelessWidget {
                 GallerymemberCariBloc()),
         BlocProvider<RegUserBloc>(
             create: (context) =>
-                RegUserBloc(repository: RegUserRepository())),
+                RegUserBloc(repository: RegUserRepository(), authenticationBloc: BlocProvider.of<AuthenticationBloc>(context))),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

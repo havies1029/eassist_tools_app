@@ -1,3 +1,4 @@
+import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/models/responseAPI/returndataapi_model.dart';
@@ -9,11 +10,15 @@ part 'reguser_state.dart';
 
 class RegUserBloc extends Bloc<RegUserEvents, RegUserState> {
 	final RegUserRepository repository;
-	RegUserBloc({required this.repository}) : super(const RegUserState()) {
-		on<RegUserUbahEvent>(onUbahRegUser);
+  final AuthenticationBloc authenticationBloc;
+	RegUserBloc({required this.repository, 
+    required this.authenticationBloc}) : super(const RegUserState()) {
 		on<RegUserTambahEvent>(onTambahRegUser);
-		on<RegUserHapusEvent>(onHapusRegUser);
-		on<RegUserLihatEvent>(onLihatRegUser);
+    on<RegUserUbahEvent>(onUbahRegUser);
+    on<RegUserHapusEvent>(onHapusRegUser);
+    on<RegUserLihatEvent>(onLihatRegUser);
+    on<ValidasiPinHPEvent>(onValidasiPinHP);
+
 	}
 
 	Future<void> onTambahRegUser(
@@ -23,11 +28,25 @@ class RegUserBloc extends Bloc<RegUserEvents, RegUserState> {
 		bool hasFailure = true;
 		emit(state.copyWith(isSaving: true, isSaved: false));
 		returnData = await repository.regUserTambah(event.record);
+    event.record.reguserId = returnData.data;
 		hasFailure = !returnData.success;
+    List<String> errors = [];
+    if (hasFailure) {
+      errors.add(returnData.data);
+    }
 		emit(state.copyWith(
 			isSaving: false,
 			isSaved: true,
+      record: event.record,
+      errors: errors,
 			hasFailure: hasFailure));
+
+    if (!hasFailure) {      
+      authenticationBloc.add(
+        RequirePinHPVerification(hpno: event.record.telepon)
+      );
+    }
+
 	}
 
 	Future<void> onUbahRegUser(
@@ -50,5 +69,29 @@ class RegUserBloc extends Bloc<RegUserEvents, RegUserState> {
 		RegUserModel record = await repository.regUserLihat(event.recordId);
 		emit(state.copyWith(isLoading: false, isLoaded: true, record: record));
 	}
+
+  Future<void> onValidasiPinHP(
+    ValidasiPinHPEvent event, Emitter<RegUserState> emit) async {
+    emit(state.copyWith(isSaving: true, isSaved: false));
+    ReturnDataAPI returnData = await repository.validasiPinHP(event.record);
+    bool hasFailure = !returnData.success;
+    List<String> errors = [];
+    if (hasFailure) {
+      errors.add(returnData.data);
+    }
+    emit(state.copyWith(
+      isSaving: false,
+      isSaved: true,
+      hasFailure: hasFailure,
+      verificationFailed: hasFailure,
+      errors: errors,
+    ));
+
+    if (!hasFailure) {
+      authenticationBloc.add(
+        PhonePinVerified()
+      );
+    }
+  }
 
 }

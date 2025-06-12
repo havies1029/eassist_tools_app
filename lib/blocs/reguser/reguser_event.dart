@@ -39,3 +39,11 @@ class RegUserLihatEvent extends RegUserEvents {
 	List<Object> get props => [recordId];
 }
 
+class ValidasiPinHPEvent extends RegUserEvents {
+	final RegUserModel record;
+	const ValidasiPinHPEvent({required this.record});
+
+	@override
+	List<Object> get props => [record];
+}
+

@@ -1,6 +1,10 @@
 // OTP Login Dialog
 import 'package:eassist_tools_app/widgets/account/login/login_gmail/Base_Dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../../blocs/reguser/reguser_bloc.dart';
+import '../../../../models/reguser/reguser_model.dart';
 
 class OtpHpDialog extends BaseDialog {
   final String hpno;
@@ -160,17 +164,14 @@ class OtpHpDialogState extends BaseDialogState<OtpHpDialog> {
     String otpCode =
     _codeControllers.map((controller) => controller.text).join();
 
-    // Validasi apakah semua kotak sudah diisi
-    if (otpCode.length != 6) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Mohon isi semua kode OTP'),
-          backgroundColor: Colors.red,
-        ),
-      );
-      return;
-    }
+    RegUserModel? record = context.read<RegUserBloc>().state.record;
+    record?.kodePin = otpCode;
 
-    // cek otp di server
+    context.read<RegUserBloc>().add(
+      ValidasiPinHPEvent(
+          record: record!
+      ),
+    );
+
   }
 }
