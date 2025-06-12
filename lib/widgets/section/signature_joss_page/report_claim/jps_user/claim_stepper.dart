@@ -91,26 +91,68 @@ class _ClaimStepperState extends State<ClaimStepper> {
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  if (currentStep > 0)
-                    OutlinedButton.icon(
-                      onPressed: back,
-                      icon: const Icon(Icons.arrow_back, color: Colors.orange),
-                      label: const Text("Kembali", style: TextStyle(color: Colors.orange)),
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: Colors.orange),
+                  children: [
+                    if (currentStep > 0)
+                      OutlinedButton.icon(
+                        onPressed: back,
+                        icon: const Icon(Icons.arrow_back, color: Colors.orange, size: 20), // font size icon
+                        label: const Text(
+                          "Kembali",
+                          style: TextStyle(color: Colors.orange, fontSize: 20), // font size teks
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(color: Colors.orange),
+                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12), // radius 12 utk Kembali
+                          ),
+                        ),
                       ),
-                    ),
-                  if (currentStep < steps.length - 1)
-                    ElevatedButton.icon(
-                      onPressed: next,
-                      icon: const Icon(Icons.arrow_forward),
-                      label: const Text("Lanjut"),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: _primaryColor,
+                    if (currentStep < steps.length - 1)
+                      ElevatedButton.icon(
+                        onPressed: next,
+                        icon: const Icon(Icons.arrow_forward, size: 20), // font size icon
+                        label: const Text(
+                          "Lanjut",
+                          style: TextStyle(fontSize: 20), // font size teks
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: _primaryColor,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8), // radius 8 utk Lanjut
+                          ),
+                        ),
                       ),
-                    ),
-                ],
+                    if (currentStep == steps.length - 1)
+                      ElevatedButton(
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Formulir telah selesai diisi!")),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: _primaryColor,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8), // radius 8 utk Selesai
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: const [
+                            Text(
+                              "Selesai",
+                              style: TextStyle(fontSize: 20), // font size teks
+                            ),
+                            SizedBox(width: 8),
+                            Icon(Icons.check, size: 20), // font size icon
+                          ],
+                        ),
+                      ),
+                  ]
               ),
             ),
           ],
@@ -135,43 +177,121 @@ class _StepIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final stepItemWidth = 100.0;
-    final totalConnectors = titles.length - 1;
-    final totalStepWidth = stepItemWidth * titles.length;
-    final totalConnectorWidth = totalWidth - totalStepWidth;
-
-    final connectorWidth = totalConnectors > 0
-        ? (totalConnectorWidth / totalConnectors).clamp(8.0, 100.0)
-        : 30.0;
-
-    return Center(
-      child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: totalWidth),
+    final isMobile = MediaQuery.of(context).size.width < 768;
+    const _textColor = Colors.black87;
+    if (isMobile) {
+      // ✅ Mobile-style stepper seperti gambar
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(titles.length * 2 - 1, (index) {
-            if (index.isEven) {
-              final stepIndex = index ~/ 2;
-              final isActive = stepIndex == currentStep;
-              final isPassed = stepIndex < currentStep;
-              return _StepItem(
-                index: stepIndex,
-                title: titles[stepIndex],
-                subtitle: subtitles[stepIndex],
-                isActive: isActive,
-                isPassed: isPassed,
-              );
-            } else {
-              final isPassed = ((index - 1) ~/ 2) < currentStep;
-              return _StepConnector(
-                isPassed: isPassed,
-                width: connectorWidth,
-              );
-            }
+          children: List.generate(titles.length, (index) {
+            final isActive = index == currentStep;
+            final isPassed = index < currentStep;
+
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 20,
+                    height: 20,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: isActive ? _primaryColor : Colors.grey.shade400,
+                        width: 2,
+                      ),
+                    ),
+                    child: Center(
+                      child: isActive
+                          ? Container(
+                        width: 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: _primaryColor,
+                        ),
+                      )
+                          : const SizedBox.shrink(),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    width: 100,
+                    child: Column(
+                      children: [
+                        Text(
+                          titles[index],
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                            color: _textColor,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          subtitles[index],
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 11,
+                            color: Colors.black54,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
           }),
         ),
-      ),
-    );
+      );
+    } else {
+      // Desktop stepper tetap pakai versi lama
+      final stepItemWidth = 100.0;
+      final totalConnectors = titles.length - 1;
+      final totalStepWidth = stepItemWidth * titles.length;
+      final totalConnectorWidth = totalWidth - totalStepWidth;
+      final connectorWidth = totalConnectors > 0
+          ? (totalConnectorWidth / totalConnectors).clamp(8.0, 100.0)
+          : 30.0;
+
+      return Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: totalWidth),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(titles.length * 2 - 1, (index) {
+              if (index.isEven) {
+                final stepIndex = index ~/ 2;
+                final isActive = stepIndex == currentStep;
+                final isPassed = stepIndex < currentStep;
+                return _StepItem(
+                  index: stepIndex,
+                  title: titles[stepIndex],
+                  subtitle: subtitles[stepIndex],
+                  isActive: isActive,
+                  isPassed: isPassed,
+                );
+              } else {
+                final isPassed = ((index - 1) ~/ 2) < currentStep;
+                return _StepConnector(
+                  isPassed: isPassed,
+                  width: connectorWidth,
+                );
+              }
+            }),
+          ),
+        ),
+      );
+    }
   }
 }
 

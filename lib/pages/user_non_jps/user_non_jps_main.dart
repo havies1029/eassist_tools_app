@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../widgets/components/hero/hero_section.dart';
-import '../../widgets/section/management_polis_page/assets_management/action_assets_section.dart';
+import '../../widgets/section/signature_joss_page/report_claim/jps_user/action_report_user_section.dart';
 import '../../widgets/components/navbar/navbar_widget.dart';
 import '../../widgets/section/about/floating_buttons_about.dart';
 import '../../widgets/components/footer/footer_section.dart';

@@ -18,7 +18,10 @@ class _InsuredDataFormState extends State<InsuredDataForm> {
       child: FormStepContainer(
         children: [
           // Section 1 - Data Tertanggung
-          const _SectionTitle(title: 'Data Tertanggung'),
+          const _SectionTitle(
+              icon: Icons.person_outline,
+              title: 'Data Tertanggung'
+          ),
           const SizedBox(height: 24),
 
           // Form fields for personal data
@@ -27,14 +30,15 @@ class _InsuredDataFormState extends State<InsuredDataForm> {
           const SizedBox(height: 40),
 
           // Section 2 - Informasi Polis
-          const _SectionTitle(title: 'Informasi Polis'),
+          const _SectionTitle(
+              icon: Icons.description_outlined,
+              title: 'Informasi Polis'
+          ),
 
           const SizedBox(height: 24),
 
           // Form fields for policy data
           _buildPolicyDataFields(),
-
-          const SizedBox(height: 40), // Bottom padding
         ],
       ),
     );
@@ -62,11 +66,17 @@ class _InsuredDataFormState extends State<InsuredDataForm> {
                 Row(
                   children: [
                     Expanded(
-                      child: _InputField(label: 'Nama Lengkap'),
+                      child: _InputField(
+                        label: 'Nama Lengkap',
+                        suffixIcon: Icons.person_outline,
+                      ),
                     ),
                     SizedBox(width: fieldSpacing),
                     Expanded(
-                      child: _InputField(label: 'Nomor KTP'),
+                      child: _InputField(
+                        label: 'Nomor KTP',
+                        suffixIcon: Icons.credit_card_outlined,
+                      ),
                     ),
                   ],
                 ),
@@ -76,11 +86,17 @@ class _InsuredDataFormState extends State<InsuredDataForm> {
                 Row(
                   children: [
                     Expanded(
-                      child: _InputField(label: 'Email'),
+                      child: _InputField(
+                        label: 'Email',
+                        suffixIcon: Icons.email_outlined,
+                      ),
                     ),
                     SizedBox(width: fieldSpacing),
                     Expanded(
-                      child: _InputField(label: 'No. Telp'),
+                      child: _InputField(
+                        label: 'No. Telp',
+                        suffixIcon: Icons.phone_outlined,
+                      ),
                     ),
                   ],
                 ),
@@ -90,20 +106,34 @@ class _InsuredDataFormState extends State<InsuredDataForm> {
                 _InputField(
                   label: 'Alamat Lengkap',
                   maxLines: 3,
+                  suffixIcon: Icons.location_on_outlined,
                 ),
               ] else ...[
                 // Mobile layout - single column
-                _InputField(label: 'Nama Lengkap'),
+                _InputField(
+                  label: 'Nama Lengkap',
+                  suffixIcon: Icons.person_outline,
+                ),
                 SizedBox(height: fieldSpacing),
-                _InputField(label: 'Nomor KTP'),
+                _InputField(
+                  label: 'Nomor KTP',
+                  suffixIcon: Icons.credit_card_outlined,
+                ),
                 SizedBox(height: fieldSpacing),
-                _InputField(label: 'Email'),
+                _InputField(
+                  label: 'Email',
+                  suffixIcon: Icons.email_outlined,
+                ),
                 SizedBox(height: fieldSpacing),
-                _InputField(label: 'No. Telp'),
+                _InputField(
+                  label: 'No. Telp',
+                  suffixIcon: Icons.phone_outlined,
+                ),
                 SizedBox(height: fieldSpacing),
                 _InputField(
                   label: 'Alamat Lengkap',
                   maxLines: 3,
+                  suffixIcon: Icons.location_on_outlined,
                 ),
               ],
             ],
@@ -135,7 +165,10 @@ class _InsuredDataFormState extends State<InsuredDataForm> {
                 Row(
                   children: [
                     Expanded(
-                      child: _InputField(label: 'Nomor Polis'),
+                      child: _InputField(
+                        label: 'Nomor Polis',
+                        suffixIcon: Icons.assignment_outlined,
+                      ),
                     ),
                     SizedBox(width: fieldSpacing),
                     Expanded(
@@ -157,12 +190,16 @@ class _InsuredDataFormState extends State<InsuredDataForm> {
                 if (selectedInsuranceType == 'Lainnya') ...[
                   _InputField(
                     label: 'Jenis Asuransi Lainnya (Jika Dipilih Lainnya)',
+                    suffixIcon: Icons.category_outlined,
                   ),
                   SizedBox(height: fieldSpacing),
                 ],
               ] else ...[
                 // Mobile layout
-                _InputField(label: 'Nomor Polis'),
+                _InputField(
+                  label: 'Nomor Polis',
+                  suffixIcon: Icons.assignment_outlined,
+                ),
                 SizedBox(height: fieldSpacing),
                 _DropdownField(
                   label: '-- Pilih Jenis Asuransi --',
@@ -177,6 +214,7 @@ class _InsuredDataFormState extends State<InsuredDataForm> {
                 if (selectedInsuranceType == 'Lainnya') ...[
                   _InputField(
                     label: 'Jenis Asuransi Lainnya (Jika Dipilih Lainnya)',
+                    suffixIcon: Icons.category_outlined,
                   ),
                   SizedBox(height: fieldSpacing),
                 ],
@@ -191,10 +229,16 @@ class _InsuredDataFormState extends State<InsuredDataForm> {
 
 class _InputField extends StatefulWidget {
   final String label;
+  final String? hintText;
+  final String? prefixText;
+  final IconData? suffixIcon;
   final int maxLines;
 
   const _InputField({
     required this.label,
+    this.hintText,
+    this.prefixText,
+    this.suffixIcon,
     this.maxLines = 1,
   });
 
@@ -205,6 +249,23 @@ class _InputField extends StatefulWidget {
 class _InputFieldState extends State<_InputField> {
   bool _isHovered = false;
   bool _isFocused = false;
+  final FocusNode _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(() {
+      setState(() {
+        _isFocused = _focusNode.hasFocus;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -225,46 +286,78 @@ class _InputFieldState extends State<_InputField> {
           ]
               : null,
         ),
-        child: Focus(
-          onFocusChange: (focused) => setState(() => _isFocused = focused),
-          child: TextField(
-            maxLines: widget.maxLines,
-            style: const TextStyle(fontSize: 14),
-            decoration: InputDecoration(
-              labelText: widget.label,
-              labelStyle: TextStyle(
-                fontSize: 14,
-                color: _isFocused
-                    ? Theme.of(context).primaryColor
-                    : Colors.grey[600],
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: Colors.grey.shade300),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: Colors.grey.shade300),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
-                  color: Theme.of(context).primaryColor,
-                  width: 2,
-                ),
-              ),
-              filled: true,
-              fillColor: _isFocused
-                  ? Theme.of(context).primaryColor.withOpacity(0.05)
-                  : _isHovered
-                  ? Colors.grey.shade50
-                  : Colors.white,
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: widget.maxLines > 1 ? 16 : 14,
-              ),
-              alignLabelWithHint: widget.maxLines > 1,
+        child: TextField(
+          focusNode: _focusNode,
+          maxLines: widget.maxLines,
+          style: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w400,
+            color: Colors.black87,
+          ),
+          decoration: InputDecoration(
+            labelText: widget.label,
+            hintText: widget.hintText,
+            prefixText: widget.prefixText,
+            suffixIcon: widget.suffixIcon != null
+                ? Icon(
+              widget.suffixIcon,
+              size: 20,
+              color: _isFocused
+                  ? Theme.of(context).primaryColor
+                  : Colors.grey[500],
+            )
+                : null,
+            labelStyle: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: _isFocused
+                  ? Theme.of(context).primaryColor
+                  : Colors.grey[600],
             ),
+            hintStyle: TextStyle(
+              fontSize: 14,
+              color: Colors.grey[400],
+              fontWeight: FontWeight.w400,
+            ),
+            prefixStyle: TextStyle(
+              fontSize: 15,
+              color: Colors.grey[600],
+              fontWeight: FontWeight.w500,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: Colors.grey.shade300),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: Colors.grey.shade300),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: Theme.of(context).primaryColor,
+                width: 2,
+              ),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.red, width: 1),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.red, width: 2),
+            ),
+            filled: true,
+            fillColor: _isFocused
+                ? Theme.of(context).primaryColor.withOpacity(0.05)
+                : _isHovered
+                ? Colors.grey.shade50
+                : Colors.white,
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: widget.maxLines > 1 ? 16 : 14,
+            ),
+            alignLabelWithHint: widget.maxLines > 1,
           ),
         ),
       ),
@@ -290,6 +383,23 @@ class _DropdownField extends StatefulWidget {
 class _DropdownFieldState extends State<_DropdownField> {
   bool _isHovered = false;
   bool _isFocused = false;
+  final FocusNode _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(() {
+      setState(() {
+        _isFocused = _focusNode.hasFocus;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -310,73 +420,113 @@ class _DropdownFieldState extends State<_DropdownField> {
           ]
               : null,
         ),
-        child: Focus(
-          onFocusChange: (focused) => setState(() => _isFocused = focused),
-          child: DropdownButtonFormField<String>(
-            value: widget.value?.isEmpty == true ? null : widget.value,
-            isExpanded: true,
-            items: [
-              const DropdownMenuItem(
-                value: null,
-                child: Text(
-                  '-- Pilih Jenis Asuransi --',
-                  style: TextStyle(fontSize: 14),
-                  overflow: TextOverflow.ellipsis,
+        child: DropdownButtonFormField<String>(
+          focusNode: _focusNode,
+          value: widget.value?.isEmpty == true ? null : widget.value,
+          isExpanded: true,
+          items: [
+            const DropdownMenuItem(
+              value: null,
+              child: Text(
+                '-- Pilih Jenis Asuransi --',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w400,
                 ),
+                overflow: TextOverflow.ellipsis,
               ),
-              const DropdownMenuItem(
-                value: 'Jiwa',
-                child: Text(
-                  'Asuransi Jiwa',
-                  style: TextStyle(fontSize: 14),
-                  overflow: TextOverflow.ellipsis,
+            ),
+            const DropdownMenuItem(
+              value: 'Jiwa',
+              child: Text(
+                'Asuransi Jiwa',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.black87,
                 ),
+                overflow: TextOverflow.ellipsis,
               ),
-              const DropdownMenuItem(
-                value: 'Kesehatan',
-                child: Text(
-                  'Asuransi Kesehatan',
-                  style: TextStyle(fontSize: 14),
-                  overflow: TextOverflow.ellipsis,
+            ),
+            const DropdownMenuItem(
+              value: 'Kesehatan',
+              child: Text(
+                'Asuransi Kesehatan',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.black87,
                 ),
+                overflow: TextOverflow.ellipsis,
               ),
-              const DropdownMenuItem(
-                value: 'Lainnya',
-                child: Text(
-                  'Lainnya',
-                  style: TextStyle(fontSize: 14),
-                  overflow: TextOverflow.ellipsis,
+            ),
+            const DropdownMenuItem(
+              value: 'Lainnya',
+              child: Text(
+                'Lainnya',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.black87,
                 ),
+                overflow: TextOverflow.ellipsis,
               ),
-            ],
-            onChanged: widget.onChanged,
-            style: const TextStyle(fontSize: 14, color: Colors.black87),
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: Colors.grey.shade300),
+            ),
+          ],
+          onChanged: widget.onChanged,
+          style: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w400,
+            color: Colors.black87,
+          ),
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: _isFocused
+                ? Theme.of(context).primaryColor
+                : Colors.grey[500],
+          ),
+          decoration: InputDecoration(
+            labelText: widget.label,
+            labelStyle: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: _isFocused
+                  ? Theme.of(context).primaryColor
+                  : Colors.grey[600],
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: Colors.grey.shade300),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: Colors.grey.shade300),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: Theme.of(context).primaryColor,
+                width: 2,
               ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: Colors.grey.shade300),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
-                  color: Theme.of(context).primaryColor,
-                  width: 2,
-                ),
-              ),
-              filled: true,
-              fillColor: _isFocused
-                  ? Theme.of(context).primaryColor.withOpacity(0.05)
-                  : _isHovered
-                  ? Colors.grey.shade50
-                  : Colors.white,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 14,
-              ),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.red, width: 1),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.red, width: 2),
+            ),
+            filled: true,
+            fillColor: _isFocused
+                ? Theme.of(context).primaryColor.withOpacity(0.05)
+                : _isHovered
+                ? Colors.grey.shade50
+                : Colors.white,
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 14,
             ),
           ),
         ),
@@ -386,9 +536,10 @@ class _DropdownFieldState extends State<_DropdownField> {
 }
 
 class _SectionTitle extends StatelessWidget {
+  final IconData icon;
   final String title;
 
-  const _SectionTitle({required this.title});
+  const _SectionTitle({required this.icon, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -405,13 +556,26 @@ class _SectionTitle extends StatelessWidget {
           color: Theme.of(context).primaryColor.withOpacity(0.2),
         ),
       ),
-      child: Text(
-        title,
-        style: TextStyle(
-          fontWeight: FontWeight.w600,
-          fontSize: 16,
-          color: Theme.of(context).primaryColor.withOpacity(0.9),
-        ),
+      child: Row(
+        children: [
+          Icon(
+            icon,
+            size: 20,
+            color: Theme.of(context).primaryColor.withOpacity(0.8),
+          ),
+          const SizedBox(width: 12),
+          Flexible(
+            child: Text(
+              title,
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
+                color: Theme.of(context).primaryColor.withOpacity(0.9),
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
       ),
     );
   }

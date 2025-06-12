@@ -18,8 +18,6 @@ class IncidentDetailForm extends StatelessWidget {
 
           // Form fields with responsive layout
           _buildFormFields(),
-
-          const SizedBox(height: 40), // Bottom padding
         ],
       ),
     );
