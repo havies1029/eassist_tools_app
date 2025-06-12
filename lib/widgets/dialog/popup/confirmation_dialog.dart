@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../register/register_client/popup_client.dart';
+import '../../account/register/register_client/popup_client.dart';
 
 class ConfirmationDialog extends StatefulWidget {
   /// Callback yang dijalankan jika pengguna menekan "Setuju & Lanjutkan"

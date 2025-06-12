@@ -87,12 +87,13 @@ class TestimonialSectionState extends State<TestimonialSection> {
                       return GridView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
+                        clipBehavior: Clip.hardEdge,
                         itemCount: state.items.take(5).length,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: crossAxisCount,
                           crossAxisSpacing: isMobile ? 8.0 : 32.0,
                           mainAxisSpacing: isMobile ? 16.0 : 40.0,
-                          childAspectRatio: childAspectRatio,
+                          mainAxisExtent: isMobile ? 270 : 300,
                         ),
                         itemBuilder: (context, idx) =>
                             _buildTestimonialItem(state.items[idx].toMap(), widget.constraints, isMobile),

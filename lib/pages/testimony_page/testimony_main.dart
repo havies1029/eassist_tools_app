@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../repositories/user/user_repository.dart';
-import '../../widgets/section/navbar/navbar_widget.dart';
+import '../../widgets/components/navbar/navbar_widget.dart';
 import '../../widgets/section/about/floating_buttons_about.dart';
-import '../../widgets/section/footer/footer_section.dart';
-import '../../widgets/section/about/hero_section_about.dart';
+import '../../widgets/components/footer/footer_section.dart';
+import '../../widgets/components/hero/hero_section.dart';
 import '../../widgets/section/testimoni/testimonial_page.dart';
 
 class DummyUserRepository extends UserRepository {
@@ -51,9 +51,11 @@ class TestimonyPage extends StatelessWidget {
     return Scaffold(
       body: LayoutBuilder(
         builder: (context, constraints) {
+          final isMobile = MediaQuery.of(context).size.width < 768;
+
           return Stack(
             children: [
-              // Layer 1: Background Image
+              // Layer 1: Background
               Positioned.fill(
                 child: Image.asset(
                   'assets/images/article_3.png',
@@ -63,6 +65,9 @@ class TestimonyPage extends StatelessWidget {
                   cacheHeight: 800,
                 ),
               ),
+              Container(
+                color: Colors.black.withOpacity(0.4),
+              ),
 
               // Layer 2: Scrollable content (tanpa navbar)
               Positioned.fill(
@@ -70,7 +75,8 @@ class TestimonyPage extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 88), // space for navbar
                   child: Column(
                     children: [
-                      HeroSection(constraints: constraints),
+                      HeroSection(constraints: constraints,
+                          pageType: PageType.testimony),
                       FloatingButtons(constraints: constraints),
                       ActionSection(constraints: constraints),
                       FooterSection(constraints: constraints),

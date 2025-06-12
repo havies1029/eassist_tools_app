@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:eassist_tools_app/pages/heropage/hero_main.dart';
 import 'package:eassist_tools_app/pages/splash/splash_page.dart';
 
-import '../asset/find_insurance_main.dart';
+import '../find_insurance/find_insurance_main.dart';
+import '../heropage/hero_page.dart';
 
 class HomeRedirectorPage extends StatelessWidget {
   const HomeRedirectorPage({super.key});

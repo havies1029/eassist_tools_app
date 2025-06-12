@@ -17,3 +17,14 @@ class LoginButtonPressed extends LoginEvent {
   String toString() =>
       'LoginButtonPressed { username: $username, password: $password }';
 }
+
+/*
+class PinVerified extends LoginEvent {
+  final dynamic user;
+
+  const PinVerified({required this.user});
+
+  @override
+  List<Object> get props => [user];
+}
+*/

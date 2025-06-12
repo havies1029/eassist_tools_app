@@ -2,14 +2,20 @@ import 'package:flutter/material.dart';
 import 'dart:math' show pi;
 
 import '../../repositories/user/user_repository.dart';
-import '../../widgets/section/about/jps_intro_description_section.dart';
-import '../../widgets/section/about/action_about_section.dart';
-import '../../widgets/section/about/artikel_card.dart';
-import '../../widgets/section/about/management_profile_section.dart';
+import '../../widgets/components/footer/footer_section.dart';
+import '../../widgets/components/hero/hero_section.dart';
+import '../../widgets/components/navbar/navbar_widget.dart';
+import '../../widgets/section/about/PencapaianAbout.dart';
 import '../../widgets/section/about/floating_buttons_about.dart';
-import '../../widgets/section/footer/footer_section.dart';
-import '../../widgets/section/navbar/navbar_widget.dart';
-import '../../widgets/section/about/hero_section_about.dart';
+import '../../widgets/section/about/action_about_section.dart';
+import '../../widgets/section/about/jps_intro_description_section.dart';
+import '../../widgets/section/about/visi_section.dart';
+import '../../widgets/section/about/value_section.dart';
+import '../../widgets/section/about/peran_section.dart';
+import '../../widgets/section/about/management_profile_section.dart';
+import '../../widgets/section/about/artikel_card.dart';
+import '../../widgets/section/testimoni/testimonial_section.dart';
+import '../../widgets/section/homeclientpage/client_section.dart';
 
 // ========================
 // Dummy Repository (API placeholder)
@@ -59,6 +65,8 @@ class AboutPage extends StatelessWidget {
     return Scaffold(
       body: LayoutBuilder(
         builder: (context, constraints) {
+          final isMobile = MediaQuery.of(context).size.width < 768;
+
           return Stack(
             children: [
               // Layer 1: Background Image
@@ -72,15 +80,22 @@ class AboutPage extends StatelessWidget {
               // Layer 2: Scrollable content (tanpa navbar)
               Positioned.fill(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.only(top: 88), // space for navbar
+                  padding: EdgeInsets.only(top: isMobile? 65 : 88),
                   child: Column(
                     children: [
-                      HeroSection(constraints: constraints),
+                      HeroSection(constraints: constraints,
+                          pageType: PageType.about),
                       FloatingButtons(constraints: constraints),
                       ActionSection(constraints: constraints),
                       AboutJps(constraints: constraints),
+                      VisiSection(constraints: constraints),
+                      PeranJpsSection(constraints: constraints),
+                      ValueSection(constraints: constraints),
+                      PencapaianSection(constraints: constraints),
                       ManagementProfileSection(constraints: constraints),
                       ArtikelCard(constraints: constraints),
+                      TestimonialSection(constraints: constraints),
+                      ClientSection(constraints: constraints),
                       FooterSection(constraints: constraints),
                     ],
                   ),
@@ -129,7 +144,7 @@ Widget _buildBackgroundImage(BoxConstraints constraints) {
 
   return Image.asset(
     'assets/images/about_jps.png',
-    fit: BoxFit.cover,
+    fit: isMobile? BoxFit.fitHeight: BoxFit.cover,
     alignment: isMobile ? Alignment.topCenter : const Alignment(0, 3),
     cacheWidth: isMobile ? 720 : 1440,
     cacheHeight: isMobile ? 960 : 800,

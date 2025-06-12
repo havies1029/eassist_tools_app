@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../repositories/user/user_repository.dart';
-import '../../widgets/section/navbar/navbar_widget.dart';
+import '../../widgets/components/navbar/navbar_widget.dart';
 import '../../widgets/section/about/floating_buttons_about.dart';
-import '../../widgets/section/footer/footer_section.dart';
-import '../../widgets/section/about/hero_section_about.dart';
+import '../../widgets/components/footer/footer_section.dart';
+import '../../widgets/components/hero/hero_section.dart';
 import '../../widgets/section/article/action_article_section.dart';
 
 class DummyUserRepository extends UserRepository {
@@ -51,9 +51,11 @@ class ArticlePage extends StatelessWidget {
     return Scaffold(
       body: LayoutBuilder(
         builder: (context, constraints) {
+          final isMobile = MediaQuery.of(context).size.width < 768;
+
           return Stack(
             children: [
-              // Layer 1: Background Image
+              // Layer 1: Background
               Positioned.fill(
                 child: Image.asset(
                   'assets/images/article_home.png',
@@ -63,14 +65,16 @@ class ArticlePage extends StatelessWidget {
                   cacheHeight: 800,
                 ),
               ),
-
+              Container(
+                color: Colors.black.withOpacity(0.4),
+              ),
               // Layer 2: Scrollable content (tanpa navbar)
               Positioned.fill(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.only(top: 88), // space for navbar
+                  padding: EdgeInsets.only(top: isMobile? 65 : 88),
                   child: Column(
                     children: [
-                      HeroSection(constraints: constraints),
+                      HeroSection(constraints: constraints, pageType: PageType.article)  ,
                       FloatingButtons(constraints: constraints),
                       ActionSection(constraints: constraints),
                       FooterSection(constraints: constraints),
@@ -99,7 +103,7 @@ class _FixedNavbarOverlay extends StatelessWidget {
       left: 0,
       right: 0,
       child: Stack(
-        clipBehavior: Clip.none, // ini penting agar pop-up bisa muncul di luar batas
+        clipBehavior: Clip.none,
         children: [
           Material(
             color: Colors.transparent,

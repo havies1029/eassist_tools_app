@@ -1,0 +1,137 @@
+import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
+import 'package:eassist_tools_app/blocs/reguser/reguser_bloc.dart';
+import 'package:eassist_tools_app/widgets/account/login/login_gmail/Base_Dialog.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+class RegisterClientDialog extends BaseDialog {
+  const RegisterClientDialog({super.key});
+
+  @override
+  State<RegisterClientDialog> createState() => _RegisterClientDialogState();
+}
+
+class _RegisterClientDialogState extends BaseDialogState<RegisterClientDialog> {
+  final _nameController = TextEditingController();
+  final hpController = TextEditingController();
+  final pswdController = TextEditingController();
+  final confirmPswdController = TextEditingController();
+  String _selectedChoice = 'Pilihan';
+  bool _isHovering = false;
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    hpController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return buildDialogContainer(
+      title: 'Daftar Klien',
+      body: BlocConsumer<RegUserBloc, RegUserState>(
+        builder: (context, state) {
+          return SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  buildLogo(),
+                  const SizedBox(height: 30),
+
+                  // Input Nama
+                  buildTextField(
+                    controller: _nameController,
+                    hintText: 'Nama Lengkap',
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Input HP
+                  buildTextField(
+                    controller: hpController,
+                    hintText: 'HP',
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Input pswd
+                  buildTextField(
+                    controller: pswdController,
+                    hintText: 'Password',
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Input confirm pswd
+                  buildTextField(
+                    controller: confirmPswdController,
+                    hintText: 'Confirm Password',
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Dropdown
+                  _buildDropdown(),
+                  const SizedBox(height: 40),
+
+                  // Tombol Daftar
+                  buildAnimatedButton(
+                    text: 'Daftar',
+                    isHovering: _isHovering,
+                    onHover: (hovering) => setState(() => _isHovering = hovering),
+                    backgroundColor:
+                    _isHovering ? const Color(0xFF6B9639) : Colors.grey.shade400,
+                    onPressed: () => _handleRegister(),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }, listener: (context, state) {  },
+      ),
+    );
+  }
+
+  Widget _buildDropdown() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey.shade300),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: _selectedChoice,
+          hint: const Text('Pilihan'),
+          isExpanded: true,
+          icon: const Icon(Icons.keyboard_arrow_down),
+          items: ['Pilihan', 'Individual', 'Perusahaan', 'Organisasi']
+              .map((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            setState(() {
+              _selectedChoice = newValue!;
+            });
+          },
+        ),
+      ),
+    );
+  }
+
+  // Fungsi yang akan disambungkan ke API
+  void _handleRegister() {
+
+    Navigator.of(context).pop();
+
+    context.read<AuthenticationBloc>().add(
+        RequirePinHPVerification(hpno: hpController.text)
+    );
+  }
+}

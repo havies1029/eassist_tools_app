@@ -6,10 +6,13 @@ import 'package:eassist_tools_app/blocs/gallery/gallerytestimonycari_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaim/klaim1list_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaim/klaim2list_bloc.dart';
 import 'package:eassist_tools_app/blocs/login/change_password_bloc.dart';
+import 'package:eassist_tools_app/blocs/login/emailverification_bloc.dart';
+import 'package:eassist_tools_app/blocs/login/login_bloc.dart';
 import 'package:eassist_tools_app/blocs/networkconnection/network_bloc.dart';
 import 'package:eassist_tools_app/blocs/onboardmenu/onboardmenucari_bloc.dart';
 import 'package:eassist_tools_app/blocs/profile/rekancontact_bloc.dart';
 import 'package:eassist_tools_app/blocs/progressindicator/progressindicator_bloc.dart';
+import 'package:eassist_tools_app/blocs/reguser/reguser_bloc.dart';
 import 'package:eassist_tools_app/blocs/simuleei/simuleeicrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/simuleei/simuleeilist_bloc.dart';
 import 'package:eassist_tools_app/blocs/simulgis/simulgiscrud_bloc.dart';
@@ -22,18 +25,14 @@ import 'package:eassist_tools_app/blocs/simulbon/simulboncrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/simulwp/simulwpcrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/takeimage/takeimage_cubit.dart';
 import 'package:eassist_tools_app/common/app_data.dart';
-import 'package:eassist_tools_app/common/loading_indicator.dart';
-import 'package:eassist_tools_app/pages/home/home_page.dart';
-import 'package:eassist_tools_app/pages/login/login_page.dart';
-import 'package:eassist_tools_app/pages/splash/splash_page.dart';
+import 'package:eassist_tools_app/pages/heropage/hero_main.dart';
 import 'package:eassist_tools_app/repositories/chatting/guestscrud_repository.dart';
 import 'package:eassist_tools_app/repositories/login/change_password_repository.dart';
-import 'package:eassist_tools_app/repositories/profile/rekanbank_repository.dart';
+import 'package:eassist_tools_app/repositories/login/emailverification_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/rekancontact_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/rekangeneral_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/rekanpajak_repository.dart';
-import 'package:eassist_tools_app/repositories/profile/rekanpic_repository.dart';
-import 'package:eassist_tools_app/repositories/profile/rekanpiccrud_repository.dart';
+import 'package:eassist_tools_app/repositories/reguser/reguser_repository.dart';
 import 'package:eassist_tools_app/repositories/simulbon/simulboncrud_repository.dart';
 import 'package:eassist_tools_app/repositories/simulcar/simulcarcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/simulcargo/simulcargocrud_repository.dart';
@@ -50,12 +49,8 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
-import 'blocs/profile/rekanbank_bloc.dart';
 import 'blocs/profile/rekangeneral_bloc.dart';
 import 'blocs/profile/rekanpajak_bloc.dart';
-import 'blocs/profile/rekanpic_bloc.dart';
-import 'blocs/profile/rekanpiccrud_bloc.dart';
-import 'blocs/profile/rekanpiclist_bloc.dart';
 import 'blocs/simulcar/simulcarcrud_bloc.dart';
 import 'blocs/simulcargo/simulcargocrud_bloc.dart';
 import 'blocs/simulmb/simulmbcrud_bloc.dart';
@@ -86,6 +81,18 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider<LoginBloc>(
+            create: (context) =>
+                LoginBloc(
+                  authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
+                  userRepository: userRepository,
+                )
+        ),
+        BlocProvider<EmailVerificationBloc>(
+            create: (context) =>
+                EmailVerificationBloc(
+                    repository: EmailVerificationRepository(),
+                    authenticationBloc: BlocProvider.of<AuthenticationBloc>(context))),
         BlocProvider<ChangePasswordBloc>(
             create: (context) =>
                 ChangePasswordBloc(repository: ChangePasswordRepository())),
@@ -98,6 +105,8 @@ class App extends StatelessWidget {
             create: (context) => NetworkBloc()..add(NetworkObserve())),
         BlocProvider<OnBoardMenuCariBloc>(
             create: (context) => OnBoardMenuCariBloc()),
+        BlocProvider<SimulmvListBloc>(
+            create: (context) => SimulmvListBloc()),
         BlocProvider<SimulmvListBloc>(
             create: (context) => SimulmvListBloc()),
         BlocProvider<SimulmvCrudBloc>(
@@ -164,22 +173,16 @@ class App extends StatelessWidget {
         BlocProvider<RekanPajakBloc>(
             create: (context) =>
                 RekanPajakBloc(repository: RekanPajakRepository())),
-        BlocProvider<RekanBankBloc>(
+        BlocProvider<GallerymemberCariBloc>(
             create: (context) =>
-                RekanBankBloc(repository: RekanBankRepository())),
-        BlocProvider<RekanPicBloc>(
+                GallerymemberCariBloc()),
+        BlocProvider<RegUserBloc>(
             create: (context) =>
-                RekanPicBloc(repository: RekanPicRepository())),
-        BlocProvider<RekanPicCrudBloc>(
-            create: (context) =>
-                RekanPicCrudBloc(repository: RekanPicCrudRepository())),
-        BlocProvider<RekanPicListBloc>(
-            create: (context) =>
-                RekanPicListBloc()),
+                RegUserBloc(repository: RegUserRepository())),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Calculator JPS',
+        title: 'JPS Insurance',
         theme: FlexThemeData.light(scheme: FlexScheme.mandyRed),
         // The Mandy red, dark theme.
         darkTheme: FlexThemeData.dark(scheme: FlexScheme.mandyRed),
@@ -188,44 +191,8 @@ class App extends StatelessWidget {
 
         routes: const {},
 
-        home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
-          builder: (context, state) {
-            if (state is AuthenticationUninitialized) {
-              debugPrint("AuthenticationUninitialized #10");
+        home: const HeroMain(),
 
-              return const SplashPage();
-            }
-
-            if (state is AuthenticationAuthenticated) {
-              debugPrint("AuthenticationAuthenticated #20");
-
-              return HomePage(
-                userRepository: userRepository,
-                userid: 0,
-                key: null,
-              );
-
-            }
-
-            if (state is AuthenticationUnauthenticated) {
-              debugPrint("AuthenticationUnauthenticated #30");
-              return HomePage(
-                userRepository: userRepository,
-                userid: 0,
-                key: null,
-              );
-            }
-
-            if (AppData.kIsWeb) {
-              debugPrint("AppData.kIsWeb #40");
-              return LoginPage(
-                userRepository: userRepository,
-              );
-            } else {
-              return const LoadingIndicator();
-            }
-          },
-        ),
       ),
     );
   }

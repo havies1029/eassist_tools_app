@@ -1,185 +1,160 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 
 class ManagementProfileSection extends StatefulWidget {
   final BoxConstraints constraints;
 
-  const ManagementProfileSection({
-    super.key,
-    required this.constraints,
-  });
+  const ManagementProfileSection({super.key, required this.constraints});
 
   @override
-  State<ManagementProfileSection> createState() =>
-      _ManagementProfileSectionState();
+  State<ManagementProfileSection> createState() => _ManagementProfileSectionState();
 }
+const _primaryColor = Color(0xFF79AB43);
+class _ManagementProfileSectionState extends State<ManagementProfileSection> with TickerProviderStateMixin {
+  // === CONSTANTS & STYLES ===
+  static const _fontFamily = 'Satoshi-Regular';
+  static const _secondaryColor = Color(0xFFFAA232);
 
-class _ManagementProfileSectionState extends State<ManagementProfileSection> {
   late final PageController _pageController;
-  int _currentIndex = 0;
+  late final AnimationController _hoverAnimationController;
+  late final Animation<double> _hoverAnimation;
+  double _currentPageValue = 1000.0;
+  bool _isHovering = false;
 
   bool get isMobile => widget.constraints.maxWidth < 768;
-  bool get isTablet =>
-      widget.constraints.maxWidth >= 768 && widget.constraints.maxWidth < 1024;
+  bool get isTablet => widget.constraints.maxWidth >= 768 && widget.constraints.maxWidth < 1024;
 
-  TextStyle get titleStyle => TextStyle(
-    fontSize: isMobile ? 20 : (isTablet ? 25 : 27),
-    fontWeight: FontWeight.bold,
-    color: Colors.black87,
-    fontFamily: 'Satoshi-Regular',
-  );
-
-  TextStyle get nameStyle => const TextStyle(
-    fontSize: 18,
-    fontWeight: FontWeight.w500,
-    color: Colors.black87,
-    fontFamily: 'Satoshi-Regular',
-  );
-
-  TextStyle get positionStyle => TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w300,
-    fontFamily: 'Satoshi-Regular',
-  );
+  TextStyle get titleStyle => TextStyle(fontSize: isMobile ? 20 : (isTablet ? 25 : 27), color: Colors.black87, fontFamily: _fontFamily);
+  TextStyle get nameStyle => TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.black87, fontFamily: _fontFamily);
+  TextStyle get positionStyle => TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: Colors.black54, fontFamily: _fontFamily);
+  TextStyle get descriptionStyle => TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black54, fontFamily: _fontFamily, height: 1);
 
   @override
   void initState() {
     super.initState();
+    _initializeAnimations();
+    _initializePageController();
+    _setupPageListener();
+  }
 
-    double fraction;
+  void _initializeAnimations() {
+    _hoverAnimationController = AnimationController(duration: const Duration(milliseconds: 300), vsync: this);
+    _hoverAnimation = Tween<double>(begin: 1.0, end: 1.02).animate(CurvedAnimation(parent: _hoverAnimationController, curve: Curves.easeInOut));
+  }
+
+  void _initializePageController() {
     double maxWidth = widget.constraints.maxWidth;
+    double fraction = maxWidth < 600 ? 0.85 : maxWidth < 900 ? 0.5 : maxWidth < 1200 ? 0.33 : 0.25;
+    _pageController = PageController(initialPage: 500, viewportFraction: fraction);
+  }
 
-    if (maxWidth < 600) {
-      fraction = 360 / maxWidth;
-    } else if (maxWidth < 900) {
-      fraction = 360 * 2 / maxWidth;
-    } else if (maxWidth < 1200) {
-      fraction = 360 * 3 / maxWidth;
-    } else {
-      fraction = 0.25;
-    }
+  void _setupPageListener() {
+    _pageController.addListener(() {
+      if (_pageController.hasClients) {
+        setState(() => _currentPageValue = _pageController.page ?? 1000.0);
+      }
+    });
+  }
 
-    _pageController = PageController(
-      initialPage: 1000,
-      viewportFraction: fraction > 1 ? 1 : fraction,
-    );
+  void _onHoverEnter() {
+    setState(() => _isHovering = true);
+    _hoverAnimationController.forward();
+  }
+
+  void _onHoverExit() {
+    setState(() => _isHovering = false);
+    _hoverAnimationController.reverse();
+  }
+
+  double _getScale(int index) => 0.95;
+  double _getOpacity(int index) {
+    final distance = (_currentPageValue - index).abs();
+    return distance <= 1.0 ? 1.0 - (distance * 0.2) : 0.8;
   }
 
   @override
   void dispose() {
     _pageController.dispose();
+    _hoverAnimationController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    int totalItems = profiles.length;
-
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(
-        horizontal: isMobile ? 35 : (isTablet ? 40 : 80),
-        vertical: isMobile ? 40 : 80,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: isMobile ? 35 : (isTablet ? 40 : 80), vertical: isMobile ? 40 : 80),
       color: Colors.white,
       child: Column(
-        crossAxisAlignment:
-        widget.constraints.maxWidth >= 1024 ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+        crossAxisAlignment: widget.constraints.maxWidth >= 1024 ? CrossAxisAlignment.center : CrossAxisAlignment.start,
         children: [
-          Text('Profil Manajemen', style: titleStyle),
+          _buildHeader(),
           SizedBox(height: isMobile ? 40 : 60),
-
-          // Carousel Profil
-          Container(
-            constraints: const BoxConstraints(maxWidth: 1200),
-            child: SizedBox(
-              height: isMobile ? 400 : (isTablet ? 500 : 400),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  PageView.builder(
-                    controller: _pageController,
-                    physics: const BouncingScrollPhysics(),
-                    onPageChanged: (index) {
-                      setState(() {
-                        _currentIndex = index % totalItems;
-                      });
-                    },
-                    itemBuilder: (context, index) {
-                      final realIndex = index % totalItems;
-                      return Center(
-                        child: Container(
-                          width: 360,
-                          margin: const EdgeInsets.symmetric(horizontal: 8),
-                          child: _buildProfileCard(profiles[realIndex]),
-                        ),
-                      );
-                    },
-                  ),
-
-                  if (widget.constraints.maxWidth >= 1200)
-                    Positioned(
-                      left: 0,
-                      top: 0,
-                      bottom: 0,
-                      child: Center(
-                        child: _buildNavigationButton(
-                          icon: Icons.chevron_left,
-                          onPressed: () => _pageController.previousPage(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          ),
-                        ),
-                      ),
-                    ),
-
-                  if (widget.constraints.maxWidth >= 1200)
-                    Positioned(
-                      right: 0,
-                      top: 0,
-                      bottom: 0,
-                      child: Center(
-                        child: _buildNavigationButton(
-                          icon: Icons.chevron_right,
-                          onPressed: () => _pageController.nextPage(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          ),
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            ),
-          ),
+          _buildCarouselWithInteractions(),
+          SizedBox(height: isMobile ? 20 : 30),
         ],
       ),
     );
   }
 
-  Widget _buildNavigationButton({
-    required IconData icon,
-    required VoidCallback onPressed,
-  }) {
-    return Container(
-      width: 58,
-      height: 58,
-      decoration: BoxDecoration(
-        color: const Color(0xFF79AB43),
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+  Widget _buildHeader() {
+    return Column(
+      crossAxisAlignment: widget.constraints.maxWidth >= 1024 ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+      children: [
+        RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(text: 'Dewan Direksi dan Komisaris ', style: titleStyle.copyWith(fontWeight: FontWeight.bold)),
+              TextSpan(text: 'J', style: titleStyle.copyWith(color: _primaryColor, fontWeight: FontWeight.bold)),
+              TextSpan(text: 'P', style: titleStyle.copyWith(color: _secondaryColor, fontWeight: FontWeight.bold)),
+              TextSpan(text: 'S', style: titleStyle.copyWith(color: _primaryColor, fontWeight: FontWeight.bold)),
+            ],
           ),
-        ],
+        ),
+        SizedBox(height: 10),
+        Text('Pemimpin yang menavigasi langkah kami menuju masa depan.', style: titleStyle.copyWith(fontWeight: FontWeight.w400, fontSize: isMobile ? 12 : 18)),
+      ],
+    );
+  }
+
+  Widget _buildCarouselWithInteractions() {
+    return MouseRegion(
+      onEnter: (_) => _onHoverEnter(),
+      onExit: (_) => _onHoverExit(),
+      child: AnimatedBuilder(
+        animation: _hoverAnimation,
+        builder: (context, child) => Transform.scale(scale: _hoverAnimation.value, child: _buildProfileCarousel()),
       ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(22),
-          onTap: onPressed,
-          child: const Icon(Icons.chevron_right, color: Colors.white, size: 24),
+    );
+  }
+
+  Widget _buildProfileCarousel() {
+    return Container(
+      constraints: const BoxConstraints(maxWidth: 1400),
+      child: SizedBox(
+        height: isMobile ? 550 : 654,
+        child: ScrollConfiguration(
+          behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {PointerDeviceKind.touch, PointerDeviceKind.mouse}),
+          child: PageView.builder(
+            controller: _pageController,
+            physics: const BouncingScrollPhysics(),
+            itemCount: profiles.length,
+            itemBuilder: (context, index) {
+              final scale = _getScale(index);
+              final opacity = _getOpacity(index);
+              return Container(
+                margin: EdgeInsets.symmetric(horizontal: isMobile ? 8 : 12),
+                child: Transform.scale(
+                  scale: scale,
+                  child: Opacity(
+                    opacity: opacity,
+                    child: _buildProfileCard(profiles[index]),
+                  ),
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -187,62 +162,79 @@ class _ManagementProfileSectionState extends State<ManagementProfileSection> {
 
   Widget _buildProfileCard(ManagementProfile profile) {
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Foto
-          ClipRRect(
-            borderRadius: BorderRadius.circular(16),
-            child: SizedBox(
-              height: 300,
-              width: 350,
-              child: Image.asset(
-                profile.imageAsset,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  color: Colors.grey[200],
-                  alignment: Alignment.center,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.person, size: 65, color: Colors.grey[400]),
-                      const SizedBox(height: 8),
-                      Text('Photo', style: TextStyle(color: Colors.grey[500], fontSize: 14)),
-                    ],
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.all(5),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+              child: SizedBox(
+                height: isMobile ? 250 : 366,
+                width: 305,
+                child: Image.asset(
+                  profile.imageAsset,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    color: Colors.grey[200],
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.person, size: 65, color: Colors.grey[400]),
+                        const SizedBox(height: 8),
+                        Text('Photo', style: TextStyle(color: Colors.grey[500], fontSize: 14)),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-
-          // Nama & Posisi
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(profile.name, style: nameStyle, maxLines: 2, overflow: TextOverflow.ellipsis),
-                Text(
-                  profile.position,
-                  style: positionStyle.copyWith(color: profile.roleColor),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Stack(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 8),
+                        Text(profile.name, style: nameStyle, maxLines: 2, overflow: TextOverflow.ellipsis),
+                        const SizedBox(height: 4),
+                        Text(profile.position, style: positionStyle, maxLines: 1, overflow: TextOverflow.ellipsis),
+                        const SizedBox(height: 12),
+                        Text(profile.experience, style: descriptionStyle, maxLines: 2, overflow: TextOverflow.ellipsis),
+                        const SizedBox(height: 8),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: profile.achievements.map((achievement) => Padding(
+                            padding: const EdgeInsets.only(bottom: 4),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(width: 4, height: 4, margin: const EdgeInsets.only(top: 6, right: 8), decoration: BoxDecoration(color: Colors.grey[600], shape: BoxShape.circle)),
+                                Expanded(child: Text(achievement, style: descriptionStyle, maxLines: isMobile? 4: 3, overflow: TextOverflow.ellipsis)),
+                              ],
+                            ),
+                          )).toList(),
+                        ),
+                      ],
+                    ),
+                    Positioned(top: 0, right: 0, child: Icon(Icons.format_quote, size: 43, color: Colors.grey[200])),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
 // ============================
-// === API or dynamic data section ===
+// === DATA / API LAYER ==== //
 // ============================
 
 class ManagementProfile {
@@ -250,57 +242,76 @@ class ManagementProfile {
   final String position;
   final String imageAsset;
   final Color roleColor;
+  final String experience;
+  final List<String> achievements;
 
   ManagementProfile({
     required this.name,
     required this.position,
     required this.imageAsset,
     required this.roleColor,
+    required this.experience,
+    required this.achievements,
   });
 }
 
-// Hardcoded sementara, nanti ganti fetch dari API
+// TODO: Replace with API integration
 final List<ManagementProfile> profiles = [
   ManagementProfile(
-    name: 'Frans Lamury, ANZIIF (Snr.Assoc)',
-    position: 'President Commissioner',
-    imageAsset: 'assets/images/profil1.png',
-    roleColor: Color(0xFF79AB43),
+    name: 'Frans Lamury',
+    position: 'Presiden Komisaris',
+    imageAsset: 'assets/images/frans.jpg',
+    roleColor: _primaryColor,
+    experience: 'Pengalaman di industri asuransi 62 tahun',
+    achievements: [
+      'Ahli dalam asuransi umum',
+      'Menjadi saksi ahli dalam asuransi umum',
+      'Anggota tim evaluasi uji kelayakan dan kepatutan untuk eksekutif dan komisaris asuransi di Indonesia',
+    ],
+  ),
+  ManagementProfile(
+    name: 'Micky',
+    position: 'Komisaris',
+    imageAsset: 'assets/images/micky.jpg',
+    roleColor: _primaryColor,
+    experience: 'Pengalaman di industri asuransi 25 tahun',
+    achievements: [
+      '25 tahun pengalaman dalam pengembangan sistem',
+      'Berpengalaman dalam pembuatan aplikasi dan sistem di sektor perbankan',
+    ],
   ),
   ManagementProfile(
     name: 'Ruddy Sudjono',
-    position: 'President Director',
-    imageAsset: 'assets/images/profil1.png',
-    roleColor: Color(0xFF79AB43),
+    position: 'Direktur Utama',
+    imageAsset: 'assets/images/ruddy.jpg',
+    roleColor: _primaryColor,
+    experience: 'Pengalaman di industri asuransi 30 tahun',
+    achievements: [
+      'Kreatif dalam pengembangan kebijakan di bidang asuransi',
+      'Pemikir “out of the box” dalam penyelesaian klaim asuransi',
+    ],
   ),
   ManagementProfile(
-    name: 'Jeffry Stanley, CIIB, CIP',
-    position: 'Director',
-    imageAsset: 'assets/images/profil1.png',
-    roleColor: Color(0xFF79AB43),
+    name: 'Jeffry Stanley',
+    position: 'Direktur Pemasaran',
+    imageAsset: 'assets/images/jeffry.jpg',
+    roleColor: _primaryColor,
+    experience: 'Pengalaman di industri asuransi 20 tahun',
+    achievements: [
+      'Memulai karier di Asuransi Sinarmas',
+      'Memiliki jaringan luas',
+      'Dikenal sebagai individu kreatif di industri asuransi',
+    ],
   ),
   ManagementProfile(
-    name: 'Sarah Michelle, MBA',
-    position: 'Finance Director',
-    imageAsset: 'assets/images/profil1.png',
-    roleColor: Color(0xFF79AB43),
-  ),
-  ManagementProfile(
-    name: 'Michael Chen, CPA',
-    position: 'Operations Director',
-    imageAsset: 'assets/images/profil1.png',
-    roleColor: Color(0xFF79AB43),
-  ),
-  ManagementProfile(
-    name: 'Lisa Anderson, CPCU',
-    position: 'Risk Management Director',
-    imageAsset: 'assets/images/profil1.png',
-    roleColor: Color(0xFF79AB43),
-  ),
-  ManagementProfile(
-    name: 'David Rodriguez, ARM',
-    position: 'Claims Director',
-    imageAsset: 'assets/images/profil1.png',
-    roleColor: Color(0xFF79AB43),
+    name: 'Fendy',
+    position: 'Direktur Keuangan',
+    imageAsset: 'assets/images/fendy.jpg',
+    roleColor: _primaryColor,
+    experience: 'Pengalaman di industri asuransi selama 32 tahun',
+    achievements: [
+      '5 tahun pengalaman di bidang akuntansi publik',
+      'Lebih dari 30 tahun di industri keuangan dan asuransi',
+    ],
   ),
 ];

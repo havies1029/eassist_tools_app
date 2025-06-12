@@ -16,9 +16,51 @@ class LoggedIn extends AuthenticationEvent {
 
   @override
   List<Object> get props => [user];
-
-  @override
-  String toString() => 'LoggedIn { user: $user.username.toString() }';
 }
 
 class LoggedOut extends AuthenticationEvent {}
+
+class RequireLoginClient extends AuthenticationEvent {}
+
+class RequireLoginUser extends AuthenticationEvent {}
+
+class RequirePinEmailVerification extends AuthenticationEvent {
+  final String email;
+
+  const RequirePinEmailVerification({required this.email});
+
+  @override
+  List<Object> get props => [email];
+}
+
+
+class FailedVerifyPinEmail extends AuthenticationEvent {}
+
+class RequirePinHPVerification extends AuthenticationEvent {
+  final String hpno;
+
+  const RequirePinHPVerification({required this.hpno});
+
+  @override
+  List<Object> get props => [hpno];
+}
+
+class ForgotPasword extends AuthenticationEvent {
+  final String email;
+
+  const ForgotPasword({required this.email});
+
+  @override
+  List<Object> get props => [email];
+}
+
+class UserAuthenticated extends AuthenticationEvent {
+  final User user;
+
+  const UserAuthenticated({required this.user});
+
+  @override
+  List<Object> get props => [user];
+}
+
+class RequireRegisterClient extends AuthenticationEvent {}

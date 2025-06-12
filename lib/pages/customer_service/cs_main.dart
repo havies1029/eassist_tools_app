@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'dart:math' show pi;
 
 import '../../repositories/user/user_repository.dart';
-import '../../widgets/section/navbar/navbar_widget.dart';
+import '../../widgets/components/navbar/navbar_widget.dart';
 import '../../widgets/section/customer_service/cs_section.dart';
 import '../../widgets/section/customer_service/floating_buttons_cs.dart';
 import '../../widgets/section/customer_service/action_section_cs.dart';
 import '../../widgets/section/testimoni/testimonial_section.dart';
 import '../../widgets/section/homeclientpage/client_section.dart';
-import '../../widgets/section/footer/footer_section.dart';
+import '../../widgets/components/footer/footer_section.dart';
 
 class CSMain extends StatelessWidget {
   const CSMain({super.key});

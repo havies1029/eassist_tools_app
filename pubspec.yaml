@@ -137,6 +137,16 @@ flutter:
     - assets/images/find_4.png
     - assets/images/find_5.png
     - assets/images/find_6.png
+    - assets/images/JPS.png
+    - assets/images/points_value.png
+    - assets/images/MANDIRI.png
+    - assets/images/BSI.png
+    - assets/images/BNI.png
+    - assets/images/value.png
+    - assets/images/UOB.png
+    - assets/images/HANABANK.png
+    - assets/images/BRI.png
+    - assets/images/JPS(2).png
 
 fonts:
     - family: HeeboBold

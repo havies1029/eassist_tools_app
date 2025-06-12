@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+// import '../../../pages/hero_user_page/hero_user_main.dart';
 import '../../../pages/hero_client_page/hero_user_main.dart';
 import '../../../pages/profile/profile_main_page.dart';
-import '../../profile/profile_individu/profile_individu_main_page.dart';
-import '../../register/register_client/popup_client.dart';
-import '../../register/register_client/register_client_dialog.dart';
+import '../../account/profile/profile_individu/profile_individu_main_page.dart';
+import '../../account/register/register_client/popup_client.dart';
+import '../../account/register/register_client/register_client_dialog.dart';
+// import '../../account/register/register_client/register_form_dialog.dart';
 
 class ReusableOTPDialog extends StatefulWidget {
   final String email;

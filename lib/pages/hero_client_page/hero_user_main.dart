@@ -2,15 +2,20 @@ import 'package:flutter/material.dart';
 import 'dart:math' show pi;
 
 import '../../repositories/user/user_repository.dart';
-import '../../widgets/content/action/action_section.dart';
-import '../../widgets/section/navbar/navbar_widget.dart';
-import '../../widgets/content/carousel/carousel_section.dart';
+import '../../widgets/components/action/action_section.dart';
+import '../../widgets/components/navbar/navbar_widget.dart';
+import '../../widgets/components/carousel/carousel_section.dart';
 import '../../widgets/section/homeclientpage/client_section.dart';
-import '../../widgets/content/feature/feature_section.dart';
+import '../../widgets/components/feature/feature_section.dart';
 import '../../widgets/section/homeclientpage/floating_buttons_user.dart';
-import '../../widgets/section/footer/footer_section.dart';
-import '../../widgets/section/homeclientpage/hero_section_heropage.dart';
+import '../../widgets/components/footer/footer_section.dart';
+import '../../widgets/components/hero/hero_section.dart';
 import '../../widgets/section/testimoni/testimonial_section.dart';
+import 'package:eassist_tools_app/widgets/account/login/login_gmail/popup_dialog_login.dart';
+import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
+import 'package:eassist_tools_app/blocs/login/emailverification_bloc.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HeroUserMain extends StatelessWidget {
   const HeroUserMain({super.key});
@@ -69,7 +74,8 @@ class HeroUserPage extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 88),
                   child: Column(
                     children: [
-                      HeroSection(constraints: constraints),
+                      HeroSection(constraints: constraints,
+                          pageType: PageType.home_client),
                       FloatingButtons(constraints: constraints),
                       ActionSection(constraints: constraints),
                       FeatureSection(constraints: constraints),

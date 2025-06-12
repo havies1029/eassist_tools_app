@@ -218,9 +218,9 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
                   Flexible(
                     flex: 0,
                     child: Image.asset(
-                      'assets/images/jps_logo1.png',
+                      'assets/images/JPS(2).png',
                       height: isMobile ? 36.0 : 70.0,
-                      fit: BoxFit.contain,
+                      fit: BoxFit.fill,
                     ),
                   ),
                 ],
@@ -335,7 +335,7 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
             item['text'],
             style: _benefitTextStyle,
             overflow: TextOverflow.ellipsis,
-            maxLines: 2,
+            maxLines: 3,
           ),
         ),
       ],

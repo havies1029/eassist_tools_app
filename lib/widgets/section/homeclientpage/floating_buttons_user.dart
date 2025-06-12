@@ -36,45 +36,27 @@ class _FloatingButtonsState extends State<FloatingButtons> with TickerProviderSt
 
   bool get isMobile => widget.constraints.maxWidth < 768;
   double get maxWidth => widget.constraints.maxWidth > 1200 ? 1200 : widget.constraints.maxWidth * 0.9;
-  double get sidePadding => isMobile ? 0 : (widget.constraints.maxWidth > 1200 ? 64.0 : 32.0);
+  double get sidePadding => isMobile ? 5 : (widget.constraints.maxWidth > 1200 ? 64.0 : 32.0);
   double get innerPadding => isMobile ? 10.0 : 40.0;
 
   GoogleSignInAccount? _user;
-  int _polisAktif = 2;
-  double _totalPremi = 1350000;
+
+  //====================[ HARDCODED API DATA ]=====================//
+  int _polisAktif = 2; // TODO: Ganti dengan data dari API
+  double _totalPremi = 1350000; // TODO: Ganti dengan data dari API
 
   @override
   void initState() {
     super.initState();
-
-    _buttonsController = AnimationController(duration: const Duration(milliseconds: 800), vsync: this);
+    _buttonsController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
     _buttonsStaggerAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _buttonsController, curve: Curves.easeOutCubic),
     );
-
     _startAnimations();
     _loadDataFromAPI();
-  }
-
-  void _startAnimations() async {
-    await Future.delayed(const Duration(milliseconds: 300));
-    _buttonsController.forward();
-  }
-
-  Future<void> _loadDataFromAPI() async {
-    await Future.delayed(const Duration(seconds: 2));
-    setState(() {
-      _polisAktif = 5;
-      _totalPremi = 2750000;
-    });
-  }
-
-  String _formatCurrency(double amount) {
-    final formatted = amount.toStringAsFixed(0).replaceAllMapped(
-      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-          (Match m) => '${m[1]}.',
-    );
-    return 'Rp $formatted';
   }
 
   @override
@@ -87,28 +69,34 @@ class _FloatingButtonsState extends State<FloatingButtons> with TickerProviderSt
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final isExact1900x1200 = screenSize.width >= 1500.0;
-    final translateOffset = isMobile ? const Offset(0, -50) : const Offset(0, -80);
+    final translateOffset = isMobile ? const Offset(0, 0) : const Offset(0, -80);
 
     return Transform.translate(
       offset: translateOffset,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: sidePadding),
-        child: isMobile ? _buildMobileBadgeWrap() : _buildDesktopBadgeWrap(isExact1900x1200),
+        child: _buildResponsiveBadgeWrap(isExact1900x1200),
       ),
     );
   }
 
-  Widget _buildMobileBadgeWrap() {
+  Widget _buildResponsiveBadgeWrap(bool isExact1900x1200) {
     return Align(
-      alignment: Alignment.centerLeft,
+      alignment: isMobile ? Alignment.centerLeft : Alignment.center,
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 25),
+        width: isMobile ? null : double.infinity,
+        constraints: BoxConstraints(maxWidth: maxWidth),
+        margin: isMobile ? const EdgeInsets.symmetric(horizontal: 25, vertical: 20.0) : const EdgeInsets.symmetric(vertical: 20.0),
         decoration: _boxDecoration(),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: innerPadding, vertical: 10.0),
+          padding: EdgeInsets.symmetric(
+            horizontal: innerPadding,
+            vertical: isMobile ? 10.0 : 20.0,
+          ),
           child: Wrap(
-            spacing: 10,
-            runSpacing: 10,
+            alignment: WrapAlignment.start,
+            spacing: isMobile ? 10 : (isExact1900x1200 ? -10 : 16),
+            runSpacing: isMobile ? 10 : 0,
             children: [
               _buildAnimatedBadge(Icons.policy, '$_polisAktif Polis Aktif', isMobile, const Duration(milliseconds: 0)),
               _buildAnimatedBadge(Icons.attach_money, _formatCurrency(_totalPremi), isMobile, const Duration(milliseconds: 200)),
@@ -116,46 +104,6 @@ class _FloatingButtonsState extends State<FloatingButtons> with TickerProviderSt
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildDesktopBadgeWrap(bool isExact1900x1200) {
-    return Center(
-      child: Container(
-        width: maxWidth,
-        margin: const EdgeInsets.symmetric(vertical: 20.0),
-        decoration: _boxDecoration(),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: innerPadding, vertical: 20.0),
-          child: Wrap(
-            spacing: isExact1900x1200 ? -10 : 16,
-            runSpacing: 0,
-            children: [
-              _buildAnimatedBadge(Icons.policy, '$_polisAktif Polis Aktif', false, const Duration(milliseconds: 0)),
-              _buildAnimatedBadge(Icons.attach_money, _formatCurrency(_totalPremi), false, const Duration(milliseconds: 200)),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  BoxDecoration _boxDecoration() {
-    return BoxDecoration(
-      color: _white,
-      borderRadius: BorderRadius.circular(16.13),
-      boxShadow: [
-        BoxShadow(
-          color: _shadowColor.withOpacity(0.08),
-          blurRadius: 20,
-          offset: const Offset(0, 8),
-        ),
-        BoxShadow(
-          color: _primaryColor.withOpacity(0.1),
-          blurRadius: 40,
-          offset: const Offset(0, 16),
-        ),
-      ],
     );
   }
 
@@ -186,6 +134,48 @@ class _FloatingButtonsState extends State<FloatingButtons> with TickerProviderSt
         );
       },
     );
+  }
+
+  BoxDecoration _boxDecoration() {
+    return BoxDecoration(
+      color: _white,
+      borderRadius: BorderRadius.circular(16.13),
+      boxShadow: [
+        BoxShadow(
+          color: _shadowColor.withOpacity(0.08),
+          blurRadius: 20,
+          offset: const Offset(0, 8),
+        ),
+        BoxShadow(
+          color: _primaryColor.withOpacity(0.1),
+          blurRadius: 40,
+          offset: const Offset(0, 16),
+        ),
+      ],
+    );
+  }
+
+  String _formatCurrency(double amount) {
+    final formatted = amount.toStringAsFixed(0).replaceAllMapped(
+      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+          (Match m) => '${m[1]}.',
+    );
+    return 'Rp $formatted';
+  }
+
+  //====================[ API / AUTH METHODS ]=====================//
+
+  void _startAnimations() async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    _buttonsController.forward();
+  }
+
+  Future<void> _loadDataFromAPI() async {
+    await Future.delayed(const Duration(seconds: 2)); // Simulasi fetch
+    setState(() {
+      _polisAktif = 5;
+      _totalPremi = 2750000;
+    });
   }
 
   Future<void> _handleSignIn() async {
@@ -234,7 +224,7 @@ class InfoBadge extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: isMobile ? 10.0 : 16.0,
-        vertical: isMobile ? 7.0 : 10.0,
+        vertical: isMobile ? 0.0 : 10.0,
       ),
       decoration: BoxDecoration(
         color: backgroundColor,

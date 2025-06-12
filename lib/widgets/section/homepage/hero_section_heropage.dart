@@ -5,168 +5,159 @@ class HeroSection extends StatelessWidget {
 
   const HeroSection({super.key, required this.constraints});
 
+  // Responsive Configs
   bool get isMobile => constraints.maxWidth < 768;
+  double get maxWidth => constraints.maxWidth > 1200 ? 1200 : constraints.maxWidth * 0.9;
+  double get sidePadding => isMobile ? 0 : (constraints.maxWidth > 1200 ? 50.0 : 32.0);
 
-  double get maxWidth =>
-      constraints.maxWidth > 1200 ? 1200 : constraints.maxWidth * 0.9;
 
-  double get sidePadding {
-    if (isMobile) return 0;
-    return constraints.maxWidth > 1200 ? 64.0 : 32.0;
-  }
+  // Styles
+  static const _primaryColor = Color(0xFF79AB43);
+  static const _whiteColor = Colors.white;
+  static const _fontFamily = 'Satoshi-Regular';
+
+  TextStyle get _boldHeading => TextStyle(
+    fontFamily: _fontFamily,
+    fontSize: isMobile ? 22 : 40,
+    fontWeight: FontWeight.w700,
+    color: _whiteColor,
+  );
+
+  TextStyle get _bodyText => TextStyle(
+    fontFamily: _fontFamily,
+    fontSize: isMobile ? 12 : 15,
+    fontWeight: FontWeight.w400,
+    height: 1.6,
+    color: _whiteColor,
+  );
 
   @override
   Widget build(BuildContext context) {
-    // Branch untuk tampilan mobile
-    if (isMobile) {
-      return Container(
-        width: double.infinity,
-        margin: const EdgeInsets.only(top: 0),
-        decoration: const BoxDecoration(
-          color: Color(0xFF79AB43),
-          borderRadius: BorderRadius.zero,
-        ),
-        // Hapus padding bawah dengan hanya menggunakan top dan horizontal
-        padding: const EdgeInsets.fromLTRB(16.0, 20.0, 16.0, 0.0),
-        child: Column(
-          // Ubah agar semua isi kolom di kiri
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Panggil dengan TextAlign.left untuk meratakan teks ke kiri
-            _buildHeroText(TextAlign.left),
-            const SizedBox(height: 20.0),
-            _buildHeroImage(),  // Sekarang otomatis 182x197 di mobile
-          ],
-        ),
-      );
-    }
-
-    // Branch untuk tampilan non-mobile (tetap pakai padding vertikal penuh)
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: sidePadding),
       child: Center(
         child: Container(
           width: maxWidth,
-          margin: const EdgeInsets.only(top: 50),
-          decoration: const BoxDecoration(
-            color: Color(0xFF79AB43),
-            borderRadius: BorderRadius.only(
+          margin: EdgeInsets.only(top: isMobile ? 0 : 50),
+          height: isMobile ? 200 : null,
+          padding: isMobile
+              ? EdgeInsets.zero
+              : const EdgeInsets.symmetric(horizontal: 40.0, vertical: 50.0),
+          decoration: BoxDecoration(
+            color: _primaryColor,
+            borderRadius: isMobile
+                ? BorderRadius.zero
+                : const BorderRadius.only(
               topLeft: Radius.circular(20),
               topRight: Radius.circular(20),
             ),
           ),
-          // Non-mobile masih pakai padding atas & bawah 50
-          padding: const EdgeInsets.symmetric(
-            horizontal: 40.0,
-            vertical: 50.0,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Flexible(
-                flex: 1,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 40.0),
-                  child: Transform.translate(
-                    offset: const Offset(0, -20),
-                    child: _buildHeroText(TextAlign.left),
-                  ),
-                ),
-              ),
-              Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  const SizedBox(width: 300, height: 250),
-                  Positioned(
-                    right: -40,
-                    bottom: 0,
-                    child: SizedBox(
-                      width: 360,
-                      child: _buildHeroImage(),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+          child: _buildContent(),
         ),
       ),
     );
   }
 
-  Widget _buildHeroText(TextAlign align) {
-    // Tentukan ukuran font berdasarkan isMobile
-    final double headingSize = isMobile ? 24 : 40;
+  Widget _buildContent() {
+    if (isMobile) {
+      return Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Positioned(
+            right: 0,
+            top: 110,
+            child: _buildHeroImage(),
+          ),
+          Positioned(
+            left: 16,
+            top: 50,
+            right: 80,
+            child: _buildTextBlock(TextAlign.left),
+          ),
+        ],
+      );
+    }
 
-    return Column(
-      crossAxisAlignment: align == TextAlign.left
-          ? CrossAxisAlignment.start
-          : CrossAxisAlignment.center,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const SizedBox(height: 40),
-        Text(
-          'Klien Kami, Prioritas Kami:',
-          textAlign: align,
-          style: TextStyle(
-            fontFamily: 'Satoshi-Regular',
-            fontSize: headingSize,
-            fontWeight: FontWeight.w700,
-            color: Colors.white,
+        Flexible(
+          flex: 1,
+          child: Padding(
+            padding: const EdgeInsets.only(right: 40.0),
+            child: Transform.translate(
+              offset: const Offset(0, -20),
+              child: _buildTextBlock(TextAlign.left),
+            ),
           ),
         ),
-        const SizedBox(height: 6),
-        Text(
-          isMobile
-              ? 'Memberikan Solusi Terbaik!'
-              : 'Memberikan Solusi Terbaik untuk Anda!',
-          textAlign: align,
-          style: TextStyle(
-            fontFamily: 'Satoshi-Regular',
-            fontSize: headingSize,
-            fontWeight: FontWeight.w200,
-            color: Colors.white,
-          ),
-        ),
-        const SizedBox(height: 10),
-        Text(
-          isMobile
-          // Versi mobile: ringkas jadi satu kalimat pendek
-              ? 'JPS adalah platform asuransi pintar yang memudahkan kamu mencari, memilih'
-              'dan klaim asuransi hanya dalam hitungan menit cepat, aman, dan terdaftar OJK.,'
-          // Versi non-mobile: tetap pakai \n seperti semula
-              : 'JPS adalah platform asuransi pintar yang memudahkan kamu mencari, memilih,\n'
-              'dan klaim asuransi hanya dalam hitungan menit cepat, aman, dan terdaftar OJK.',
-          textAlign: align,
-          style: TextStyle(
-            fontFamily: 'Satoshi-Regular',
-            fontSize: 15.0,
-            fontWeight: FontWeight.w400,
-            height: 1.6,
-            color: Colors.white,
-          ),
+        Stack(
+          clipBehavior: Clip.none,
+          children: [
+            const SizedBox(width: 300, height: 250),
+            Positioned(
+              right: -40,
+              bottom: 0,
+              child: SizedBox(width: 360, child: _buildHeroImage()),
+            ),
+          ],
         ),
       ],
     );
   }
 
-  Widget _buildHeroImage() {
-    if (isMobile) {
-      return Align(
-        alignment: Alignment.centerRight,
-        child: Image.asset(
-          'assets/images/human.png',
-          width: 242,
-          height: 257,
-          fit: BoxFit.contain,
-        ),
-      );
-    }
+  Widget _buildTextBlock(TextAlign align) {
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxWidth: isMobile ? double.infinity : maxWidth * 0.65,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            _sharedTitle1,
+            textAlign: align,
+            style: _boldHeading.copyWith(fontSize: isMobile ? 20 : 40),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            _sharedTitle2,
+            textAlign: align,
+            style: _boldHeading.copyWith(fontSize: isMobile ? 20 : 40),
+          ),
+          const SizedBox(height: 10),
+          RichText(
+            textAlign: align,
+            text: TextSpan(
+              style: _bodyText.copyWith(fontSize: isMobile ? 12 : 15),
+              children: const [
+                TextSpan(text: 'JPS ', style: TextStyle(fontWeight: FontWeight.w700)),
+                TextSpan(text: 'adalah platform asuransi pintar yang memudahkan kamu mencari, memilih, dan klaim asuransi hanya dalam hitungan menit '),
+                TextSpan(text: 'cepat', style: TextStyle(fontWeight: FontWeight.w700)),
+                TextSpan(text: ', '),
+                TextSpan(text: 'aman', style: TextStyle(fontWeight: FontWeight.w700)),
+                TextSpan(text: ', dan '),
+                TextSpan(text: 'terdaftar OJK', style: TextStyle(fontWeight: FontWeight.w700)),
+                TextSpan(text: '.'),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
+  Widget _buildHeroImage() {
     return Image.asset(
-      'assets/images/human.png',
+      _imageUrl,
+      width: isMobile ? 200 : null,
+      height: isMobile ? 200 : null,
       fit: BoxFit.contain,
     );
   }
 
+  static const String _sharedTitle1 = 'Klien Kami, Prioritas Kami:';
+  static const String _sharedTitle2 = 'Memberikan Solusi Terbaik untuk Anda!';
+  static const String _imageUrl = 'assets/images/human.png';
 }
