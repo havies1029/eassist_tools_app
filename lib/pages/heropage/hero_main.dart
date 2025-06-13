@@ -27,25 +27,63 @@ class DummyUserRepository extends UserRepository {
   // Override semua method yang dibutuhkan dengan return dummy data atau kosong
 }
 
-class HeroMain extends StatelessWidget {
+class HeroMain extends StatefulWidget {
   const HeroMain({super.key});
+
+  @override
+  State<HeroMain> createState() => _HeroMainState();
+}
+
+class _HeroMainState extends State<HeroMain> {
+
+  bool _sudahTerdaftarSebagaiClient = false;
   @override
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
 
         BlocListener<AuthenticationBloc, AuthenticationState>(
-          listener: (context, state) {
+          listener: (context, state) async {
             debugPrint("AuthenticationBloc state: $state");
             if (state is AuthenticationUnauthenticated) {
               debugPrint("AuthenticationUnauthenticated");
 
               CustomPopupsLoginUser.showLoginUserDialog(context);
             }
+            // else if (state is AuthenticationRequireLoginClient) {
+            //   debugPrint("AuthenticationRequireLoginClient");
+            //
+            //   CustomPopupsLoginUser.showLoginClientDialog(context);
+            //   // if (state.requiredFrom == "bloc_email_verification") {
+            //   //
+            //   //   debugPrint(
+            //   //       "sudah terdaftar di client, dialihkan ke form login client");
+            //   //
+            //   //   //??? kalau perlu kasih popup / notifikasi ke user terkait hal diatas.
+            //   //
+            //   //   CustomPopupsLoginUser.showLoginClientDialog(context);
+            //   //
+            //   // } else {
+            //   //   CustomPopupsLoginUser.showLoginClientDialog(context);
+            //   // }
+            // }
             else if (state is AuthenticationRequireLoginClient) {
-              debugPrint("AuthenticationUnauthenticated");
+              debugPrint("AuthenticationRequireLoginClient");
 
-              CustomPopupsLoginUser.showLoginClientDialog(context);
+              if (state.requiredFrom == "bloc_email_verification") {
+                debugPrint("sudah terdaftar di client, dialihkan ke form login client");
+
+                // Update flag
+                setState(() {
+                  _sudahTerdaftarSebagaiClient = true;
+                });
+
+                // Delay agar tidak seperti 'pindah halaman'
+                await Future.delayed(const Duration(milliseconds: 150));
+                CustomPopupsLoginUser.showLoginClientDialog(context);
+              } else {
+                CustomPopupsLoginUser.showLoginClientDialog(context);
+              }
             }
             else if (state is AuthenticationForgotPassword) {
               debugPrint("AuthenticationForgotPassword");
@@ -57,27 +95,28 @@ class HeroMain extends StatelessWidget {
             }
             else if (state is AuthenticationRequirePinHPVerification) {
               debugPrint("AuthenticationRequirePinVerification");
-              Navigator.of(context).pop();
+              // Navigator.of(context).pop();
               CustomPopupsLoginUser.showRequestOTPHPDialog(context, state.hpno);
             }
             else if (state is AuthenticationRequirePinEmailVerification) {
               debugPrint("AuthenticationRequirePinEmailVerification");
-              Navigator.of(context).pop();
+              // Navigator.of(context).pop();
               CustomPopupsLoginUser.showRequestOTPEmailDialog(context, state.email);
             }
-            else if (state is AuthenticationUserAuthenticated){
-              debugPrint("AuthenticationUserAuthenticated");
-
-              // Navigator.of(context, rootNavigator: true).maybePop();
-              //
-              // Navigator.pushReplacement(
-              //   context,
-              //   MaterialPageRoute(builder: (_) => HeroUserMain()),
-              // );
-              Navigator.of(context).pop();
-            }else if (state is AuthenticationPhonePinVerified) {
+            // else if (state is AuthenticationUserAuthenticated){
+            //   debugPrint("AuthenticationUserAuthenticated");
+            //
+            //   // Navigator.of(context, rootNavigator: true).maybePop();
+            //   //
+            //   // Navigator.pushReplacement(
+            //   //   context,
+            //   //   MaterialPageRoute(builder: (_) => HeroUserMain()),
+            //   // );
+            //   Navigator.of(context).pop();
+            // }
+            else if (state is AuthenticationPhonePinVerified) {
               debugPrint("AuthenticationPhonePinVerified");
-              Navigator.of(context).pop();
+              // Navigator.of(context).pop();
 
               debugPrint("Log out user");
               // force login user
@@ -87,7 +126,7 @@ class HeroMain extends StatelessWidget {
             }
             else if (state is AuthenticationGoogleUserAuthenticated) {
               debugPrint("AuthenticationGoogleUserAuthenticated");
-              Navigator.of(context).pop();
+              // Navigator.of(context).pop();
             }
             else if (state is AuthenticationLoading) {
               debugPrint("AuthenticationLoading");
@@ -97,11 +136,25 @@ class HeroMain extends StatelessWidget {
             }
             else if (state is AuthenticationPostCheckHasToken) {
               debugPrint("AuthenticationPostCheckHasToken");
-            }
-            else if (state is AuthenticationAuthenticated) {
+            } else if (state is AuthenticationAuthenticated) {
               debugPrint("AuthenticationAuthenticated");
-            }
 
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+              }
+
+              if (state.authenticatedFrom == "login_user") {
+                debugPrint("Navigate to HeroMain");
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (_) => const HeroMain()),
+                );
+              } else if (state.authenticatedFrom == "login_client") {
+                debugPrint("Navigate to HeroUserMain");
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (_) => const HeroUserMain()),
+                );
+              }
+            }
           },
         ),
 

@@ -531,8 +531,9 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
 
     if (hasError) return;
 
-    debugPrint('🔵 Tombol Masuk ditekan dengan email="$email"');
-
+    debugPrint(
+      '🔵 Tombol Masuk ditekan dengan email="$email" dan password(tersimpan)"',
+    );
     BlocProvider.of<LoginBloc>(context).add(LoginButtonPressed(
       username: email,
       password: password,

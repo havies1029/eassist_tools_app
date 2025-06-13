@@ -289,7 +289,7 @@ class LupaSandiDialogState extends BaseDialogState<LupaSandiDialog> {
               child: GestureDetector(
                 onTap: () async {
                   Navigator.of(context).pop();
-                  context.read<AuthenticationBloc>().add(RequireLoginClient());
+                  context.read<AuthenticationBloc>().add(RequireLoginClient(requiredFrom: "lupa_sandi", errorMsg: ""));
                 },
                 child: Text(
                   'Login Client',

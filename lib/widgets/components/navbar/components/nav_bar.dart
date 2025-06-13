@@ -44,7 +44,7 @@ class NavBar extends StatelessWidget {
                 onTap: () {
                   final authState = context.read<AuthenticationBloc>().state;
 
-                  if (authState is AuthenticationAuthenticated || authState is AuthenticationUserAuthenticated||
+                  if (authState is AuthenticationAuthenticated ||
                       authState is AuthenticationGoogleUserAuthenticated) {
                     // Sudah login → ke HeroUserMain
                     Navigator.push(

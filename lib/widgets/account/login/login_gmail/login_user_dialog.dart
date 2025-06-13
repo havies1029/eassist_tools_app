@@ -507,8 +507,7 @@ class LoginUserDialogState extends BaseDialogState<LoginUserDialog> {
               onTap: () async {
                 Navigator.of(context).pop();
                 //await CustomPopupsLoginUser.showRegisterUserDialog(context);
-
-                context.read<AuthenticationBloc>().add(RequireLoginClient());
+                context.read<AuthenticationBloc>().add(RequireLoginClient(requiredFrom: "login_user", errorMsg: ""));
               },
               child: Text(
                 'Login Client',

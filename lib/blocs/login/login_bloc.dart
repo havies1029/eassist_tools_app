@@ -49,5 +49,4 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       emit(LoginFailure(error: "username atau password salah"));
     }
   }
-
 }

@@ -24,7 +24,8 @@ class AuthenticationBloc
     on<LoggedOut>(_onLoggedOut);
     on<RequirePinEmailVerification>(_onRequirePinEmailVerification);
     on<RequireLoginClient>((event, emit) {
-      emit(AuthenticationRequireLoginClient());
+      emit(AuthenticationRequireLoginClient(
+          requiredFrom: event.requiredFrom, errorMsg: event.errorMsg));
     });
     on<ForgotPasword>((event, emit) {
       emit(AuthenticationForgotPassword());
@@ -49,23 +50,49 @@ class AuthenticationBloc
     });
   }
 
+  // Future<void> _onAppStarted(
+  //     AppStarted event, Emitter<AuthenticationState> emit) async {
+  //   debugPrint("_onAppStarted");
+  //
+  //   emit(AuthenticationPreCheckHasToken());
+  //   //String token = AppData.kIsWeb ? "" : await userRepository.getToken();
+  //   String token = await userRepository.getToken();
+  //   emit(AuthenticationPostCheckHasToken());
+  //
+  //   debugPrint("hasToken ?");
+  //   if (token.isNotEmpty) {
+  //
+  //     final user = await userRepository.getUserByToken(token);
+  //
+  //     AppData.user = user;
+  //
+  //     emit(AuthenticationAuthenticated(user: user));
+  //
+  //     //debugPrint("hasToken ? yes -> ${AppData.userToken}");
+  //   } else {
+  //     //debugPrint("hasToken ? no");
+  //     emit(AuthenticationUnauthenticated());
+  //     //debugPrint("hasToken ? no -> proceed");
+  //   }
+  // }
+
   Future<void> _onAppStarted(
       AppStarted event, Emitter<AuthenticationState> emit) async {
     debugPrint("_onAppStarted");
 
     emit(AuthenticationPreCheckHasToken());
-    //String token = AppData.kIsWeb ? "" : await userRepository.getToken();    
     String token = await userRepository.getToken();
     emit(AuthenticationPostCheckHasToken());
 
     debugPrint("hasToken ?");
     if (token.isNotEmpty) {
-
-      final user = await userRepository.getUserByToken(token);     
+      final user = await userRepository.getUserByToken(token);
 
       AppData.user = user;
 
-      emit(AuthenticationAuthenticated(user: user));
+      //emit(AuthenticatioTokenAuthenticated(user: user));
+      emit(AuthenticationAuthenticated(
+          user: user, authenticatedFrom: "login_token"));
 
       //debugPrint("hasToken ? yes -> ${AppData.userToken}");
     } else {
@@ -77,12 +104,13 @@ class AuthenticationBloc
 
   Future<void> _onLoggedIn(
       LoggedIn event, Emitter<AuthenticationState> emit) async {
-
     debugPrint("_onLoggedIn dari Form Login Client");
 
     emit(AuthenticationLoading());
 
-    emit(AuthenticationAuthenticated(user: event.user));
+    //emit(AuthenticationClientAuthenticated(user: event.user));
+    emit(AuthenticationAuthenticated(
+        user: event.user, authenticatedFrom: "login_client"));
   }
 
   Future<void> _onLoggedOut(
@@ -100,13 +128,13 @@ class AuthenticationBloc
 
   Future<void> _onUserAuthenticated(
       UserAuthenticated event, Emitter<AuthenticationState> emit) async {
-
     debugPrint("_onLoggedIn dari Form Login User");
 
     emit(AuthenticationLoading());
-    
-    emit(AuthenticationUserAuthenticated(user: event.user));
-    
-    emit(AuthenticationAuthenticated(user: event.user));
+
+    //emit(AuthenticationUserAuthenticated(user: event.user));
+
+    emit(AuthenticationAuthenticated(
+        user: event.user, authenticatedFrom: "login_user"));
   }
 }

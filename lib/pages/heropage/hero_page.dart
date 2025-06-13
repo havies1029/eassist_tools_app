@@ -99,6 +99,16 @@ class _HeroPageState extends State<HeroPage> {
                     const EdgeInsets.only(top: 88), // ruang untuk navbar
                     child: Column(
                       children: [
+                        BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                            builder: (context, state) {
+                              if (state is AuthenticationAuthenticated) {
+                                if (state.user.custType == "C") {
+                                  return Text(
+                                      'Username : ${state.user.username ?? "???"}');
+                                }
+                              }
+                              return Container();
+                            }),
                         HeroSection(constraints: constraints),
                         FloatingButtons(constraints: constraints),
                         ActionSection(constraints: constraints),
