@@ -32,6 +32,17 @@ GoogleSignIn _googleSignIn = GoogleSignIn(
   scopes: scopes,
 );
 
+
+class CachedGoogleSigninButton extends StatelessWidget {
+  const CachedGoogleSigninButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    debugPrint('✅ Rendered CachedGoogleSigninButton sekali');
+    return googleSigninButton();
+  }
+}
+
 class LoginUserDialog extends BaseDialog {
   const LoginUserDialog({super.key});
 
@@ -238,6 +249,7 @@ class LoginUserDialogState extends BaseDialogState<LoginUserDialog> {
   }
 
   Widget _buildLoginForm(BuildContext context, bool isMobile) {
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -328,7 +340,7 @@ class LoginUserDialogState extends BaseDialogState<LoginUserDialog> {
 
         // Tombol Google
         AppData.kIsWeb
-            ? googleSigninButton()
+            ? const CachedGoogleSigninButton()
             : _buildIconButton(
           text: 'Daftar Menggunakan Gmail',
           iconPath: 'assets/icons/google-icon.svg',

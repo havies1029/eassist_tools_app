@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'claim_stepper.dart'; // pastikan sesuai path
 
 const _primaryColor = Color(0xFF79AB43);
 const _textColor = Colors.black87;
-const _benefitTextColor = Color(0xFF2D3748);
 const _fontFamily = 'Satoshi-Regular';
 
 class ActionSection extends StatelessWidget {
@@ -46,7 +46,59 @@ class ActionSection extends StatelessWidget {
       child: Center(
         child: Container(
           constraints: BoxConstraints(maxWidth: maxWidth),
-          // Tidak ada konten di sini, hanya background putih dengan radius dan padding
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // HEADER UTAMA
+              Text.rich(
+                TextSpan(
+                  text: 'Petunjuk Pengajuan ',
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.w400,
+                    fontFamily: _fontFamily,
+                    color: _textColor,
+                  ),
+                  children: [
+                    TextSpan(
+                      text: 'Klaim',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: _primaryColor,
+                      ),
+                    ),
+                  ],
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.badge, color: _primaryColor, size: 30),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Pengguna non JPS',
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: _fontFamily,
+                      color: _primaryColor,
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 40),
+
+              /// ✅ Revisi Bagian STEP FORM
+              AnimatedSize(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                child: const ClaimStepper(),
+              ),
+            ],
+          ),
         ),
       ),
     );

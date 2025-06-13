@@ -36,6 +36,14 @@ class _HamburgerDropdownContentState extends State<HamburgerDropdownContent> {
   final List<Map<String, dynamic>> _menus = [
     {
       'icon': Icons.assignment,
+      'title': 'Signature Joss',
+      'subs': [
+        SubMenuItem(icon: Icons.add_circle_outline, title: 'Cari Asuransi', onTap: () {}),
+        SubMenuItem(icon: Icons.list_alt, title: 'Lapor Claim', onTap: () {}),
+      ],
+    },
+    {
+      'icon': Icons.assignment,
       'title': 'Simulasi Polis',
       'subs': [
         SubMenuItem(icon: Icons.add_circle_outline, title: 'Buat Polis Baru', onTap: () {}),

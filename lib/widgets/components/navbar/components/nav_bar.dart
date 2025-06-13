@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../blocs/authentication/authentication_bloc.dart';
+import '../../../../pages/hero_client_page/hero_user_main.dart';
 import '../../../../pages/heropage/hero_main.dart';
 
 class NavBar extends StatelessWidget {
@@ -39,10 +42,22 @@ class NavBar extends StatelessWidget {
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const HeroMain()),
-                  );
+                  final authState = context.read<AuthenticationBloc>().state;
+
+                  if (authState is AuthenticationAuthenticated || authState is AuthenticationUserAuthenticated||
+                      authState is AuthenticationGoogleUserAuthenticated) {
+                    // Sudah login → ke HeroUserMain
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const HeroUserMain()),
+                    );
+                  } else {
+                    // Belum login → ke HeroMain
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const HeroMain()),
+                    );
+                  }
                 },
                 child: Image.asset(
                   'assets/images/jps_logo.png',
@@ -50,6 +65,7 @@ class NavBar extends StatelessWidget {
                 ),
               ),
             ),
+
 
             const Spacer(),
 

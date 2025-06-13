@@ -47,6 +47,7 @@ import '../../../pages/customer_service/cs_main.dart';
 import '../../../repositories/user/user_repository.dart';
 // import '../../login/login_client/popup_client.dart';
 import '../../account/register/register_client/popup_client.dart';
+import '../../dialog/popup/status_popup.dart';
 
 
 
@@ -262,24 +263,18 @@ class _NavbarWidgetState extends State<NavbarWidget> {
         break;
 
       case 'Reset Password':
-      // await CustomPopups.showRegisterDialog(context);
+        showDialog(
+          context: context,
+          barrierColor: Colors.black54,
+          builder: (_) => const ResetPasswordPage(),
+        );
         break;
 
       case 'Logout':
-        LogoutPopupHelper.show(
-          context,
-          onConfirm: () {
-            // 1️⃣ Emit event logout
-            context.read<AuthenticationBloc>().add(LoggedOut());
-
-            // 2️⃣ Tutup semua dialog dan ganti ke HeroMain
-            Navigator.of(context, rootNavigator: true).pop(); // tutup popup
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const HeroMain()),
-            );
-          },
-          onCancel: () {},
+        showDialog(
+          context: context,
+          barrierColor: Colors.black54,
+          builder: (_) => const LogoutPopup(),
         );
         break;
 
@@ -381,8 +376,7 @@ class _NavbarWidgetState extends State<NavbarWidget> {
           },
         ),
       );
-    }
-    else if (title == 'Rekan Bank') {
+    }else if (title == 'Rekan Bank') {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -636,26 +630,35 @@ class _NavbarWidgetState extends State<NavbarWidget> {
         context,
         MaterialPageRoute(builder: (context) => const UserNonJpsMain()),
       );
-    }else if (title == 'Popup Logout') {
-      LogoutPopupHelper.show(
+    }
+    // else if (title == 'Popup Logout') {
+    //   LogoutPopupHelper.show(
+    //     context,
+    //     onConfirm: () {
+    //       context.read<AuthenticationBloc>().add(LoggedOut());
+    //     },
+    //     onCancel: () {
+    //       // Opsional: lakukan sesuatu jika dibatalkan
+    //     },
+    //   );
+    // }else if (title == 'Logout') {
+    //   LogoutPopupHelper.show(
+    //     context,
+    //     onConfirm: () {
+    //       context.read<AuthenticationBloc>().add(LoggedOut());
+    //     },
+    //     onCancel: () {
+    //       // Opsional: lakukan sesuatu jika dibatalkan
+    //     },
+    //   );
+    // }
+    else if (title == 'Cari Asuransi') {
+      Navigator.push(
         context,
-        onConfirm: () {
-          context.read<AuthenticationBloc>().add(LoggedOut());
-        },
-        onCancel: () {
-          // Opsional: lakukan sesuatu jika dibatalkan
-        },
+        MaterialPageRoute(builder: (context) => const FindInsuranceMain()),
       );
-    }else if (title == 'Logout') {
-      LogoutPopupHelper.show(
-        context,
-        onConfirm: () {
-          context.read<AuthenticationBloc>().add(LoggedOut());
-        },
-        onCancel: () {
-          // Opsional: lakukan sesuatu jika dibatalkan
-        },
-      );
+    }else if (title == 'Lapor Claim') {
+      StatusPopupHelper.show(context);
     }
   }
 }
