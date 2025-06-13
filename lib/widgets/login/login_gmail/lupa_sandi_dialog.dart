@@ -127,8 +127,7 @@ class LupaSandiDialogState extends BaseDialogState<LupaSandiDialog> {
             onExit: (_) => setState(() => _isHoveringRegister = false),
             child: GestureDetector(
               onTap: () async {
-                Navigator.of(context).pop();
-                context.read<AuthenticationBloc>().add(RequireLoginClient());
+                context.read<AuthenticationBloc>().add(RequireLoginClient(requiredFrom: "lupa_sandi", errorMsg: ""));
               },
               child: Text(
                 'Apabila sudah menjadi client : Login Client',

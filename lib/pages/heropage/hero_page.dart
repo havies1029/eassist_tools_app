@@ -53,23 +53,19 @@ class _HeroPageState extends State<HeroPage> {
                         cacheHeight: 800,
                       ),
               ),
-      
+
               // Layer 2: Konten scrollable
               Positioned.fill(
                 child: SingleChildScrollView(
-                  padding:
-                      const EdgeInsets.only(top: 88), // ruang untuk navbar
+                  padding: const EdgeInsets.only(top: 88), // ruang untuk navbar
                   child: Column(
                     children: [
                       TextButton(
                           onPressed: () {
-                            context
-                                .read<AuthenticationBloc>()
-                                .add(LoggedOut());
+                            context.read<AuthenticationBloc>().add(LoggedOut());
                           },
                           child: Text("Logout",
-                              style: TextStyle(
-                                  color: Colors.white))),
+                              style: TextStyle(color: Colors.white))),
                       TextButton(
                           onPressed: () {
                             context
@@ -77,8 +73,17 @@ class _HeroPageState extends State<HeroPage> {
                                 .add(RequireRegisterClient());
                           },
                           child: Text("Register Client",
-                              style: TextStyle(
-                                  color: Colors.white))),
+                              style: TextStyle(color: Colors.white))),
+                      BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                          builder: (context, state) {
+                        if (state is AuthenticationAuthenticated) {
+                          if (state.user.custType == "C") {
+                            return Text(
+                                'Username : ${state.user.username ?? "???"}');
+                          }
+                        }
+                        return Container();
+                      }),
                       HeroSection(constraints: constraints),
                       FloatingButtons(constraints: constraints),
                       ActionSection(constraints: constraints),
@@ -91,7 +96,7 @@ class _HeroPageState extends State<HeroPage> {
                   ),
                 ),
               ),
-      
+
               // Layer 3: Navbar overlay di atas semua
               const FixedNavbarOverlay(),
             ],

@@ -20,7 +20,15 @@ class LoggedIn extends AuthenticationEvent {
 
 class LoggedOut extends AuthenticationEvent {}
 
-class RequireLoginClient extends AuthenticationEvent {}
+class RequireLoginClient extends AuthenticationEvent {
+  final String requiredFrom;
+  final String errorMsg;
+
+  const RequireLoginClient({required this.requiredFrom, required this.errorMsg});
+
+  @override
+  List<Object> get props => [requiredFrom, errorMsg];
+}
 
 class RequireLoginUser extends AuthenticationEvent {}
 
@@ -32,7 +40,6 @@ class RequirePinEmailVerification extends AuthenticationEvent {
   @override
   List<Object> get props => [email];
 }
-
 
 class FailedVerifyPinEmail extends AuthenticationEvent {}
 

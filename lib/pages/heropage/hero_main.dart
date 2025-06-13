@@ -5,7 +5,6 @@ import 'package:eassist_tools_app/widgets/login/login_gmail/popup_dialog_login.d
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
 class HeroMain extends StatefulWidget {
   const HeroMain({super.key});
 
@@ -14,12 +13,10 @@ class HeroMain extends StatefulWidget {
 }
 
 class HeroMainState extends State<HeroMain> {
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
-        
         BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {
             debugPrint("AuthenticationBloc state: $state");
@@ -27,64 +24,64 @@ class HeroMainState extends State<HeroMain> {
               debugPrint("AuthenticationUnauthenticated");
 
               CustomPopupsLoginUser.showLoginUserDialog(context);
-            }
-            else if (state is AuthenticationRequireLoginClient) {
-              debugPrint("AuthenticationUnauthenticated");
+            } else if (state is AuthenticationRequireLoginClient) {
+              debugPrint("AuthenticationRequireLoginClient");
+              Navigator.of(context).pop();
 
-              CustomPopupsLoginUser.showLoginClientDialog(context);
-            }
-            else if (state is AuthenticationForgotPassword) {
+              if (state.requiredFrom == "bloc_email_verification") {
+
+                debugPrint(
+                    "sudah terdaftar di client, dialihkan ke form login client");
+
+                //??? kalau perlu kasih popup / notifikasi ke user terkait hal diatas.
+
+                 CustomPopupsLoginUser.showLoginClientDialog(context);
+               
+              } else {
+                CustomPopupsLoginUser.showLoginClientDialog(context);
+              }
+            } else if (state is AuthenticationForgotPassword) {
               debugPrint("AuthenticationForgotPassword");
               CustomPopupsLoginUser.showForgotPasswordDialog(context);
-            }
-            else if (state is AuthenticationRequireRegisterClient) {
+            } else if (state is AuthenticationRequireRegisterClient) {
               debugPrint("AuthenticationRequireRegisterClient");
               CustomPopupsLoginUser.showRegisterClientDialog(context);
-            }            
-            else if (state is AuthenticationRequirePinHPVerification) {
+            } else if (state is AuthenticationRequirePinHPVerification) {
               debugPrint("AuthenticationRequirePinVerification");
               Navigator.of(context).pop();
               CustomPopupsLoginUser.showRequestOTPHPDialog(context, state.hpno);
-            }
-            else if (state is AuthenticationRequirePinEmailVerification) {
+            } else if (state is AuthenticationRequirePinEmailVerification) {
               debugPrint("AuthenticationRequirePinEmailVerification");
               Navigator.of(context).pop();
-              CustomPopupsLoginUser.showRequestOTPEmailDialog(context, state.email); 
-            }
-            else if (state is AuthenticationUserAuthenticated){
-              debugPrint("AuthenticationUserAuthenticated");
-              Navigator.of(context).pop();
-            }
-            else if (state is AuthenticationPhonePinVerified) {
+              CustomPopupsLoginUser.showRequestOTPEmailDialog(
+                  context, state.email);
+
+            } else if (state is AuthenticationPhonePinVerified) {
               debugPrint("AuthenticationPhonePinVerified");
               Navigator.of(context).pop();
-              
+
               debugPrint("Log out user");
               // force login user
               BlocProvider.of<AuthenticationBloc>(context).add(
                 LoggedOut(),
               );
-            }
-            else if (state is AuthenticationGoogleUserAuthenticated) {
+            } else if (state is AuthenticationGoogleUserAuthenticated) {
               debugPrint("AuthenticationGoogleUserAuthenticated");
               Navigator.of(context).pop();
-            }
-            else if (state is AuthenticationLoading) {
+            } else if (state is AuthenticationLoading) {
               debugPrint("AuthenticationLoading");
-            }
-            else if (state is AuthenticationPreCheckHasToken) {
+            } else if (state is AuthenticationPreCheckHasToken) {
               debugPrint("AuthenticationPreCheckHasToken");
-            }
-            else if (state is AuthenticationPostCheckHasToken) {
+            } else if (state is AuthenticationPostCheckHasToken) {
               debugPrint("AuthenticationPostCheckHasToken");
-            }
-            else if (state is AuthenticationAuthenticated) {
+            } else if (state is AuthenticationAuthenticated) {
               debugPrint("AuthenticationAuthenticated");
+              if ((state.authenticatedFrom == "login_user") || (state.authenticatedFrom == "login_client")) {
+                Navigator.of(context).pop();
+              }              
             }
           },
-        ),        
-
-       
+        ),
       ],
       child: MaterialApp(
         title: 'JPS Insurance',
@@ -116,4 +113,3 @@ class HeroMainState extends State<HeroMain> {
 }
 
 // Ubah HeroPage jadi StatefulWidget
-

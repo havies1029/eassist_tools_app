@@ -78,7 +78,7 @@ class LoginUserDialogState extends BaseDialogState<LoginUserDialog> {
 
     });
     
-    _googleSignIn.signInSilently();
+    //_googleSignIn.signInSilently();
     
   }
 
@@ -126,7 +126,7 @@ class LoginUserDialogState extends BaseDialogState<LoginUserDialog> {
           ),
         );
       },
-      listener: (BuildContext context, EmailVerificationState state) {},
+      listener: (context, state) {},
     );
   }
 
@@ -325,11 +325,9 @@ class LoginUserDialogState extends BaseDialogState<LoginUserDialog> {
             onEnter: (_) => setState(() => _isHoveringRegister = true),
             onExit: (_) => setState(() => _isHoveringRegister = false),
             child: GestureDetector(
-              onTap: () async {
-                Navigator.of(context).pop();
-                //await CustomPopupsLoginUser.showRegisterUserDialog(context);
+              onTap: () async {               
 
-                context.read<AuthenticationBloc>().add(RequireLoginClient());
+                context.read<AuthenticationBloc>().add(RequireLoginClient(requiredFrom: "login_user", errorMsg: ""));
               },
               child: Text(
                 'Login Client',

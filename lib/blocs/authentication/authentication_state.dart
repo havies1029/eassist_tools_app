@@ -9,16 +9,10 @@ class AuthenticationUninitialized extends AuthenticationState {}
 
 class AuthenticationAuthenticated extends AuthenticationState {
   final User user;
-  AuthenticationAuthenticated({required this.user});
+  final String authenticatedFrom;
+  AuthenticationAuthenticated({required this.user, required this.authenticatedFrom});
   @override
-  List<Object> get props => [user];
-}
-
-class AuthenticationUserAuthenticated extends AuthenticationState {
-  final User user;
-  AuthenticationUserAuthenticated({required this.user});
-  @override
-  List<Object> get props => [user];
+  List<Object> get props => [user, authenticatedFrom];
 }
 
 class AuthenticationGoogleUserAuthenticated extends AuthenticationState {
@@ -33,7 +27,9 @@ class AuthenticationUnauthenticated extends AuthenticationState {}
 class AuthenticationLoading extends AuthenticationState {}
 
 class AuthenticationPreCheckHasToken extends AuthenticationState {}
+
 class AuthenticationPostCheckHasToken extends AuthenticationState {}
+
 class AuthenticationRequirePinEmailVerification extends AuthenticationState {
   final String email;
 
@@ -43,7 +39,16 @@ class AuthenticationRequirePinEmailVerification extends AuthenticationState {
   List<Object> get props => [email];
 }
 
-class AuthenticationRequireLoginClient extends AuthenticationState {}
+class AuthenticationRequireLoginClient extends AuthenticationState {
+  final String requiredFrom;
+  final String errorMsg;
+
+  AuthenticationRequireLoginClient(
+      {required this.requiredFrom, required this.errorMsg});
+
+  @override
+  List<Object> get props => [requiredFrom, errorMsg];
+}
 
 class AuthenticationRequirePinHPVerification extends AuthenticationState {
   final String hpno;
@@ -54,7 +59,8 @@ class AuthenticationRequirePinHPVerification extends AuthenticationState {
   List<Object> get props => [hpno];
 }
 
-
 class AuthenticationForgotPassword extends AuthenticationState {}
+
 class AuthenticationRequireRegisterClient extends AuthenticationState {}
-class AuthenticationPhonePinVerified  extends AuthenticationState {}
+
+class AuthenticationPhonePinVerified extends AuthenticationState {}

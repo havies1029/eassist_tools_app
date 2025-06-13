@@ -30,9 +30,10 @@ class EmailVerificationBloc
       Emitter<EmailVerificationState> emit) async {
     ReturnDataAPI returnData;
     bool hasFailure = true;
-    emit(state.copyWith(isLoading: true, isLoaded: false));
+    emit(state.copyWith(isLoading: true, isLoaded: false, hasFailure: false));
     returnData = await repository.emailVerificationTambah(event.record);
     hasFailure = !returnData.success;
+    List<String> errors = [];
     
     if (!hasFailure) {
       
@@ -66,6 +67,15 @@ class EmailVerificationBloc
           .add(RequirePinEmailVerification(email: event.record.email));
       }      
     }
+    else if (returnData.data.isNotEmpty) {
+      List<String> infoData = returnData.data.split(";");
+      if (infoData[0] == '9') {        
+        errors.add(infoData[1]);        
+
+        authenticationBloc
+          .add(RequireLoginClient(requiredFrom: "bloc_email_verification", errorMsg: infoData[1]));
+      } 
+    }
 
     debugPrint("onTambahEmailVerification returnData: ${returnData.data}");
     emit(state.copyWith(
@@ -73,6 +83,7 @@ class EmailVerificationBloc
       isLoaded: true,
       hasFailure: hasFailure,
       record: event.record,
+      errors: errors,
     ));
    
   }
