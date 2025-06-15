@@ -91,7 +91,7 @@ class _ClaimStepperState extends State<ClaimStepper> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     if (currentStep > 0)
                       OutlinedButton.icon(
@@ -184,78 +184,111 @@ class _StepIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 768;
     const _textColor = Colors.black87;
-    if (isMobile) {
-      // ✅ Mobile-style stepper seperti gambar
-      return SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Row(
-          children: List.generate(titles.length, (index) {
-            final isActive = index == currentStep;
-            final isPassed = index < currentStep;
 
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 20,
-                    height: 20,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: isActive ? _primaryColor : Colors.grey.shade400,
-                        width: 2,
-                      ),
+    if (isMobile) {
+      // ✅ Mobile-style stepper yang responsif dan tidak overflow
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Column(
+          children: [
+            // Step indicators dengan scroll horizontal
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: List.generate(titles.length, (index) {
+                  final isActive = index == currentStep;
+                  final isPassed = index < currentStep;
+
+                  return Container(
+                    margin: EdgeInsets.only(
+                      right: index < titles.length - 1 ? 8 : 0,
                     ),
-                    child: Center(
-                      child: isActive
-                          ? Container(
-                        width: 8,
-                        height: 8,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: _primaryColor,
-                        ),
-                      )
-                          : const SizedBox.shrink(),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  SizedBox(
-                    width: 100,
-                    child: Column(
+                    child: Row(
                       children: [
-                        Text(
-                          titles[index],
-                          textAlign: TextAlign.center,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                            color: _textColor,
+                        // Step circle
+                        Container(
+                          width: 32,
+                          height: 32,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: isPassed || isActive ? _primaryColor : Colors.grey.shade300,
+                            border: Border.all(
+                              color: isPassed || isActive ? _primaryColor : Colors.grey.shade400,
+                              width: 2,
+                            ),
+                          ),
+                          child: Center(
+                            child: isPassed
+                                ? const Icon(
+                              Icons.check,
+                              color: Colors.white,
+                              size: 16,
+                            )
+                                : isActive
+                                ? Container(
+                              width: 8,
+                              height: 8,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                              ),
+                            )
+                                : Text(
+                              '${index + 1}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey.shade600,
+                                fontSize: 14,
+                              ),
+                            ),
                           ),
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          subtitles[index],
-                          textAlign: TextAlign.center,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 11,
-                            color: Colors.black54,
+
+                        // Connector line (kecuali untuk step terakhir)
+                        if (index < titles.length - 1)
+                          Container(
+                            width: 40,
+                            height: 2,
+                            margin: const EdgeInsets.symmetric(horizontal: 8),
+                            color: index < currentStep ? _primaryColor : Colors.grey.shade300,
                           ),
-                        ),
                       ],
                     ),
+                  );
+                }),
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            // Step labels - hanya tampilkan step yang aktif
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                children: [
+                  Text(
+                    titles[currentStep],
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: _textColor,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitles[currentStep],
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.black54,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
                 ],
               ),
-            );
-          }),
+            ),
+          ],
         ),
       );
     } else {
@@ -299,8 +332,6 @@ class _StepIndicator extends StatelessWidget {
     }
   }
 }
-
-
 
 class _StepItem extends StatelessWidget {
   final int index;

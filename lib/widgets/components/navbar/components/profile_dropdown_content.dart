@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../../../blocs/authentication/authentication_bloc.dart';
 import 'profile_menu_item.dart'; // path ke ProfileMenuItem yang sudah kamu ekstrak
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProfileDropdownContent extends StatelessWidget {
   final VoidCallback onClose;
@@ -79,15 +81,27 @@ class ProfileDropdownContent extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Nadya Septrijayani',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize:16,
-                          fontWeight: FontWeight.bold,
-                          fontFamily:'Satoshi-Regular',
-                        ),
+                      Builder(
+                        builder: (context) {
+                          final state = context.read<AuthenticationBloc>().state;
+                          String name = "[Nama User]";
+                          if (state is AuthenticationAuthenticated &&
+                              state.user.custType == "C") {
+                            name = state.user.nama ?? "[Nama User]";
+                          }
+
+                          return Text(
+                            name,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Satoshi-Regular',
+                            ),
+                          );
+                        },
                       ),
+
                       Text(
                         'Online',
                         style: TextStyle(

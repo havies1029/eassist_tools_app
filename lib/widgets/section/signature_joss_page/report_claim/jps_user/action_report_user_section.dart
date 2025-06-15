@@ -18,7 +18,7 @@ class ActionSection extends StatelessWidget {
   }
 
   EdgeInsets get horizontalPadding => EdgeInsets.symmetric(
-    horizontal: isMobile ? 35.0 : (isTablet ? 48.0 : 80.0),
+    horizontal: 0,
   );
 
   EdgeInsets get verticalPadding {

@@ -19,7 +19,6 @@ class SupportingDocumentsForm extends StatelessWidget {
             title: 'Unggah Dokumen Pendukung',
           ),
           const SizedBox(height: 24),
-
           _buildDocumentFields(),
         ],
       ),
@@ -31,10 +30,11 @@ class SupportingDocumentsForm extends StatelessWidget {
       builder: (context, constraints) {
         final screenWidth = MediaQuery.of(context).size.width;
         final isMobile = screenWidth <= 600;
+        final isTablet = screenWidth > 600 && screenWidth <= 900;
 
-        // Calculate responsive spacing
-        final horizontalPadding = isMobile ? 16.0 : 24.0;
-        final fieldSpacing = isMobile ? 16.0 : 20.0;
+        // Calculate responsive spacing and padding
+        final horizontalPadding = isMobile ? 12.0 : (isTablet ? 20.0 : 24.0);
+        final fieldSpacing = isMobile ? 12.0 : (isTablet ? 16.0 : 20.0);
 
         return Container(
           width: double.infinity,
@@ -83,7 +83,7 @@ class _UploadFieldState extends State<_UploadField> {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx'],
-        allowMultiple: true, // Mengizinkan multiple files
+        allowMultiple: true,
       );
 
       if (result != null && result.files.isNotEmpty) {
@@ -92,12 +92,14 @@ class _UploadFieldState extends State<_UploadField> {
         });
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error memilih file: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error memilih file: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
@@ -139,16 +141,19 @@ class _UploadFieldState extends State<_UploadField> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth <= 600;
+    final isTablet = screenWidth > 600 && screenWidth <= 900;
+
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.all(16),
+        width: double.infinity,
+        padding: EdgeInsets.all(isMobile ? 12 : 16),
         decoration: BoxDecoration(
-          color: _isHovered
-              ? Colors.grey.shade50
-              : Colors.white,
+          color: _isHovered ? Colors.grey.shade50 : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: _isHovered
@@ -168,7 +173,31 @@ class _UploadFieldState extends State<_UploadField> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+            // Header with responsive layout
+            isMobile
+                ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Text(
+                    widget.label,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: _isHovered
+                          ? Theme.of(context).primaryColor.withOpacity(0.9)
+                          : Colors.grey[700],
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: _buildUploadButton(),
+                ),
+              ],
+            )
+                : Row(
               children: [
                 Expanded(
                   child: Text(
@@ -183,118 +212,141 @@ class _UploadFieldState extends State<_UploadField> {
                   ),
                 ),
                 const SizedBox(width: 16),
-                MouseRegion(
-                  onEnter: (_) => setState(() => _isButtonHovered = true),
-                  onExit: (_) => setState(() => _isButtonHovered = false),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    child: ElevatedButton.icon(
-                      onPressed: _pickFiles,
-                      icon: Icon(
-                        Icons.upload_file,
-                        size: 18,
-                        color: _isButtonHovered ? Colors.white : Colors.white.withOpacity(0.9),
-                      ),
-                      label: Text(
-                        "Pilih File",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: _isButtonHovered ? Colors.white : Colors.white.withOpacity(0.9),
-                        ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: _isButtonHovered
-                            ? Theme.of(context).primaryColor.withOpacity(0.9)
-                            : Theme.of(context).primaryColor,
-                        elevation: _isButtonHovered ? 4 : 2,
-                        shadowColor: Theme.of(context).primaryColor.withOpacity(0.3),
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                _buildUploadButton(),
               ],
             ),
 
-            // Files preview section - hanya muncul jika ada file yang dipilih
+            // Files preview section
             if (_selectedFiles.isNotEmpty) ...[
-              const SizedBox(height: 12),
+              SizedBox(height: isMobile ? 12 : 16),
               ...List.generate(_selectedFiles.length, (index) {
                 final file = _selectedFiles[index];
                 return Padding(
-                  padding: EdgeInsets.only(bottom: index < _selectedFiles.length - 1 ? 8 : 0),
-                  child: InkWell(
-                    onTap: () => _viewFile(file),
-                    borderRadius: BorderRadius.circular(8),
-                    child: Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor.withOpacity(0.05),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: Theme.of(context).primaryColor.withOpacity(0.2),
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            _getFileIconData(file),
-                            size: 24,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  file.name,
-                                  style: const TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                const SizedBox(height: 2),
-                                Text(
-                                  _formatFileSize(file.size),
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    color: Colors.grey[600],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          // Tombol hapus file
-                          InkWell(
-                            onTap: () => _removeFile(index),
-                            child: Container(
-                              padding: const EdgeInsets.all(6),
-                              decoration: BoxDecoration(
-                                color: Colors.red.withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: const Icon(
-                                Icons.close,
-                                size: 16,
-                                color: Colors.red,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  padding: EdgeInsets.only(
+                      bottom: index < _selectedFiles.length - 1 ? 8 : 0),
+                  child: _buildFilePreview(file, index, isMobile),
                 );
               }),
             ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUploadButton() {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth <= 600;
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isButtonHovered = true),
+      onExit: (_) => setState(() => _isButtonHovered = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        child: ElevatedButton.icon(
+          onPressed: _pickFiles,
+          icon: Icon(
+            Icons.upload_file,
+            size: isMobile ? 16 : 18,
+            color: _isButtonHovered
+                ? Colors.white
+                : Colors.white.withOpacity(0.9),
+          ),
+          label: Text(
+            "Pilih File",
+            style: TextStyle(
+              fontSize: isMobile ? 13 : 14,
+              fontWeight: FontWeight.w500,
+              color: _isButtonHovered
+                  ? Colors.white
+                  : Colors.white.withOpacity(0.9),
+            ),
+          ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: _isButtonHovered
+                ? Theme.of(context).primaryColor.withOpacity(0.9)
+                : Theme.of(context).primaryColor,
+            elevation: _isButtonHovered ? 4 : 2,
+            shadowColor: Theme.of(context).primaryColor.withOpacity(0.3),
+            padding: EdgeInsets.symmetric(
+              horizontal: isMobile ? 16 : 20,
+              vertical: isMobile ? 10 : 12,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            minimumSize: isMobile ? const Size.fromHeight(44) : null,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFilePreview(PlatformFile file, int index, bool isMobile) {
+    return InkWell(
+      onTap: () => _viewFile(file),
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(isMobile ? 10 : 12),
+        decoration: BoxDecoration(
+          color: Theme.of(context).primaryColor.withOpacity(0.05),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: Theme.of(context).primaryColor.withOpacity(0.2),
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              _getFileIconData(file),
+              size: isMobile ? 20 : 24,
+              color: Theme.of(context).primaryColor,
+            ),
+            SizedBox(width: isMobile ? 8 : 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    file.name,
+                    style: TextStyle(
+                      fontSize: isMobile ? 12 : 13,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    maxLines: isMobile ? 2 : 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    _formatFileSize(file.size),
+                    style: TextStyle(
+                      fontSize: isMobile ? 10 : 11,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            // Remove button
+            InkWell(
+              onTap: () => _removeFile(index),
+              borderRadius: BorderRadius.circular(4),
+              child: Container(
+                padding: EdgeInsets.all(isMobile ? 4 : 6),
+                decoration: BoxDecoration(
+                  color: Colors.red.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Icon(
+                  Icons.close,
+                  size: isMobile ? 14 : 16,
+                  color: Colors.red,
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -315,11 +367,21 @@ class _FilePreviewDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final isMobile = screenSize.width <= 600;
+    final dialogWidth = isMobile ? screenSize.width * 0.95 : screenSize.width * 0.8;
+    final dialogHeight = isMobile ? screenSize.height * 0.85 : screenSize.height * 0.8;
+
     return Dialog(
       backgroundColor: Colors.transparent,
+      insetPadding: EdgeInsets.all(isMobile ? 8 : 16),
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.8,
-        height: MediaQuery.of(context).size.height * 0.8,
+        width: dialogWidth,
+        height: dialogHeight,
+        constraints: BoxConstraints(
+          maxWidth: isMobile ? double.infinity : 800,
+          maxHeight: isMobile ? double.infinity : 600,
+        ),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
@@ -328,7 +390,7 @@ class _FilePreviewDialog extends StatelessWidget {
           children: [
             // Header
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(isMobile ? 12 : 16),
               decoration: BoxDecoration(
                 color: Theme.of(context).primaryColor.withOpacity(0.1),
                 borderRadius: const BorderRadius.only(
@@ -341,17 +403,26 @@ class _FilePreviewDialog extends StatelessWidget {
                   Expanded(
                     child: Text(
                       file.name,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.w600,
-                        fontSize: 16,
+                        fontSize: isMobile ? 14 : 16,
                       ),
-                      maxLines: 1,
+                      maxLines: isMobile ? 2 : 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
+                  const SizedBox(width: 8),
                   IconButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(Icons.close),
+                    icon: Icon(
+                      Icons.close,
+                      size: isMobile ? 20 : 24,
+                    ),
+                    padding: EdgeInsets.all(isMobile ? 4 : 8),
+                    constraints: BoxConstraints(
+                      minWidth: isMobile ? 32 : 40,
+                      minHeight: isMobile ? 32 : 40,
+                    ),
                   ),
                 ],
               ),
@@ -360,10 +431,8 @@ class _FilePreviewDialog extends StatelessWidget {
             // Content
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: _isImage
-                    ? _buildImagePreview()
-                    : _buildFileInfo(),
+                padding: EdgeInsets.all(isMobile ? 12 : 16),
+                child: _isImage ? _buildImagePreview() : _buildFileInfo(),
               ),
             ),
           ],
@@ -374,7 +443,6 @@ class _FilePreviewDialog extends StatelessWidget {
 
   Widget _buildImagePreview() {
     if (kIsWeb) {
-      // Web: gunakan file.bytes
       if (file.bytes != null) {
         return ClipRRect(
           borderRadius: BorderRadius.circular(8),
@@ -386,7 +454,6 @@ class _FilePreviewDialog extends StatelessWidget {
         );
       }
     } else {
-      // Mobile/Desktop: file.path bisa digunakan
       if (file.path != null) {
         return ClipRRect(
           borderRadius: BorderRadius.circular(8),
@@ -413,13 +480,18 @@ class _FilePreviewDialog extends StatelessWidget {
             color: Colors.grey[400],
           ),
           const SizedBox(height: 16),
-          Text(
-            file.name,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              file.name,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+              textAlign: TextAlign.center,
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
             ),
-            textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
           Text(
@@ -487,11 +559,15 @@ class _InputFieldState extends State<_InputField> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth <= 600;
+
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
+        width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           boxShadow: _isHovered || _isFocused
@@ -508,11 +584,11 @@ class _InputFieldState extends State<_InputField> {
           onFocusChange: (focused) => setState(() => _isFocused = focused),
           child: TextField(
             maxLines: widget.maxLines,
-            style: const TextStyle(fontSize: 14),
+            style: TextStyle(fontSize: isMobile ? 13 : 14),
             decoration: InputDecoration(
               labelText: widget.label,
               labelStyle: TextStyle(
-                fontSize: 14,
+                fontSize: isMobile ? 13 : 14,
                 color: _isFocused
                     ? Theme.of(context).primaryColor
                     : Colors.grey[600],
@@ -539,8 +615,8 @@ class _InputFieldState extends State<_InputField> {
                   ? Colors.grey.shade50
                   : Colors.white,
               contentPadding: EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: widget.maxLines > 1 ? 16 : 14,
+                horizontal: isMobile ? 12 : 16,
+                vertical: widget.maxLines > 1 ? (isMobile ? 12 : 16) : (isMobile ? 12 : 14),
               ),
               alignLabelWithHint: widget.maxLines > 1,
             ),
@@ -559,12 +635,18 @@ class _SectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth <= 600;
+
     return Container(
       width: double.infinity,
       margin: EdgeInsets.symmetric(
-        horizontal: MediaQuery.of(context).size.width <= 600 ? 16 : 24,
+        horizontal: isMobile ? 12 : (screenWidth <= 900 ? 20 : 24),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      padding: EdgeInsets.symmetric(
+        horizontal: isMobile ? 16 : 20,
+        vertical: isMobile ? 12 : 16,
+      ),
       decoration: BoxDecoration(
         color: Theme.of(context).primaryColor.withOpacity(0.08),
         borderRadius: BorderRadius.circular(12),
@@ -576,16 +658,20 @@ class _SectionTitle extends StatelessWidget {
         children: [
           Icon(
             icon,
-            size: 20,
+            size: isMobile ? 18 : 20,
             color: Theme.of(context).primaryColor.withOpacity(0.8),
           ),
-          const SizedBox(width: 12),
-          Text(
-            title,
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 16,
-              color: Theme.of(context).primaryColor.withOpacity(0.9),
+          SizedBox(width: isMobile ? 8 : 12),
+          Expanded(
+            child: Text(
+              title,
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: isMobile ? 14 : 16,
+                color: Theme.of(context).primaryColor.withOpacity(0.9),
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],

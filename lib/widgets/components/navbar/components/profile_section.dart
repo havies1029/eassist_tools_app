@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../blocs/authentication/authentication_bloc.dart';
 
 class ProfileSection extends StatelessWidget {
   final GlobalKey profileButtonKey;
@@ -79,15 +81,27 @@ class ProfileSection extends StatelessWidget {
               const SizedBox(width: 12),
 
               // Nama User
-              const Text(
-                'Nadya Septrijayani',
-                style: TextStyle(
-                  fontFamily: 'Satoshi-Regular',
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF2D5016),
-                ),
+              Builder(
+                builder: (context) {
+                  final state = context.read<AuthenticationBloc>().state;
+                  String name = "[Nama User]";
+                  if (state is AuthenticationAuthenticated &&
+                      state.user.custType == "C") {
+                    name = state.user.nama ?? "[Nama User]";
+                  }
+
+                  return Text(
+                    name,
+                    style: const TextStyle(
+                      color: Color(0xFF2D5016),
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Satoshi-Regular',
+                    ),
+                  );
+                },
               ),
+
 
               const SizedBox(width: 8),
 

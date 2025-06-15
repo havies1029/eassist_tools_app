@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+  import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../blocs/authentication/authentication_bloc.dart';
 
 class AppTheme {
   static const String fontFamily = 'Satoshi-Regular';
@@ -56,11 +58,9 @@ class HeroSection extends StatelessWidget {
   double get maxWidth =>
       constraints.maxWidth > 1200 ? 1200 : constraints.maxWidth * 0.95;
 
-
-
   @override
   Widget build(BuildContext context) {
-    final titleData = _getTitleData();
+    final titleData = _getTitleData(context);
     final descData = _getDescriptionData();
 
     return Padding(
@@ -85,66 +85,72 @@ class HeroSection extends StatelessWidget {
                       height: 1.2,
                     ),
                   ),
-                  TextSpan(
-                    text: titleData['normal'],
-                    style: TextStyle(
-                      fontFamily: AppTheme.fontFamily,
-                      fontSize: AppTheme.titleSize(isMobile),
-                      fontWeight: FontWeight.w400,
-                      color: AppTheme.white,
-                      height: 1.2,
+                  if (titleData['normal'] != null)
+                    TextSpan(
+                      text: titleData['normal'],
+                      style: TextStyle(
+                        fontFamily: AppTheme.fontFamily,
+                        fontSize: AppTheme.titleSize(isMobile),
+                        fontWeight: FontWeight.w400,
+                        color: AppTheme.white,
+                        height: 1.2,
+                      ),
                     ),
-                  ),
-                  TextSpan(
-                    text: titleData['bold1'],
-                    style: TextStyle(
-                      fontFamily: AppTheme.fontFamily,
-                      fontSize: AppTheme.titleSize(isMobile),
-                      fontWeight: FontWeight.w700,
-                      color: AppTheme.white,
-                      height: 1.2,
+                  if (titleData['bold1'] != null)
+                    TextSpan(
+                      text: titleData['bold1'],
+                      style: TextStyle(
+                        fontFamily: AppTheme.fontFamily,
+                        fontSize: AppTheme.titleSize(isMobile),
+                        fontWeight: FontWeight.w700,
+                        color: AppTheme.white,
+                        height: 1.2,
+                      ),
                     ),
-                  ),
-                  TextSpan(
-                    text: titleData['normal3'],
-                    style: TextStyle(
-                      fontFamily: AppTheme.fontFamily,
-                      fontSize: AppTheme.titleSize(isMobile),
-                      fontWeight: FontWeight.w400,
-                      color: AppTheme.white,
-                      height: 1.2,
+                  if (titleData['normal3'] != null)
+                    TextSpan(
+                      text: titleData['normal3'],
+                      style: TextStyle(
+                        fontFamily: AppTheme.fontFamily,
+                        fontSize: AppTheme.titleSize(isMobile),
+                        fontWeight: FontWeight.w400,
+                        color: AppTheme.white,
+                        height: 1.2,
+                      ),
                     ),
-                  ),
-                  TextSpan(
-                    text: titleData['bold3'],
-                    style: TextStyle(
-                      fontFamily: AppTheme.fontFamily,
-                      fontSize: AppTheme.titleSize(isMobile),
-                      fontWeight: FontWeight.w700,
-                      color: AppTheme.white,
-                      height: 1.2,
+                  if (titleData['bold3'] != null)
+                    TextSpan(
+                      text: titleData['bold3'],
+                      style: TextStyle(
+                        fontFamily: AppTheme.fontFamily,
+                        fontSize: AppTheme.titleSize(isMobile),
+                        fontWeight: FontWeight.w700,
+                        color: AppTheme.white,
+                        height: 1.2,
+                      ),
                     ),
-                  ),
-                  TextSpan(
-                    text: titleData['normal4'],
-                    style: TextStyle(
-                      fontFamily: AppTheme.fontFamily,
-                      fontSize: AppTheme.titleSize(isMobile),
-                      fontWeight: FontWeight.w400,
-                      color: AppTheme.white,
-                      height: 1.2,
+                  if (titleData['normal4'] != null)
+                    TextSpan(
+                      text: titleData['normal4'],
+                      style: TextStyle(
+                        fontFamily: AppTheme.fontFamily,
+                        fontSize: AppTheme.titleSize(isMobile),
+                        fontWeight: FontWeight.w400,
+                        color: AppTheme.white,
+                        height: 1.2,
+                      ),
                     ),
-                  ),
-                  TextSpan(
-                    text: titleData['bold4'],
-                    style: TextStyle(
-                      fontFamily: AppTheme.fontFamily,
-                      fontSize: AppTheme.titleSize(isMobile),
-                      fontWeight: FontWeight.w700,
-                      color: AppTheme.white,
-                      height: 1.2,
+                  if (titleData['bold4'] != null)
+                    TextSpan(
+                      text: titleData['bold4'],
+                      style: TextStyle(
+                        fontFamily: AppTheme.fontFamily,
+                        fontSize: AppTheme.titleSize(isMobile),
+                        fontWeight: FontWeight.w700,
+                        color: AppTheme.white,
+                        height: 1.2,
+                      ),
                     ),
-                  ),
                 ],
               ),
             ),
@@ -194,12 +200,22 @@ class HeroSection extends StatelessWidget {
     );
   }
 
-  // ======================
-  // DATA
-  // ======================
-
-  Map<String, String> _getTitleData() {
+  // ============================================
+  // TITLE DATA WITH BLOC INTEGRATION
+  // ============================================
+  Map<String, String> _getTitleData(BuildContext context) {
     switch (pageType) {
+      case PageType.home_client:
+        final state = context.read<AuthenticationBloc>().state;
+        String name = "[Nama User]";
+        if (state is AuthenticationAuthenticated &&
+            state.user.custType == "C") {
+          name = state.user.nama ?? "[Nama User]";
+        }
+        return {
+          'bold': 'Selamat Datang, $name !\n',
+          'normal': 'Berikut ringkasan polis Anda Hari ini:',
+        };
       case PageType.about:
         return {
           'bold': 'Mengenal JPS: ',
@@ -226,18 +242,13 @@ class HeroSection extends StatelessWidget {
           'bold': 'Jenis asuransi ',
           'normal': 'apa yang\nkamu butuhkan?',
         };
-      case PageType.home_client:
-        return {
-          'bold': 'Selamat Datang, [Nama User]! \n',
-          'normal': 'Berikut ringkasan polis Anda Hari ini:',
-        };
       case PageType.report_claim:
         return {
           'bold': 'Proses Klaim Mudah ',
           'normal': 'dan ',
           'bold1': 'Cepat\n',
-          'normal3' : 'di ',
-          'bold3' : 'JPS'
+          'normal3': 'di ',
+          'bold3': 'JPS'
         };
       case PageType.home:
       default:
@@ -290,17 +301,13 @@ class HeroSection extends StatelessWidget {
           'normal1': 'Ajukan ',
           'bold': 'klaim asuransi ',
           'normal2': 'hanya dalam beberapa langkah ',
-          'bold1' : 'pratiks. ',
-          'normal3' : 'Kami bantu pastikan prosesnya ',
-          'bold3' : 'lancar ',
-          'normal4' : 'dan ',
-          'bold4' : 'transparan.'
+          'bold1': 'pratiks. ',
+          'normal3': 'Kami bantu pastikan prosesnya ',
+          'bold3': 'lancar ',
+          'normal4': 'dan ',
+          'bold4': 'transparan.'
         };
       case PageType.user_jps:
-        return {
-          'bold': 'Asuransi aktif ',
-          'normal': 'menjamin perlindungan saat kamu membutuhkannya.',
-        };
       case PageType.user_non_jps:
         return {
           'bold': 'Asuransi aktif ',
@@ -312,9 +319,7 @@ class HeroSection extends StatelessWidget {
         };
       case PageType.home:
       default:
-        return {
-
-        };
+        return {};
     }
   }
 }

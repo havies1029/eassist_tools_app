@@ -51,12 +51,23 @@ class _HeroPageState extends State<HeroPage> {
                     Icon(Icons.check_circle_outline, color: Colors.white),
                   ),
                   Expanded(
-                    child: Text(
-                      "state is AuthenticationAuthenticated",
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
-                      ),
+                    child: Builder(
+                      builder: (context) {
+                        final state = context.read<AuthenticationBloc>().state;
+                        String name = "[Nama User]";
+                        if (state is AuthenticationAuthenticated &&
+                            state.user.custType == "C") {
+                          name = state.user.nama ?? "[Nama User]";
+                        }
+
+                        return Text(
+                          "Selamat datang, $name",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ],

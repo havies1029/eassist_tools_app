@@ -8,11 +8,11 @@ import 'package:eassist_tools_app/widgets/components/navbar/components/hamburger
 import 'package:eassist_tools_app/widgets/components/navbar/components/nav_bar.dart';
 import 'package:eassist_tools_app/widgets/components/navbar/components/profile_dropdown_content.dart';
 import 'package:eassist_tools_app/widgets/components/navbar/components/profile_section.dart';
-import 'package:eassist_tools_app/widgets/section/about/PencapaianAbout.dart';
+// import 'package:eassist_tools_app/widgets/section/about/PencapaianAbout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../blocs/authentication/authentication_bloc.dart';
+// import '../../../blocs/authentication/authentication_bloc.dart';
 import '../../../blocs/profile/rekanbank_bloc.dart';
 import '../../../blocs/profile/rekancontact_bloc.dart';
 import '../../../blocs/profile/rekangeneral_bloc.dart';

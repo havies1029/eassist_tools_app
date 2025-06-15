@@ -55,6 +55,7 @@ import 'blocs/simulcar/simulcarcrud_bloc.dart';
 import 'blocs/simulcargo/simulcargocrud_bloc.dart';
 import 'blocs/simulmb/simulmbcrud_bloc.dart';
 import 'blocs/simultree/simultreecrud_bloc.dart';
+import 'router/app_router.dart';
 
 Future<void> main() async {
 

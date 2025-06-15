@@ -27,58 +27,150 @@ class ClaimPaymentForm extends StatelessWidget {
       builder: (context, constraints) {
         final screenWidth = MediaQuery.of(context).size.width;
         final availableWidth = constraints.maxWidth;
-        final isWideScreen = availableWidth > 600;
-        final isMobile = screenWidth <= 600;
+        final isWideScreen = availableWidth > 768;
+        final isTablet = availableWidth > 600 && availableWidth <= 768;
+        final isMobile = availableWidth <= 600;
 
-        // Calculate responsive spacing
-        final horizontalPadding = isMobile ? 16.0 : 24.0;
-        final fieldSpacing = isMobile ? 16.0 : 20.0;
+        // Enhanced responsive spacing with better mobile handling
+        double getHorizontalPadding() {
+          if (isMobile) return 12.0;
+          if (isTablet) return 20.0;
+          return 24.0;
+        }
+
+        double getFieldSpacing() {
+          if (isMobile) return 16.0;
+          if (isTablet) return 18.0;
+          return 20.0;
+        }
+
+        double getRowSpacing() {
+          if (isMobile) return 12.0;
+          return 16.0;
+        }
+
+        final horizontalPadding = getHorizontalPadding();
+        final fieldSpacing = getFieldSpacing();
+        final rowSpacing = getRowSpacing();
 
         return Container(
           width: double.infinity,
+          constraints: BoxConstraints(
+            maxWidth: double.infinity,
+            minWidth: 0,
+          ),
           padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               if (isWideScreen) ...[
-                // Row 1: Nama Bank & Nomor Rekening
-                Row(
-                  children: [
-                    Expanded(
-                      child: _InputField(label: 'Nama Bank'),
-                    ),
-                    SizedBox(width: fieldSpacing),
-                    Expanded(
-                      child: _InputField(label: 'Nomor Rekening'),
-                    ),
-                  ],
+                // Desktop layout - 2 columns for bank name and account number
+                _buildTwoColumnRow([
+                  _InputField(
+                    label: 'Nama Bank',
+                    hintText: 'Pilih atau ketik nama bank',
+                    suffixIcon: Icons.keyboard_arrow_down_outlined,
+                  ),
+                  _InputField(
+                    label: 'Nomor Rekening',
+                    hintText: 'Masukkan nomor rekening',
+                    keyboardType: TextInputType.number,
+                    suffixIcon: Icons.account_balance_wallet_outlined,
+                  ),
+                ], rowSpacing),
+                SizedBox(height: fieldSpacing),
+
+                // Full width for account holder name
+                _InputField(
+                  label: 'Nama Pemilik Rekening',
+                  hintText: 'Nama sesuai dengan rekening bank',
+                  suffixIcon: Icons.person_outline,
+                ),
+              ] else if (isTablet) ...[
+                // Tablet layout - 2 columns for bank name and account number
+                _buildTwoColumnRow([
+                  _InputField(
+                    label: 'Nama Bank',
+                    hintText: 'Pilih atau ketik nama bank',
+                    suffixIcon: Icons.keyboard_arrow_down_outlined,
+                  ),
+                  _InputField(
+                    label: 'Nomor Rekening',
+                    hintText: 'Masukkan nomor rekening',
+                    keyboardType: TextInputType.number,
+                    suffixIcon: Icons.account_balance_wallet_outlined,
+                  ),
+                ], rowSpacing),
+                SizedBox(height: fieldSpacing),
+
+                _InputField(
+                  label: 'Nama Pemilik Rekening',
+                  hintText: 'Nama sesuai dengan rekening bank',
+                  suffixIcon: Icons.person_outline,
+                ),
+              ] else ...[
+                // Mobile layout - single column with enhanced spacing
+                _InputField(
+                  label: 'Nama Bank',
+                  hintText: 'Pilih atau ketik nama bank',
+                  suffixIcon: Icons.keyboard_arrow_down_outlined,
                 ),
                 SizedBox(height: fieldSpacing),
 
-                // Row 2: Nama Pemilik Rekening (full width)
-                _InputField(label: 'Nama Pemilik Rekening'),
-              ] else ...[
-                // Mobile layout - single column
-                _InputField(label: 'Nama Bank'),
+                _InputField(
+                  label: 'Nomor Rekening',
+                  hintText: 'Masukkan nomor rekening',
+                  keyboardType: TextInputType.number,
+                  suffixIcon: Icons.account_balance_wallet_outlined,
+                ),
                 SizedBox(height: fieldSpacing),
-                _InputField(label: 'Nomor Rekening'),
-                SizedBox(height: fieldSpacing),
-                _InputField(label: 'Nama Pemilik Rekening'),
+
+                _InputField(
+                  label: 'Nama Pemilik Rekening',
+                  hintText: 'Nama sesuai dengan rekening bank',
+                  suffixIcon: Icons.person_outline,
+                ),
               ],
+              // Add bottom padding for better mobile experience
+              SizedBox(height: isMobile ? 20 : 16),
             ],
           ),
         );
       },
     );
   }
+
+  Widget _buildTwoColumnRow(List<Widget> children, double spacing) {
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: children[0],
+          ),
+          SizedBox(width: spacing),
+          Expanded(
+            child: children[1],
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _InputField extends StatefulWidget {
   final String label;
+  final String? hintText;
+  final IconData? suffixIcon;
   final int maxLines;
+  final TextInputType? keyboardType;
 
   const _InputField({
     required this.label,
+    this.hintText,
+    this.suffixIcon,
     this.maxLines = 1,
+    this.keyboardType,
   });
 
   @override
@@ -88,14 +180,38 @@ class _InputField extends StatefulWidget {
 class _InputFieldState extends State<_InputField> {
   bool _isHovered = false;
   bool _isFocused = false;
+  final FocusNode _focusNode = FocusNode();
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(() {
+      setState(() {
+        _isFocused = _focusNode.hasFocus;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width <= 600;
+
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
+        constraints: const BoxConstraints(
+          minHeight: 48, // Ensure minimum touch target
+        ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           boxShadow: _isHovered || _isFocused
@@ -108,46 +224,78 @@ class _InputFieldState extends State<_InputField> {
           ]
               : null,
         ),
-        child: Focus(
-          onFocusChange: (focused) => setState(() => _isFocused = focused),
-          child: TextField(
-            maxLines: widget.maxLines,
-            style: const TextStyle(fontSize: 14),
-            decoration: InputDecoration(
-              labelText: widget.label,
-              labelStyle: TextStyle(
-                fontSize: 14,
-                color: _isFocused
-                    ? Theme.of(context).primaryColor
-                    : Colors.grey[600],
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: Colors.grey.shade300),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: Colors.grey.shade300),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
-                  color: Theme.of(context).primaryColor,
-                  width: 2,
-                ),
-              ),
-              filled: true,
-              fillColor: _isFocused
-                  ? Theme.of(context).primaryColor.withOpacity(0.05)
-                  : _isHovered
-                  ? Colors.grey.shade50
-                  : Colors.white,
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: widget.maxLines > 1 ? 16 : 14,
-              ),
-              alignLabelWithHint: widget.maxLines > 1,
+        child: TextField(
+          controller: _controller,
+          focusNode: _focusNode,
+          maxLines: widget.maxLines,
+          keyboardType: widget.keyboardType,
+          textInputAction: TextInputAction.next,
+          style: TextStyle(
+            fontSize: isMobile ? 16 : 15, // Prevent zoom on iOS
+            fontWeight: FontWeight.w400,
+            color: Colors.black87,
+          ),
+          decoration: InputDecoration(
+            labelText: widget.label,
+            hintText: widget.hintText,
+            suffixIcon: widget.suffixIcon != null
+                ? Icon(
+              widget.suffixIcon,
+              size: isMobile ? 22 : 20,
+              color: _isFocused
+                  ? Theme.of(context).primaryColor
+                  : Colors.grey[500],
+            )
+                : null,
+            labelStyle: TextStyle(
+              fontSize: isMobile ? 14 : 13,
+              fontWeight: FontWeight.w500,
+              color: _isFocused
+                  ? Theme.of(context).primaryColor
+                  : Colors.grey[600],
             ),
+            hintStyle: TextStyle(
+              fontSize: isMobile ? 14 : 13,
+              color: Colors.grey[400],
+              fontWeight: FontWeight.w400,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: Colors.grey.shade300),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: Colors.grey.shade300),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: Theme.of(context).primaryColor,
+                width: 2,
+              ),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.red, width: 1),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.red, width: 2),
+            ),
+            filled: true,
+            fillColor: _isFocused
+                ? Theme.of(context).primaryColor.withOpacity(0.05)
+                : _isHovered
+                ? Colors.grey.shade50
+                : Colors.white,
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: isMobile ? 14 : 16,
+              vertical: widget.maxLines > 1
+                  ? (isMobile ? 14 : 16)
+                  : (isMobile ? 16 : 14),
+            ),
+            alignLabelWithHint: widget.maxLines > 1,
+            isDense: false,
           ),
         ),
       ),
@@ -163,12 +311,17 @@ class _SectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width <= 600;
+
     return Container(
       width: double.infinity,
       margin: EdgeInsets.symmetric(
-        horizontal: MediaQuery.of(context).size.width <= 600 ? 16 : 24,
+        horizontal: isMobile ? 12 : 24,
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      padding: EdgeInsets.symmetric(
+        horizontal: isMobile ? 16 : 20,
+        vertical: isMobile ? 14 : 16,
+      ),
       decoration: BoxDecoration(
         color: Theme.of(context).primaryColor.withOpacity(0.08),
         borderRadius: BorderRadius.circular(12),
@@ -180,16 +333,20 @@ class _SectionTitle extends StatelessWidget {
         children: [
           Icon(
             icon,
-            size: 20,
+            size: isMobile ? 18 : 20,
             color: Theme.of(context).primaryColor.withOpacity(0.8),
           ),
-          const SizedBox(width: 12),
-          Text(
-            title,
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 16,
-              color: Theme.of(context).primaryColor.withOpacity(0.9),
+          SizedBox(width: isMobile ? 10 : 12),
+          Expanded(
+            child: Text(
+              title,
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: isMobile ? 15 : 16,
+                color: Theme.of(context).primaryColor.withOpacity(0.9),
+              ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
             ),
           ),
         ],

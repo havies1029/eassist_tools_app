@@ -28,103 +28,171 @@ class IncidentDetailForm extends StatelessWidget {
       builder: (context, constraints) {
         final screenWidth = MediaQuery.of(context).size.width;
         final availableWidth = constraints.maxWidth;
-        final isWideScreen = availableWidth > 600;
-        final isMobile = screenWidth <= 600;
+        final isWideScreen = availableWidth > 768;
+        final isTablet = availableWidth > 600 && availableWidth <= 768;
+        final isMobile = availableWidth <= 600;
 
-        // Calculate responsive spacing
-        final horizontalPadding = isMobile ? 16.0 : 24.0;
-        final fieldSpacing = isMobile ? 16.0 : 20.0;
+        // Enhanced responsive spacing with better mobile handling
+        double getHorizontalPadding() {
+          if (isMobile) return 12.0;
+          if (isTablet) return 20.0;
+          return 24.0;
+        }
+
+        double getFieldSpacing() {
+          if (isMobile) return 16.0;
+          if (isTablet) return 18.0;
+          return 20.0;
+        }
+
+        double getRowSpacing() {
+          if (isMobile) return 12.0;
+          return 16.0;
+        }
+
+        final horizontalPadding = getHorizontalPadding();
+        final fieldSpacing = getFieldSpacing();
+        final rowSpacing = getRowSpacing();
 
         return Container(
           width: double.infinity,
+          constraints: BoxConstraints(
+            maxWidth: double.infinity,
+            minWidth: 0,
+          ),
           padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               if (isWideScreen) ...[
-                // Row 1: Tanggal Kejadian & Waktu
-                Row(
-                  children: [
-                    Expanded(
-                      child: _InputField(
-                        label: 'Tanggal Kejadian',
-                        hintText: 'hh/bb/tttt',
-                        suffixIcon: Icons.calendar_today_outlined,
-                      ),
-                    ),
-                    SizedBox(width: fieldSpacing),
-                    Expanded(
-                      child: _InputField(
-                        label: 'Waktu',
-                        hintText: 'hh:mm',
-                        suffixIcon: Icons.access_time_outlined,
-                      ),
-                    ),
-                  ],
+                // Desktop layout - 2 columns
+                _buildTwoColumnRow([
+                  _InputField(
+                    label: 'Tanggal Kejadian',
+                    hintText: 'dd/mm/yyyy',
+                    suffixIcon: Icons.calendar_today_outlined,
+                  ),
+                  _InputField(
+                    label: 'Waktu',
+                    hintText: 'hh:mm',
+                    suffixIcon: Icons.access_time_outlined,
+                  ),
+                ], rowSpacing),
+                SizedBox(height: fieldSpacing),
+
+                _buildTwoColumnRow([
+                  _InputField(
+                    label: 'Lokasi Kejadian',
+                    suffixIcon: Icons.location_on_outlined,
+                  ),
+                  _InputField(
+                    label: 'Estimasi Nilai Kerugian',
+                    hintText: 'Masukkan nominal',
+                    prefixText: 'Rp ',
+                    keyboardType: TextInputType.number,
+                  ),
+                ], rowSpacing),
+                SizedBox(height: fieldSpacing),
+
+                _InputField(
+                  label: 'Deskripsi Kejadian',
+                  maxLines: 4,
+                  suffixIcon: Icons.description_outlined,
+                ),
+              ] else if (isTablet) ...[
+                // Tablet layout - mixed layout
+                _buildTwoColumnRow([
+                  _InputField(
+                    label: 'Tanggal Kejadian',
+                    hintText: 'dd/mm/yyyy',
+                    suffixIcon: Icons.calendar_today_outlined,
+                  ),
+                  _InputField(
+                    label: 'Waktu',
+                    hintText: 'hh:mm',
+                    suffixIcon: Icons.access_time_outlined,
+                  ),
+                ], rowSpacing),
+                SizedBox(height: fieldSpacing),
+
+                _InputField(
+                  label: 'Lokasi Kejadian',
+                  suffixIcon: Icons.location_on_outlined,
                 ),
                 SizedBox(height: fieldSpacing),
 
-                // Row 2: Lokasi Kejadian & Estimasi Nilai Kerugian
-                Row(
-                  children: [
-                    Expanded(
-                      child: _InputField(
-                        label: 'Lokasi Kejadian',
-                        suffixIcon: Icons.location_on_outlined,
-                      ),
-                    ),
-                    SizedBox(width: fieldSpacing),
-                    Expanded(
-                      child: _InputField(
-                        label: 'Estimasi Nilai Kerugian',
-                        hintText: 'Rp',
-                        prefixText: 'Rp ',
-                      ),
-                    ),
-                  ],
+                _InputField(
+                  label: 'Estimasi Nilai Kerugian',
+                  hintText: 'Masukkan nominal',
+                  prefixText: 'Rp ',
+                  keyboardType: TextInputType.number,
                 ),
                 SizedBox(height: fieldSpacing),
 
-                // Row 3: Deskripsi Kejadian (full width)
                 _InputField(
                   label: 'Deskripsi Kejadian',
                   maxLines: 4,
                   suffixIcon: Icons.description_outlined,
                 ),
               ] else ...[
-                // Mobile layout - single column
+                // Mobile layout - single column with enhanced spacing
                 _InputField(
                   label: 'Tanggal Kejadian',
-                  hintText: 'hh/bb/tttt',
+                  hintText: 'dd/mm/yyyy',
                   suffixIcon: Icons.calendar_today_outlined,
                 ),
                 SizedBox(height: fieldSpacing),
+
                 _InputField(
                   label: 'Waktu',
                   hintText: 'hh:mm',
                   suffixIcon: Icons.access_time_outlined,
                 ),
                 SizedBox(height: fieldSpacing),
+
                 _InputField(
                   label: 'Lokasi Kejadian',
                   suffixIcon: Icons.location_on_outlined,
                 ),
                 SizedBox(height: fieldSpacing),
+
                 _InputField(
                   label: 'Estimasi Nilai Kerugian',
-                  hintText: 'Rp',
+                  hintText: 'Masukkan nominal',
                   prefixText: 'Rp ',
+                  keyboardType: TextInputType.number,
                 ),
                 SizedBox(height: fieldSpacing),
+
                 _InputField(
                   label: 'Deskripsi Kejadian',
-                  maxLines: 4,
+                  maxLines: 3, // Slightly smaller on mobile
                   suffixIcon: Icons.description_outlined,
                 ),
               ],
+              // Add bottom padding for better mobile experience
+              SizedBox(height: isMobile ? 20 : 16),
             ],
           ),
         );
       },
+    );
+  }
+
+  Widget _buildTwoColumnRow(List<Widget> children, double spacing) {
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: children[0],
+          ),
+          SizedBox(width: spacing),
+          Expanded(
+            child: children[1],
+          ),
+        ],
+      ),
     );
   }
 }
@@ -135,6 +203,7 @@ class _InputField extends StatefulWidget {
   final String? prefixText;
   final IconData? suffixIcon;
   final int maxLines;
+  final TextInputType? keyboardType;
 
   const _InputField({
     required this.label,
@@ -142,6 +211,7 @@ class _InputField extends StatefulWidget {
     this.prefixText,
     this.suffixIcon,
     this.maxLines = 1,
+    this.keyboardType,
   });
 
   @override
@@ -152,6 +222,7 @@ class _InputFieldState extends State<_InputField> {
   bool _isHovered = false;
   bool _isFocused = false;
   final FocusNode _focusNode = FocusNode();
+  final TextEditingController _controller = TextEditingController();
 
   @override
   void initState() {
@@ -166,16 +237,22 @@ class _InputFieldState extends State<_InputField> {
   @override
   void dispose() {
     _focusNode.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width <= 600;
+
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
+        constraints: const BoxConstraints(
+          minHeight: 48, // Ensure minimum touch target
+        ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           boxShadow: _isHovered || _isFocused
@@ -189,10 +266,13 @@ class _InputFieldState extends State<_InputField> {
               : null,
         ),
         child: TextField(
+          controller: _controller,
           focusNode: _focusNode,
           maxLines: widget.maxLines,
-          style: const TextStyle(
-            fontSize: 15,
+          keyboardType: widget.keyboardType,
+          textInputAction: widget.maxLines > 1 ? TextInputAction.newline : TextInputAction.next,
+          style: TextStyle(
+            fontSize: isMobile ? 16 : 15, // Prevent zoom on iOS
             fontWeight: FontWeight.w400,
             color: Colors.black87,
           ),
@@ -203,26 +283,26 @@ class _InputFieldState extends State<_InputField> {
             suffixIcon: widget.suffixIcon != null
                 ? Icon(
               widget.suffixIcon,
-              size: 20,
+              size: isMobile ? 22 : 20,
               color: _isFocused
                   ? Theme.of(context).primaryColor
                   : Colors.grey[500],
             )
                 : null,
             labelStyle: TextStyle(
-              fontSize: 14,
+              fontSize: isMobile ? 14 : 13,
               fontWeight: FontWeight.w500,
               color: _isFocused
                   ? Theme.of(context).primaryColor
                   : Colors.grey[600],
             ),
             hintStyle: TextStyle(
-              fontSize: 14,
+              fontSize: isMobile ? 14 : 13,
               color: Colors.grey[400],
               fontWeight: FontWeight.w400,
             ),
             prefixStyle: TextStyle(
-              fontSize: 15,
+              fontSize: isMobile ? 16 : 15,
               color: Colors.grey[600],
               fontWeight: FontWeight.w500,
             ),
@@ -256,10 +336,13 @@ class _InputFieldState extends State<_InputField> {
                 ? Colors.grey.shade50
                 : Colors.white,
             contentPadding: EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: widget.maxLines > 1 ? 16 : 14,
+              horizontal: isMobile ? 14 : 16,
+              vertical: widget.maxLines > 1
+                  ? (isMobile ? 14 : 16)
+                  : (isMobile ? 16 : 14),
             ),
             alignLabelWithHint: widget.maxLines > 1,
+            isDense: false,
           ),
         ),
       ),
@@ -275,12 +358,17 @@ class _SectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width <= 600;
+
     return Container(
       width: double.infinity,
       margin: EdgeInsets.symmetric(
-        horizontal: MediaQuery.of(context).size.width <= 600 ? 16 : 24,
+        horizontal: isMobile ? 12 : 24,
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      padding: EdgeInsets.symmetric(
+        horizontal: isMobile ? 16 : 20,
+        vertical: isMobile ? 14 : 16,
+      ),
       decoration: BoxDecoration(
         color: Theme.of(context).primaryColor.withOpacity(0.08),
         borderRadius: BorderRadius.circular(12),
@@ -292,16 +380,20 @@ class _SectionTitle extends StatelessWidget {
         children: [
           Icon(
             icon,
-            size: 20,
+            size: isMobile ? 18 : 20,
             color: Theme.of(context).primaryColor.withOpacity(0.8),
           ),
-          const SizedBox(width: 12),
-          Text(
-            title,
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 16,
-              color: Theme.of(context).primaryColor.withOpacity(0.9),
+          SizedBox(width: isMobile ? 10 : 12),
+          Expanded(
+            child: Text(
+              title,
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: isMobile ? 15 : 16,
+                color: Theme.of(context).primaryColor.withOpacity(0.9),
+              ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
             ),
           ),
         ],

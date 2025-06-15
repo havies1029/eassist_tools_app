@@ -2,6 +2,8 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../blocs/authentication/authentication_bloc.dart';
 
 
 class EnhancedHoverButton extends StatefulWidget {
@@ -127,6 +129,9 @@ class _EnhancedHoverButtonState extends State<EnhancedHoverButton>
 
   @override
   Widget build(BuildContext context) {
+    final state = context.read<AuthenticationBloc>().state;
+    final bool isClient = state is AuthenticationAuthenticated &&
+        state.user.custType == "C";
     return AnimatedBuilder(
       animation: Listenable.merge([
         _hoverController,
@@ -167,6 +172,7 @@ class _EnhancedHoverButtonState extends State<EnhancedHoverButton>
                       ),
                   ],
                 ),
+
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -184,21 +190,24 @@ class _EnhancedHoverButtonState extends State<EnhancedHoverButton>
                       ),
                     ),
                     const SizedBox(width: 8.0),
-                    Flexible(
-                      child: Text(
-                        widget.isLogin ? 'Masuk' : 'Daftar Client',
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontFamily: 'Satoshi-Regular',
-                          color: widget.isLogin
-                              ? const Color(0xFF79AB43)
-                              : Colors.white,
-                          fontWeight:
-                          _isHovered ? FontWeight.w600 : FontWeight.w500,
-                          fontSize: 16.0,
+
+                    // Hanya tampilkan teks jika bukan client atau tombol login
+                    if (!(isClient && !widget.isLogin))
+                      Flexible(
+                        child: Text(
+                          widget.isLogin ? 'Masuk' : 'Daftar Client',
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontFamily: 'Satoshi-Regular',
+                            color: widget.isLogin
+                                ? const Color(0xFF79AB43)
+                                : Colors.white,
+                            fontWeight:
+                            _isHovered ? FontWeight.w600 : FontWeight.w500,
+                            fontSize: 16.0,
+                          ),
                         ),
                       ),
-                    ),
                   ],
                 ),
               ),
