@@ -62,6 +62,7 @@ class AuthenticationBloc
       final user = await userRepository.getUserByToken(token);
 
       AppData.user = user;
+      AppData.userToken = token;
 
       //emit(AuthenticatioTokenAuthenticated(user: user));
       emit(AuthenticationAuthenticated(

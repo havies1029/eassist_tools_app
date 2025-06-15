@@ -21,18 +21,18 @@ DropdownSearch<ComboMPropinsiModel> buildFieldComboMPropinsi({
 			),
 		),
 			items: (filter, infiniteScrollProps) async {
-				return ComboMPropinsiRepository().getComboMPropinsi();
+				return ComboMPropinsiRepository().getComboMPropinsi(filter);
 			},
 			suffixProps: const DropdownSuffixProps(clearButtonProps: ClearButtonProps(isVisible: false)),
 			popupProps: const PopupPropsMultiSelection.modalBottomSheet(
 				disableFilter: false,
 				showSelectedItems: true,
-				showSearchBox: false,
+				showSearchBox: true,
 				itemBuilder: itemBuilderComboMPropinsi,
 			),
 			compareFn: (item, sItem) => item.mpropinsiId == sItem.mpropinsiId,
 			itemAsString: (item) {
-				return item.mnegaraId;
+				return item.propinsiNama;
 			},
 			onChanged: (value) {
 				if (onChangedCallback != null) {
@@ -67,7 +67,7 @@ Widget itemBuilderComboMPropinsi(
 			),
 		child: ListTile(
 			selected: isSelected,
-			title: Text(item.mnegaraId),
+			title: Text(item.propinsiNama),
 		),
 	);
 }

@@ -283,6 +283,7 @@ class _RekanPajakFormBodyState extends State<RekanPajakFormBody> {
   Widget buildFieldMkotaId() {
     return buildFieldComboMKota(
       labelText: 'mkotaId',
+      propinsiId: "",
       initItem: fieldComboMKota,
       onChangedCallback: (value) {
         if (value != null) {
@@ -330,6 +331,7 @@ class _RekanPajakFormBodyState extends State<RekanPajakFormBody> {
     return buildFieldComboRKodepos(
       labelText: 'rkodeposId',
       initItem: fieldComboRKodepos,
+      kotaId: "",
       onChangedCallback: (value) {
         if (value != null) {
           _removeError("Field ComboRKodepos tidak boleh kosong.");

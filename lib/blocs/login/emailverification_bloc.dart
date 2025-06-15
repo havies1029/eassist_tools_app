@@ -34,13 +34,11 @@ class EmailVerificationBloc
     returnData = await repository.emailVerificationTambah(event.record);
     hasFailure = !returnData.success;
     List<String> errors = [];
-    
+
     if (!hasFailure) {
-      
       List<String> infoData = returnData.data.split(";");
 
       if ((infoData[0] == '1') || (infoData[0] == '3')) {
-
         Token token = Token.split(event.record.email, infoData[1]);
 
         UserRepository userRepository = UserRepository();
@@ -54,27 +52,26 @@ class EmailVerificationBloc
         );
 
         AppData.user = user;
+        AppData.userToken = token.token!;
 
         if (state.isSimpanPassword) {
           userRepository.persistToken(userToken: token.token!);
-        }      
+        }
 
         authenticationBloc.add(UserAuthenticated(user: user));
-
       } else if (infoData[0] == '2') {
         event.record.requestId = infoData[1];
         authenticationBloc
-          .add(RequirePinEmailVerification(email: event.record.email));
-      }      
-    }
-    else if (returnData.data.isNotEmpty) {
+            .add(RequirePinEmailVerification(email: event.record.email));
+      }
+    } else if (returnData.data.isNotEmpty) {
       List<String> infoData = returnData.data.split(";");
-      if (infoData[0] == '9') {        
-        errors.add(infoData[1]);        
+      if (infoData[0] == '9') {
+        errors.add(infoData[1]);
 
-        authenticationBloc
-          .add(RequireLoginClient(requiredFrom: "bloc_email_verification", errorMsg: infoData[1]));
-      } 
+        authenticationBloc.add(RequireLoginClient(
+            requiredFrom: "bloc_email_verification", errorMsg: infoData[1]));
+      }
     }
 
     debugPrint("onTambahEmailVerification returnData: ${returnData.data}");
@@ -85,7 +82,6 @@ class EmailVerificationBloc
       record: event.record,
       errors: errors,
     ));
-   
   }
 
   Future<void> onValidasiPinEmail(
@@ -120,7 +116,7 @@ class EmailVerificationBloc
 
       if (state.isSimpanPassword) {
         userRepository.persistToken(userToken: token.token!);
-      }      
+      }
 
       authenticationBloc.add(UserAuthenticated(user: user));
     } else {
@@ -133,10 +129,11 @@ class EmailVerificationBloc
   Future<void> onFieldSimpanPasswordChangedEvent(
       FieldSimpanPasswordChangedEvent event,
       Emitter<EmailVerificationState> emit) async {
-    
-    debugPrint("onFieldSimpanPasswordChangedEvent event: ${event.isSimpanPassword}");
+    debugPrint(
+        "onFieldSimpanPasswordChangedEvent event: ${event.isSimpanPassword}");
     emit(state.copyWith(isSimpanPassword: event.isSimpanPassword));
-    
-    debugPrint("onFieldSimpanPasswordChangedEvent state: ${state.isSimpanPassword}");
+
+    debugPrint(
+        "onFieldSimpanPasswordChangedEvent state: ${state.isSimpanPassword}");
   }
 }

@@ -511,6 +511,7 @@ class RekanContactFormPageFormState extends State<RekanContactFormPage> {
 		return buildFieldComboMKota(
 			labelText: 'mkotaId',
 			initItem: fieldComboMKota,
+      propinsiId: "",
 			onChangedCallback: (value) {
 				if (value != null) {
 					removeError(
@@ -588,6 +589,7 @@ class RekanContactFormPageFormState extends State<RekanContactFormPage> {
 		return buildFieldComboRKodepos(
 			labelText: 'rkodeposId',
 			initItem: fieldComboRKodepos,
+      kotaId: "",
 			onChangedCallback: (value) {
 				if (value != null) {
 					removeError(

@@ -10,12 +10,11 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserRepository {
-
   Future<User> authenticate({
     String? username,
     String? password,
   }) async {
-    UserLogin userLogin = UserLogin(username: username, password: password);    
+    UserLogin userLogin = UserLogin(username: username, password: password);
     LoginApi loginApi = LoginApi();
     User user = await loginApi.validateUserLoginAPI(userLogin);
 
@@ -26,7 +25,6 @@ class UserRepository {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('user_token', userToken);
   }
-  
 
   Future<void> deleteToken({required int id}) async {
     final prefs = await SharedPreferences.getInstance();
@@ -36,7 +34,7 @@ class UserRepository {
   Future<String> getToken() async {
     final prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('user_token');
-    return token?? "";	
+    return token ?? "";
   }
 
   Future<bool> updateUser(User user) async {
@@ -45,12 +43,12 @@ class UserRepository {
     bool isValid = await updateUserProfile(user);
 
     AppData.user = user;
+    AppData.userToken = user.token!;
 
     return isValid;
   }
 
-
-  Future<void> uploadFotoProfile(File fileFoto) async {    
+  Future<void> uploadFotoProfile(File fileFoto) async {
     await uploadImage2API(fileFoto.path);
   }
 
@@ -59,5 +57,5 @@ class UserRepository {
     LoginApi loginApi = LoginApi();
     User user = await loginApi.getUserByTokenAPI(token);
     return user;
-  } 
+  }
 }

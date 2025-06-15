@@ -2,6 +2,7 @@ import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart'
 import 'package:eassist_tools_app/pages/about_jps/action_about_section.dart';
 import 'package:eassist_tools_app/pages/find_insurance/find_section_insurance.dart';
 import 'package:eassist_tools_app/pages/find_insurance/floating_buttons_insurance.dart';
+import 'package:eassist_tools_app/pages/gen_profile/test_profile_page.dart';
 import 'package:eassist_tools_app/pages/heropage/fixed_nambar_overlay.dart';
 import 'package:eassist_tools_app/widgets/section/carousel_section.dart';
 import 'package:eassist_tools_app/widgets/section/client_section.dart';
@@ -80,6 +81,25 @@ class _HeroPageState extends State<HeroPage> {
                           if (state.user.custType == "C") {
                             return Text(
                                 'Username : ${state.user.username ?? "???"}');
+                          }
+                        }
+                        return Container();
+                      }),
+                      BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                          builder: (context, state) {
+                        if (state is AuthenticationAuthenticated) {
+                          if (state.user.custType == "C") {
+                            return TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          TestProfilePage()),
+                                );
+                              },
+                              child: Text("Form Profile"),
+                            );
                           }
                         }
                         return Container();

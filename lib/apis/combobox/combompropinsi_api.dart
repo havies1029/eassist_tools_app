@@ -5,10 +5,11 @@ import 'package:eassist_tools_app/models/combobox/combompropinsi_model.dart';
 
 class ComboMPropinsiAPI {
 
-	Future<List<ComboMPropinsiModel>> getComboMPropinsiAPI() async {
+	Future<List<ComboMPropinsiModel>> getComboMPropinsiAPI(String filter) async {
+    Map<String, String> queryParams = {"filter": filter};
 		String urlGetComboEndPoint = "${AppData.prefixEndPoint}/api/mpropinsicombobox/getlist";
 
-		var uri = AppData.uriHtpp(AppData.httpAuthority, urlGetComboEndPoint);
+		var uri = AppData.uriHtpp(AppData.httpAuthority, urlGetComboEndPoint, queryParams);
 		final http.Response response = await http.get(uri, headers: <String, String>{
 			'Content-Type': 'application/json; odata=verbos',
 			'Accept': 'application/json; odata=verbos',

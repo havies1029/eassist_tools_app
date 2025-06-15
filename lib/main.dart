@@ -3,6 +3,9 @@ import 'package:eassist_tools_app/blocs/chatting/guestscrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/gallery/galleryeventcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gallery/gallerymembercari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gallery/gallerytestimonycari_bloc.dart';
+import 'package:eassist_tools_app/blocs/gen_profile/mrekancontactcrud_bloc.dart';
+import 'package:eassist_tools_app/blocs/gen_profile/mrekangeneralcmpcrud_bloc.dart';
+import 'package:eassist_tools_app/blocs/gen_profile/mrekangeneralidvcrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaim/klaim1list_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaim/klaim2list_bloc.dart';
 import 'package:eassist_tools_app/blocs/login/change_password_bloc.dart';
@@ -27,6 +30,9 @@ import 'package:eassist_tools_app/blocs/takeimage/takeimage_cubit.dart';
 import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:eassist_tools_app/pages/heropage/hero_main.dart';
 import 'package:eassist_tools_app/repositories/chatting/guestscrud_repository.dart';
+import 'package:eassist_tools_app/repositories/gen_profile/mrekancontactcrud_repository.dart';
+import 'package:eassist_tools_app/repositories/gen_profile/mrekangeneralcmpcrud_repository.dart';
+import 'package:eassist_tools_app/repositories/gen_profile/mrekangeneralidvcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/login/change_password_repository.dart';
 import 'package:eassist_tools_app/repositories/login/emailverification_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/rekancontact_repository.dart';
@@ -176,7 +182,16 @@ class App extends StatelessWidget {
               GallerymemberCariBloc()),        
         BlocProvider<RegUserBloc>(
             create: (context) =>
-                RegUserBloc(repository: RegUserRepository(), authenticationBloc: BlocProvider.of<AuthenticationBloc>(context))),        
+                RegUserBloc(repository: RegUserRepository(), authenticationBloc: BlocProvider.of<AuthenticationBloc>(context))),   
+        BlocProvider<MRekanGeneralCmpCrudBloc>(
+          create: (context) => MRekanGeneralCmpCrudBloc(repository: MRekanGeneralCmpCrudRepository()),
+        ),
+        BlocProvider<MRekanGeneralIdvCrudBloc>(
+          create: (context) => MRekanGeneralIdvCrudBloc(repository: MRekanGeneralIdvCrudRepository()),
+        ),  
+        BlocProvider<MRekanContactCrudBloc>(
+          create: (context) => MRekanContactCrudBloc(repository: MRekanContactCrudRepository()),
+        ), 
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

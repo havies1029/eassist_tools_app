@@ -391,6 +391,7 @@ class RekanPajakFormPageFormState extends State<RekanPajakFormPage> {
 		return buildFieldComboMKota(
 			labelText: 'mkotaId',
 			initItem: fieldComboMKota,
+      propinsiId: "",
 			onChangedCallback: (value) {
 				if (value != null) {
 					removeError(error: "Field ComboMKota tidak boleh kosong.");
@@ -437,6 +438,7 @@ class RekanPajakFormPageFormState extends State<RekanPajakFormPage> {
 		return buildFieldComboRKodepos(
 			labelText: 'rkodeposId',
 			initItem: fieldComboRKodepos,
+      kotaId: "",
 			onChangedCallback: (value) {
 				if (value != null) {
 					removeError(error: "Field ComboRKodepos tidak boleh kosong.");

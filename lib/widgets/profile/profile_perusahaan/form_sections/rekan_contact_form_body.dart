@@ -340,6 +340,7 @@ class _RekanContactFormBodyState extends State<RekanContactFormBody> {
     return buildFieldComboMKota(
       labelText: 'mkotaId',
       initItem: fieldComboMKota,
+      propinsiId: "",
       onChangedCallback: (value) {
         if (value != null) {
           _removeError("Field ComboMKota tidak boleh kosong.");
@@ -387,6 +388,7 @@ class _RekanContactFormBodyState extends State<RekanContactFormBody> {
     return buildFieldComboRKodepos(
       labelText: 'rkodeposId',
       initItem: fieldComboRKodepos,
+      kotaId: "",
       onChangedCallback: (value) {
         if (value != null) {
           _removeError("Field ComboRKodepos tidak boleh kosong.");
