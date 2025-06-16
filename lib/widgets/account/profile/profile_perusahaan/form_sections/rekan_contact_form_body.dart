@@ -362,7 +362,7 @@ class _RekanContactFormBodyState extends State<RekanContactFormBody> {
       },
       validatorCallback: (value) {
         if (value == null) _addError("Field ComboMKota tidak boleh kosong.");
-      },
+      }, propinsiId: '',
     )
         : _buildDisabledDropdown(
       text: fieldComboMKota?.kotaDesc ?? '-',
@@ -408,7 +408,7 @@ class _RekanContactFormBodyState extends State<RekanContactFormBody> {
       },
       validatorCallback: (value) {
         if (value == null) _addError("Field Kode tidak boleh kosong.");
-      },
+      }, kotaId: '',
     )
         : _buildDisabledDropdown(
       text: fieldComboRKodepos?.kodeposNo ?? '-',

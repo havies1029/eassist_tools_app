@@ -307,7 +307,7 @@ class _RekanPajakFormBodyState extends State<RekanPajakFormBody> {
       },
       validatorCallback: (value) {
         if (value == null) _addError("Field ComboMKota tidak boleh kosong.");
-      },
+      }, propinsiId: '',
     )
         : _buildDisabledDropdown(
       text: fieldComboMKota?.kotaDesc ?? '-',
@@ -354,7 +354,7 @@ class _RekanPajakFormBodyState extends State<RekanPajakFormBody> {
       },
       validatorCallback: (value) {
         if (value == null) _addError("Field ComboRKodepos tidak boleh kosong.");
-      },
+      }, kotaId: '',
     )
         : _buildDisabledDropdown(
       text: fieldComboRKodepos?.kodeposNo ?? '-',

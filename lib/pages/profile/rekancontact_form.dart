@@ -530,7 +530,7 @@ class RekanContactFormPageFormState extends State<RekanContactFormPage> {
 						error: "Field ComboMKota tidak boleh kosong.",
 					);
 				}
-			},
+			}, propinsiId: '',
 		);
 	}
 
@@ -607,7 +607,7 @@ class RekanContactFormPageFormState extends State<RekanContactFormPage> {
 						error: "Field ComboRKodepos tidak boleh kosong.",
 					);
 				}
-			},
+			}, kotaId: '',
 		);
 	}
 

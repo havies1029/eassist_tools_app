@@ -406,7 +406,7 @@ class RekanPajakFormPageFormState extends State<RekanPajakFormPage> {
 				if (value == null) {
 					addError(error: "Field ComboMKota tidak boleh kosong.");
 				}
-			},
+			}, propinsiId: '',
 		);
 	}
 
@@ -452,7 +452,7 @@ class RekanPajakFormPageFormState extends State<RekanPajakFormPage> {
 				if (value == null) {
 					addError(error: "Field ComboRKodepos tidak boleh kosong.");
 				}
-			},
+			}, kotaId: '',
 		);
 	}
 }
