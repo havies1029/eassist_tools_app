@@ -1,6 +1,5 @@
 import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
 import '../../repositories/user/user_repository.dart';
-import '../../widgets/section/about/PencapaianAbout.dart';
 import '../../widgets/section/homepage/hero_section_heropage.dart';
 import '../../widgets/components/action/action_section.dart';
 import '../../widgets/components/carousel/carousel_section.dart';
@@ -110,20 +109,19 @@ class _HeroPageState extends State<HeroPage> {
                     const EdgeInsets.only(top: 88), // ruang untuk navbar
                     child: Column(
                       children: [
-                        BlocBuilder<AuthenticationBloc, AuthenticationState>(
-                            builder: (context, state) {
-                              if (state is AuthenticationAuthenticated) {
-                                if (state.user.custType == "C") {
-                                  return Text(
-                                      'Username : ${state.user.username ?? "???"}');
-                                }
-                              }
-                              return Container();
-                            }),
+                        // BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                        //     builder: (context, state) {
+                        //       if (state is AuthenticationAuthenticated) {
+                        //         if (state.user.custType == "C") {
+                        //           return Text(
+                        //               'Username : ${state.user.username ?? "???"}');
+                        //         }
+                        //       }
+                        //       return Container();
+                        //     }),
                         HeroSection(constraints: constraints),
                         FloatingButtons(constraints: constraints),
                         ActionSection(constraints: constraints),
-                        PencapaianSection(constraints: constraints),
                         CarouselSection(constraints: constraints),
                         FeatureSection(constraints: constraints),
                         TestimonialSection(constraints: constraints),

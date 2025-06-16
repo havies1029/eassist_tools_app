@@ -1,5 +1,6 @@
 // ganti nama menjadi StatusPopup
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../pages/user_jps/user_jps_main.dart';
 import '../../../pages/user_non_jps/user_non_jps_main.dart';
 
@@ -77,12 +78,13 @@ class _StatusPopupState extends State<StatusPopup>
       _overlayController.reverse().then((_) {
         if (mounted) {
           Navigator.of(context).pop();
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (_) => isJpsUser ? const UserJpsMain() : const UserNonJpsMain(),
-            ),
-          );
+          Future.microtask(() {
+            if (isJpsUser) {
+              context.go('/user_jps');
+            } else {
+              context.go('/user_non_jps');
+            }
+          });
         }
       });
     });

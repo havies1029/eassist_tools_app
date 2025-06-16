@@ -3,6 +3,7 @@ import 'package:eassist_tools_app/common/constants.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' show pi;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import 'testimonial_page.dart';
 import '../../../pages/testimony_page/testimony_main.dart';
@@ -100,15 +101,16 @@ class TestimonialSectionState extends State<TestimonialSection> {
                       );
                     }
                 ),
-                const SizedBox(height: 20.0),
+                const SizedBox(height: 30.0),
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const TestimonyMain()),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(builder: (context) => const TestimonyMain()),
+                      // );
+                      context.go('/testimony');
                     },
                     child: Text(
                       'Tampilkan semua',

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'dart:math' show pi;
 
 import 'package:shared_preferences/shared_preferences.dart';    // ← import SharedPreferences
@@ -69,6 +70,10 @@ class _HeroMainState extends State<HeroMain> {
             // }
             else if (state is AuthenticationRequireLoginClient) {
               debugPrint("AuthenticationRequireLoginClient");
+              if (Navigator.of(context, rootNavigator: true).canPop()) {
+                Navigator.of(context, rootNavigator: true).pop();
+                await Future.delayed(const Duration(milliseconds: 100)); // beri waktu popup menutup
+              }
 
               if (state.requiredFrom == "bloc_email_verification") {
                 debugPrint("sudah terdaftar di client, dialihkan ke form login client");
@@ -143,17 +148,16 @@ class _HeroMainState extends State<HeroMain> {
                 Navigator.of(context).pop();
               }
 
-              if (state.authenticatedFrom == "login_user") {
-                debugPrint("Navigate to HeroMain");
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (_) => const HeroMain()),
-                );
-              } else if (state.authenticatedFrom == "login_client") {
-                debugPrint("Navigate to HeroUserMain");
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (_) => const HeroUserMain()),
-                );
-              }
+              // Navigasi aman menggunakan Future.microtask
+              Future.microtask(() {
+                if (state.authenticatedFrom == "login_user") {
+                  debugPrint("Navigate to HeroMain");
+                  context.go('/hero');
+                } else if (state.authenticatedFrom == "login_client") {
+                  debugPrint("Navigate to HeroUserMain");
+                  context.go('/hero_user');
+                }
+              });
             }
           },
         ),

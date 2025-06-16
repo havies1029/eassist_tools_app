@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import '../../dialog/popup/status_popup.dart';
 import 'decorations/AnimatedHoverActionButton.dart';
 
 class ActionSection extends StatefulWidget {
@@ -356,19 +358,28 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
   Widget _buildActionCTAs() {
     final children = [
       AnimatedHoverActionButton(
-        onPressed: () {},
+        onPressed: () {
+          context.go('/find_insurance');
+        },
         text: 'Cari Asuransi',
         icon: Icons.search,
         isPrimary: true,
         delay: const Duration(milliseconds: 0),
       ),
       AnimatedHoverActionButton(
-        onPressed: () {},
+        onPressed: () {
+          showDialog(
+            context: context,
+            barrierColor: Colors.black54,
+            builder: (_) => const StatusPopup(),
+          );
+        },
         text: 'Lapor Klaim',
         icon: Icons.open_in_new,
         isPrimary: false,
         delay: const Duration(milliseconds: 200),
       ),
+
     ];
 
     return isMobile

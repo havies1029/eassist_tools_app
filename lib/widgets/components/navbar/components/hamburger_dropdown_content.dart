@@ -152,6 +152,7 @@ class _HamburgerDropdownContentState extends State<HamburgerDropdownContent> {
             SubMenuItem(icon: Icons.person_outline, title: 'Popup Succeed', onTap: () {}),
             SubMenuItem(icon: Icons.person_outline, title: 'Popup Logout', onTap: () {}),
             SubMenuItem(icon: Icons.business_outlined, title: 'Dialog Confirmation', onTap: () {}),
+            SubMenuItem(icon: Icons.business_outlined, title: 'Status Popup', onTap: () {}),
           ],
         },
         {

@@ -1,10 +1,7 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../blocs/authentication/authentication_bloc.dart';
-
 
 class EnhancedHoverButton extends StatefulWidget {
   final VoidCallback onPressed;
@@ -57,21 +54,13 @@ class _EnhancedHoverButtonState extends State<EnhancedHoverButton>
       vsync: this,
     );
 
-    _scaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: 1.05,
-    ).animate(CurvedAnimation(
-      parent: _hoverController,
-      curve: Curves.easeInOut,
-    ));
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.05).animate(
+      CurvedAnimation(parent: _hoverController, curve: Curves.easeInOut),
+    );
 
-    _elevationAnimation = Tween<double>(
-      begin: 0.0,
-      end: 8.0,
-    ).animate(CurvedAnimation(
-      parent: _hoverController,
-      curve: Curves.easeInOut,
-    ));
+    _elevationAnimation = Tween<double>(begin: 0.0, end: 8.0).animate(
+      CurvedAnimation(parent: _hoverController, curve: Curves.easeInOut),
+    );
 
     if (widget.isLogin) {
       _backgroundAnimation = AlwaysStoppedAnimation(Colors.white);
@@ -88,29 +77,20 @@ class _EnhancedHoverButtonState extends State<EnhancedHoverButton>
       ).animate(_hoverController);
     }
 
-    _iconScaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: 1.2,
-    ).animate(CurvedAnimation(
-      parent: _hoverController,
-      curve: Curves.elasticOut,
-    ));
+    _iconScaleAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
+      CurvedAnimation(parent: _hoverController, curve: Curves.elasticOut),
+    );
 
     _iconRotationAnimation = Tween<double>(
       begin: 0.0,
       end: widget.isLogin ? 0.1 : -0.1,
-    ).animate(CurvedAnimation(
-      parent: _hoverController,
-      curve: Curves.easeInOut,
-    ));
+    ).animate(
+      CurvedAnimation(parent: _hoverController, curve: Curves.easeInOut),
+    );
 
-    _pulseAnimation = Tween<double>(
-      begin: 1.0,
-      end: 1.03,
-    ).animate(CurvedAnimation(
-      parent: _pulseController,
-      curve: Curves.easeInOut,
-    ));
+    _pulseAnimation = Tween<double>(begin: 1.0, end: 1.03).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
 
     if (!widget.isLogin) {
       Future.delayed(widget.delay + const Duration(milliseconds: 1000), () {
@@ -132,6 +112,12 @@ class _EnhancedHoverButtonState extends State<EnhancedHoverButton>
     final state = context.read<AuthenticationBloc>().state;
     final bool isClient = state is AuthenticationAuthenticated &&
         state.user.custType == "C";
+
+    // ❌ Sembunyikan tombol "Daftar Client" jika user adalah client
+    if (isClient && !widget.isLogin) {
+      return const SizedBox.shrink();
+    }
+
     return AnimatedBuilder(
       animation: Listenable.merge([
         _hoverController,
@@ -154,7 +140,8 @@ class _EnhancedHoverButtonState extends State<EnhancedHoverButton>
                   (1.0 - _pressController.value * 0.05),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+                padding:
+                const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
                 decoration: BoxDecoration(
                   color: _backgroundAnimation.value,
                   borderRadius: BorderRadius.circular(16.13),
@@ -166,13 +153,11 @@ class _EnhancedHoverButtonState extends State<EnhancedHoverButton>
                     if (_isHovered || !widget.isLogin)
                       BoxShadow(
                         color: const Color(0xFF79AB43).withOpacity(0.3),
-                        spreadRadius: 0,
                         blurRadius: _elevationAnimation.value + 4,
                         offset: Offset(0, _elevationAnimation.value / 2),
                       ),
                   ],
                 ),
-
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -190,24 +175,21 @@ class _EnhancedHoverButtonState extends State<EnhancedHoverButton>
                       ),
                     ),
                     const SizedBox(width: 8.0),
-
-                    // Hanya tampilkan teks jika bukan client atau tombol login
-                    if (!(isClient && !widget.isLogin))
-                      Flexible(
-                        child: Text(
-                          widget.isLogin ? 'Masuk' : 'Daftar Client',
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontFamily: 'Satoshi-Regular',
-                            color: widget.isLogin
-                                ? const Color(0xFF79AB43)
-                                : Colors.white,
-                            fontWeight:
-                            _isHovered ? FontWeight.w600 : FontWeight.w500,
-                            fontSize: 16.0,
-                          ),
+                    Flexible(
+                      child: Text(
+                        widget.isLogin ? 'Masuk' : 'Daftar Client',
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontFamily: 'Satoshi-Regular',
+                          color: widget.isLogin
+                              ? const Color(0xFF79AB43)
+                              : Colors.white,
+                          fontWeight:
+                          _isHovered ? FontWeight.w600 : FontWeight.w500,
+                          fontSize: 16.0,
                         ),
                       ),
+                    ),
                   ],
                 ),
               ),
@@ -234,3 +216,101 @@ class _EnhancedHoverButtonState extends State<EnhancedHoverButton>
     }
   }
 }
+
+
+/*
+
+@override
+Widget build(BuildContext context) {
+  final state = context.read<AuthenticationBloc>().state;
+  final bool isClient = state is AuthenticationAuthenticated &&
+      state.user.custType == "C";
+  final bool isWaitingAuth = state is! AuthenticationAuthenticated;
+
+  // Anti-flash: Sembunyikan tombol "Daftar Client" saat belum auth atau sudah client
+  if (!widget.isLogin && (isClient || isWaitingAuth)) {
+    return const SizedBox.shrink();
+  }
+
+  return AnimatedBuilder(
+    animation: Listenable.merge([
+      _hoverController,
+      _pressController,
+      _pulseController,
+    ]),
+    builder: (context, child) {
+      return MouseRegion(
+        cursor: SystemMouseCursors.click,
+        onEnter: (_) => _onHover(true),
+        onExit: (_) => _onHover(false),
+        child: GestureDetector(
+          onTapDown: (_) => _pressController.forward(),
+          onTapUp: (_) => _pressController.reverse(),
+          onTapCancel: () => _pressController.reverse(),
+          onTap: widget.onPressed,
+          child: Transform.scale(
+            scale: _scaleAnimation.value *
+                _pulseAnimation.value *
+                (1.0 - _pressController.value * 0.05),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+              decoration: BoxDecoration(
+                color: _backgroundAnimation.value,
+                borderRadius: BorderRadius.circular(16.13),
+                border: Border.all(
+                  color: _borderAnimation.value ?? Colors.transparent,
+                  width: 1.5,
+                ),
+                boxShadow: [
+                  if (_isHovered || !widget.isLogin)
+                    BoxShadow(
+                      color: const Color(0xFF79AB43).withOpacity(0.3),
+                      blurRadius: _elevationAnimation.value + 4,
+                      offset: Offset(0, _elevationAnimation.value / 2),
+                    ),
+                ],
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Transform.scale(
+                    scale: _iconScaleAnimation.value,
+                    child: Transform.rotate(
+                      angle: _iconRotationAnimation.value,
+                      child: Icon(
+                        widget.isLogin ? Icons.login : Icons.person_add,
+                        color: widget.isLogin
+                            ? const Color(0xFF79AB43)
+                            : Colors.white,
+                        size: 18.0,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8.0),
+                  Flexible(
+                    child: Text(
+                      widget.isLogin ? 'Masuk' : 'Daftar Client',
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontFamily: 'Satoshi-Regular',
+                        color: widget.isLogin
+                            ? const Color(0xFF79AB43)
+                            : Colors.white,
+                        fontWeight:
+                            _isHovered ? FontWeight.w600 : FontWeight.w500,
+                        fontSize: 16.0,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    },
+  );
+}
+
+ */

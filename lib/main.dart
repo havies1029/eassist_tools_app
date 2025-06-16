@@ -29,6 +29,7 @@ import 'package:eassist_tools_app/pages/heropage/hero_main.dart';
 import 'package:eassist_tools_app/repositories/chatting/guestscrud_repository.dart';
 import 'package:eassist_tools_app/repositories/login/change_password_repository.dart';
 import 'package:eassist_tools_app/repositories/login/emailverification_repository.dart';
+import 'package:eassist_tools_app/repositories/profile/rekanbank_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/rekancontact_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/rekangeneral_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/rekanpajak_repository.dart';
@@ -49,6 +50,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
+import 'blocs/profile/rekanbank_bloc.dart';
 import 'blocs/profile/rekangeneral_bloc.dart';
 import 'blocs/profile/rekanpajak_bloc.dart';
 import 'blocs/simulcar/simulcarcrud_bloc.dart';
@@ -56,11 +58,16 @@ import 'blocs/simulcargo/simulcargocrud_bloc.dart';
 import 'blocs/simulmb/simulmbcrud_bloc.dart';
 import 'blocs/simultree/simultreecrud_bloc.dart';
 import 'router/app_router.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 
 Future<void> main() async {
 
   final userRepository = UserRepository();
   AppData.kIsWeb = kIsWeb;
+
+  if (kIsWeb) {
+    setUrlStrategy(PathUrlStrategy()); // HILANGKAN TANDA # pada path url
+  }
 
   runApp(BlocProvider<AuthenticationBloc>(
     create: (context) {
@@ -174,6 +181,9 @@ class App extends StatelessWidget {
         BlocProvider<RekanPajakBloc>(
             create: (context) =>
                 RekanPajakBloc(repository: RekanPajakRepository())),
+        BlocProvider<RekanBankBloc>(
+            create: (context) =>
+                RekanBankBloc(repository: RekanBankRepository())),
         BlocProvider<GallerymemberCariBloc>(
             create: (context) =>
                 GallerymemberCariBloc()),
@@ -181,20 +191,33 @@ class App extends StatelessWidget {
             create: (context) =>
                 RegUserBloc(repository: RegUserRepository(), authenticationBloc: BlocProvider.of<AuthenticationBloc>(context))),
       ],
-      child: MaterialApp(
+      // child: MaterialApp(
+      //   debugShowCheckedModeBanner: false,
+      //   title: 'JPS Insurance',
+      //   theme: FlexThemeData.light(scheme: FlexScheme.mandyRed),
+      //   // The Mandy red, dark theme.
+      //   darkTheme: FlexThemeData.dark(scheme: FlexScheme.mandyRed),
+      //   // Use dark or light theme based on system setting.
+      //   themeMode: ThemeMode.light,
+      //
+      //   routes: const {},
+      //
+      //   home: const HeroMain(),
+      //
+      // ),
+      child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
         title: 'JPS Insurance',
         theme: FlexThemeData.light(scheme: FlexScheme.mandyRed),
-        // The Mandy red, dark theme.
         darkTheme: FlexThemeData.dark(scheme: FlexScheme.mandyRed),
-        // Use dark or light theme based on system setting.
         themeMode: ThemeMode.light,
-
-        routes: const {},
-
-        home: const HeroMain(),
-
+        routerConfig: router, // <--- INI INTINYA
       ),
     );
   }
 }
+
+/*
+final GoRouter router = GoRouter(
+  initialLocation: '/splash',
+*/

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../blocs/authentication/authentication_bloc.dart';
 import '../../../../pages/hero_client_page/hero_user_main.dart';
@@ -25,6 +26,9 @@ class NavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final double maxWidth =
     constraints.maxWidth > 1200 ? 1200 : constraints.maxWidth;
+    final authState = context.watch<AuthenticationBloc>().state;
+    final showHamburger = authState is AuthenticationAuthenticated &&
+        (authState.authenticatedFrom == 'login_user' || authState.authenticatedFrom == 'login_client');
 
     return Container(
       width: double.infinity,
@@ -47,16 +51,18 @@ class NavBar extends StatelessWidget {
                   if (authState is AuthenticationAuthenticated ||
                       authState is AuthenticationGoogleUserAuthenticated) {
                     // Sudah login → ke HeroUserMain
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const HeroUserMain()),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (_) => const HeroUserMain()),
+                    // );
+                    context.go('/hero_user');
                   } else {
                     // Belum login → ke HeroMain
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const HeroMain()),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (_) => const HeroMain()),
+                    // );
+                    context.go('/hero');
                   }
                 },
                 child: Image.asset(
@@ -75,29 +81,30 @@ class NavBar extends StatelessWidget {
             const SizedBox(width: 16),
 
             // Hamburger Menu Icon
-            Container(
-              key: menuButtonKey,
-              decoration: BoxDecoration(
-                color: isMenuOpen
-                    ? const Color(0xFF79AB43).withOpacity(0.1)
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: IconButton(
-                icon: AnimatedRotation(
-                  turns: isMenuOpen ? 0.5 : 0,
-                  duration: const Duration(milliseconds: 200),
-                  child: Icon(
-                    isMenuOpen ? Icons.close : Icons.menu,
-                    color: const Color(0xFF79AB43),
-                    size: 24,
-                  ),
+            if (showHamburger)
+              Container(
+                key: menuButtonKey,
+                decoration: BoxDecoration(
+                  color: isMenuOpen
+                      ? const Color(0xFF79AB43).withOpacity(0.1)
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                onPressed: onHamburgerToggle,
-                tooltip: isMenuOpen ? 'Close menu' : 'Open navigation menu',
-                splashRadius: 24,
+                child: IconButton(
+                  icon: AnimatedRotation(
+                    turns: isMenuOpen ? 0.5 : 0,
+                    duration: const Duration(milliseconds: 200),
+                    child: Icon(
+                      isMenuOpen ? Icons.close : Icons.menu,
+                      color: const Color(0xFF79AB43),
+                      size: 24,
+                    ),
+                  ),
+                  onPressed: onHamburgerToggle,
+                  tooltip: isMenuOpen ? 'Close menu' : 'Open navigation menu',
+                  splashRadius: 24,
+                ),
               ),
-            ),
           ],
         ),
       ),

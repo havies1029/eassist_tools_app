@@ -11,6 +11,7 @@ import 'package:eassist_tools_app/widgets/components/navbar/components/profile_s
 // import 'package:eassist_tools_app/widgets/section/about/PencapaianAbout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 // import '../../../blocs/authentication/authentication_bloc.dart';
 import '../../../blocs/profile/rekanbank_bloc.dart';
@@ -287,183 +288,63 @@ class _NavbarWidgetState extends State<NavbarWidget> {
   Future<void> _handleMenuTap(String title) async {
     final dummyUserRepository = DummyUserRepository();
     if (title == 'Splash Screen') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const SplashPage()),
-      );
+      context.go('/splash');
+      // context.push('/splash'); //pindah ke atas page lain
     }else if (title == 'Tentang JPS') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const AboutMain()),
-      );
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => const AboutMain()),
+      // );
+      context.go('/about');
     }else if (title == 'Home Page') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const HeroMain()),
-      );
+      context.go('/hero');
     }else if (title == 'Hero User Page') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const HeroUserMain()),
-      );
+      context.go('/hero_user');
     }else if (title == 'About JPS') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const AboutMain()),
-      );
+      context.go('/about');
     }else if (title == 'Customer Service') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const CSMain()),
-      );
+      context.go('/cs');
     }else if (title == 'Article Page') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const ArticleMain()),
-      );
+      context.go('/article');
+    }else if (title == 'Artikel Asuransi') {
+      context.go('/article');
     }else if (title == 'Testimoni') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const TestimonyMain()),
-      );
+      context.go('/testimony');
     }else if (title == 'Find Insurance') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const FindInsuranceMain()),
-      );
+      context.go('/find_insurance');
     }else if (title == 'Rekan Contact') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) {
-            return BlocProvider.value(
-              value: BlocProvider.of<RekanContactBloc>(context),
-              child: const RekanContactFormPage(
-                viewMode: 'tambah',    // atau 'ubah'
-                recordId: '',          // kalau 'ubah', ganti dengan ID yang relevan
-              ),
-            );
-          },
-        ),
-      );
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) {
+      //       return BlocProvider.value(
+      //         value: BlocProvider.of<RekanContactBloc>(context),
+      //         child: const RekanContactFormPage(
+      //           viewMode: 'tambah',    // atau 'ubah'
+      //           recordId: '',          // kalau 'ubah', ganti dengan ID yang relevan
+      //         ),
+      //       );
+      //     },
+      //   ),
+      // );
+      context.go('/rekancontact');
     }else if (title == 'Rekan General') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) {
-            return BlocProvider.value(
-              value: BlocProvider.of<RekanGeneralBloc>(context),
-              child: const RekanGeneralFormPage(
-                viewMode: 'tambah',    // atau 'ubah'
-                recordId: '',          // kalau 'ubah', ganti dengan ID yang relevan
-              ),
-            );
-          },
-        ),
-      );
+      context.go('/rekangeneral');
     }else if (title == 'Rekan Pajak') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) {
-            return BlocProvider.value(
-              value: BlocProvider.of<RekanPajakBloc>(context),
-              child: const RekanPajakFormPage(
-                viewMode: 'tambah',    // atau 'ubah'
-                recordId: '',          // kalau 'ubah', ganti dengan ID yang relevan
-              ),
-            );
-          },
-        ),
-      );
+      context.go('/rekanpajak');
     }else if (title == 'Rekan Bank') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) {
-            return BlocProvider.value(
-              value: BlocProvider.of<RekanBankBloc>(context),
-              child: const RekanBankFormPage(
-                viewMode: 'tambah',    // atau 'ubah'
-                recordId: '',          // kalau 'ubah', ganti dengan ID yang relevan
-              ),
-            );
-          },
-        ),
-      );
+      context.go('/rekanbank');
     }else if (title == 'Rekan Pic Form') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) {
-            return BlocProvider.value(
-              value: BlocProvider.of<RekanPicBloc>(context),
-              child: const RekanPicFormPage(
-                viewMode: 'tambah',    // atau 'ubah'
-                recordId: '',          // kalau 'ubah', ganti dengan ID yang relevan
-              ),
-            );
-          },
-        ),
-      );
+      context.go('/rekanpic');
     }
     else if (title == 'Rekan Pic Crud Form') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) {
-            return BlocProvider.value(
-              value: BlocProvider.of<RekanPicCrudBloc>(context),
-              child: const RekanPicCrudFormPage(
-                viewMode: 'tambah',    // atau 'ubah'
-                recordId: '',          // kalau 'ubah', ganti dengan ID yang relevan
-              ),
-            );
-          },
-        ),
-      );
+      context.go('/rekanpiccrud');
     }else if (title == 'Rekan Pic Crud Main') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) {
-            return BlocProvider.value(
-              value: BlocProvider.of<RekanPicCrudBloc>(context),
-              child: const RekanPicCrudMainPage(
-                viewMode: 'tambah',    // atau 'ubah'
-                recordId: '',          // kalau 'ubah', ganti dengan ID yang relevan
-              ),
-            );
-          },
-        ),
-      );
+      context.go('/rekanpiccrud_main');
     }else if (title == 'Rekan Pic List List') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) {
-            return BlocProvider.value(
-              value: BlocProvider.of<RekanPajakBloc>(context),
-              child: const RekanPicListPage(// kalau 'ubah', ganti dengan ID yang relevan
-              ),
-            );
-          },
-        ),
-      );
+      context.go('/rekanpiclist');
     }else if (title == 'Rekan Pic List List Widget') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) {
-            return BlocProvider.value(
-              value: BlocProvider.of<RekanPicListBloc>(context),
-              child: const RekanPicListListWidget(searchText: '',
-                // kalau 'ubah', ganti dengan ID yang relevan
-              ),
-            );
-          },
-        ),
-      );
+      context.go('/rekanpiclist_widget');
     }
     //
     // else if (title == 'Rekan Pic List Main') {
@@ -495,20 +376,19 @@ class _NavbarWidgetState extends State<NavbarWidget> {
     //   );
     // }
     else if (title == 'Rekan General V2') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) {
-            return BlocProvider.value(
-              value: BlocProvider.of<RekanPajakBloc>(context),
-              child: const RekanPajakFormPage(
-                viewMode: 'tambah',    // atau 'ubah'
-                recordId: '',          // kalau 'ubah', ganti dengan ID yang relevan
-              ),
-            );
-          },
-        ),
-      );
+      context.go('/rekanpajak');
+    }else if (title == 'Management Asset') {
+      context.go('/assets_management');
+    }else if (title == 'Active Asset') {
+      context.go('/active_assets');
+    }else if (title == 'User JPS') {
+      context.go('/user_jps');
+    }else if (title == 'User Non JPS') {
+      context.go('/user_non_jps');
+    }else if (title == 'Cari Asuransi') {
+      context.go('/find_insurance');
+    }else if (title == 'Lapor Claim') {
+      StatusPopupHelper.show(context);
     }else if (title == 'Login Client') {
       // Jika ingin push ke halaman baru:
       // Navigator.of(context).push(
@@ -610,25 +490,11 @@ class _NavbarWidgetState extends State<NavbarWidget> {
           onConfirm: () { Navigator.push(context, MaterialPageRoute(builder: (_) => const HeroUserPage())); },
         ),
       );
-    }else if (title == 'Management Asset') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const AssetsManagementMain()),
-      );
-    }else if (title == 'Active Asset') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const ActiveAssetPage()),
-      );
-    }else if (title == 'User JPS') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const UserJpsMain()),
-      );
-    }else if (title == 'User Non JPS') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const UserNonJpsMain()),
+    } else if (title == 'Status Popup') {
+      showDialog(
+        context: context,
+        barrierColor: Colors.black54,
+        builder: (_) => const StatusPopup(),
       );
     }
     // else if (title == 'Popup Logout') {
@@ -652,13 +518,6 @@ class _NavbarWidgetState extends State<NavbarWidget> {
     //     },
     //   );
     // }
-    else if (title == 'Cari Asuransi') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const FindInsuranceMain()),
-      );
-    }else if (title == 'Lapor Claim') {
-      StatusPopupHelper.show(context);
-    }
+
   }
 }
