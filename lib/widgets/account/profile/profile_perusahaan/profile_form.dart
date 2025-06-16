@@ -81,7 +81,7 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
           // Semua card form bertumpuk
           _buildCard(RekanGeneralFormBody(viewMode: 'tambah', recordId: '')),
           const SizedBox(height: 16),
-          _buildCard(RekanContactFormBody(viewMode: 'tambah', recordId: '')),
+          _buildCard(MRekanContactFormBody()),
           const SizedBox(height: 16),
           _buildCard(
             RekanPICFormBody(
@@ -122,7 +122,7 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
           // Baris pertama: 2 kolom (RekanGeneral | RekanContact)
           _buildRow([
             _buildCard(RekanGeneralFormBody(viewMode: 'tambah', recordId: '')),
-            _buildCard(RekanContactFormBody(viewMode: 'tambah', recordId: '')),
+            _buildCard(MRekanContactFormBody()),
           ]),
           const SizedBox(height: 16),
 
@@ -172,7 +172,7 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
           // Baris pertama: 3 kolom (General | Contact | PIC)
           _buildRow([
             _buildCardCenter(RekanGeneralFormBody(viewMode: 'tambah', recordId: '')),
-            _buildCardCenter(RekanContactFormBody(viewMode: 'tambah', recordId: '')),
+            _buildCardCenter(MRekanContactFormBody()),
             _buildCardCenter(
               RekanPICFormBody(
                 isEditing: widget.editSection['Informasi PIC'] ?? false,
