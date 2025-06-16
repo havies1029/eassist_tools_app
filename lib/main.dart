@@ -3,6 +3,7 @@ import 'package:eassist_tools_app/blocs/chatting/guestscrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/gallery/galleryeventcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gallery/gallerymembercari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gallery/gallerytestimonycari_bloc.dart';
+import 'package:eassist_tools_app/blocs/gen_profile/mrekanpajakcrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaim/klaim1list_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaim/klaim2list_bloc.dart';
 import 'package:eassist_tools_app/blocs/login/change_password_bloc.dart';
@@ -28,6 +29,7 @@ import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:eassist_tools_app/pages/heropage/hero_main.dart';
 import 'package:eassist_tools_app/repositories/chatting/guestscrud_repository.dart';
 import 'package:eassist_tools_app/repositories/gen_profile/mrekancontactcrud_repository.dart';
+import 'package:eassist_tools_app/repositories/gen_profile/mrekanpajakcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/login/change_password_repository.dart';
 import 'package:eassist_tools_app/repositories/login/emailverification_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/rekanbank_repository.dart';
@@ -192,6 +194,9 @@ class App extends StatelessWidget {
         BlocProvider<GallerymemberCariBloc>(
             create: (context) =>
                 GallerymemberCariBloc()),
+        BlocProvider<MRekanPajakCrudBloc>(
+            create: (context) =>
+                MRekanPajakCrudBloc(repository: MRekanPajakCrudRepository())),
         BlocProvider<RegUserBloc>(
             create: (context) =>
                 RegUserBloc(repository: RegUserRepository(), authenticationBloc: BlocProvider.of<AuthenticationBloc>(context))),
