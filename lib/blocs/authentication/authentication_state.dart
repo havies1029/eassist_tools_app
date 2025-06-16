@@ -15,13 +15,6 @@ class AuthenticationAuthenticated extends AuthenticationState {
   List<Object> get props => [user, authenticatedFrom];
 }
 
-// class AuthenticationUserAuthenticated extends AuthenticationState {
-//   final User user;
-//   AuthenticationUserAuthenticated({required this.user});
-//   @override
-//   List<Object> get props => [user];
-// }
-
 class AuthenticationGoogleUserAuthenticated extends AuthenticationState {
   final GoogleSignInAccount user;
   AuthenticationGoogleUserAuthenticated({required this.user});
@@ -34,7 +27,9 @@ class AuthenticationUnauthenticated extends AuthenticationState {}
 class AuthenticationLoading extends AuthenticationState {}
 
 class AuthenticationPreCheckHasToken extends AuthenticationState {}
+
 class AuthenticationPostCheckHasToken extends AuthenticationState {}
+
 class AuthenticationRequirePinEmailVerification extends AuthenticationState {
   final String email;
 
@@ -64,7 +59,8 @@ class AuthenticationRequirePinHPVerification extends AuthenticationState {
   List<Object> get props => [hpno];
 }
 
-
 class AuthenticationForgotPassword extends AuthenticationState {}
+
 class AuthenticationRequireRegisterClient extends AuthenticationState {}
-class AuthenticationPhonePinVerified  extends AuthenticationState {}
+
+class AuthenticationPhonePinVerified extends AuthenticationState {}

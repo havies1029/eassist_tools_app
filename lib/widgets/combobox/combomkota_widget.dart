@@ -6,14 +6,15 @@ import 'package:eassist_tools_app/repositories/combobox/combomkota_repository.da
 DropdownSearch<ComboMKotaModel> buildFieldComboMKota({
 	required String labelText,
 	GlobalKey<DropdownSearchState<ComboMKotaModel>>? comboKey,
-	ComboMKotaModel? initItem,
+	ComboMKotaModel? initItem,  
+  required String propinsiId,
 	Function(ComboMKotaModel?)? onChangedCallback,
 	required Function(ComboMKotaModel?) onSaveCallback,
 	Function(ComboMKotaModel?)? validatorCallback
 	}) {
 	return DropdownSearch<ComboMKotaModel>(
 		key: comboKey,
-		selectedItem: initItem,
+		selectedItem: initItem,    
 		decoratorProps: DropDownDecoratorProps(
 			decoration: InputDecoration(
 				hintText: '...',
@@ -21,7 +22,7 @@ DropdownSearch<ComboMKotaModel> buildFieldComboMKota({
 			),
 		),
 			items: (filter, infiniteScrollProps) async {
-				return ComboMKotaRepository().getComboMKota();
+				return ComboMKotaRepository().getComboMKota(propinsiId);
 			},
 			suffixProps: const DropdownSuffixProps(clearButtonProps: ClearButtonProps(isVisible: false)),
 			popupProps: const PopupPropsMultiSelection.modalBottomSheet(
@@ -32,7 +33,7 @@ DropdownSearch<ComboMKotaModel> buildFieldComboMKota({
 			),
 			compareFn: (item, sItem) => item.mkotaId == sItem.mkotaId,
 			itemAsString: (item) {
-				return item.mpropinsiId;
+				return item.kotaDesc;
 			},
 			onChanged: (value) {
 				if (onChangedCallback != null) {
@@ -67,7 +68,7 @@ Widget itemBuilderComboMKota(
 			),
 		child: ListTile(
 			selected: isSelected,
-			title: Text(item.mpropinsiId),
+			title: Text(item.kotaDesc),
 		),
 	);
 }

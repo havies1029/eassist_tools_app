@@ -7,6 +7,7 @@ DropdownSearch<ComboRKodeposModel> buildFieldComboRKodepos({
 	required String labelText,
 	GlobalKey<DropdownSearchState<ComboRKodeposModel>>? comboKey,
 	ComboRKodeposModel? initItem,
+  required String kotaId,
 	Function(ComboRKodeposModel?)? onChangedCallback,
 	required Function(ComboRKodeposModel?) onSaveCallback,
 	Function(ComboRKodeposModel?)? validatorCallback
@@ -21,13 +22,13 @@ DropdownSearch<ComboRKodeposModel> buildFieldComboRKodepos({
 			),
 		),
 			items: (filter, infiniteScrollProps) async {
-				return ComboRKodeposRepository().getComboRKodepos();
+				return ComboRKodeposRepository().getComboRKodepos(kotaId, filter);
 			},
 			suffixProps: const DropdownSuffixProps(clearButtonProps: ClearButtonProps(isVisible: false)),
 			popupProps: const PopupPropsMultiSelection.modalBottomSheet(
 				disableFilter: false,
 				showSelectedItems: true,
-				showSearchBox: false,
+				showSearchBox: true,
 				itemBuilder: itemBuilderComboRKodepos,
 			),
 			compareFn: (item, sItem) => item.rkodeposId == sItem.rkodeposId,

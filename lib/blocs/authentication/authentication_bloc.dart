@@ -46,35 +46,8 @@ class AuthenticationBloc
     on<GoogleUserAuthenticated>((event, emit) {
       debugPrint("_onLoggedIn dari Form Login Google");
       emit(AuthenticationGoogleUserAuthenticated(user: event.user));
-
     });
   }
-
-  // Future<void> _onAppStarted(
-  //     AppStarted event, Emitter<AuthenticationState> emit) async {
-  //   debugPrint("_onAppStarted");
-  //
-  //   emit(AuthenticationPreCheckHasToken());
-  //   //String token = AppData.kIsWeb ? "" : await userRepository.getToken();
-  //   String token = await userRepository.getToken();
-  //   emit(AuthenticationPostCheckHasToken());
-  //
-  //   debugPrint("hasToken ?");
-  //   if (token.isNotEmpty) {
-  //
-  //     final user = await userRepository.getUserByToken(token);
-  //
-  //     AppData.user = user;
-  //
-  //     emit(AuthenticationAuthenticated(user: user));
-  //
-  //     //debugPrint("hasToken ? yes -> ${AppData.userToken}");
-  //   } else {
-  //     //debugPrint("hasToken ? no");
-  //     emit(AuthenticationUnauthenticated());
-  //     //debugPrint("hasToken ? no -> proceed");
-  //   }
-  // }
 
   Future<void> _onAppStarted(
       AppStarted event, Emitter<AuthenticationState> emit) async {
@@ -89,6 +62,7 @@ class AuthenticationBloc
       final user = await userRepository.getUserByToken(token);
 
       AppData.user = user;
+      AppData.userToken = token;
 
       //emit(AuthenticatioTokenAuthenticated(user: user));
       emit(AuthenticationAuthenticated(

@@ -5,10 +5,11 @@ import 'package:eassist_tools_app/models/combobox/comborkodepos_model.dart';
 
 class ComboRKodeposAPI {
 
-	Future<List<ComboRKodeposModel>> getComboRKodeposAPI() async {
+	Future<List<ComboRKodeposModel>> getComboRKodeposAPI(String kotaId, String filter) async {
 		String urlGetComboEndPoint = "${AppData.prefixEndPoint}/api/rkodeposcombobox/getlist";
 
-		var uri = AppData.uriHtpp(AppData.httpAuthority, urlGetComboEndPoint);
+    Map<String, String> queryParams = {"kotaId": kotaId, "filter": filter};
+		var uri = AppData.uriHtpp(AppData.httpAuthority, urlGetComboEndPoint, queryParams);
 		final http.Response response = await http.get(uri, headers: <String, String>{
 			'Content-Type': 'application/json; odata=verbos',
 			'Accept': 'application/json; odata=verbos',
