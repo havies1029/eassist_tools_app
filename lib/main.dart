@@ -27,7 +27,11 @@ import 'package:eassist_tools_app/blocs/takeimage/takeimage_cubit.dart';
 import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:eassist_tools_app/pages/heropage/hero_main.dart';
 import 'package:eassist_tools_app/repositories/chatting/guestscrud_repository.dart';
+import 'package:eassist_tools_app/repositories/gen_profile/mrekanbankcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/gen_profile/mrekancontactcrud_repository.dart';
+import 'package:eassist_tools_app/repositories/gen_profile/mrekangeneralcmpcrud_repository.dart';
+import 'package:eassist_tools_app/repositories/gen_profile/mrekangeneralidvcrud_repository.dart';
+import 'package:eassist_tools_app/repositories/gen_profile/mrekanpajakcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/login/change_password_repository.dart';
 import 'package:eassist_tools_app/repositories/login/emailverification_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/rekanbank_repository.dart';
@@ -51,7 +55,11 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
+import 'blocs/gen_profile/mrekanbankcrud_bloc.dart';
 import 'blocs/gen_profile/mrekancontactcrud_bloc.dart';
+import 'blocs/gen_profile/mrekangeneralcmpcrud_bloc.dart';
+import 'blocs/gen_profile/mrekangeneralidvcrud_bloc.dart';
+import 'blocs/gen_profile/mrekanpajakcrud_bloc.dart';
 import 'blocs/profile/rekanbank_bloc.dart';
 import 'blocs/profile/rekangeneral_bloc.dart';
 import 'blocs/profile/rekanpajak_bloc.dart';
@@ -192,6 +200,21 @@ class App extends StatelessWidget {
         BlocProvider<GallerymemberCariBloc>(
             create: (context) =>
                 GallerymemberCariBloc()),
+        BlocProvider<MRekanBankCrudBloc>(
+            create: (context) =>
+                MRekanBankCrudBloc(repository: MRekanBankCrudRepository())),
+        BlocProvider<MRekanPajakCrudBloc>(
+            create: (context) =>
+                MRekanPajakCrudBloc(repository: MRekanPajakCrudRepository())),
+        BlocProvider<RekanPajakBloc>(
+            create: (context) =>
+                RekanPajakBloc(repository: RekanPajakRepository())),
+        BlocProvider<MRekanGeneralCmpCrudBloc>(
+          create: (context) => MRekanGeneralCmpCrudBloc(repository: MRekanGeneralCmpCrudRepository()),
+        ),
+        BlocProvider<MRekanGeneralIdvCrudBloc>(
+          create: (context) => MRekanGeneralIdvCrudBloc(repository: MRekanGeneralIdvCrudRepository()),
+        ),
         BlocProvider<RegUserBloc>(
             create: (context) =>
                 RegUserBloc(repository: RegUserRepository(), authenticationBloc: BlocProvider.of<AuthenticationBloc>(context))),

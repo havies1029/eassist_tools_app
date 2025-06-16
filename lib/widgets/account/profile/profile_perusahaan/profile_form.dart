@@ -79,7 +79,7 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
       child: Column(
         children: [
           // Semua card form bertumpuk
-          _buildCard(RekanGeneralFormBody(viewMode: 'tambah', recordId: '')),
+          _buildCard(MRekanGeneralCmpFormBody()),
           const SizedBox(height: 16),
           _buildCard(MRekanContactFormBody()),
           const SizedBox(height: 16),
@@ -121,7 +121,7 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
         children: [
           // Baris pertama: 2 kolom (RekanGeneral | RekanContact)
           _buildRow([
-            _buildCard(RekanGeneralFormBody(viewMode: 'tambah', recordId: '')),
+            _buildCard(MRekanGeneralCmpFormBody()),
             _buildCard(MRekanContactFormBody()),
           ]),
           const SizedBox(height: 16),
@@ -171,7 +171,7 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
         children: [
           // Baris pertama: 3 kolom (General | Contact | PIC)
           _buildRow([
-            _buildCardCenter(RekanGeneralFormBody(viewMode: 'tambah', recordId: '')),
+            _buildCardCenter(MRekanGeneralCmpFormBody()),
             _buildCardCenter(MRekanContactFormBody()),
             _buildCardCenter(
               RekanPICFormBody(
