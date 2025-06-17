@@ -6,7 +6,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
 import '../../../blocs/authentication/authentication_bloc.dart';
 import '../../account/login/login_gmail/popup_dialog_login.dart';
-import '../../account/register/register_client/popup_client.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 import 'decorations/EnhancedHoverButton.dart';

@@ -240,7 +240,7 @@ class App extends StatelessWidget {
         theme: FlexThemeData.light(scheme: FlexScheme.mandyRed),
         darkTheme: FlexThemeData.dark(scheme: FlexScheme.mandyRed),
         themeMode: ThemeMode.light,
-        routerConfig: router, // <--- INI INTINYA
+        routerConfig: buildRouter(context), // <--- INI INTINYA
       ),
     );
   }

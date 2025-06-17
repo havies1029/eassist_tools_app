@@ -1,4 +1,5 @@
 import 'package:eassist_tools_app/pages/splash/splash_page.dart';
+import 'package:eassist_tools_app/widgets/account/login/login_gmail/popup_dialog_login.dart';
 import 'package:eassist_tools_app/widgets/dialog/PopUp/confirmation_dialog.dart';
 import 'package:eassist_tools_app/widgets/account/profile/profile_individu/profile_individu_main_page.dart';
 import 'package:eassist_tools_app/widgets/account/register/register_gmail/Popup.dart';
@@ -37,8 +38,7 @@ import '../../../pages/profile/rekanpiclist_list_widget.dart';
 import '../../../pages/user_jps/user_jps_main.dart';
 import '../../../pages/user_non_jps/user_non_jps_main.dart';
 import '../../dialog/PopUp/success_popup.dart';
-import '../../dialog/forget_password/forget_password_dialog.dart';
-import '../../account/login/login_client/login_client_dialog.dart';
+import '../../dialog/forget_password/repair.dart';
 import '../../account/profile/profile_perusahaan/profile_main_page.dart';
 import '../../../pages/profile/rekancontact_form.dart';
 import '../../../pages/profile/rekangeneral_form.dart';
@@ -47,7 +47,7 @@ import '../../../pages/testimony_page/testimony_main.dart';
 import '../../../pages/customer_service/cs_main.dart';
 import '../../../repositories/user/user_repository.dart';
 // import '../../login/login_client/popup_client.dart';
-import '../../account/register/register_client/popup_client.dart';
+
 import '../../dialog/popup/status_popup.dart';
 
 
@@ -390,19 +390,9 @@ class _NavbarWidgetState extends State<NavbarWidget> {
     }else if (title == 'Lapor Claim') {
       StatusPopupHelper.show(context);
     }else if (title == 'Login Client') {
-      // Jika ingin push ke halaman baru:
-      // Navigator.of(context).push(
-      //   MaterialPageRoute(builder: (_) => const LoginClientPage()),
-      // );
-
-      // Atau, jika kamu ingin menampilkannya sebagai dialog:
-      showDialog(
-        context: context,
-        barrierColor: Colors.black54,
-        builder: (_) => const LoginClientPage(),
-      );
+      await CustomPopupsLoginUser.showLoginClientDialog(context);
     }else if (title == 'Register Client') {
-      await CustomPopupsClient.showRegisterDialog(context);
+      await CustomPopupsLoginUser.showRegisterClientDialog(context);
     }else if (title == 'Register Gmail') {
       await CustomPopupsRegisterUser.showRegisterDialog(context);
     }else if (title == 'Reset Password Page') {

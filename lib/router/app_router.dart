@@ -1,6 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:eassist_tools_app/pages/splash/splash_page.dart';
 import 'package:eassist_tools_app/widgets/account/profile/profile_individu/profile_individu_main_page.dart';
@@ -26,6 +26,7 @@ import '../pages/testimony_page/testimony_main.dart';
 import '../pages/customer_service/cs_main.dart';
 
 import '../repositories/user/user_repository.dart';
+import '../blocs/authentication/authentication_bloc.dart';
 
 class DummyUserRepository extends UserRepository {
   // Override semua method yang dibutuhkan dengan return dummy data atau kosong
@@ -33,107 +34,119 @@ class DummyUserRepository extends UserRepository {
 
 final dummyUserRepository = DummyUserRepository();
 
-final GoRouter router = GoRouter(
-  initialLocation: '/hero', //base dari mulai project
-  routes: [
-    GoRoute(path: '/splash', builder: (context, state) => const SplashPage()),
-    GoRoute(
-      path: '/profile_individu',
-      builder: (context, state) {
-        final userId = int.tryParse(state.uri.queryParameters['userid'] ?? '') ?? 123;
-        return ProfileIndividuMainPage(
-          userid: userId,
-          userRepository: dummyUserRepository,
-        );
-      },
-    ),
-    GoRoute(path: '/about', builder: (context, state) => const AboutMain()),
-    GoRoute(path: '/active_assets', builder: (context, state) => const ActiveAssetPage()),
-    GoRoute(path: '/article', builder: (context, state) => const ArticleMain()),
-    GoRoute(path: '/assets_management', builder: (context, state) => const AssetsManagementMain()),
-    GoRoute(path: '/find_insurance', builder: (context, state) => const FindInsuranceMain()),
-    GoRoute(path: '/hero_user', builder: (context, state) => const HeroUserMain()),
-    GoRoute(path: '/testimony', builder: (context, state) => const TestimonyMain()),
-    GoRoute(path: '/hero', builder: (context, state) => const HeroMain()),
-    GoRoute(
-      path: '/rekanbank',
-      builder: (context, state) {
-        final mode = state.uri.queryParameters['mode'] ?? 'tambah';
-        final id = state.uri.queryParameters['id'] ?? '';
-        return RekanBankFormPage(viewMode: mode, recordId: id);
-      },
-    ),
-    GoRoute(
-      path: '/rekanpic',
-      builder: (context, state) {
-        final mode = state.uri.queryParameters['mode'] ?? 'tambah';
-        final id = state.uri.queryParameters['id'] ?? '';
-        return RekanPicFormPage(viewMode: mode, recordId: id);
-      },
-    ),
-    GoRoute(
-      path: '/rekanpiccrud',
-      builder: (context, state) {
-        final mode = state.uri.queryParameters['mode'] ?? 'tambah';
-        final id = state.uri.queryParameters['id'] ?? '';
-        return RekanPicCrudFormPage(viewMode: mode, recordId: id);
-      },
-    ),
-    GoRoute(
-      path: '/rekanpiccrud_main',
-      builder: (context, state) {
-        final mode = state.uri.queryParameters['mode'] ?? 'tambah';
-        final id = state.uri.queryParameters['id'] ?? '';
-        return RekanPicCrudMainPage(viewMode: mode, recordId: id);
-      },
-    ),
-    GoRoute(
-      path: '/rekanpiclist',
-      builder: (context, state) {
-        // final query = state.uri.queryParameters['search'] ?? '';
-        return RekanPicListPage();
-      },
-    ),
-    GoRoute(
-      path: '/rekanpiclist_widget',
-      builder: (context, state) {
-        final query = state.uri.queryParameters['search'] ?? '';
-        return RekanPicListListWidget(searchText: query);
-      },
-    ),
-    GoRoute(path: '/user_jps', builder: (context, state) => const UserJpsMain()),
-    GoRoute(path: '/user_non_jps', builder: (context, state) => const UserNonJpsMain()),
-    GoRoute(
-      path: '/rekancontact',
-      builder: (context, state) {
-        final mode = state.uri.queryParameters['mode'] ?? 'tambah';
-        final id = state.uri.queryParameters['id'] ?? '';
-        return RekanContactFormPage(viewMode: mode, recordId: id);
-      },
-    ),
-    GoRoute(
-      path: '/rekangeneral',
-      builder: (context, state) {
-        final mode = state.uri.queryParameters['mode'] ?? 'tambah';
-        final id = state.uri.queryParameters['id'] ?? '';
-        return RekanGeneralFormPage(viewMode: mode, recordId: id);
-      },
-    ),
-    GoRoute(
-      path: '/rekanpajak',
-      builder: (context, state) {
-        final mode = state.uri.queryParameters['mode'] ?? 'tambah';
-        final id = state.uri.queryParameters['id'] ?? '';
-        return RekanPajakFormPage(viewMode: mode, recordId: id);
-      },
-    ),
-    GoRoute(path: '/testimony', builder: (context, state) => const TestimonyMain()),
-    GoRoute(path: '/cs', builder: (context, state) => const CSMain()),
-  ],
-);
+GoRouter buildRouter(BuildContext context) {
+  return GoRouter(
+    initialLocation: '/hero',
+    redirect: (context, state) {
+      final authState = BlocProvider.of<AuthenticationBloc>(context, listen: false).state;
 
+      if (authState is AuthenticationAuthenticated) {
+        final from = authState.authenticatedFrom;
+        final location = state.matchedLocation;
 
+        if (from == 'login_user' && location == '/hero_user') {
+          return '/hero';
+        }
 
+        if (from == 'login_client' && location == '/hero') {
+          return '/hero_user';
+        }
+      }
+
+      return null;
+    },
+    routes: [
+      GoRoute(path: '/splash', builder: (context, state) => const SplashPage()),
+      GoRoute(
+        path: '/profile_individu',
+        builder: (context, state) {
+          final userId = int.tryParse(state.uri.queryParameters['userid'] ?? '') ?? 123;
+          return ProfileIndividuMainPage(
+            userid: userId,
+            userRepository: dummyUserRepository,
+          );
+        },
+      ),
+      GoRoute(path: '/about', builder: (context, state) => const AboutMain()),
+      GoRoute(path: '/active_assets', builder: (context, state) => const ActiveAssetPage()),
+      GoRoute(path: '/article', builder: (context, state) => const ArticleMain()),
+      GoRoute(path: '/assets_management', builder: (context, state) => const AssetsManagementMain()),
+      GoRoute(path: '/find_insurance', builder: (context, state) => const FindInsuranceMain()),
+      GoRoute(path: '/hero_user', builder: (context, state) => const HeroUserMain()),
+      GoRoute(path: '/hero', builder: (context, state) => const HeroMain()),
+      GoRoute(path: '/testimony', builder: (context, state) => const TestimonyMain()),
+      GoRoute(path: '/cs', builder: (context, state) => const CSMain()),
+
+      // form-form
+      GoRoute(
+        path: '/rekanbank',
+        builder: (context, state) {
+          final mode = state.uri.queryParameters['mode'] ?? 'tambah';
+          final id = state.uri.queryParameters['id'] ?? '';
+          return RekanBankFormPage(viewMode: mode, recordId: id);
+        },
+      ),
+      GoRoute(
+        path: '/rekanpic',
+        builder: (context, state) {
+          final mode = state.uri.queryParameters['mode'] ?? 'tambah';
+          final id = state.uri.queryParameters['id'] ?? '';
+          return RekanPicFormPage(viewMode: mode, recordId: id);
+        },
+      ),
+      GoRoute(
+        path: '/rekanpiccrud',
+        builder: (context, state) {
+          final mode = state.uri.queryParameters['mode'] ?? 'tambah';
+          final id = state.uri.queryParameters['id'] ?? '';
+          return RekanPicCrudFormPage(viewMode: mode, recordId: id);
+        },
+      ),
+      GoRoute(
+        path: '/rekanpiccrud_main',
+        builder: (context, state) {
+          final mode = state.uri.queryParameters['mode'] ?? 'tambah';
+          final id = state.uri.queryParameters['id'] ?? '';
+          return RekanPicCrudMainPage(viewMode: mode, recordId: id);
+        },
+      ),
+      GoRoute(path: '/rekanpiclist', builder: (context, state) => RekanPicListPage()),
+      GoRoute(
+        path: '/rekanpiclist_widget',
+        builder: (context, state) {
+          final query = state.uri.queryParameters['search'] ?? '';
+          return RekanPicListListWidget(searchText: query);
+        },
+      ),
+      GoRoute(path: '/user_jps', builder: (context, state) => const UserJpsMain()),
+      GoRoute(path: '/user_non_jps', builder: (context, state) => const UserNonJpsMain()),
+      GoRoute(
+        path: '/rekancontact',
+        builder: (context, state) {
+          final mode = state.uri.queryParameters['mode'] ?? 'tambah';
+          final id = state.uri.queryParameters['id'] ?? '';
+          return RekanContactFormPage(viewMode: mode, recordId: id);
+        },
+      ),
+      GoRoute(
+        path: '/rekangeneral',
+        builder: (context, state) {
+          final mode = state.uri.queryParameters['mode'] ?? 'tambah';
+          final id = state.uri.queryParameters['id'] ?? '';
+          return RekanGeneralFormPage(viewMode: mode, recordId: id);
+        },
+      ),
+      GoRoute(
+        path: '/rekanpajak',
+        builder: (context, state) {
+          final mode = state.uri.queryParameters['mode'] ?? 'tambah';
+          final id = state.uri.queryParameters['id'] ?? '';
+          return RekanPajakFormPage(viewMode: mode, recordId: id);
+        },
+      ),
+    ],
+  );
+}
 
 /*
 

@@ -4,10 +4,14 @@ import 'package:flutter/services.dart';
 // import '../../../pages/hero_user_page/hero_user_main.dart';
 import '../../../pages/hero_client_page/hero_user_main.dart';
 import '../../../pages/profile/profile_main_page.dart';
+import '../../../repositories/user/user_repository.dart';
 import '../../account/profile/profile_individu/profile_individu_main_page.dart';
-import '../../account/register/register_client/popup_client.dart';
-import '../../account/register/register_client/register_form_dialog.dart';
 // import '../../account/register/register_client/register_form_dialog.dart';
+
+
+class DummyUserRepository extends UserRepository {
+  // Override semua method yang dibutuhkan dengan return dummy data atau kosong
+}
 
 class ReusableOTPDialog extends StatefulWidget {
   final String email;
@@ -223,7 +227,7 @@ class _ReusableOTPDialogState extends State<ReusableOTPDialog>
             MaterialPageRoute(
               builder: (_) => ProfileIndividuMainPage(
                 userid: 123,
-                userRepository: dummyUserRepository(),
+                userRepository: DummyUserRepository(),
               ),
             ),
           );
@@ -232,7 +236,7 @@ class _ReusableOTPDialogState extends State<ReusableOTPDialog>
             MaterialPageRoute(
               builder: (_) => ProfileMainPage(
                 userid: 123,
-                userRepository: dummyUserRepository(),
+                userRepository: DummyUserRepository(),
               ),
             ),
           );
@@ -267,7 +271,7 @@ class _ReusableOTPDialogState extends State<ReusableOTPDialog>
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: const BoxDecoration(
-        color: CustomPopupsClient.primaryGreen,
+        color:Color(0xFF79AB43),
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Row(
@@ -320,7 +324,7 @@ class _ReusableOTPDialogState extends State<ReusableOTPDialog>
           height: 60,
           decoration: const BoxDecoration(
             shape: BoxShape.circle,
-            color: CustomPopupsClient.primaryGreen,
+            color: Color(0xFF79AB43),
           ),
           child: const Icon(Icons.lock_outline, color: Colors.white, size: 30),
         ),
@@ -442,7 +446,7 @@ class _ReusableOTPDialogState extends State<ReusableOTPDialog>
         width: double.infinity,
         height: 50,
         decoration: BoxDecoration(
-          color: isLoading ? Colors.grey : CustomPopupsClient.primaryGreen,
+          color: isLoading ? Colors.grey : Color(0xFF79AB43),
           borderRadius: BorderRadius.circular(10),
           boxShadow: const [
             BoxShadow(

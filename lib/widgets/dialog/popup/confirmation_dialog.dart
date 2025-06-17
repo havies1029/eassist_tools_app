@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../account/register/register_client/popup_client.dart';
 
 class ConfirmationDialog extends StatefulWidget {
   /// Callback yang dijalankan jika pengguna menekan "Setuju & Lanjutkan"
@@ -161,8 +160,8 @@ class _ConfirmationDialogState extends State<ConfirmationDialog>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            CustomPopupsClient.primaryGreen,
-            CustomPopupsClient.primaryGreen.withOpacity(0.8),
+            Color(0xFF79AB43),
+            Color(0xFF79AB43).withOpacity(0.8),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -222,10 +221,10 @@ class _ConfirmationDialogState extends State<ConfirmationDialog>
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: CustomPopupsClient.primaryGreen.withOpacity(0.08),
+              color: Color(0xFF79AB43).withOpacity(0.08),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: CustomPopupsClient.primaryGreen.withOpacity(0.2),
+                color: Color(0xFF79AB43).withOpacity(0.2),
                 width: 1,
               ),
             ),
@@ -345,8 +344,8 @@ class _ConfirmationDialogState extends State<ConfirmationDialog>
                       const Color(0xFF5A7F2F),
                     ]
                         : [
-                      CustomPopupsClient.primaryGreen,
-                      CustomPopupsClient.primaryGreen.withOpacity(0.9),
+                      Color(0xFF79AB43),
+                      Color(0xFF79AB43).withOpacity(0.9),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -355,7 +354,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog>
                   boxShadow: _isHoveringConfirm
                       ? [
                     BoxShadow(
-                      color: CustomPopupsClient.primaryGreen.withOpacity(0.4),
+                      color: Color(0xFF79AB43).withOpacity(0.4),
                       blurRadius: 12,
                       offset: const Offset(0, 6),
                       spreadRadius: 0,
@@ -363,7 +362,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog>
                   ]
                       : [
                     BoxShadow(
-                      color: CustomPopupsClient.primaryGreen.withOpacity(0.3),
+                      color: Color(0xFF79AB43).withOpacity(0.3),
                       blurRadius: 8,
                       offset: const Offset(0, 4),
                       spreadRadius: 0,

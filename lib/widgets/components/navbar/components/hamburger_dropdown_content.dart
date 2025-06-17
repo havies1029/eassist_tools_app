@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../blocs/authentication/authentication_bloc.dart';
 import '../dropdown_menu/dropdown_expandable_item.dart';
-import '../dropdown_menu/sub_menu_item.dart';
+import '../dropdown_menu/sub_menu_item.dart';// pastikan path benar
 
 class HamburgerDropdownContent extends StatefulWidget {
   final VoidCallback onClose;
@@ -13,8 +15,7 @@ class HamburgerDropdownContent extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _HamburgerDropdownContentState createState() =>
-      _HamburgerDropdownContentState();
+  _HamburgerDropdownContentState createState() => _HamburgerDropdownContentState();
 }
 
 class _HamburgerDropdownContentState extends State<HamburgerDropdownContent> {
@@ -33,7 +34,7 @@ class _HamburgerDropdownContentState extends State<HamburgerDropdownContent> {
   bool _isExpanded(List<int> path) => _activePath.length >= path.length &&
       List.generate(path.length, (i) => _activePath[i] == path[i]).every((b) => b);
 
-  final List<Map<String, dynamic>> _menus = [
+  final List<Map<String, dynamic>> _allMenus = [
     {
       'icon': Icons.assignment,
       'title': 'Signature Joss',
@@ -194,8 +195,23 @@ class _HamburgerDropdownContentState extends State<HamburgerDropdownContent> {
     },
   ];
 
+  List<Map<String, dynamic>> _filterMenusBasedOnLogin() {
+    final state = BlocProvider.of<AuthenticationBloc>(context).state;
+
+    if (state is AuthenticationAuthenticated &&
+        state.authenticatedFrom == "login_user") {
+      return _allMenus.where((menu) =>
+      menu['title'] == 'Signature Joss' || menu['title'] == 'Tentang JPS'
+      ).toList();
+    }
+
+    return _allMenus; // default: tampilkan semua
+  }
+
   @override
   Widget build(BuildContext context) {
+    final filteredMenus = _filterMenusBasedOnLogin();
+
     return Container(
       width: 320,
       height: 500,
@@ -254,9 +270,9 @@ class _HamburgerDropdownContentState extends State<HamburgerDropdownContent> {
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.symmetric(vertical: 8),
-              itemCount: _menus.length,
+              itemCount: filteredMenus.length,
               itemBuilder: (ctx, i) {
-                final m = _menus[i];
+                final m = filteredMenus[i];
                 return DropdownExpandableItem(
                   icon: m['icon'],
                   title: m['title'],
@@ -265,7 +281,7 @@ class _HamburgerDropdownContentState extends State<HamburgerDropdownContent> {
                   isExpanded: _isExpanded([i]),
                   activePath: _activePath,
                   onHeaderTap: _handleExpand,
-                  onMenuTap: widget.onMenuTap, // ✔️ tambahan penting!
+                  onMenuTap: widget.onMenuTap,
                 );
               },
             ),

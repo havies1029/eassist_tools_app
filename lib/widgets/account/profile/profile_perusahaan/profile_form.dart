@@ -1,7 +1,9 @@
+import 'package:eassist_tools_app/widgets/account/login/login_gmail/Login_Page.dart';
 import 'package:flutter/material.dart';
 import '../../../dialog/PopUp/confirmation_dialog.dart';
 import '../../../dialog/PopUp/success_popup.dart';
-import '../../../account/login/login_client/login_client_dialog.dart';
+// import '../../../account/login/login_client/login_client_dialog.dart';
+import '../../login/login_gmail/popup_dialog_login.dart';
 import '../profile_individu/form_sections/mrekan_bank_form_body.dart';
 import 'form_sections/mrekan_general_cmp_form_body.dart';
 import 'form_sections/rekan_contact_form_body.dart';
@@ -43,21 +45,14 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
             builder: (context) => PopupSuceedPage(
               message: 'Register sebagai Client telah sukses.\n'
                   'Silakan mengecek password di email yang telah didaftarkan.',
-              onOk: () {
+              onOk: () async {
                 // Ketika tombol "OK" di PopupSuceedPage ditekan:
                 Navigator.of(context).pop(); // Tutup PopupSuceedPage
 
                 // 3) Navigasi ke halaman LoginClientPage
                 //    Jika LoginClientPage punya parameter, boleh ditambahkan di sini:
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => const LoginClientPage(
-                      // contoh: passing parameter ke constructor
-                      // email: 'user@example.com',
-                    ),
-                  ),
-                );
+                await CustomPopupsLoginUser.showLoginClientDialog(context);
+
               },
             ),
           );

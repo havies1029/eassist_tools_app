@@ -3,8 +3,8 @@ import 'package:eassist_tools_app/widgets/account/login/login_gmail/Base_Dialog.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../blocs/reguser/reguser_bloc.dart';
-import '../../../../models/reguser/reguser_model.dart';
+import '../../../blocs/reguser/reguser_bloc.dart';
+import '../../../models/reguser/reguser_model.dart';
 
 class OtpHpDialog extends BaseDialog {
   final String hpno;

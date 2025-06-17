@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../account/register/register_client/popup_client.dart';
 
 class ForgetPasswordPage extends StatefulWidget {
   const ForgetPasswordPage({Key? key}) : super(key: key);
@@ -126,7 +125,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage>
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: const BoxDecoration(
-        color: CustomPopupsClient.primaryGreen,
+        color: Color(0xFF79AB43),
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
@@ -271,7 +270,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage>
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
-                borderSide: const BorderSide(color: CustomPopupsClient.primaryGreen, width: 2),
+                borderSide: const BorderSide(color: Color(0xFF79AB43), width: 2),
               ),
               filled: true,
               fillColor: Colors.grey.shade50,
@@ -305,19 +304,19 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage>
         decoration: BoxDecoration(
           color: _isHovering
               ? const Color(0xFF6B9639)
-              : CustomPopupsClient.primaryGreen,
+              : Color(0xFF79AB43),
           borderRadius: BorderRadius.circular(10),
           boxShadow: _isHovering
               ? [
             BoxShadow(
-              color: CustomPopupsClient.primaryGreen.withOpacity(0.4),
+              color: Color(0xFF79AB43).withOpacity(0.4),
               blurRadius: 15,
               offset: const Offset(0, 8),
             ),
           ]
               : [
             BoxShadow(
-              color: CustomPopupsClient.primaryGreen.withOpacity(0.2),
+              color: Color(0xFF79AB43).withOpacity(0.2),
               blurRadius: 5,
               offset: const Offset(0, 3),
             ),
