@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import '../../../dialog/PopUp/confirmation_dialog.dart';
 import '../../../dialog/PopUp/success_popup.dart';
 import '../../../account/login/login_client/login_client_dialog.dart';
-import 'form_sections/rekan_general_form_body.dart';
+import '../profile_individu/form_sections/mrekan_bank_form_body.dart';
+import 'form_sections/mrekan_general_cmp_form_body.dart';
 import 'form_sections/rekan_contact_form_body.dart';
 import 'form_sections/rekan_pajak_form_body.dart';
 import 'form_sections/rekan_pic_form_body.dart';
@@ -79,7 +80,7 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
       child: Column(
         children: [
           // Semua card form bertumpuk
-          _buildCard(RekanGeneralFormBody(viewMode: 'tambah', recordId: '')),
+          _buildCard(MRekanGeneralCmpFormBody()),
           const SizedBox(height: 16),
           _buildCard(MRekanContactFormBody()),
           const SizedBox(height: 16),
@@ -91,9 +92,9 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
             ),
           ),
           const SizedBox(height: 16),
-          _buildCard(RekanBankFormBody(viewMode: 'tambah', recordId: '')),
+          _buildCard(MRekanBankFormBody(viewMode: 'tambah', recordId: '')),
           const SizedBox(height: 16),
-          _buildCard(RekanPajakFormBody(viewMode: 'tambah', recordId: '')),
+          _buildCard(MRekanPajakFormBody(viewMode: 'tambah', recordId: '')),
           const SizedBox(height: 32),
 
           // Tombol di paling bawah (mobile)
@@ -121,7 +122,7 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
         children: [
           // Baris pertama: 2 kolom (RekanGeneral | RekanContact)
           _buildRow([
-            _buildCard(RekanGeneralFormBody(viewMode: 'tambah', recordId: '')),
+            _buildCard(MRekanGeneralCmpFormBody()),
             _buildCard(MRekanContactFormBody()),
           ]),
           const SizedBox(height: 16),
@@ -135,13 +136,13 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
                 toggleEdit: widget.toggleEdit,
               ),
             ),
-            _buildCard(RekanBankFormBody(viewMode: 'tambah', recordId: '')),
+            _buildCard(MRekanBankFormBody(viewMode: 'tambah', recordId: '')),
           ]),
           const SizedBox(height: 16),
 
           // Baris ketiga: 1 kolom (Pajak)
           _buildRow([
-            _buildCard(RekanPajakFormBody(viewMode: 'tambah', recordId: '')),
+            _buildCard(MRekanPajakFormBody(viewMode: 'tambah', recordId: '')),
             const SizedBox(), // filler
           ]),
           const SizedBox(height: 32),
@@ -171,7 +172,7 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
         children: [
           // Baris pertama: 3 kolom (General | Contact | PIC)
           _buildRow([
-            _buildCardCenter(RekanGeneralFormBody(viewMode: 'tambah', recordId: '')),
+            _buildCardCenter(MRekanGeneralCmpFormBody()),
             _buildCardCenter(MRekanContactFormBody()),
             _buildCardCenter(
               RekanPICFormBody(
@@ -185,8 +186,8 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
 
           // Baris kedua: 2 kolom (Bank | Pajak) + filler
           _buildRow([
-            _buildCardCenter(RekanBankFormBody(viewMode: 'tambah', recordId: '')),
-            _buildCardCenter(RekanPajakFormBody(viewMode: 'tambah', recordId: '')),
+            _buildCardCenter(MRekanBankFormBody(viewMode: 'tambah', recordId: '')),
+            _buildCardCenter(MRekanPajakFormBody(viewMode: 'tambah', recordId: '')),
             const SizedBox(),
           ]),
           const SizedBox(height: 32),

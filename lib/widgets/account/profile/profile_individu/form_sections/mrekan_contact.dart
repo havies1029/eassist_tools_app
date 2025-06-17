@@ -338,7 +338,7 @@ class _MRekanContactFormBodyState extends State<MRekanContactFormBody> {
 
       setState(() {
         isEditingSection = false;
-        });
-      }
+      });
     }
+  }
 }

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'form_sections/section_identitas_rekening.dart';
-import '../profile_individu/form_sections/section_informasi_klien.dart';
-import '../profile_individu/form_sections/section_kontak_klien.dart';
+import '../profile_individu/form_sections/mrekan_general_idv_form_body.dart';
+import '../profile_perusahaan/form_sections/mrekan_pajak_form_body.dart';
+import '../profile_individu/form_sections/mrekan_bank_form_body.dart';
+import '../profile_perusahaan/form_sections/mrekan_general_cmp_form_body.dart';
+import '../profile_individu/form_sections/mrekan_contact.dart';
+import '../profile_perusahaan/form_sections/rekan_bank_form_body.dart';
 
 class ProfileIndividuFormSection extends StatelessWidget {
   final Map<String, bool> editSection;
@@ -33,43 +36,20 @@ class ProfileIndividuFormSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // --- Kontak Perusahaan ---
-          Card(
-            elevation: 2,
-            shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SectionKontakKlien(isEditing: true, controllers: {}, toggleEdit: () {  },
-              ),
-            ),
-          ),
+          // --- General Individu ---
+          _buildCard(MRekanGeneralIdvFormBody(viewMode: 'tambah', recordId: '')),
+
+          // --- General Contact ---
+          _buildCard(MRekanContactFormBody()),
+          const SizedBox(height: 16),
+          // --- Informasi Rekening ---
+          _buildCard(RekanBankFormBody(viewMode: 'tambah', recordId: '')),
           const SizedBox(height: 16),
 
-          // --- General Information ---
-          Card(
-            elevation: 2,
-            shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SectionInformasiKlien(isEditing: true, controllers: {}, toggleEdit: () {  },
-              ),
-            ),
-          ),
           const SizedBox(height: 16),
-
           // --- Informasi Pajak ---
-          Card(
-            elevation: 2,
-            shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SectionIdentitasRekening(isEditing: true, controllers: {}, toggleEdit: () {  },
-              ),
-            ),
-          ),
+          _buildCard(MRekanPajakFormBody(viewMode: 'tambah', recordId: '')),
+
         ],
       ),
     );
@@ -80,47 +60,29 @@ class ProfileIndividuFormSection extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
-          // Pada tablet: dua kolom (Kontak + General), lalu Informasi Pajak di bawah
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: Card(
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SectionKontakKlien(isEditing: true, controllers: {}, toggleEdit: () {  },
-                    ),
-                  ),
-                ),
+                child: _buildCard(MRekanGeneralIdvFormBody(viewMode: 'tambah', recordId: '')),
               ),
               const SizedBox(width: 16),
               Expanded(
-                child: Card(
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SectionInformasiKlien(isEditing: true, controllers: {}, toggleEdit: () {  },
-                    ),
-                  ),
-                ),
+                child: _buildCard(MRekanContactFormBody()),
               ),
             ],
           ),
           const SizedBox(height: 16),
-          Card(
-            elevation: 2,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12)),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SectionIdentitasRekening(isEditing: true, controllers: {}, toggleEdit: () {  },
+          Row(
+            children: [
+              Expanded(
+                child: _buildCard(RekanBankFormBody(viewMode: 'tambah', recordId: '')),
               ),
-            ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: _buildCard(MRekanPajakFormBody(viewMode: 'tambah', recordId: '')),
+              ),
+            ],
           ),
         ],
       ),
@@ -133,49 +95,35 @@ class ProfileIndividuFormSection extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Kontak Perusahaan
           Expanded(
-            child: Card(
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SectionKontakKlien(isEditing: true, controllers: {}, toggleEdit: () {  },),
-              ),
-            ),
+            child: _buildCard(MRekanGeneralIdvFormBody(viewMode: 'tambah', recordId: '')),
           ),
           const SizedBox(width: 16),
-
-          // General Information
           Expanded(
-            child: Card(
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SectionInformasiKlien(isEditing: true, controllers: {}, toggleEdit: () {  },
-                ),
-              ),
-            ),
+            child: _buildCard(MRekanContactFormBody()),
           ),
           const SizedBox(width: 16),
-
-          // Informasi Pajak
           Expanded(
-            child: Card(
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SectionIdentitasRekening(isEditing: true, controllers: {}, toggleEdit: () {  },
-                ),
-              ),
+            child: Column(
+              children: [
+                _buildCard(RekanBankFormBody(viewMode: 'tambah', recordId: '')),
+                const SizedBox(height: 16),
+                _buildCard(MRekanPajakFormBody(viewMode: 'tambah', recordId: '')),
+              ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildCard(Widget child) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: child,
       ),
     );
   }
