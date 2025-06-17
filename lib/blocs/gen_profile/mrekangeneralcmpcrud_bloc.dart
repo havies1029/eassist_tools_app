@@ -23,8 +23,11 @@ class MRekanGeneralCmpCrudBloc
       Emitter<MRekanGeneralCmpCrudState> emit) async {
     emit(state.copyWith(isSaving: true, isSaved: false));
     bool hasFailure = !await repository.mRekanGeneralCmpCrudUbah(event.record);
-    emit(
-        state.copyWith(isSaving: false, isSaved: true, hasFailure: hasFailure, record: event.record));
+    emit(state.copyWith(
+        isSaving: false,
+        isSaved: true,
+        hasFailure: hasFailure,
+        record: event.record));
   }
 
   Future<void> onLihatMRekanGeneralCmpCrud(MRekanGeneralCmpCrudLihatEvent event,
@@ -37,25 +40,25 @@ class MRekanGeneralCmpCrudBloc
 
     ComboMBidangModel? comboBidang = record.comboMBidang;
 
-    emit(state.copyWith(isLoading: false, isLoaded: true, record: record,
-      comboMBentukCst: comboBentuk, comboMBidang: comboBidang));
+    emit(state.copyWith(
+        isLoading: false,
+        isLoaded: true,
+        record: record,
+        comboMBentukCst: comboBentuk,
+        comboMBidang: comboBidang));
   }
 
   Future<void> onComboMBentukCstChanged(ComboMBentukCstChangedEvent event,
       Emitter<MRekanGeneralCmpCrudState> emit) async {
-    emit(state.copyWith(isLoading: true, isLoaded: false));
 
     ComboMBentukCstModel comboMBentukCst = event.comboMBentukCst;
-    emit(state.copyWith(
-        isLoading: false, isLoaded: true, comboMBentukCst: comboMBentukCst));
+    emit(state.copyWith(comboMBentukCst: comboMBentukCst));
   }
 
   Future<void> onComboMBidangChanged(ComboMBidangChangedEvent event,
       Emitter<MRekanGeneralCmpCrudState> emit) async {
-    emit(state.copyWith(isLoading: true, isLoaded: false));
 
     ComboMBidangModel comboMBidang = event.comboMBidang;
-    emit(state.copyWith(
-        isLoading: false, isLoaded: true, comboMBidang: comboMBidang));
+    emit(state.copyWith(comboMBidang: comboMBidang));
   }
 }

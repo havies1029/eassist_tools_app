@@ -1,28 +1,38 @@
+import 'package:eassist_tools_app/widgets/checkbox_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:string_validator/string_validator.dart';
 import 'package:eassist_tools_app/common/constants.dart';
 import 'package:eassist_tools_app/widgets/form_error.dart';
-import 'package:eassist_tools_app/blocs/gen_profile/mrekanbankcrud_bloc.dart';
-import 'package:eassist_tools_app/models/gen_profile/mrekanbankcrud_model.dart';
+import 'package:eassist_tools_app/blocs/gen_profile/mrekanpiccrud_bloc.dart';
+import 'package:eassist_tools_app/models/gen_profile/mrekanpiccrud_model.dart';
+import 'package:eassist_tools_app/models/combobox/combomjabatan_model.dart';
+import 'package:eassist_tools_app/widgets/combobox/combomjabatan_widget.dart';
+import 'package:intl/intl.dart';
+import 'package:eassist_tools_app/common/thousand_separator_input_formatter.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 
 
-class MRekanBankCrudFormPage extends StatefulWidget {
+class MRekanPicCrudFormPage extends StatefulWidget {
 	final String viewMode;
 	final String recordId;
 
-	const MRekanBankCrudFormPage({super.key, required this.viewMode, required this.recordId});
+	const MRekanPicCrudFormPage({super.key, required this.viewMode, required this.recordId});
 
 	@override
-	MRekanBankCrudFormPageFormState createState() => MRekanBankCrudFormPageFormState();
+	MRekanPicCrudFormPageFormState createState() => MRekanPicCrudFormPageFormState();
 }
 
-class MRekanBankCrudFormPageFormState extends State<MRekanBankCrudFormPage> {
-	late MRekanBankCrudBloc mRekanBankCrudBloc;
+class MRekanPicCrudFormPageFormState extends State<MRekanPicCrudFormPage> {
+	late MRekanPicCrudBloc mRekanPicCrudBloc;
 	final _formKey = GlobalKey<FormState>();
 	final List<String> errors = [];
-	var fieldMrekan1IdController = TextEditingController();
-	var fieldRekNamaController = TextEditingController();
-	var fieldRekNoController = TextEditingController();
+	var fieldIsDefaultController = TextEditingController();
+	ComboMJabatanModel? fieldComboMJabatan;
+	final comboMJabatanKey = GlobalKey<DropdownSearchState<ComboMJabatanModel>>();
+	var fieldPicEmailController = TextEditingController();
+	var fieldPicHpController = TextEditingController();
+	var fieldPicNamaController = TextEditingController();
 
 	@override
 	void initState() {
@@ -34,8 +44,8 @@ class MRekanBankCrudFormPageFormState extends State<MRekanBankCrudFormPage> {
 
 	@override
 	Widget build(BuildContext context) {
-		mRekanBankCrudBloc = BlocProvider.of<MRekanBankCrudBloc>(context);
-		return BlocConsumer<MRekanBankCrudBloc, MRekanBankCrudState>(
+		mRekanPicCrudBloc = BlocProvider.of<MRekanPicCrudBloc>(context);
+		return BlocConsumer<MRekanPicCrudBloc, MRekanPicCrudState>(
 			builder: (context, state) {
 				return Dialog(
 					shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -48,7 +58,7 @@ class MRekanBankCrudFormPageFormState extends State<MRekanBankCrudFormPage> {
 									children: [
 										const SizedBox(height: 10),
 										Text(
-											"${widget.viewMode == "tambah" ? "Tambah" : "Ubah"} Informasi Bank",
+											"${widget.viewMode == "tambah" ? "Tambah" : "Ubah"} Informasi PIC",
 											style: const TextStyle(
 												fontSize: 20.0,
 												color: Color(0xffff6101),
@@ -59,10 +69,11 @@ class MRekanBankCrudFormPageFormState extends State<MRekanBankCrudFormPage> {
 											),
 										),
 										const SizedBox(height: 25),
-										buildFieldMbankId(),
-										buildFieldMrekan1Id(),
-										buildFieldRekNama(),
-										buildFieldRekNo(),
+										buildFieldIsDefault(), 
+										buildFieldMjabatanId(),                  
+										buildFieldPicNama(),                    
+										buildFieldPicHp(),
+										buildFieldPicEmail(),
 										const SizedBox(height: 25),
 										FormError(
 											errors: errors,
@@ -113,56 +124,76 @@ class MRekanBankCrudFormPageFormState extends State<MRekanBankCrudFormPage> {
 				listener: (context, state) {
 					if (state.isLoaded) {
 						if (state.record != null){
-							fieldMrekan1IdController.text = state.record!.mrekan1Id;
-							fieldRekNamaController.text = state.record!.rekNama;
-							fieldRekNoController.text = state.record!.rekNo;
+							fieldIsDefaultController.text = (state.record?.isDefault??false).toString();
+							fieldPicEmailController.text = state.record?.picEmail??"";
+							fieldPicHpController.text = state.record?.picHp??"";
+							fieldPicNamaController.text = state.record?.picNama??"";
 						}
+						fieldComboMJabatan = state.comboMJabatan;
 					}
 				},
+		buildWhen: (previous, current) {
+		  if (previous.isFieldIsDefaultChanged != current.isFieldIsDefaultChanged){
+        fieldIsDefaultController.text = current.record!.isDefault.toString();
+        return true;
+		  }
+		  return false;
+		},
 			);
 		}
 	void loadData() {
 		if (widget.viewMode == "ubah") {
-		mRekanBankCrudBloc.add(
-			MRekanBankCrudLihatEvent(recordId: widget.recordId));
+		mRekanPicCrudBloc.add(
+			MRekanPicCrudLihatEvent(recordId: widget.recordId));
 		}
 	}
 
-	Widget buildFieldMbankId(){
-		return TextFormField(
+  Widget buildFieldIsDefault(){
+    return CheckboxWidget(
+        leftLabel: "",
+        rightLabel: "Default",
+        initialValue: toBoolean(fieldIsDefaultController.text),
+        callback: (value) {
+          mRekanPicCrudBloc
+            .add(CheckboxIsDefaultChangedEvent(isChecked: value));
+                  
+        });
+  }
+
+	Widget buildFieldMjabatanId(){
+		return buildFieldComboMJabatan(
+			comboKey: comboMJabatanKey,
+			labelText: 'mjabatanId',
+			initItem: fieldComboMJabatan,
+			onChangedCallback: (value) {
+				if (value != null) {
+					removeError(
+						error: "Field ComboMJabatan tidak boleh kosong.");
+					mRekanPicCrudBloc.add(ComboMJabatanChangedEvent(comboMJabatan: value));
+				}
+			},
+			onSaveCallback: (value) {
+				if (value != null) {
+					fieldComboMJabatan = value;
+				}
+			},
+			validatorCallback: (value) {
+				if (value == null) {
+					addError(
+						error: "Field ComboMJabatan tidak boleh kosong.");
+				}
+			},
 		);
 	}
 
-	Widget buildFieldMrekan1Id(){
-		return TextFormField(
-			controller: fieldMrekan1IdController,
-			decoration: const InputDecoration(
-				labelText: "mrekan1Id",
-				floatingLabelBehavior: FloatingLabelBehavior.always,
-			),
-			onChanged: (value) {
-				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
-				}
-			},
-			validator: (value) {
-				if (value == null || value.isEmpty) {
-					addError(error: kStringNullError);
-					return "";
-				}
-				return null;
-			},
-		);
-	}
-
-	Widget buildFieldRekNama(){
+	Widget buildFieldPicEmail(){
 		return TextFormField(
 			keyboardType: TextInputType.multiline,
 			minLines: 1,
 			maxLines: 3,
-			controller: fieldRekNamaController,
+			controller: fieldPicEmailController,
 			decoration: const InputDecoration(
-				labelText: "rekNama",
+				labelText: "picEmail",
 				floatingLabelBehavior: FloatingLabelBehavior.always,
 			),
 			onChanged: (value) {
@@ -180,11 +211,36 @@ class MRekanBankCrudFormPageFormState extends State<MRekanBankCrudFormPage> {
 		);
 	}
 
-	Widget buildFieldRekNo(){
+	Widget buildFieldPicHp(){
 		return TextFormField(
-			controller: fieldRekNoController,
+			controller: fieldPicHpController,
 			decoration: const InputDecoration(
-				labelText: "rekNo",
+				labelText: "picHp",
+				floatingLabelBehavior: FloatingLabelBehavior.always,
+			),
+			onChanged: (value) {
+				if (value.isNotEmpty) {
+				removeError(error: kStringNullError);
+				}
+			},
+			validator: (value) {
+				if (value == null || value.isEmpty) {
+					addError(error: kStringNullError);
+					return "";
+				}
+				return null;
+			},
+		);
+	}
+
+	Widget buildFieldPicNama(){
+		return TextFormField(
+			keyboardType: TextInputType.multiline,
+			minLines: 1,
+			maxLines: 3,
+			controller: fieldPicNamaController,
+			decoration: const InputDecoration(
+				labelText: "picNama",
 				floatingLabelBehavior: FloatingLabelBehavior.always,
 			),
 			onChanged: (value) {
@@ -209,17 +265,19 @@ class MRekanBankCrudFormPageFormState extends State<MRekanBankCrudFormPage> {
 	void onSaveForm() {
 		if (_formKey.currentState!.validate()) {
 			_formKey.currentState!.save();
-			MRekanBankCrudModel record = MRekanBankCrudModel(
-				mrekan1Id: fieldMrekan1IdController.text,
-				mrekanbankId: '',
-				rekNama: fieldRekNamaController.text,
-				rekNo: fieldRekNoController.text,
+			MRekanPicCrudModel record = MRekanPicCrudModel(
+				isDefault: toBoolean(fieldIsDefaultController.text),
+				mjabatanId: fieldComboMJabatan?.mjabatanId,
+				mrekanpicId: '',
+				picEmail: fieldPicEmailController.text,
+				picHp: fieldPicHpController.text,
+				picNama: fieldPicNamaController.text,
 			);
 			if (widget.viewMode == "tambah") {
-				mRekanBankCrudBloc.add(MRekanBankCrudTambahEvent(record: record));
+				mRekanPicCrudBloc.add(MRekanPicCrudTambahEvent(record: record));
 			} else if (widget.viewMode == "ubah") {
-				record.mrekanbankId = mRekanBankCrudBloc.state.record!.mrekanbankId;
-				mRekanBankCrudBloc.add(MRekanBankCrudUbahEvent(record: record));
+				record.mrekanpicId = mRekanPicCrudBloc.state.record!.mrekanpicId;
+				mRekanPicCrudBloc.add(MRekanPicCrudUbahEvent(record: record));
 			}
 			_dismissDialog();
 		}

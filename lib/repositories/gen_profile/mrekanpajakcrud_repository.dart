@@ -6,16 +6,11 @@ class MRekanPajakCrudRepository {
 
 	MRekanPajakCrudAPI api = MRekanPajakCrudAPI();
 
-	Future<ReturnDataAPI> mRekanPajakCrudTambah(MRekanPajakCrudModel record) async {
-		return await api.mRekanPajakCrudTambahAPI(record);
-	}
 	Future<bool> mRekanPajakCrudUbah(MRekanPajakCrudModel record) async {
 		return await api.mRekanPajakCrudUbahAPI(record);
 	}
-	Future<bool> mRekanPajakCrudHapus(String mrekanpajakId) async {
-		return await api.mRekanPajakCrudHapusAPI(mrekanpajakId);
-	}
-	Future<MRekanPajakCrudModel> mRekanPajakCrudLihat(String mrekanpajakId) async {
-		return await api.mRekanPajakCrudLihatAPI(mrekanpajakId);
+
+	Future<MRekanPajakCrudModel> mRekanPajakCrudLihat() async {
+		return await api.mRekanPajakCrudLihatAPI();
 	}
 }

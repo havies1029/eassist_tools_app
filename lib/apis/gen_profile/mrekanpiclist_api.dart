@@ -1,14 +1,13 @@
 import 'dart:convert';
 import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:http/http.dart' as http;
-import 'package:eassist_tools_app/models/gen_profile/mrekan1list_model.dart';
+import 'package:eassist_tools_app/models/gen_profile/mrekanpiclist_model.dart';
 
-class MRekan1ListAPI{
-	Future<List<MRekan1ListModel>> getMRekan1ListAPI(String searchText, int hal) async {
-		String urlGetListEndPoint = "${AppData.prefixEndPoint}/api/profile/mrekan1list/getlist";
+class MRekanPicListAPI{
+	Future<List<MRekanPicListModel>> getMRekanPicListAPI() async {
+		String urlGetListEndPoint = "${AppData.prefixEndPoint}/api/profile/mrekanpiclist/getlist";
 
-		Map<String, String> queryParams = {"searchText": searchText, "hal": hal.toString()};
-		var uri = AppData.uriHtpp(AppData.httpAuthority, urlGetListEndPoint, queryParams);
+		var uri = AppData.uriHtpp(AppData.httpAuthority, urlGetListEndPoint);
 		final http.Response response = await http.get(uri, headers: <String, String>{
 			'Content-Type': 'application/json; odata=verbos',
 			'Accept': 'application/json; odata=verbos',
@@ -18,7 +17,7 @@ class MRekan1ListAPI{
 		if (response.statusCode == 200) {
 			final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
 			return parsed
-				.map<MRekan1ListModel>((json) => MRekan1ListModel.fromJson(json))
+				.map<MRekanPicListModel>((json) => MRekanPicListModel.fromJson(json))
 				.toList();
 		} else {
 			throw Exception("Failed to load data");

@@ -1,5 +1,6 @@
 import 'package:eassist_tools_app/pages/gen_profile/mrekancontactcrud_form.dart';
 import 'package:eassist_tools_app/pages/gen_profile/mrekangeneralcmpcrud_form.dart';
+import 'package:eassist_tools_app/pages/gen_profile/mrekanpiclist_list.dart';
 import 'package:flutter/material.dart';
 
 class TestProfilePage extends StatefulWidget {
@@ -26,7 +27,7 @@ class _TestProfilePageState extends State<TestProfilePage> {
               MRekanGeneralCmpCrudFormPage(),
               const SizedBox(height: 24),            
               MRekanContactCrudFormPage(),
-              const SizedBox(height: 24),
+              const SizedBox(height: 24),   
               ElevatedButton(
                 onPressed: () {
                 },

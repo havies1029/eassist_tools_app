@@ -2,14 +2,14 @@ import 'dart:convert';
 import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:http/http.dart' as http;
 import 'package:eassist_tools_app/models/responseAPI/returndataapi_model.dart';
-import 'package:eassist_tools_app/models/gen_profile/mrekan1crud_model.dart';
+import 'package:eassist_tools_app/models/gen_profile/mrekanpiccrud_model.dart';
 
-class MRekan1CrudAPI {
+class MRekanPicCrudAPI {
 
-	Future<ReturnDataAPI> mRekan1CrudTambahAPI(MRekan1CrudModel record) async {
+	Future<ReturnDataAPI> mRekanPicCrudTambahAPI(MRekanPicCrudModel record) async {
 		String tambahEndpoint =
-			"${AppData.prefixEndPoint}/api/profile/mrekan1crud/create";
-		Map<String, String> queryParams = {"modul_id": "mRekan1CrudTambahAPI"};
+			"${AppData.prefixEndPoint}/api/profile/mrekanpiccrud/create";
+		Map<String, String> queryParams = {"modul_id": "mRekanPicCrudTambahAPI"};
 		var uri = AppData.uriHtpp(AppData.httpAuthority, tambahEndpoint, queryParams);
 
 		ReturnDataAPI returnData;
@@ -28,10 +28,10 @@ class MRekan1CrudAPI {
 		}
 		return returnData;
 	}
-	Future<bool> mRekan1CrudUbahAPI(MRekan1CrudModel record) async {
+	Future<bool> mRekanPicCrudUbahAPI(MRekanPicCrudModel record) async {
 		String ubahEndpoint =
-			"${AppData.prefixEndPoint}/api/profile/mrekan1crud/update";
-		Map<String, String> queryParams = {"modul_id": "mRekan1CrudUbahAPI"};
+			"${AppData.prefixEndPoint}/api/profile/mrekanpiccrud/update";
+		Map<String, String> queryParams = {"modul_id": "mRekanPicCrudUbahAPI"};
 
 		var uri = AppData.uriHtpp(AppData.httpAuthority, ubahEndpoint, queryParams);
 
@@ -51,11 +51,11 @@ class MRekan1CrudAPI {
 		}
 		return returnData.success;
 	}
-	Future<bool> mRekan1CrudHapusAPI(String mrekan1Id) async {
-		String hapusEndpoint = "${AppData.prefixEndPoint}/api/profile/mrekan1crud/delete";
+	Future<bool> mRekanPicCrudHapusAPI(String mrekanpicId) async {
+		String hapusEndpoint = "${AppData.prefixEndPoint}/api/profile/mrekanpiccrud/delete";
 		Map<String, String> queryParams = {
-			'mrekan1Id': mrekan1Id,
-			'modul_id': 'mRekan1CrudHapusAPI'};
+			'mrekanpicId': mrekanpicId,
+			'modul_id': 'mRekanPicCrudHapusAPI'};
 		var uri = AppData.uriHtpp(AppData.httpAuthority, hapusEndpoint, queryParams);
 		final http.Response response =
 			await http.get(uri, headers: <String, String>{
@@ -72,9 +72,9 @@ class MRekan1CrudAPI {
 		}
 		return returnData.success;
 	}
-	Future<MRekan1CrudModel> mRekan1CrudLihatAPI(String mrekan1Id) async {
-		String lihatEndpoint = "${AppData.prefixEndPoint}/api/profile/mrekan1crud/read";
-		Map<String, String> queryParams = {'mrekan1Id': mrekan1Id};
+	Future<MRekanPicCrudModel> mRekanPicCrudLihatAPI(String mrekanpicId) async {
+		String lihatEndpoint = "${AppData.prefixEndPoint}/api/profile/mrekanpiccrud/read";
+		Map<String, String> queryParams = {'mrekanpicId': mrekanpicId};
 		var uri = AppData.uriHtpp(AppData.httpAuthority, lihatEndpoint, queryParams);
 		final http.Response response =
 			await http.get(uri, headers: <String, String>{
@@ -84,7 +84,7 @@ class MRekan1CrudAPI {
 		});
 
 		if (response.statusCode == 200) {
-			var returnData = MRekan1CrudModel.fromJson(jsonDecode(response.body));
+			var returnData = MRekanPicCrudModel.fromJson(jsonDecode(response.body));
 			return returnData;
 		} else {
 			return throw Exception("Failed to load data");

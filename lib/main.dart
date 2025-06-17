@@ -6,6 +6,8 @@ import 'package:eassist_tools_app/blocs/gallery/gallerytestimonycari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekancontactcrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekangeneralcmpcrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekangeneralidvcrud_bloc.dart';
+import 'package:eassist_tools_app/blocs/gen_profile/mrekanpiccrud_bloc.dart';
+import 'package:eassist_tools_app/blocs/gen_profile/mrekanpiclist_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaim/klaim1list_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaim/klaim2list_bloc.dart';
 import 'package:eassist_tools_app/blocs/login/change_password_bloc.dart';
@@ -33,6 +35,7 @@ import 'package:eassist_tools_app/repositories/chatting/guestscrud_repository.da
 import 'package:eassist_tools_app/repositories/gen_profile/mrekancontactcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/gen_profile/mrekangeneralcmpcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/gen_profile/mrekangeneralidvcrud_repository.dart';
+import 'package:eassist_tools_app/repositories/gen_profile/mrekanpiccrud_repository.dart';
 import 'package:eassist_tools_app/repositories/login/change_password_repository.dart';
 import 'package:eassist_tools_app/repositories/login/emailverification_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/rekancontact_repository.dart';
@@ -191,6 +194,12 @@ class App extends StatelessWidget {
         ),  
         BlocProvider<MRekanContactCrudBloc>(
           create: (context) => MRekanContactCrudBloc(repository: MRekanContactCrudRepository()),
+        ), 
+        BlocProvider<MRekanPicListBloc>(
+          create: (context) =>
+              MRekanPicListBloc()),        
+        BlocProvider<MRekanPicCrudBloc>(
+          create: (context) => MRekanPicCrudBloc(repository: MRekanPicCrudRepository()),
         ), 
       ],
       child: MaterialApp(
