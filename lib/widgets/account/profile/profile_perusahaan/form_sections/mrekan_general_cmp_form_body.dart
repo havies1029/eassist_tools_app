@@ -49,7 +49,7 @@ class _MRekanGeneralCmpFormBodyState extends State<MRekanGeneralCmpFormBody> {
     return BlocListener<MRekanGeneralCmpCrudBloc, MRekanGeneralCmpCrudState>(
       listener: (context, state) {
         if (state.isLoaded && state.record != null) {
-          fieldRekanNamaController.text = state.record!.rekanNama;
+          fieldRekanNamaController.text = state.record!.rekanNama!;
           fieldComboMBentukCst = state.comboMBentukCst;
           fieldComboMBidang = state.comboMBidang;
         }
@@ -236,7 +236,7 @@ class _MRekanGeneralCmpFormBodyState extends State<MRekanGeneralCmpFormBody> {
         rekanNama: fieldRekanNamaController.text,
         mbentukcstId: fieldComboMBentukCst?.mbentukcstId,
         mbidangId: fieldComboMBidang?.mbidangId,
-        mrekan1Id: bloc.state.record?.mrekan1Id ?? '',
+        // mrekan1Id: bloc.state.record?.mrekan1Id ?? '',
       );
 
       bloc.add(MRekanGeneralCmpCrudUbahEvent(record: record));

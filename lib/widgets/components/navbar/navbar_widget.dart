@@ -408,17 +408,7 @@ class _NavbarWidgetState extends State<NavbarWidget> {
         builder: (_) => const ResetPasswordPage(),
       );
     }else if (title == 'Forget Password Page') {
-      // Jika ingin push ke halaman baru:
-      // Navigator.of(context).push(
-      //   MaterialPageRoute(builder: (_) => const ForgetPasswordPage()),
-      // );
-
-      // Atau, jika kamu ingin menampilkannya sebagai dialog:
-      showDialog(
-        context: context,
-        barrierColor: Colors.black54,
-        builder: (_) => const ForgetPasswordPage(),
-      );
+      await CustomPopupsLoginUser.showForgotPasswordDialog(context);
     }else if (title == 'Popup Succeed') {
       // Jika ingin push ke halaman baru:
       // Navigator.of(context).push(

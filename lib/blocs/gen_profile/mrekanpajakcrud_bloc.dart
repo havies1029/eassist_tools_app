@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:eassist_tools_app/models/responseAPI/returndataapi_model.dart';
 import 'package:eassist_tools_app/models/combobox/combompropinsi_model.dart';
 import 'package:eassist_tools_app/models/combobox/combomkota_model.dart';
 import 'package:eassist_tools_app/models/combobox/comborkodepos_model.dart';
@@ -14,46 +13,24 @@ class MRekanPajakCrudBloc extends Bloc<MRekanPajakCrudEvents, MRekanPajakCrudSta
 	final MRekanPajakCrudRepository repository;
 	MRekanPajakCrudBloc({required this.repository}) : super(const MRekanPajakCrudState()) {
 		on<MRekanPajakCrudUbahEvent>(onUbahMRekanPajakCrud);
-		on<MRekanPajakCrudTambahEvent>(onTambahMRekanPajakCrud);
-		on<MRekanPajakCrudHapusEvent>(onHapusMRekanPajakCrud);
 		on<MRekanPajakCrudLihatEvent>(onLihatMRekanPajakCrud);
 		on<ComboMPropinsiChangedEvent>(onComboMPropinsiChanged);
 		on<ComboMKotaChangedEvent>(onComboMKotaChanged);
 		on<ComboRKodeposChangedEvent>(onComboRKodeposChanged);
 	}
 
-	Future<void> onTambahMRekanPajakCrud(
-		MRekanPajakCrudTambahEvent event, Emitter<MRekanPajakCrudState> emit) async {
-
-		ReturnDataAPI returnData;
-		bool hasFailure = true;
-		emit(state.copyWith(isSaving: true, isSaved: false));
-		returnData = await repository.mRekanPajakCrudTambah(event.record);
-		hasFailure = !returnData.success;
-		emit(state.copyWith(
-			isSaving: false,
-			isSaved: true,
-			hasFailure: hasFailure));
-	}
 
 	Future<void> onUbahMRekanPajakCrud(
 		MRekanPajakCrudUbahEvent event, Emitter<MRekanPajakCrudState> emit) async {
 		emit(state.copyWith(isSaving: true, isSaved: false));
 		bool hasFailure = !await repository.mRekanPajakCrudUbah(event.record);
-		emit(state.copyWith(isSaving: false, isSaved: true, hasFailure: hasFailure));
-	}
-
-	Future<void> onHapusMRekanPajakCrud(
-		MRekanPajakCrudHapusEvent event, Emitter<MRekanPajakCrudState> emit) async {
-		emit(state.copyWith(isSaving: true, isSaved: false));
-		bool hasFailure = !await repository.mRekanPajakCrudHapus(event.recordId);
-		emit(state.copyWith(isSaving: false, isSaved: true, hasFailure: hasFailure));
+		emit(state.copyWith(isSaving: false, isSaved: true, hasFailure: hasFailure, record: event.record));
 	}
 
 	Future<void> onLihatMRekanPajakCrud(
 		MRekanPajakCrudLihatEvent event, Emitter<MRekanPajakCrudState> emit) async {
 		emit(state.copyWith(isLoading: true, isLoaded: false));
-		MRekanPajakCrudModel record = await repository.mRekanPajakCrudLihat(event.recordId);
+		MRekanPajakCrudModel record = await repository.mRekanPajakCrudLihat();
 		emit(state.copyWith(isLoading: false, isLoaded: true, record: record));
 	}
 

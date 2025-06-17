@@ -4,7 +4,6 @@ import 'package:eassist_tools_app/common/constants.dart';
 import 'package:eassist_tools_app/widgets/form_error.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekanbankcrud_bloc.dart';
 import 'package:eassist_tools_app/models/gen_profile/mrekanbankcrud_model.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 
 
 class MRekanBankCrudFormPage extends StatefulWidget {
