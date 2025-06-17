@@ -1,42 +1,59 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 
 import 'package:eassist_tools_app/common/constants.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekancontactcrud_bloc.dart';
 import 'package:eassist_tools_app/models/gen_profile/mrekancontactcrud_model.dart';
 import 'package:eassist_tools_app/models/combobox/combomkota_model.dart';
-import 'package:eassist_tools_app/widgets/combobox/combomkota_widget.dart';
 import 'package:eassist_tools_app/models/combobox/combompropinsi_model.dart';
-import 'package:eassist_tools_app/widgets/combobox/combompropinsi_widget.dart';
 import 'package:eassist_tools_app/models/combobox/comborkodepos_model.dart';
+import 'package:eassist_tools_app/widgets/combobox/combomkota_widget.dart';
+import 'package:eassist_tools_app/widgets/combobox/combompropinsi_widget.dart';
 import 'package:eassist_tools_app/widgets/combobox/comborkodepos_widget.dart';
 
-class MRekanContactFormBody extends StatefulWidget {
-  const MRekanContactFormBody({super.key});
+class RekanContact extends StatefulWidget {
+  const RekanContact({super.key});
 
   @override
-  State<MRekanContactFormBody> createState() => _MRekanContactFormBodyState();
+  State<RekanContact> createState() => _RekanContactState();
 }
 
-class _MRekanContactFormBodyState extends State<MRekanContactFormBody> {
+class _RekanContactState extends State<RekanContact> {
   final _formKey = GlobalKey<FormState>();
-  late MRekanContactCrudBloc bloc;
+  final comboMPropinsiKey = GlobalKey<DropdownSearchState<ComboMPropinsiModel>>();
 
-  final fieldAlamat1Controller = TextEditingController();
-  final fieldEmailController = TextEditingController();
-  final fieldTelpController = TextEditingController();
+  final TextEditingController fieldAlamat1Controller = TextEditingController();
+  final TextEditingController fieldEmailController = TextEditingController();
+  final TextEditingController fieldTelpController = TextEditingController();
 
   ComboMKotaModel? fieldComboMKota;
   ComboMPropinsiModel? fieldComboMPropinsi;
   ComboRKodeposModel? fieldComboRKodepos;
 
+  bool isEditingSection = false;
+  late MRekanContactCrudBloc bloc;
+
+  final TextStyle labelStyle = const TextStyle(fontWeight: FontWeight.w200);
+  final TextStyle hintStyle = const TextStyle(fontFamily: 'Satoshi', fontSize: 14, color: Colors.grey);
+  final TextStyle textStyle = const TextStyle(fontFamily: 'Satoshi', fontSize: 14);
+
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
+      bloc = BlocProvider.of<MRekanContactCrudBloc>(context);
       bloc.add(MRekanContactCrudLihatEvent());
     });
+  }
+
+  @override
+  void dispose() {
+    fieldAlamat1Controller.dispose();
+    fieldEmailController.dispose();
+    fieldTelpController.dispose();
+    super.dispose();
   }
 
   @override
@@ -62,58 +79,53 @@ class _MRekanContactFormBodyState extends State<MRekanContactFormBody> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              Row(
+                children: [
+                  const Expanded(
+                    child: Text("Kontak Klien :", style: TextStyle(fontSize: 17.5, fontWeight: FontWeight.bold)),
+                  ),
+                  IconButton(
+                    icon: Icon(isEditingSection ? Icons.check : Icons.edit),
+                    onPressed: () {
+                      if (isEditingSection) {
+                        onSaveForm();
+                      } else {
+                        setState(() => isEditingSection = true);
+                      }
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
               _buildLabelText("Alamat"),
               const SizedBox(height: 6),
-              _buildTextField(
-                controller: fieldAlamat1Controller,
-                hintText: "Masukkan alamat lengkap",
-              ),
+              _buildStyledTextField(controller: fieldAlamat1Controller, hintText: "Masukkan alamat lengkap"),
               const SizedBox(height: 12),
-
               _buildLabelText("Email"),
               const SizedBox(height: 6),
-              _buildTextField(
-                controller: fieldEmailController,
-                hintText: "contoh@mail.com",
-                keyboardType: TextInputType.emailAddress,
-              ),
+              _buildStyledTextField(controller: fieldEmailController, hintText: "contoh@mail.com", keyboardType: TextInputType.emailAddress),
               const SizedBox(height: 12),
-
               _buildLabelText("Provinsi"),
               const SizedBox(height: 6),
-              _buildStyledDropdown(
-                child: _buildFieldMPropinsiDropdown(),
-              ),
+              _buildStyledDropdown(child: _buildFieldMPropinsiDropdown()),
               const SizedBox(height: 12),
-
               _buildLabelText("Kota"),
               const SizedBox(height: 6),
-              _buildStyledDropdown(
-                child: _buildFieldMKotaDropdown(),
-              ),
+              _buildStyledDropdown(child: _buildFieldMKotaDropdown()),
               const SizedBox(height: 12),
-
               _buildLabelText("Kode Pos"),
               const SizedBox(height: 6),
-              _buildStyledDropdown(
-                child: _buildFieldRKodeposDropdown(),
-              ),
+              _buildStyledDropdown(child: _buildFieldRKodeposDropdown()),
               const SizedBox(height: 12),
-
               _buildLabelText("No. HP"),
               const SizedBox(height: 6),
-              _buildTextField(
+              _buildStyledTextField(
                 controller: fieldTelpController,
-                hintText: "08xxxxxxxxxx",
+                hintText: "Contoh: 6283388774644",
                 keyboardType: TextInputType.phone,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
               const SizedBox(height: 16),
-
-              ElevatedButton(
-                onPressed: onSaveForm,
-                child: const Text("Simpan"),
-              )
             ],
           ),
         ),
@@ -121,14 +133,9 @@ class _MRekanContactFormBodyState extends State<MRekanContactFormBody> {
     );
   }
 
-  Widget _buildLabelText(String text) {
-    return Text(
-      text,
-      style: const TextStyle(fontWeight: FontWeight.w600),
-    );
-  }
+  Widget _buildLabelText(String text) => Align(alignment: Alignment.centerLeft, child: Text(text, style: labelStyle));
 
-  Widget _buildTextField({
+  Widget _buildStyledTextField({
     required TextEditingController controller,
     required String hintText,
     TextInputType keyboardType = TextInputType.text,
@@ -136,75 +143,85 @@ class _MRekanContactFormBodyState extends State<MRekanContactFormBody> {
   }) {
     return TextFormField(
       controller: controller,
+      readOnly: !isEditingSection,
       keyboardType: keyboardType,
       inputFormatters: inputFormatters,
       decoration: InputDecoration(
         hintText: hintText,
+        hintStyle: hintStyle,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-        contentPadding:
-        const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Field tidak boleh kosong';
-        }
-        return null;
-      },
+      validator: (value) => value == null || value.isEmpty ? 'Field tidak boleh kosong' : null,
     );
   }
 
   Widget _buildStyledDropdown({required Widget child}) {
     return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey.shade400),
         borderRadius: BorderRadius.circular(8),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       child: child,
     );
   }
 
+  Widget _buildDisabledDropdown({required String text}) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+      child: Text(text, style: textStyle),
+    );
+  }
+
   Widget _buildFieldMKotaDropdown() {
-    return buildFieldComboMKota(
-      labelText: 'Kota',
+    return isEditingSection
+        ? buildFieldComboMKota(
+      labelText: 'Pilih',
       initItem: fieldComboMKota,
       propinsiId: fieldComboMPropinsi?.mpropinsiId ?? "",
       onChangedCallback: (value) {
         if (value != null) {
-          fieldComboMKota = value;
+          setState(() {
+            fieldComboMKota = value;
+            fieldComboRKodepos = null;
+          });
           bloc.add(ComboMKotaChangedEvent(comboMKota: value));
-          fieldComboRKodepos = null;
         }
       },
-      onSaveCallback: (value) {
-        if (value != null) fieldComboMKota = value;
-      },
+      onSaveCallback: (value) => fieldComboMKota = value,
       validatorCallback: (value) {},
-    );
+    )
+        : _buildDisabledDropdown(text: fieldComboMKota?.kotaDesc ?? 'Belum diisi');
   }
 
   Widget _buildFieldMPropinsiDropdown() {
-    return buildFieldComboMPropinsi(
-      labelText: 'Provinsi',
+    return isEditingSection
+        ? buildFieldComboMPropinsi(
+      comboKey: comboMPropinsiKey,
+      labelText: 'Pilih',
       initItem: fieldComboMPropinsi,
       onChangedCallback: (value) {
         if (value != null) {
-          fieldComboMPropinsi = value;
+          setState(() {
+            fieldComboMPropinsi = value;
+            fieldComboMKota = null;
+            fieldComboRKodepos = null;
+          });
           bloc.add(ComboMPropinsiChangedEvent(comboMPropinsi: value));
-          fieldComboMKota = null;
-          fieldComboRKodepos = null;
         }
       },
-      onSaveCallback: (value) {
-        if (value != null) fieldComboMPropinsi = value;
-      },
+      onSaveCallback: (value) => fieldComboMPropinsi = value,
       validatorCallback: (value) {},
-    );
+    )
+        : _buildDisabledDropdown(text: fieldComboMPropinsi?.propinsiNama ?? 'Belum diisi');
   }
 
   Widget _buildFieldRKodeposDropdown() {
-    return buildFieldComboRKodepos(
-      labelText: 'Kode Pos',
+    return isEditingSection
+        ? buildFieldComboRKodepos(
+      labelText: 'Pilih',
       initItem: fieldComboRKodepos,
       kotaId: fieldComboMKota?.mkotaId ?? "",
       onChangedCallback: (value) {
@@ -213,12 +230,13 @@ class _MRekanContactFormBodyState extends State<MRekanContactFormBody> {
           bloc.add(ComboRKodeposChangedEvent(comboRKodepos: value));
         }
       },
-      onSaveCallback: (value) {
-        if (value != null) fieldComboRKodepos = value;
-      },
+      onSaveCallback: (value) => fieldComboRKodepos = value,
       validatorCallback: (value) {},
-    );
+    )
+        : _buildDisabledDropdown(text: fieldComboRKodepos?.kodeposNo ?? 'Belum diisi');
   }
+
+  // =========================== API Actions =============================
 
   void onSaveForm() {
     if (_formKey.currentState!.validate()) {
@@ -235,6 +253,8 @@ class _MRekanContactFormBodyState extends State<MRekanContactFormBody> {
       );
 
       bloc.add(MRekanContactCrudUbahEvent(record: record));
+
+      setState(() => isEditingSection = false);
     }
   }
 }

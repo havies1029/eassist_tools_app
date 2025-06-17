@@ -1,6 +1,6 @@
 import 'package:eassist_tools_app/pages/splash/splash_page.dart';
 import 'package:eassist_tools_app/widgets/dialog/PopUp/confirmation_dialog.dart';
-import 'package:eassist_tools_app/widgets/account/profile/profile_individu/profile_individu_main_page.dart';
+// import 'package:eassist_tools_app/widgets/account/profile/profile_individu/profile_individu_main_page.dart';
 import 'package:eassist_tools_app/widgets/account/register/register_gmail/Popup.dart';
 import 'package:eassist_tools_app/widgets/dialog/popup/logout_popup.dart';
 import 'package:eassist_tools_app/widgets/dialog/reset_password/reset_password_dialog.dart';
@@ -39,7 +39,7 @@ import '../../../pages/user_non_jps/user_non_jps_main.dart';
 import '../../dialog/PopUp/success_popup.dart';
 import '../../dialog/forget_password/forget_password_dialog.dart';
 import '../../account/login/login_client/login_client_dialog.dart';
-import '../../account/profile/profile_perusahaan/profile_main_page.dart';
+import '../../account/profile/profile_main_page.dart';
 import '../../../pages/profile/rekancontact_form.dart';
 import '../../../pages/profile/rekangeneral_form.dart';
 import '../../../pages/profile/rekanpajak_form.dart';
@@ -255,8 +255,8 @@ class _NavbarWidgetState extends State<NavbarWidget> {
             child: SizedBox(
               width: 1300,
               child: ProfileMainPage(
-                userid: 123, // ganti sesuai session
-                userRepository: dummyUserRepository,
+                userid: 123,
+                selectedChoice: 'perusahaan',
               ),
             ),
           ),
@@ -458,9 +458,9 @@ class _NavbarWidgetState extends State<NavbarWidget> {
           ),
           child: SizedBox(
             width: 1200,
-            child: ProfileIndividuMainPage(
+            child: ProfileMainPage(
               userid: 123,
-              userRepository: dummyUserRepository,
+              selectedChoice: 'Individual',
             ),
           ),
         ),
@@ -477,7 +477,7 @@ class _NavbarWidgetState extends State<NavbarWidget> {
             width: 1200,
             child: ProfileMainPage(
               userid: 123,
-              userRepository: dummyUserRepository,
+              selectedChoice: 'Perusahaan',
             ),
           ),
         ),

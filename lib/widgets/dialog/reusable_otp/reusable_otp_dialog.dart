@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 // import '../../../pages/hero_user_page/hero_user_main.dart';
 import '../../../pages/hero_client_page/hero_user_main.dart';
-import '../../../pages/profile/profile_main_page.dart';
-import '../../account/profile/profile_individu/profile_individu_main_page.dart';
+import '../../../widgets/account/profile/profile_main_page.dart';
+import '../../account/profile/profile_main_page.dart';
 import '../../account/register/register_client/popup_client.dart';
 import '../../account/register/register_client/register_form_dialog.dart';
 // import '../../account/register/register_client/register_form_dialog.dart';
@@ -17,7 +17,7 @@ class ReusableOTPDialog extends StatefulWidget {
   /// Callback untuk kirim ulang OTP (opsional)
   final Future<void> Function()? onResend;
   /// Pilihan dropdown yang dikirimkan dari register_form_dialog (opsional)
-  final String? selectedChoice;
+  final String selectedChoice;
 
   const ReusableOTPDialog({
     super.key,
@@ -25,7 +25,7 @@ class ReusableOTPDialog extends StatefulWidget {
     this.title = 'Verifikasi Kode',
     this.onSubmit,
     this.onResend,
-    this.selectedChoice,
+    required this.selectedChoice,
   });
 
   @override
@@ -218,25 +218,14 @@ class _ReusableOTPDialogState extends State<ReusableOTPDialog>
 
       // 2) Navigasi sesuai selectedChoice (jika ada), atau ke HeroUserMain
       if (widget.selectedChoice != null) {
-        if (widget.selectedChoice == 'Individual') {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => ProfileIndividuMainPage(
-                userid: 123,
-                userRepository: dummyUserRepository(),
-              ),
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => ProfileMainPage(
+              userid: 123,
+              selectedChoice: widget.selectedChoice,
             ),
-          );
-        } else {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => ProfileMainPage(
-                userid: 123,
-                userRepository: dummyUserRepository(),
-              ),
-            ),
-          );
-        }
+          ),
+        );
       } else {
         Navigator.of(context).push(
           MaterialPageRoute(builder: (_) => const HeroUserMain()),

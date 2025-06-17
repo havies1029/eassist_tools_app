@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:eassist_tools_app/pages/splash/splash_page.dart';
-import 'package:eassist_tools_app/widgets/account/profile/profile_individu/profile_individu_main_page.dart';
+import 'package:eassist_tools_app/widgets/account/profile/profile_main_page.dart';
 import '../pages/about_jps/about_main.dart';
 import '../pages/active_assets/active_assets_main.dart';
 import '../pages/article_page/article_main.dart';
@@ -41,9 +41,9 @@ final GoRouter router = GoRouter(
       path: '/profile_individu',
       builder: (context, state) {
         final userId = int.tryParse(state.uri.queryParameters['userid'] ?? '') ?? 123;
-        return ProfileIndividuMainPage(
+        return ProfileMainPage(
           userid: userId,
-          userRepository: dummyUserRepository,
+          selectedChoice: 'Individual',
         );
       },
     ),

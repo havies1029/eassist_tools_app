@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../../repositories/user/user_repository.dart';
 import 'popup_client.dart';
-import '../../profile/profile_perusahaan/profile_main_page.dart';
+import '../../profile/profile_main_page.dart';
 import '../../../../repositories/user/user_repository.dart';
-import '../../profile/profile_individu/profile_individu_main_page.dart';
 
 // Dummy repository (cocokkan dengan yang di RegisterDialog)
 class dummyUserRepository extends UserRepository {
@@ -351,26 +350,34 @@ class _LoginDialogState extends State<LoginDialog> with TickerProviderStateMixin
 
     // 1) Tutup LoginDialog (OTP)
     Navigator.of(context).pop();
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => ProfileMainPage(
+          userid: 123,
+          selectedChoice: widget.selectedChoice,
+        ),
+      ),
+    );
 
-    // 2) Navigasi ke halaman profil berdasarkan pilihan
-    if (widget.selectedChoice == 'Individual') {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (_) => ProfileIndividuMainPage(
-            userid: 123,
-            userRepository: dummyUserRepository(),
-          ),
-        ),
-      );
-    } else {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (_) => ProfileMainPage(
-            userid: 123,
-            userRepository: dummyUserRepository(),
-          ),
-        ),
-      );
-    }
+    // // 2) Navigasi ke halaman profil berdasarkan pilihan
+    // if (widget.selectedChoice == 'Individual') {
+    //   Navigator.of(context).push(
+    //     MaterialPageRoute(
+    //       builder: (_) => ProfileIndividuMainPage(
+    //         userid: 123,
+    //         userRepository: dummyUserRepository(),
+    //       ),
+    //     ),
+    //   );
+    // } else {
+    //   Navigator.of(context).push(
+    //     MaterialPageRoute(
+    //       builder: (_) => ProfileMainPage(
+    //         userid: 123,
+    //         userRepository: dummyUserRepository(),
+    //       ),
+    //     ),
+    //   );
+    // }
   }
 }

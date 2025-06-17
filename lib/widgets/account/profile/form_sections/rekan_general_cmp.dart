@@ -9,14 +9,14 @@ import 'package:eassist_tools_app/widgets/combobox/combombentukcst_widget.dart';
 import 'package:eassist_tools_app/models/combobox/combombidang_model.dart';
 import 'package:eassist_tools_app/widgets/combobox/combombidang_widget.dart';
 
-class MRekanGeneralCmpFormBody extends StatefulWidget {
-  const MRekanGeneralCmpFormBody({super.key});
+class RekanGeneralCmp extends StatefulWidget {
+  const RekanGeneralCmp({super.key});
 
   @override
-  State<MRekanGeneralCmpFormBody> createState() => _MRekanGeneralCmpFormBodyState();
+  State<RekanGeneralCmp> createState() => _RekanGeneralCmpState();
 }
 
-class _MRekanGeneralCmpFormBodyState extends State<MRekanGeneralCmpFormBody> {
+class _RekanGeneralCmpState extends State<RekanGeneralCmp> {
   final _formKey = GlobalKey<FormState>();
   late MRekanGeneralCmpCrudBloc bloc;
 
@@ -25,12 +25,32 @@ class _MRekanGeneralCmpFormBodyState extends State<MRekanGeneralCmpFormBody> {
   ComboMBentukCstModel? fieldComboMBentukCst;
   ComboMBidangModel? fieldComboMBidang;
 
+  bool isEditingSection = false;
+
+  // === Styles ===
+  static const TextStyle labelStyle = TextStyle(fontWeight: FontWeight.w200);
+  static const TextStyle hintStyle = TextStyle(
+    fontFamily: 'Satoshi',
+    fontSize: 14,
+    color: Colors.grey,
+  );
+  static const TextStyle textStyle = TextStyle(
+    fontFamily: 'Satoshi',
+    fontSize: 14,
+  );
+
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
       bloc.add(MRekanGeneralCmpCrudLihatEvent());
     });
+  }
+
+  @override
+  void dispose() {
+    fieldRekanNamaController.dispose();
+    super.dispose();
   }
 
   @override
@@ -45,21 +65,39 @@ class _MRekanGeneralCmpFormBodyState extends State<MRekanGeneralCmpFormBody> {
           fieldComboMBidang = state.comboMBidang;
         }
       },
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _buildLabelText("Nama Rekan"),
+              Row(
+                children: [
+                  const Expanded(
+                    child: Text(
+                      "Informasi Perusahaan :",
+                      style: TextStyle(fontSize: 17.5, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(isEditingSection ? Icons.check : Icons.edit),
+                    onPressed: () {
+                      isEditingSection ? onSaveForm() : setState(() => isEditingSection = true);
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+
+              _buildLabelText("Nama Badan Usaha"),
               const SizedBox(height: 6),
-              _buildTextField(
+              _buildStyledTextField(
                 controller: fieldRekanNamaController,
                 hintText: "Masukkan nama perusahaan",
                 keyboardType: TextInputType.multiline,
                 maxLines: 2,
+                validator: (value) => (value == null || value.isEmpty) ? 'Field tidak boleh kosong' : null,
               ),
               const SizedBox(height: 12),
 
@@ -72,11 +110,6 @@ class _MRekanGeneralCmpFormBodyState extends State<MRekanGeneralCmpFormBody> {
               const SizedBox(height: 6),
               _buildStyledDropdown(child: _buildComboMBidang()),
               const SizedBox(height: 16),
-
-              ElevatedButton(
-                onPressed: onSaveForm,
-                child: const Text("Simpan"),
-              ),
             ],
           ),
         ),
@@ -85,47 +118,59 @@ class _MRekanGeneralCmpFormBodyState extends State<MRekanGeneralCmpFormBody> {
   }
 
   Widget _buildLabelText(String text) {
-    return Text(text, style: const TextStyle(fontWeight: FontWeight.w600));
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Text(text, style: labelStyle),
+    );
   }
 
-  Widget _buildTextField({
+  Widget _buildStyledTextField({
     required TextEditingController controller,
     required String hintText,
     TextInputType keyboardType = TextInputType.text,
     int maxLines = 1,
+    String? Function(String?)? validator,
+    void Function(String)? onChanged,
   }) {
     return TextFormField(
       controller: controller,
+      readOnly: !isEditingSection,
       keyboardType: keyboardType,
       maxLines: maxLines,
       decoration: InputDecoration(
         hintText: hintText,
+        hintStyle: hintStyle,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Field tidak boleh kosong';
-        }
-        return null;
-      },
+      validator: validator,
+      onChanged: onChanged,
     );
   }
 
   Widget _buildStyledDropdown({required Widget child}) {
     return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey.shade400),
         borderRadius: BorderRadius.circular(8),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       child: child,
     );
   }
 
+  Widget _buildDisabledDropdown({required String text}) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+      child: Text(text, style: textStyle),
+    );
+  }
+
   Widget _buildComboMBentukCst() {
-    return buildFieldComboMBentukCst(
-      labelText: 'Bentuk Badan Usaha',
+    return isEditingSection
+        ? buildFieldComboMBentukCst(
+      labelText: 'Pilih',
       initItem: fieldComboMBentukCst,
       onChangedCallback: (value) {
         if (value != null) {
@@ -133,17 +178,17 @@ class _MRekanGeneralCmpFormBodyState extends State<MRekanGeneralCmpFormBody> {
           bloc.add(ComboMBentukCstChangedEvent(comboMBentukCst: value));
         }
       },
-      onSaveCallback: (value) {
-        if (value != null) fieldComboMBentukCst = value;
-      },
+      onSaveCallback: (value) => fieldComboMBentukCst = value,
       validatorCallback: (value) {},
       comboKey: null,
-    );
+    )
+        : _buildDisabledDropdown(text: fieldComboMBentukCst?.bentukNama ?? 'Belum diisi');
   }
 
   Widget _buildComboMBidang() {
-    return buildFieldComboMBidang(
-      labelText: 'Bidang Usaha',
+    return isEditingSection
+        ? buildFieldComboMBidang(
+      labelText: 'Pilih',
       initItem: fieldComboMBidang,
       onChangedCallback: (value) {
         if (value != null) {
@@ -151,14 +196,14 @@ class _MRekanGeneralCmpFormBodyState extends State<MRekanGeneralCmpFormBody> {
           bloc.add(ComboMBidangChangedEvent(comboMBidang: value));
         }
       },
-      onSaveCallback: (value) {
-        if (value != null) fieldComboMBidang = value;
-      },
+      onSaveCallback: (value) => fieldComboMBidang = value,
       validatorCallback: (value) {},
       comboKey: null,
-    );
+    )
+        : _buildDisabledDropdown(text: fieldComboMBidang?.bidangNama ?? 'Belum diisi');
   }
 
+  // === API Submit & Logic ===
   void onSaveForm() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
@@ -171,6 +216,8 @@ class _MRekanGeneralCmpFormBodyState extends State<MRekanGeneralCmpFormBody> {
       );
 
       bloc.add(MRekanGeneralCmpCrudUbahEvent(record: record));
+
+      setState(() => isEditingSection = false);
     }
   }
 }

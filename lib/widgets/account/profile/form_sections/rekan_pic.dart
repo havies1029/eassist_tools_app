@@ -1,4 +1,4 @@
-// lib/widgets/form_sections/rekan_pic_form_body.dart
+// lib/widgets/form_sections/rekan_pic.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,12 +6,12 @@ import 'package:eassist_tools_app/common/constants.dart';
 import 'package:eassist_tools_app/widgets/form_error.dart';
 
 /// Widget yang hanya berisi “body” form Informasi PIC (tanpa Dialog).
-class RekanPICFormBody extends StatefulWidget {
+class RekanPIC extends StatefulWidget {
   final bool isEditing;
   final Map<String, TextEditingController> controllers;
   final void Function(String sectionKey) toggleEdit;
 
-  const RekanPICFormBody({
+  const RekanPIC({
     Key? key,
     required this.isEditing,
     required this.controllers,
@@ -19,10 +19,10 @@ class RekanPICFormBody extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _RekanPICFormBodyState createState() => _RekanPICFormBodyState();
+  _RekanPICState createState() => _RekanPICState();
 }
 
-class _RekanPICFormBodyState extends State<RekanPICFormBody> {
+class _RekanPICState extends State<RekanPIC> {
   final _formKey = GlobalKey<FormState>();
   final List<String> _errors = [];
 

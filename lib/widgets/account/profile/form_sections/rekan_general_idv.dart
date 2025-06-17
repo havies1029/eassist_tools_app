@@ -8,21 +8,21 @@ import 'package:eassist_tools_app/models/combobox/combompekerjaan_model.dart';
 import 'package:eassist_tools_app/widgets/combobox/combompekerjaan_widget.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
-class MRekanGeneralIdvFormBody extends StatefulWidget {
+class RekanGeneralIdv extends StatefulWidget {
   final String viewMode;
   final String recordId;
 
-  const MRekanGeneralIdvFormBody({
+  const RekanGeneralIdv({
     Key? key,
     required this.viewMode,
     required this.recordId,
   }) : super(key: key);
 
   @override
-  State<MRekanGeneralIdvFormBody> createState() => _MRekanGeneralIdvFormBodyState();
+  State<RekanGeneralIdv> createState() => _RekanGeneralIdvState();
 }
 
-class _MRekanGeneralIdvFormBodyState extends State<MRekanGeneralIdvFormBody> {
+class _RekanGeneralIdvState extends State<RekanGeneralIdv> {
   final _formKey = GlobalKey<FormState>();
   late MRekanGeneralIdvCrudBloc bloc;
 

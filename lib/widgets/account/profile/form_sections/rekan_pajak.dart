@@ -11,24 +11,24 @@ import 'package:eassist_tools_app/models/combobox/combompropinsi_model.dart';
 import 'package:eassist_tools_app/widgets/combobox/combompropinsi_widget.dart';
 import 'package:eassist_tools_app/models/combobox/comborkodepos_model.dart';
 import 'package:eassist_tools_app/widgets/combobox/comborkodepos_widget.dart';
-import '../../inline_error_text.dart';
+import '../inline_error_text.dart';
 
 /// Widget yang hanya berisi “body” form Informasi Pajak (tanpa Dialog).
-class RekanPajakFormBody extends StatefulWidget {
+class RekanPajak extends StatefulWidget {
   final String viewMode;
   final String recordId;
 
-  const RekanPajakFormBody({
+  const RekanPajak({
     Key? key,
     required this.viewMode,
     required this.recordId,
   }) : super(key: key);
 
   @override
-  _RekanPajakFormBodyState createState() => _RekanPajakFormBodyState();
+  _RekanPajakState createState() => _RekanPajakState();
 }
 
-class _RekanPajakFormBodyState extends State<RekanPajakFormBody> {
+class _RekanPajakState extends State<RekanPajak> {
   late RekanPajakBloc rekanPajakBloc;
   final _formKey = GlobalKey<FormState>();
   final List<String> errors = [];

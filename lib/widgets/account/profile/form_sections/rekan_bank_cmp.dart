@@ -38,21 +38,21 @@ class SectionErrorAlert extends StatelessWidget {
   }
 }
 
-class RekanBankFormBody extends StatefulWidget {
+class RekanBankCmp extends StatefulWidget {
   final String viewMode;
   final String recordId;
 
-  const RekanBankFormBody({
+  const RekanBankCmp({
     Key? key,
     required this.viewMode,
     required this.recordId,
   }) : super(key: key);
 
   @override
-  _RekanBankFormBodyState createState() => _RekanBankFormBodyState();
+  _RekanBankCmpState createState() => _RekanBankCmpState();
 }
 
-class _RekanBankFormBodyState extends State<RekanBankFormBody> {
+class _RekanBankCmpState extends State<RekanBankCmp> {
   late RekanBankBloc rekanBankBloc;
   final _formKey = GlobalKey<FormState>();
   final List<String> errors = [];
