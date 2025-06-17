@@ -1,7 +1,8 @@
+import 'package:eassist_tools_app/blocs/gen_profile/mrekan1crud_bloc.dart';
 import 'package:eassist_tools_app/pages/gen_profile/mrekancontactcrud_form.dart';
 import 'package:eassist_tools_app/pages/gen_profile/mrekangeneralcmpcrud_form.dart';
-import 'package:eassist_tools_app/pages/gen_profile/mrekanpiclist_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TestProfilePage extends StatefulWidget {
   const TestProfilePage({super.key});
@@ -11,32 +12,53 @@ class TestProfilePage extends StatefulWidget {
 }
 
 class _TestProfilePageState extends State<TestProfilePage> {    
+  late MRekan1CrudBloc mRekan1CrudBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(milliseconds: 500), () {
+      loadData();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    mRekan1CrudBloc = BlocProvider.of<MRekan1CrudBloc>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),  
-          child: Column(
-            children: [
-        
-              MRekanGeneralCmpCrudFormPage(),
-              const SizedBox(height: 24),            
-              MRekanContactCrudFormPage(),
-              const SizedBox(height: 24),   
-              ElevatedButton(
-                onPressed: () {
-                },
-                child: const Text('Simpan'),
+      body: BlocConsumer<MRekan1CrudBloc, MRekan1CrudState>(
+      builder: (context, state) {          
+          return state.isLoaded ? SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),  
+              child: Column(
+                children: [
+                  Text("Nama Client : ${state.record?.rekanNama ?? "????"}"),
+                  Text("JenisClientId :${state.record?.mjnsclientId??"???"}"),
+                  MRekanGeneralCmpCrudFormPage(),
+                  const SizedBox(height: 24),            
+                  MRekanContactCrudFormPage(),
+                  const SizedBox(height: 24),   
+                  ElevatedButton(
+                    onPressed: () {
+                    },
+                    child: const Text('Simpan'),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
+          ): CircularProgressIndicator();
+        }, 
+        listener: (BuildContext context, MRekan1CrudState state) {  },
       ),
     );
   }
+
+void loadData() {
+  mRekan1CrudBloc.add(MRekan1CrudLihatEvent());
+}
+
 }

@@ -3,6 +3,7 @@ import 'package:eassist_tools_app/blocs/chatting/guestscrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/gallery/galleryeventcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gallery/gallerymembercari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gallery/gallerytestimonycari_bloc.dart';
+import 'package:eassist_tools_app/blocs/gen_profile/mrekan1crud_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekancontactcrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekangeneralcmpcrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekangeneralidvcrud_bloc.dart';
@@ -32,6 +33,7 @@ import 'package:eassist_tools_app/blocs/takeimage/takeimage_cubit.dart';
 import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:eassist_tools_app/pages/heropage/hero_main.dart';
 import 'package:eassist_tools_app/repositories/chatting/guestscrud_repository.dart';
+import 'package:eassist_tools_app/repositories/gen_profile/mrekan1crud_repository.dart';
 import 'package:eassist_tools_app/repositories/gen_profile/mrekancontactcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/gen_profile/mrekangeneralcmpcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/gen_profile/mrekangeneralidvcrud_repository.dart';
@@ -200,6 +202,9 @@ class App extends StatelessWidget {
               MRekanPicListBloc()),        
         BlocProvider<MRekanPicCrudBloc>(
           create: (context) => MRekanPicCrudBloc(repository: MRekanPicCrudRepository()),
+        ), 
+        BlocProvider<MRekan1CrudBloc>(
+          create: (context) => MRekan1CrudBloc(repository: MRekan1CrudRepository()),
         ), 
       ],
       child: MaterialApp(
