@@ -1,6 +1,11 @@
+import 'dart:typed_data';
+
 import 'package:eassist_tools_app/blocs/gen_profile/mrekan1crud_bloc.dart';
+import 'package:eassist_tools_app/blocs/profile/profile_download_foto_bloc.dart';
+import 'package:eassist_tools_app/blocs/profile/profile_upload_foto_bloc.dart';
 import 'package:eassist_tools_app/pages/gen_profile/mrekancontactcrud_form.dart';
 import 'package:eassist_tools_app/pages/gen_profile/mrekangeneralcmpcrud_form.dart';
+import 'package:eassist_tools_app/pages/gen_profile/profile_picture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -38,6 +43,25 @@ class _TestProfilePageState extends State<TestProfilePage> {
                 children: [
                   Text("Nama Client : ${state.record?.rekanNama ?? "????"}"),
                   Text("JenisClientId :${state.record?.mjnsclientId??"???"}"),
+                  BlocBuilder<ProfileDownloadFotoBloc, ProfileDownloadFotoState>(
+                    builder: (context, imageState) {
+                      Uint8List? imageBytes;
+                      if (imageState is ProfileDownloadFotoLoaded) {
+                        imageBytes = imageState.imageBytes;
+                      }
+
+                      return ProfilePicture(
+                        imageUrl: 'https://www.jayaproteksindo.co.id/image/Logo.png',
+                        radius: 60,
+                        blocImageBytes: imageBytes,
+                        onImageSelected: (bytes, fileName) async {
+                          context.read<ProfileUploadFotoBloc>().add(
+                            UploadProfilePicture(bytes, fileName),
+                          );
+                        },
+                      );
+                    },
+                  ),
                   MRekanGeneralCmpCrudFormPage(),
                   const SizedBox(height: 24),            
                   MRekanContactCrudFormPage(),
@@ -58,6 +82,7 @@ class _TestProfilePageState extends State<TestProfilePage> {
   }
 
 void loadData() {
+  context.read<ProfileDownloadFotoBloc>().add(LoadSecureImage());
   mRekan1CrudBloc.add(MRekan1CrudLihatEvent());
 }
 

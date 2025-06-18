@@ -16,7 +16,8 @@ import 'package:eassist_tools_app/blocs/login/emailverification_bloc.dart';
 import 'package:eassist_tools_app/blocs/login/login_bloc.dart';
 import 'package:eassist_tools_app/blocs/networkconnection/network_bloc.dart';
 import 'package:eassist_tools_app/blocs/onboardmenu/onboardmenucari_bloc.dart';
-import 'package:eassist_tools_app/blocs/profile/rekancontact_bloc.dart';
+import 'package:eassist_tools_app/blocs/profile/profile_download_foto_bloc.dart';
+import 'package:eassist_tools_app/blocs/profile/profile_upload_foto_bloc.dart';
 import 'package:eassist_tools_app/blocs/progressindicator/progressindicator_bloc.dart';
 import 'package:eassist_tools_app/blocs/reguser/reguser_bloc.dart';
 import 'package:eassist_tools_app/blocs/simuleei/simuleeicrud_bloc.dart';
@@ -40,9 +41,7 @@ import 'package:eassist_tools_app/repositories/gen_profile/mrekangeneralidvcrud_
 import 'package:eassist_tools_app/repositories/gen_profile/mrekanpiccrud_repository.dart';
 import 'package:eassist_tools_app/repositories/login/change_password_repository.dart';
 import 'package:eassist_tools_app/repositories/login/emailverification_repository.dart';
-import 'package:eassist_tools_app/repositories/profile/rekancontact_repository.dart';
-import 'package:eassist_tools_app/repositories/profile/rekangeneral_repository.dart';
-import 'package:eassist_tools_app/repositories/profile/rekanpajak_repository.dart';
+import 'package:eassist_tools_app/repositories/profile/userfoto_repository.dart';
 import 'package:eassist_tools_app/repositories/reguser/reguser_repository.dart';
 import 'package:eassist_tools_app/repositories/simulbon/simulboncrud_repository.dart';
 import 'package:eassist_tools_app/repositories/simulcar/simulcarcrud_repository.dart';
@@ -60,8 +59,6 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
-import 'blocs/profile/rekangeneral_bloc.dart';
-import 'blocs/profile/rekanpajak_bloc.dart';
 import 'blocs/simulcar/simulcarcrud_bloc.dart';
 import 'blocs/simulcargo/simulcargocrud_bloc.dart';
 import 'blocs/simulmb/simulmbcrud_bloc.dart';
@@ -172,16 +169,7 @@ class App extends StatelessWidget {
               GallerytestimonyCariBloc()),        
         BlocProvider<GallerymemberCariBloc>(
           create: (context) =>
-              GallerymemberCariBloc()),
-        BlocProvider<RekanContactBloc>(
-            create: (context) =>
-                RekanContactBloc(repository: RekanContactRepository())),
-        BlocProvider<RekanGeneralBloc>(
-            create: (context) =>
-                RekanGeneralBloc(repository: RekanGeneralRepository())),
-        BlocProvider<RekanPajakBloc>(
-            create: (context) =>
-                RekanPajakBloc(repository: RekanPajakRepository())),        
+              GallerymemberCariBloc()),          
         BlocProvider<GallerymemberCariBloc>(
           create: (context) =>
               GallerymemberCariBloc()),        
@@ -206,6 +194,12 @@ class App extends StatelessWidget {
         BlocProvider<MRekan1CrudBloc>(
           create: (context) => MRekan1CrudBloc(repository: MRekan1CrudRepository()),
         ), 
+        BlocProvider<ProfileUploadFotoBloc>(
+          create: (context) =>
+              ProfileUploadFotoBloc()),    
+        BlocProvider<ProfileDownloadFotoBloc>(
+          create: (context) =>
+              ProfileDownloadFotoBloc(repository: UserFotoRepository())),    
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

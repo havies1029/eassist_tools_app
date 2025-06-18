@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'popup_client.dart';
-import '../../profile/profile_perusahaan/profile_main_page.dart';
 import '../../../repositories/user/user_repository.dart';
 import '../../profile/profile_individu/profile_individu_main_page.dart';
 
@@ -362,14 +361,7 @@ class _LoginDialogState extends State<LoginDialog> with TickerProviderStateMixin
         ),
       );
     } else {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (_) => ProfileMainPage(
-            userid: 123,
-            userRepository: dummyUserRepository(),
-          ),
-        ),
-      );
+      
     }
   }
 }

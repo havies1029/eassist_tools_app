@@ -11,19 +11,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:math' show pi;
 
-import '../../../blocs/profile/rekancontact_bloc.dart';
-import '../../../blocs/profile/rekangeneral_bloc.dart';
-import '../../../blocs/profile/rekanpajak_bloc.dart';
 import '../../../pages/about_jps/about_main.dart';
 import '../../../pages/article_page/article_main.dart';
 import '../../../pages/hero_user_page/hero_user_main.dart';
 import '../../../pages/heropage/hero_main.dart';
 import '../../PopUp/Popup_Succeed.dart';
 import '../../login/login_client/LoginClientPage.dart';
-import '../../profile/profile_perusahaan/profile_main_page.dart';
-import '../../../pages/profile/rekancontact_form.dart';
-import '../../../pages/profile/rekangeneral_form.dart';
-import '../../../pages/profile/rekanpajak_form.dart';
 import '../../../pages/testimony_page/testimony_main.dart';
 import '../../../repositories/user/user_repository.dart';
 // import '../../login/login_client/popup_client.dart';
@@ -226,21 +219,7 @@ class _NavbarWidgetState extends State<NavbarWidget> {
 
     switch (menu) {
       case 'Profil':
-        await showDialog(
-          context: context,
-          barrierDismissible: true,
-          builder: (context) => Dialog(
-            insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            child: SizedBox(
-              width: 1300,
-              child: ProfileMainPage(
-                userid: 123, // ganti sesuai session
-                userRepository: dummyUserRepository,
-              ),
-            ),
-          ),
-        );
+        
         break;
 
       case 'Reset Password':
@@ -293,51 +272,7 @@ class _NavbarWidgetState extends State<NavbarWidget> {
         context,
         MaterialPageRoute(builder: (context) => const TestimonyMain()),
       );
-    }else if (title == 'Rekan Contact') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) {
-            return BlocProvider.value(
-              value: BlocProvider.of<RekanContactBloc>(context),
-              child: const RekanContactFormPage(
-                viewMode: 'tambah',    // atau 'ubah'
-                recordId: '',          // kalau 'ubah', ganti dengan ID yang relevan
-              ),
-            );
-          },
-        ),
-      );
-    }else if (title == 'Rekan General') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) {
-            return BlocProvider.value(
-              value: BlocProvider.of<RekanGeneralBloc>(context),
-              child: const RekanGeneralFormPage(
-                viewMode: 'tambah',    // atau 'ubah'
-                recordId: '',          // kalau 'ubah', ganti dengan ID yang relevan
-              ),
-            );
-          },
-        ),
-      );
-    }else if (title == 'Rekan Pajak') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) {
-            return BlocProvider.value(
-              value: BlocProvider.of<RekanPajakBloc>(context),
-              child: const RekanPajakFormPage(
-                viewMode: 'tambah',    // atau 'ubah'
-                recordId: '',          // kalau 'ubah', ganti dengan ID yang relevan
-              ),
-            );
-          },
-        ),
-      );
+
     }else if (title == 'Login Gmail') {
       await CustomPopupsLoginUser.showLoginUserDialog(context);
     }else if (title == 'Login Client') {
@@ -405,22 +340,7 @@ class _NavbarWidgetState extends State<NavbarWidget> {
         ),
       );
     } else if (title == 'Profile Perusahaan') {
-      showDialog(
-        context: context,
-        builder: (context) => Dialog(
-          insetPadding: const EdgeInsets.all(32),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-          child: SizedBox(
-            width: 1200,
-            child: ProfileMainPage(
-              userid: 123,
-              userRepository: dummyUserRepository,
-            ),
-          ),
-        ),
-      );
+      
     } else if (title == 'Dialog Confirmation') {
       showDialog(
         context: context,
