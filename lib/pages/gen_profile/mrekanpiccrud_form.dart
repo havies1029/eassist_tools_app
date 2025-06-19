@@ -46,8 +46,8 @@ class MRekanPicCrudFormPageFormState extends State<MRekanPicCrudFormPage> {
 	Widget build(BuildContext context) {
 		mRekanPicCrudBloc = BlocProvider.of<MRekanPicCrudBloc>(context);
 		return BlocConsumer<MRekanPicCrudBloc, MRekanPicCrudState>(
-			builder: (context, state) {
-				return Dialog(
+			builder: (context, state) { 
+				return state.isLoaded ? Dialog(
 					shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
 					child: SingleChildScrollView(
 						child: Padding(
@@ -119,7 +119,7 @@ class MRekanPicCrudFormPageFormState extends State<MRekanPicCrudFormPage> {
 									],
 								)),
 						),
-					));
+					)):CircularProgressIndicator();
 				},
 				listener: (context, state) {
 					if (state.isLoaded) {
@@ -137,7 +137,7 @@ class MRekanPicCrudFormPageFormState extends State<MRekanPicCrudFormPage> {
         fieldIsDefaultController.text = current.record!.isDefault.toString();
         return true;
 		  }
-		  return false;
+		  return current.isLoaded;
 		},
 			);
 		}

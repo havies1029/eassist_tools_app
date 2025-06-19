@@ -53,7 +53,8 @@ class MRekanPicCrudBloc extends Bloc<MRekanPicCrudEvents, MRekanPicCrudState> {
     emit(state.copyWith(isLoading: true, isLoaded: false));
     MRekanPicCrudModel record =
         await repository.mRekanPicCrudLihat(event.recordId);
-    emit(state.copyWith(isLoading: false, isLoaded: true, record: record));
+    
+    emit(state.copyWith(isLoading: false, isLoaded: true, record: record, comboMJabatan: record.comboMJabatan));
   }
 
   Future<void> onComboMJabatanChanged(
