@@ -18,6 +18,7 @@ import 'package:eassist_tools_app/blocs/networkconnection/network_bloc.dart';
 import 'package:eassist_tools_app/blocs/onboardmenu/onboardmenucari_bloc.dart';
 import 'package:eassist_tools_app/blocs/profile/profile_download_foto_bloc.dart';
 import 'package:eassist_tools_app/blocs/profile/profile_upload_foto_bloc.dart';
+import 'package:eassist_tools_app/blocs/profile/profile_upload_ktp_bloc.dart';
 import 'package:eassist_tools_app/blocs/progressindicator/progressindicator_bloc.dart';
 import 'package:eassist_tools_app/blocs/reguser/reguser_bloc.dart';
 import 'package:eassist_tools_app/blocs/simuleei/simuleeicrud_bloc.dart';
@@ -41,6 +42,7 @@ import 'package:eassist_tools_app/repositories/gen_profile/mrekangeneralidvcrud_
 import 'package:eassist_tools_app/repositories/gen_profile/mrekanpiccrud_repository.dart';
 import 'package:eassist_tools_app/repositories/login/change_password_repository.dart';
 import 'package:eassist_tools_app/repositories/login/emailverification_repository.dart';
+import 'package:eassist_tools_app/repositories/profile/profile_ktp_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/userfoto_repository.dart';
 import 'package:eassist_tools_app/repositories/reguser/reguser_repository.dart';
 import 'package:eassist_tools_app/repositories/simulbon/simulboncrud_repository.dart';
@@ -199,7 +201,10 @@ class App extends StatelessWidget {
               ProfileUploadFotoBloc()),    
         BlocProvider<ProfileDownloadFotoBloc>(
           create: (context) =>
-              ProfileDownloadFotoBloc(repository: UserFotoRepository())),    
+              ProfileDownloadFotoBloc(repository: UserFotoRepository())), 
+        BlocProvider<ProfileUploadKtpBloc>(
+          create: (context) =>
+              ProfileUploadKtpBloc(repository: ProfileKtpRepository())),       
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

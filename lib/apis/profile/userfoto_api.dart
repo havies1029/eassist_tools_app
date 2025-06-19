@@ -52,6 +52,26 @@ class UserFotoApi {
     }
   }
 
+  Future<Uint8List?> getUserProfileKtpImageBytes() async {
+
+    String getImageEndpoint = "${AppData.prefixEndPoint}/api/userprofile/getktp";
+
+    Map<String, String> headers = <String, String>{
+      'Content-Type': 'multipart/form-data',
+      'Authorization': 'Bearer ${AppData.userToken}'
+    };
+
+    var uri = AppData.uriHtpp(AppData.httpAuthority, getImageEndpoint);
+
+    final response = await http.get(uri,headers: headers);
+
+    if (response.statusCode == 200) {
+      return response.bodyBytes;
+    } else {
+      throw Exception('Gagal mengambil gambar: ${response.statusCode}');
+    }
+  }
+
   Future<void> postImage(File image) async {
     UserRepository userRepo = UserRepository();
     String token = await userRepo.getToken();

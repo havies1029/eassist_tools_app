@@ -5,6 +5,7 @@ import 'package:eassist_tools_app/blocs/profile/profile_download_foto_bloc.dart'
 import 'package:eassist_tools_app/blocs/profile/profile_upload_foto_bloc.dart';
 import 'package:eassist_tools_app/pages/gen_profile/mrekancontactcrud_form.dart';
 import 'package:eassist_tools_app/pages/gen_profile/mrekangeneralcmpcrud_form.dart';
+import 'package:eassist_tools_app/pages/gen_profile/mrekangeneralidvcrud_form.dart';
 import 'package:eassist_tools_app/pages/gen_profile/profile_picture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -65,6 +66,8 @@ class _TestProfilePageState extends State<TestProfilePage> {
                   MRekanGeneralCmpCrudFormPage(),
                   const SizedBox(height: 24),            
                   MRekanContactCrudFormPage(),
+                  const SizedBox(height: 24),   
+                  MRekanGeneralIdvCrudFormPage(),
                   const SizedBox(height: 24),   
                   ElevatedButton(
                     onPressed: () {
