@@ -144,6 +144,7 @@ class _HamburgerDropdownContentState extends State<HamburgerDropdownContent> {
           'subs': [
             SubMenuItem(icon: Icons.person_pin_circle_outlined, title: 'Profile Individu', onTap: () {}),
             SubMenuItem(icon: Icons.business_outlined, title: 'Profile Perusahaan', onTap: () {}),
+            SubMenuItem(icon: Icons.business_outlined, title: 'Test Profile', onTap: () {}),
           ],
         },
         {

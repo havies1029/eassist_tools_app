@@ -1,40 +1,52 @@
+import 'package:eassist_tools_app/models/combobox/combomjnskel_model.dart';
 import 'package:eassist_tools_app/models/combobox/combompekerjaan_model.dart';
 
 class MRekanGeneralIdvCrudModel {
-	String mjnsclientId;
-	String mjnskelId;
-	String mrekan1Id;
-	String rekanNama;
-	String? mpekerjaanId;
-	ComboMPekerjaanModel? comboMPekerjaan;
+  String? mjnskelId;
+  String mrekan1Id;
+  String rekanNama;
+  String? mpekerjaanId;
+  bool? isKtpUploaded;
+  ComboMPekerjaanModel? comboMPekerjaan;
+  ComboMJnskelModel? comboMJnskel;
 
-	MRekanGeneralIdvCrudModel({required this.mjnsclientId, required this.mjnskelId, 
-		required this.mrekan1Id, required this.rekanNama, 
-		this.mpekerjaanId, this.comboMPekerjaan});
+  MRekanGeneralIdvCrudModel(
+      {required this.mjnskelId,
+      required this.mrekan1Id,
+      required this.rekanNama,
+      this.mpekerjaanId,
+      this.isKtpUploaded,
+      this.comboMPekerjaan,
+      this.comboMJnskel});
 
-	factory MRekanGeneralIdvCrudModel.fromJson(Map<String, dynamic> data) {
-		ComboMPekerjaanModel? comboMPekerjaan;
-		if (data['comboMPekerjaan'] != null) {
-			comboMPekerjaan = ComboMPekerjaanModel.fromJson(data['comboMPekerjaan']);
-		}
+  factory MRekanGeneralIdvCrudModel.fromJson(Map<String, dynamic> data) {
+    ComboMPekerjaanModel? comboMPekerjaan;
+    if (data['comboMPekerjaan'] != null) {
+      comboMPekerjaan = ComboMPekerjaanModel.fromJson(data['comboMPekerjaan']);
+    }
 
-		return MRekanGeneralIdvCrudModel(
-			mjnsclientId: data['mjnsclientId']??'',
-			mjnskelId: data['mjnskelId']??'',
-			mrekan1Id: data['mrekan1Id']??'',
-			rekanNama: data['rekanNama']??'',
-			mpekerjaanId: data['mpekerjaanId']??'',
-			comboMPekerjaan: comboMPekerjaan
-		);
+    ComboMJnskelModel? comboMJnskel;
+    if (data['comboMJnskel'] != null) {
+      comboMJnskel = ComboMJnskelModel.fromJson(data['comboMJnskel']);
+    }
 
-	}
+    return MRekanGeneralIdvCrudModel(
+        mjnskelId: data['mjnskelId'] ?? '',
+        mrekan1Id: data['mrekan1Id'] ?? '',
+        rekanNama: data['rekanNama'] ?? '',
+        mpekerjaanId: data['mpekerjaanId'] ?? '',        
+			  isKtpUploaded: data['isKtpUploaded']??false,
+        comboMPekerjaan: comboMPekerjaan,
+        comboMJnskel: comboMJnskel);
+  }
 
-	Map<String, dynamic> toJson() =>
-		{'mjnsclientId': mjnsclientId,
-		'mjnskelId': mjnskelId,
-		'mrekan1Id': mrekan1Id,
-		'rekanNama': rekanNama,
-		'mpekerjaanId': mpekerjaanId,
-		'comboMPekerjaan': comboMPekerjaan?.toJson()};
-
+  Map<String, dynamic> toJson() => {
+        'mjnskelId': mjnskelId,
+        'mrekan1Id': mrekan1Id,
+        'rekanNama': rekanNama,
+        'mpekerjaanId': mpekerjaanId,
+        'isKtpUploaded': isKtpUploaded,
+        'comboMPekerjaan': comboMPekerjaan?.toJson(),
+        'comboMJnsKel': comboMJnskel?.toJson()
+      };
 }

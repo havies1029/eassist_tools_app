@@ -148,6 +148,10 @@ flutter:
     - assets/images/HANABANK.png
     - assets/images/BRI.png
     - assets/images/JPS(2).png
+    - assets/images/article1.png
+    - assets/images/article2.png
+    - assets/images/article3.png
+    - assets/images/article4.png
 
 fonts:
     - family: HeeboBold

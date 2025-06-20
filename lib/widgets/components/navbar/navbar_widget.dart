@@ -1,7 +1,7 @@
 import 'package:eassist_tools_app/pages/splash/splash_page.dart';
 import 'package:eassist_tools_app/widgets/account/login/login_gmail/popup_dialog_login.dart';
 import 'package:eassist_tools_app/widgets/dialog/PopUp/confirmation_dialog.dart';
-import 'package:eassist_tools_app/widgets/account/profile/profile_individu/profile_individu_main_page.dart';
+import 'package:eassist_tools_app/widgets/account/profile/profile_main_page.dart';
 import 'package:eassist_tools_app/widgets/account/register/register_gmail/Popup.dart';
 import 'package:eassist_tools_app/widgets/dialog/popup/logout_popup.dart';
 import 'package:eassist_tools_app/widgets/dialog/reset_password/reset_password_dialog.dart';
@@ -9,45 +9,13 @@ import 'package:eassist_tools_app/widgets/components/navbar/components/hamburger
 import 'package:eassist_tools_app/widgets/components/navbar/components/nav_bar.dart';
 import 'package:eassist_tools_app/widgets/components/navbar/components/profile_dropdown_content.dart';
 import 'package:eassist_tools_app/widgets/components/navbar/components/profile_section.dart';
-// import 'package:eassist_tools_app/widgets/section/about/PencapaianAbout.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-
-// import '../../../blocs/authentication/authentication_bloc.dart';
-import '../../../blocs/profile/rekanbank_bloc.dart';
-import '../../../blocs/profile/rekancontact_bloc.dart';
-import '../../../blocs/profile/rekangeneral_bloc.dart';
-import '../../../blocs/profile/rekanpajak_bloc.dart';
-import '../../../blocs/profile/rekanpic_bloc.dart';
-import '../../../blocs/profile/rekanpiccrud_bloc.dart';
-import '../../../blocs/profile/rekanpiclist_bloc.dart';
-import '../../../pages/about_jps/about_main.dart';
-import '../../../pages/active_assets/active_assets_main.dart';
-import '../../../pages/article_page/article_main.dart';
-import '../../../pages/summary_polis_assets/assets_management_main.dart';
-import '../../../pages/find_insurance/find_insurance_main.dart';
+import '../../../blocs/gen_profile/mrekan1crud_bloc.dart';
 import '../../../pages/hero_client_page/hero_user_main.dart';
-import '../../../pages/heropage/hero_main.dart';
-import '../../../pages/profile/rekanbank_form.dart';
-import '../../../pages/profile/rekanpic_form.dart';
-import '../../../pages/profile/rekanpiccrud_form.dart';
-import '../../../pages/profile/rekanpiccrud_main.dart';
-import '../../../pages/profile/rekanpiclist_list.dart';
-import '../../../pages/profile/rekanpiclist_list_widget.dart';
-import '../../../pages/user_jps/user_jps_main.dart';
-import '../../../pages/user_non_jps/user_non_jps_main.dart';
 import '../../dialog/PopUp/success_popup.dart';
-import '../../dialog/forget_password/repair.dart';
-import '../../account/profile/profile_perusahaan/profile_main_page.dart';
-import '../../../pages/profile/rekancontact_form.dart';
-import '../../../pages/profile/rekangeneral_form.dart';
-import '../../../pages/profile/rekanpajak_form.dart';
-import '../../../pages/testimony_page/testimony_main.dart';
-import '../../../pages/customer_service/cs_main.dart';
 import '../../../repositories/user/user_repository.dart';
-// import '../../login/login_client/popup_client.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../dialog/popup/status_popup.dart';
 
 
@@ -246,22 +214,34 @@ class _NavbarWidgetState extends State<NavbarWidget> {
 
     switch (menu) {
       case 'Profil':
-        await showDialog(
-          context: context,
-          barrierDismissible: true,
-          builder: (context) => Dialog(
-            insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            child: SizedBox(
-              width: 1300,
-              child: ProfileMainPage(
-                userid: 123, // ganti sesuai session
-                userRepository: dummyUserRepository,
+        final blocState = context.read<MRekan1CrudBloc>().state;
+        final mjnsclientId = blocState.record?.mjnsclientId.toString();
+        debugPrint('Nilai mjnsclientId: $mjnsclientId');
+        // final mrekan1Id = blocState.record?.mrekan1Id ?? 0; // ganti kalau field user ID kamu berbeda
+
+        if (mjnsclientId == "10" || mjnsclientId == "20") {
+          await showDialog(
+            context: context,
+            barrierDismissible: true,
+            builder: (context) => Dialog(
+              insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              child: SizedBox(
+                width: 1300,
+                child: ProfileMainPage(
+                  userid: 123,
+                  selectedChoice: mjnsclientId == "10" ? 'Individual' : 'Perusahaan',
+                ),
               ),
             ),
-          ),
-        );
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Data profil tidak tersedia.")),
+          );
+        }
         break;
+
 
       case 'Reset Password':
         showDialog(
@@ -344,7 +324,9 @@ class _NavbarWidgetState extends State<NavbarWidget> {
     }else if (title == 'Rekan Pic List List') {
       context.go('/rekanpiclist');
     }else if (title == 'Rekan Pic List List Widget') {
-      context.go('/rekanpiclist_widget');
+     context.go('/rekanpiclist_widget');
+    }else if (title == 'Test Profile') {
+      context.go('/test_profile');
     }
     //
     // else if (title == 'Rekan Pic List Main') {
@@ -438,9 +420,9 @@ class _NavbarWidgetState extends State<NavbarWidget> {
           ),
           child: SizedBox(
             width: 1200,
-            child: ProfileIndividuMainPage(
+            child: ProfileMainPage(
               userid: 123,
-              userRepository: dummyUserRepository,
+              selectedChoice: 'Individual',
             ),
           ),
         ),
@@ -456,21 +438,23 @@ class _NavbarWidgetState extends State<NavbarWidget> {
           child: SizedBox(
             width: 1200,
             child: ProfileMainPage(
-              userid: 123,
-              userRepository: dummyUserRepository,
+                userid: 123,
+                selectedChoice: 'Perusahaan',
             ),
           ),
         ),
       );
-    } else if (title == 'Dialog Confirmation') {
-      showDialog(
-        context: context,
-        barrierColor: Colors.black54,
-        builder: (_) => ConfirmationDialog(
-          onConfirm: () { Navigator.push(context, MaterialPageRoute(builder: (_) => const HeroUserPage())); },
-        ),
-      );
-    } else if (title == 'Status Popup') {
+      // context.go('/rekanpajak1');
+    // } else if (title == 'Dialog Confirmation') {
+    //   showDialog(
+    //     context: context,
+    //     barrierColor: Colors.black54,
+    //     builder: (_) => ConfirmationDialog(
+    //       onConfirm: () { Navigator.push(context, MaterialPageRoute(builder: (_) => const HeroUserPage())); },
+    //     ),
+    //   );
+    // }
+    }else if (title == 'Status Popup') {
       showDialog(
         context: context,
         barrierColor: Colors.black54,

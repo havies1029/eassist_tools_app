@@ -8,7 +8,7 @@ class MRekanGeneralIdvCrudAPI {
 
 	Future<bool> mRekanGeneralIdvCrudUbahAPI(MRekanGeneralIdvCrudModel record) async {
 		String ubahEndpoint =
-			"${AppData.prefixEndPoint}/api/profile/mrekangeneralidvcrud/update";
+			"${AppData.prefixEndPoint}/api/profile/rekangeneralidvcrud/update";
 		Map<String, String> queryParams = {"modul_id": "mRekanGeneralIdvCrudUbahAPI"};
 
 		var uri = AppData.uriHtpp(AppData.httpAuthority, ubahEndpoint, queryParams);
@@ -31,7 +31,7 @@ class MRekanGeneralIdvCrudAPI {
 	}
 	
 	Future<MRekanGeneralIdvCrudModel> mRekanGeneralIdvCrudLihatAPI() async {
-		String lihatEndpoint = "${AppData.prefixEndPoint}/api/profile/mrekangeneralidvcrud/read";
+		String lihatEndpoint = "${AppData.prefixEndPoint}/api/profile/rekangeneralidvcrud/read";
 		var uri = AppData.uriHtpp(AppData.httpAuthority, lihatEndpoint);
 		final http.Response response =
 			await http.get(uri, headers: <String, String>{
@@ -44,7 +44,7 @@ class MRekanGeneralIdvCrudAPI {
 			var returnData = MRekanGeneralIdvCrudModel.fromJson(jsonDecode(response.body));
 			return returnData;
 		} else {
-			return throw Exception("Failed to load data");
+			return throw Exception("Failed to load data general individu");
 		}
 	}
 }

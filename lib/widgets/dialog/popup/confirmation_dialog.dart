@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:eassist_tools_app/blocs/gen_profile/mrekan1crud_bloc.dart';
 
 class ConfirmationDialog extends StatefulWidget {
-  /// Callback yang dijalankan jika pengguna menekan "Setuju & Lanjutkan"
   final VoidCallback onConfirm;
+  final String mrekanId;
 
   const ConfirmationDialog({
     Key? key,
     required this.onConfirm,
+    required this.mrekanId,
   }) : super(key: key);
 
   @override
@@ -80,10 +83,15 @@ class _ConfirmationDialogState extends State<ConfirmationDialog>
   void _confirmAndClose() async {
     await _animationController.reverse();
     if (mounted) {
+      context.read<MRekan1CrudBloc>().add(
+        MRekan1CrudSetujuTCEvent(mrekanId: widget.mrekanId),
+      );
       Navigator.of(context).pop();
       widget.onConfirm();
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {

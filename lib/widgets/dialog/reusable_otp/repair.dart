@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import '../../../pages/hero_client_page/hero_user_main.dart';
 import '../../../pages/profile/profile_main_page.dart';
 import '../../../repositories/user/user_repository.dart';
-import '../../account/profile/profile_individu/profile_individu_main_page.dart';
 // import '../../account/register/register_client/register_form_dialog.dart';
 
 
@@ -223,14 +222,7 @@ class _ReusableOTPDialogState extends State<ReusableOTPDialog>
       // 2) Navigasi sesuai selectedChoice (jika ada), atau ke HeroUserMain
       if (widget.selectedChoice != null) {
         if (widget.selectedChoice == 'Individual') {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => ProfileIndividuMainPage(
-                userid: 123,
-                userRepository: DummyUserRepository(),
-              ),
-            ),
-          );
+
         } else {
           Navigator.of(context).push(
             MaterialPageRoute(

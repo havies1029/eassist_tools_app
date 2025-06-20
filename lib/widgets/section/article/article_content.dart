@@ -1,9 +1,17 @@
+// ========================
+// 🎯 Artikel Utama Metadata
+// ========================
+
 final String articleTitle =
     'Apa Itu JPS? Mengenal Jenis Perlindungan Mikro yang Ramah Masyarakat';
 
 final String articleAuthor = 'Ryan Basudara';
 final String articleDate = 'May 22, 2025';
 final String articleImagePath = 'assets/images/article_2.png';
+
+// ========================
+// 📌 Daftar Isi (TOC Items)
+// ========================
 
 final List<Map<String, String>> tocItems = [
   {'title': 'Apa Itu JPS?', 'id': 'apa-itu-jps'},
@@ -12,6 +20,10 @@ final List<Map<String, String>> tocItems = [
   {'title': 'Siapa yang Bisa Menjadi Peserta JPS?', 'id': 'siapa-peserta'},
   {'title': 'JPS bukan sekadar program asuransi mikro.', 'id': 'kesimpulan'},
 ];
+
+// ========================
+// 📚 Konten Setiap Section
+// ========================
 
 final Map<String, Map<String, dynamic>> sectionContents = {
   'apa-itu-jps': {
@@ -66,6 +78,10 @@ final Map<String, Map<String, dynamic>> sectionContents = {
   },
 };
 
+// ========================
+// 📰 Artikel Sampingan (Sidebar)
+// ========================
+
 final List<Map<String, String>> sidebarArticles = [
   {
     'title': '5 Jenis Perlindungan JPS yang Wajib Diketahui Masyarakat',
@@ -98,3 +114,74 @@ final List<Map<String, String>> sidebarArticles = [
     'readTime': '5 Menit',
   },
 ];
+
+
+
+// ========================
+// 📰 CERITA BESAR
+// ========================
+
+
+// Data untuk cerita besar (main articles)
+final List<Map<String, String>> mainArticles = [
+  {
+    'title': 'Selasa, 16 Januari 2018 "SMART INSURANCE", Gebrakan AWAL TAHUN PT. Jaya Proteksindo Sakti',
+    'image': 'assets/images/article1.png',
+    'date': '16 Januari 2018'
+  },
+  {
+    'title': 'Revolusi Teknologi Digital dalam Industri Asuransi Modern',
+    'image': 'assets/images/article2.png',
+    'date': '18 Jun 2025'
+  },
+  {
+    'title': 'Inovasi Produk Asuransi untuk Generasi Milenial',
+    'image': 'assets/images/article3.png',
+    'date': '17 Jun 2025'
+  },
+  {
+    'title': 'Strategi Pemasaran Digital dalam Era New Normal',
+    'image': 'assets/images/article4.png',
+    'date': '16 Jun 2025'
+  },
+];
+
+
+// ========================
+// 📰 CERITA SAMPINGAN
+// ========================
+
+// Data untuk cerita sampingan (side articles)
+final List<Map<String, String>> sideArticles = [
+  {
+    'title': 'Smart Insurance, Solusi Lindungi Properti Pencurian Dari Risiko Tak Terduga',
+    'source': 'TribunBisnis/TribunNews.Com',
+    'image': 'assets/images/article1.png',
+  },
+  {
+    'title': 'Jaya Proteksindo Sakti Persembahan Smart Insurance, Solusi Asuransi Untuk Pelaku Industri',
+    'source': 'LipurankCom',
+    'image': 'assets/images/article2.png',
+  },
+  {
+    'title': 'Teknologi Blockchain dalam Asuransi Kesehatan',
+    'source': 'TechNews.Com',
+    'image': 'assets/images/article3.png',
+  },
+  {
+    'title': 'Perkembangan Asuransi Syariah di Indonesia',
+    'source': 'IslamicFinance.Com',
+    'image': 'assets/images/article4.png',
+  },
+  {
+    'title': 'Digitalisasi Klaim Asuransi Mempercepat Proses',
+    'source': 'FinancialTech.Com',
+    'image': 'assets/images/article1.png',
+  },
+  {
+    'title': 'Asuransi Mikro untuk UMKM Indonesia',
+    'source': 'BusinessDaily.Com',
+    'image': 'assets/images/article2.png',
+  },
+];
+

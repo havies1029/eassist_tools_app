@@ -54,11 +54,43 @@ class _RegisterClientDialogState extends BaseDialogState<RegisterClientDialog> {
                   const SizedBox(height: 20),
 
                   // Input HP
-                  buildTextField(
+                  // Input HP dengan prefix +62 dan bendera Indonesia
+                  TextFormField(
                     controller: hpController,
-                    hintText: 'HP',
-                    keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.phone,
+                    decoration: InputDecoration(
+                      prefixIcon: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const SizedBox(width: 15),
+                          const Text(
+                            '+62',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          const SizedBox(width: 5),
+                        ],
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Nomor HP wajib diisi';
+                      }
+                      if (!RegExp(r'^[0-9]{9,13}$').hasMatch(value)) {
+                        return 'Format nomor tidak valid';
+                      }
+                      return null;
+                    },
+                    onTap: () {
+                      if (hpController.text.isEmpty) {
+                        hpController.text = '8'; // hanya angka setelah +62
+                      }
+                    },
                   ),
+
                   const SizedBox(height: 20),
 
                   // Input pswd

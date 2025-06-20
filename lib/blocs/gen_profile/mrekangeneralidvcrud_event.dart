@@ -31,17 +31,26 @@ class MRekanGeneralIdvCrudHapusEvent extends MRekanGeneralIdvCrudEvents {
 	List<Object> get props => [recordId];
 }
 
-class MRekanGeneralIdvCrudLihatEvent extends MRekanGeneralIdvCrudEvents {
-	final String recordId;
-	const MRekanGeneralIdvCrudLihatEvent({required this.recordId});
-
-	@override
-	List<Object> get props => [recordId];
-}
+class MRekanGeneralIdvCrudLihatEvent extends MRekanGeneralIdvCrudEvents {}
 
 class ComboMPekerjaanChangedEvent extends MRekanGeneralIdvCrudEvents{
 	final ComboMPekerjaanModel comboMPekerjaan;
 	const ComboMPekerjaanChangedEvent({required this.comboMPekerjaan});
 
-	@override	List<Object> get props => [comboMPekerjaan];}
+	@override	List<Object> get props => [comboMPekerjaan];
+}
+
+class ComboMJnskelChangedEvent extends MRekanGeneralIdvCrudEvents{
+	final ComboMJnskelModel comboMJnskel;
+	const ComboMJnskelChangedEvent({required this.comboMJnskel});
+
+	@override	List<Object> get props => [comboMJnskel];
+}
+
+class UpdateIsKtpUploaded extends MRekanGeneralIdvCrudEvents{
+	final bool isUploaded;
+	const UpdateIsKtpUploaded({required this.isUploaded});
+
+	@override	List<Object> get props => [isUploaded];
+}
 

@@ -5,8 +5,15 @@ import 'decorations/AnimatedHoverActionButton.dart';
 
 class ActionSection extends StatefulWidget {
   final BoxConstraints constraints;
+  final bool showCTAs;
+  final bool isAbout;
 
-  const ActionSection({super.key, required this.constraints});
+  const ActionSection({
+    super.key,
+    required this.constraints,
+    this.showCTAs = true,
+    this.isAbout = false,
+  });
 
   @override
   State<ActionSection> createState() => _ActionSectionState();
@@ -97,8 +104,10 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
     _mainController.forward();
     await Future.delayed(const Duration(milliseconds: 400));
     _imageController.forward();
-    await Future.delayed(const Duration(milliseconds: 600));
-    _ctaController.forward();
+    if (widget.showCTAs) {
+      await Future.delayed(const Duration(milliseconds: 600));
+      _ctaController.forward();
+    }
   }
 
   @override
@@ -127,7 +136,11 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
             children: [
               if (isMobile) _buildMobileBackgroundImage(),
               Container(
-                padding: verticalPadding.add(horizontalPadding),
+                padding: verticalPadding
+                    .add(horizontalPadding)
+                    .add(EdgeInsets.only(
+                  bottom: widget.isAbout && isMobile ? 60.0 : 0.0,
+                )),
                 child: Center(
                   child: Container(
                     constraints: BoxConstraints(maxWidth: maxWidth),
@@ -144,18 +157,18 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
 
   Widget _buildMobileBackgroundImage() {
     return Positioned(
-      top: 150,
-      right: -50,
+      top: widget.isAbout ? 100 : 150,
+      right: widget.isAbout ? -40 : -50,
       child: AnimatedBuilder(
         animation: _imageController,
         builder: (context, child) {
           return Opacity(
-            opacity: 0.15 * _imageController.value,
+            opacity: 0.30 * _imageController.value,
             child: Transform.scale(
               scale: 2,
               child: Container(
-                width: 250,
-                height: 250,
+                width: widget.isAbout ? 200 : 250,
+                height: widget.isAbout ? 200 : 250,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(16.13),
                   child: Image.asset(
@@ -177,9 +190,10 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
       _buildAnimatedTitle(),
       const SizedBox(height: 32.0),
       _buildBenefitPoints(),
-      const SizedBox(height: 32.0),
-      _buildAnimatedCTAs(),
-      const SizedBox(height: 32.0),
+      if (widget.showCTAs) ...[
+        const SizedBox(height: 32.0),
+        _buildAnimatedCTAs(),
+      ],
     ],
   );
 
@@ -194,17 +208,16 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
             _buildAnimatedTitle(),
             const SizedBox(height: 30.0),
             _buildBenefitPoints(),
-            const SizedBox(height: 30.0),
-            _buildAnimatedCTAs(),
+            if (widget.showCTAs) ...[
+              const SizedBox(height: 30.0),
+              _buildAnimatedCTAs(),
+            ],
           ],
         ),
       ),
       const SizedBox(width: 24.0),
       ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: maxWidth * 0.4,
-          maxHeight: 300,
-        ),
+        constraints: BoxConstraints(maxWidth: maxWidth * 0.4, maxHeight: 300),
         child: _buildAnimatedImage(),
       ),
     ],
@@ -253,10 +266,7 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
             child: FadeTransition(
               opacity: _imageController,
               child: Container(
-                constraints: const BoxConstraints(
-                  maxWidth: 400,
-                  maxHeight: 400,
-                ),
+                constraints: const BoxConstraints(maxWidth: 400, maxHeight: 400),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(16.13),
                   child: Image.asset(
@@ -323,11 +333,7 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
               ),
             ],
           ),
-          child: Icon(
-            item['icon'],
-            color: const Color(0xFF79AB43),
-            size: 25.0,
-          ),
+          child: Icon(item['icon'], color: const Color(0xFF79AB43), size: 25.0),
         ),
         const SizedBox(width: 12.0),
         Flexible(
@@ -379,7 +385,6 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
         isPrimary: false,
         delay: const Duration(milliseconds: 200),
       ),
-
     ];
 
     return isMobile

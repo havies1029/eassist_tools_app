@@ -14,6 +14,6 @@ class MRekanGeneralIdvCrudMainPage extends StatelessWidget {
 				appBar: AppBar(
 					title: Text('${viewMode == "tambah"?"Tambah":"Ubah"} Informasi General'),
 				),
-				body: MRekanGeneralIdvCrudFormPage(viewMode: viewMode, recordId: recordId)));
+				body: MRekanGeneralIdvCrudFormPage()));
 	}
 }

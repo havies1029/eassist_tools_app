@@ -50,4 +50,4 @@ OutlineInputBorder outlineInputBorder() {
   );
 }
 
-enum ListStatus { initial, success, failure }
+enum ListStatus { initial, success, failure, loading }
