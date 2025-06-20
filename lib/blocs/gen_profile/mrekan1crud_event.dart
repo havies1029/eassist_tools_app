@@ -7,7 +7,14 @@ abstract class MRekan1CrudEvents extends Equatable {
 	List<Object> get props => [];
 }
 
-
-
 class MRekan1CrudLihatEvent extends MRekan1CrudEvents {}
+
+class MRekan1CrudSetujuTCEvent extends MRekan1CrudEvents {
+  final String mrekanId;
+
+  const MRekan1CrudSetujuTCEvent({required this.mrekanId});
+
+  @override
+  List<Object> get props => [mrekanId];
+}
 

@@ -8,6 +8,7 @@ class MRekan1CrudState extends Equatable {
 	final bool isSaving;
 	final bool isSaved;
 	final bool hasFailure;
+  final bool isSetujuTC;
 	const MRekan1CrudState(
 		{this.record,
 		this.isLoading = false,
@@ -15,6 +16,7 @@ class MRekan1CrudState extends Equatable {
 		this.isSaving = false,
 		this.isSaved = false,
 		this.hasFailure = false,
+		this.isSetujuTC = false,
 });
 
 	MRekan1CrudState copyWith({
@@ -24,6 +26,7 @@ class MRekan1CrudState extends Equatable {
 		bool? isSaving,
 		bool? isSaved,
 		bool? hasFailure,
+		bool? isSetujuTC,
 	}){
 		return MRekan1CrudState(
 			record: record ?? this.record,
@@ -32,9 +35,10 @@ class MRekan1CrudState extends Equatable {
 			isSaving: isSaving ?? this.isSaving,
 			isSaved: isSaved ?? this.isSaved,
 			hasFailure: hasFailure ?? this.hasFailure,
+			isSetujuTC: isSetujuTC ?? this.isSetujuTC,
 		);
 	}
 
 	@override
-	List<Object> get props => [isLoading, isLoaded, isSaving, isSaved, hasFailure];
+	List<Object> get props => [isLoading, isLoaded, isSaving, isSaved, hasFailure, isSetujuTC];
 }

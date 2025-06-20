@@ -4,13 +4,15 @@ class MRekan1CrudModel {
   int polisCount;
   double polisAmount;
   String mjnsclientId;
+  bool isSetujuTC;
 
   MRekan1CrudModel(
       {required this.mrekan1Id,
       required this.rekanNama,
       required this.polisCount,
       required this.polisAmount,
-      required this.mjnsclientId});
+      required this.mjnsclientId,
+      required this.isSetujuTC});
 
   factory MRekan1CrudModel.fromJson(Map<String, dynamic> data) {
     return MRekan1CrudModel(
@@ -19,6 +21,7 @@ class MRekan1CrudModel {
       polisCount: int.tryParse(data['polisCount'].toString()) ?? 0,
       polisAmount: double.tryParse(data['polisAmount'].toString()) ?? 0,
       mjnsclientId: data['mjnsclientId'] ?? '',
+      isSetujuTC: data['isSetujuTC'] ?? false,
     );
   }
 
@@ -27,6 +30,7 @@ class MRekan1CrudModel {
         'rekanNama': rekanNama,
         'polisCount': polisCount.toString(),
         'polisAmount': polisAmount.toString(),
-        'mjnsclientId': mjnsclientId
+        'mjnsclientId': mjnsclientId,
+        'isSetujuTC': isSetujuTC
       };
 }

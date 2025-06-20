@@ -36,7 +36,8 @@ class _TestProfilePageState extends State<TestProfilePage> {
         title: const Text('Profile'),
       ),
       body: BlocConsumer<MRekan1CrudBloc, MRekan1CrudState>(
-      builder: (context, state) {          
+      builder: (context, state) {       
+        debugPrint("TestProfilePage: state.isSetujuTC: ${state.isSetujuTC}");   
           return state.isLoaded ? SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(16.0),  
@@ -68,18 +69,24 @@ class _TestProfilePageState extends State<TestProfilePage> {
                   MRekanContactCrudFormPage(),
                   const SizedBox(height: 24),   
                   MRekanGeneralIdvCrudFormPage(),
-                  const SizedBox(height: 24),   
-                  ElevatedButton(
-                    onPressed: () {
-                    },
-                    child: const Text('Simpan'),
-                  ),
+                  const SizedBox(height: 24),  
+                  Text("state.isSetujuTC : ${state.isSetujuTC}"),
+                  if (!state.isSetujuTC) 
+                    ElevatedButton(
+                      onPressed: () {
+                        mRekan1CrudBloc.add(MRekan1CrudSetujuTCEvent(mrekanId: state.record?.mrekan1Id ?? ""));
+                      },
+                      child: const Text('Setujui TC'),
+                    ),
                 ],
               ),
             ),
           ): CircularProgressIndicator();
         }, 
         listener: (BuildContext context, MRekan1CrudState state) {  },
+        buildWhen: (previous, current) {
+          return current.isSetujuTC || current.isLoaded;
+        },
       ),
     );
   }
