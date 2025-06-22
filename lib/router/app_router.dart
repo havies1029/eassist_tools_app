@@ -1,3 +1,4 @@
+import 'package:eassist_tools_app/pages/splash/loading_user_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 // import 'package:go_router/src/refresh_stream.dart';
@@ -23,7 +24,7 @@ import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart'
 
 import '../helper/go_router_refresh_stream.dart';
 import '../pages/gen_profile/test_profile_main.dart';
-import '../pages/gen_profile/test_profile_page.dart';
+import '../pages/splash/loading_client_page.dart';
 
 /// Dummy fallback (tidak digunakan langsung dalam router)
 class DummyUserRepository extends UserRepository {}
@@ -34,7 +35,7 @@ GoRouter buildRouter(BuildContext context) {
   final AuthenticationBloc authBloc = BlocProvider.of<AuthenticationBloc>(context, listen: false);
 
   return GoRouter(
-    initialLocation: '/hero',
+    initialLocation: '/loading_hero',
 
     /// 👇 Sangat penting agar GoRouter tahu ketika state berubah
     refreshListenable: GoRouterRefreshStream(authBloc.stream),
@@ -48,7 +49,7 @@ GoRouter buildRouter(BuildContext context) {
 
       // Redirect jika belum login
       if (authState is AuthenticationUnauthenticated && location != '/hero') {
-        return '/hero';
+        return '/loading_hero';
       }
 
       // Redirect untuk yang sudah login
@@ -57,13 +58,13 @@ GoRouter buildRouter(BuildContext context) {
 
         // Semua login_client & login_token diarahkan ke /hero_user
         if ((from == 'login_client' || from == 'login_token') && location == '/hero') {
-          return '/hero_user';
+          return '/loading_hero_user';
         }
 
 
         // login_user diarahkan ke /hero
         if (from == 'login_user' && location != '/hero') {
-          return '/hero';
+          return '/loading_hero';
         }
       }
 
@@ -74,7 +75,14 @@ GoRouter buildRouter(BuildContext context) {
     /// 👇 Semua route aplikasi
     routes: [
       GoRoute(path: '/splash', builder: (context, state) => const SplashPage()),
-
+      GoRoute(
+        path: '/loading_hero_user',
+        builder: (context, state) => const LoadingClientPage(),
+      ),
+      GoRoute(
+        path: '/loading_hero',
+        builder: (context, state) => const LoadingUserPage(),
+      ),
       GoRoute(
         path: '/profile_individu',
         builder: (context, state) {

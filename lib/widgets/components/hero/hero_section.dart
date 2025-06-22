@@ -7,9 +7,9 @@ class AppTheme {
   static const Color white = Colors.white;
   static const Color primaryColor = Color(0xFF79AB43);
 
-  static double titleSize(bool isMobile) => isMobile ? 22 : 40;
-  static double bodySize(bool isMobile) => isMobile ? 12 : 15;
-  static double smallSize(bool isMobile) => isMobile ? 12 : 15;
+  static double titleSize(bool isMobile) => isMobile ? 25 : 43;
+  static double bodySize(bool isMobile) => isMobile ? 15 : 18;
+  static double smallSize(bool isMobile) => isMobile ? 15 : 18;
 
   static EdgeInsets responsivePadding(BoxConstraints constraints) {
     final double width = constraints.maxWidth;
@@ -111,7 +111,7 @@ class HeroSection extends StatelessWidget {
           children: [
             Positioned(
               right: 0,
-              top: 160,
+              top: 170,
               child: _buildHumanImage(),
             ),
             Positioned(
@@ -145,7 +145,7 @@ class HeroSection extends StatelessWidget {
             const SizedBox(width: 300, height: 250),
             Positioned(
               right: -40,
-              bottom: isTablet ? -50 : -10,
+              bottom: isTablet ? -40 : -10,
               child: SizedBox(width: 360, child: _buildHumanImage()),
             ),
           ],

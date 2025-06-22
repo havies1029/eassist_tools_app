@@ -108,7 +108,7 @@ class LoginUserDialogState extends BaseDialogState<LoginUserDialog> {
               // Tutup dialog ketika tap area di luar dialog
               onTap: () => Navigator.of(context).pop(),
               child: Scaffold(
-                backgroundColor: Colors.black.withOpacity(0.5), // Semi-transparent background
+                backgroundColor: Colors.black.withOpacity(0.2), // Semi-transparent background
                 body: GestureDetector(
                   // Mencegah dialog tertutup ketika tap di dalam dialog
                   onTap: () {},
@@ -270,6 +270,22 @@ class LoginUserDialogState extends BaseDialogState<LoginUserDialog> {
                 fontSize: 16,
               ),
               border: InputBorder.none,
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: Colors.grey.shade300),
+              ),
+              focusedBorder: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12)),
+                borderSide: BorderSide(color: Color(0xFF7BA05B), width: 1.8),
+              ),
+              errorBorder: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12)),
+                borderSide: BorderSide(color: Colors.red, width: 1.5),
+              ),
+              focusedErrorBorder: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12)),
+                borderSide: BorderSide(color: Colors.red, width: 1.8),
+              ),
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             ),
           ),

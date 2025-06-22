@@ -12,11 +12,13 @@ import 'package:dropdown_search/dropdown_search.dart';
 class MRekanPicCrudFormBody extends StatefulWidget {
   final String viewMode;
   final String recordId;
+  final VoidCallback? onCancel;
 
   const MRekanPicCrudFormBody({
     super.key,
     this.viewMode = 'tambah',
     this.recordId = '',
+    this.onCancel,
   });
 
   @override
@@ -34,17 +36,6 @@ class _MRekanPicCrudFormBodyState extends State<MRekanPicCrudFormBody> {
   final comboMJabatanKey = GlobalKey<DropdownSearchState<ComboMJabatanModel>>();
   ComboMJabatanModel? fieldComboMJabatan;
   bool isDefaultChecked = false;
-
-  final TextStyle labelStyle = const TextStyle(fontWeight: FontWeight.w500);
-  final TextStyle hintStyle = TextStyle(
-    fontFamily: 'Satoshi',
-    fontSize: 14,
-    color: Colors.grey.shade600,
-  );
-  final TextStyle textStyle = const TextStyle(
-    fontFamily: 'Satoshi',
-    fontSize: 14,
-  );
 
   @override
   void initState() {
@@ -86,112 +77,246 @@ class _MRekanPicCrudFormBodyState extends State<MRekanPicCrudFormBody> {
       child: BlocBuilder<MRekanPicCrudBloc, MRekanPicCrudState>(
         builder: (context, state) {
           if (!state.isLoaded) {
-            return const Center(child: CircularProgressIndicator());
+            return _buildLoadingState();
           }
 
-          return Container(
-            color: Colors.white,
-            padding: const EdgeInsets.all(12),
-            child: Form(
-              key: _formKey,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    children: [
-                      const Expanded(
-                        child: Text(
-                          "Informasi PIC",
-                          style: TextStyle(
-                            fontSize: 17.5,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.check),
-                        onPressed: onSaveForm,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-
-                  _buildLabelText("Nama PIC"),
-                  const SizedBox(height: 6),
-                  _buildStyledTextField(
-                    controller: fieldPicNamaController,
-                    hintText: "Masukkan nama",
-                  ),
-
-                  const SizedBox(height: 12),
-                  _buildLabelText("Email PIC"),
-                  const SizedBox(height: 6),
-                  _buildStyledTextField(
-                    controller: fieldPicEmailController,
-                    hintText: "Masukkan email",
-                    keyboardType: TextInputType.emailAddress,
-                  ),
-
-                  const SizedBox(height: 12),
-                  _buildLabelText("No. HP PIC"),
-                  const SizedBox(height: 6),
-                  _buildStyledTextField(
-                    controller: fieldPicHpController,
-                    hintText: "Masukkan nomor HP",
-                    keyboardType: TextInputType.phone,
-                  ),
-
-                  const SizedBox(height: 12),
-                  _buildLabelText("Jabatan"),
-                  const SizedBox(height: 6),
-                  _buildStyledDropdown(child: _buildFieldComboMJabatan()),
-
-                  const SizedBox(height: 12),
-                  _buildLabelText("Default PIC"),
-                  const SizedBox(height: 6),
-                  CheckboxWidget(
-                    leftLabel: "",
-                    rightLabel: "Default",
-                    initialValue: isDefaultChecked,
-                    callback: (value) {
-                      setState(() => isDefaultChecked = value);
-                    },
-                  ),
-                ],
-              ),
-            ),
-          );
+          return _buildFormContent();
         },
       ),
     );
   }
 
-  // Label
-  Widget _buildLabelText(String text) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Text(text, style: labelStyle),
+  Widget _buildLoadingState() {
+    return Container(
+      color: Colors.grey.shade50,
+      child: const Center(
+        child: CircularProgressIndicator(
+          strokeWidth: 2,
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+        ),
+      ),
     );
   }
 
-  // Input TextField
-  Widget _buildStyledTextField({
+  Widget _buildFormContent() {
+    return Container(
+      color: Colors.grey.shade50,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Header
+            _buildHeader(),
+
+            // Form Card
+            Container(
+              margin: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: Colors.grey.shade200,
+                  width: 0.5,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.04),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Form(
+                  key: _formKey,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildFormField(
+                        label: "Nama PIC",
+                        child: _buildTextField(
+                          controller: fieldPicNamaController,
+                          hintText: "Masukkan nama",
+                          prefixIcon: Icons.person_outline,
+                        ),
+                      ),
+
+                      _buildFormField(
+                        label: "Email",
+                        child: _buildTextField(
+                          controller: fieldPicEmailController,
+                          hintText: "Masukkan email",
+                          prefixIcon: Icons.email_outlined,
+                          keyboardType: TextInputType.emailAddress,
+                        ),
+                      ),
+
+                      _buildFormField(
+                        label: "No. HP",
+                        child: _buildTextField(
+                          controller: fieldPicHpController,
+                          hintText: "Masukkan nomor HP",
+                          prefixIcon: Icons.phone_outlined,
+                          keyboardType: TextInputType.phone,
+                        ),
+                      ),
+
+                      _buildFormField(
+                        label: "Jabatan",
+                        child: _buildDropdownField(),
+                      ),
+
+                      _buildFormField(
+                        label: "Pengaturan",
+                        child: _buildCheckboxField(),
+                        isLast: true,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        children: [
+          IconButton(
+            onPressed: () {
+              if (widget.onCancel != null) {
+                widget.onCancel!(); // hanya tutup form, tidak pop context
+              }
+            },
+            icon: const Icon(Icons.arrow_back, size: 20),
+            style: IconButton.styleFrom(
+              backgroundColor: Colors.grey.shade100,
+              foregroundColor: Colors.grey.shade700,
+              minimumSize: const Size(40, 40),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.viewMode == 'tambah' ? 'Tambah PIC' : 'Edit PIC',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                  ),
+                ),
+                Text(
+                  'Informasi Person in Charge',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Colors.grey.shade600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          IconButton(
+            onPressed: onSaveForm,
+            icon: const Icon(Icons.check, size: 20),
+            style: IconButton.styleFrom(
+              backgroundColor: Colors.green.shade50,
+              foregroundColor: Colors.green.shade700,
+              minimumSize: const Size(40, 40),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFormField({
+    required String label,
+    required Widget child,
+    bool isLast = false,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
+        ),
+        const SizedBox(height: 8),
+        child,
+        if (!isLast) const SizedBox(height: 20),
+      ],
+    );
+  }
+
+  Widget _buildTextField({
     required TextEditingController controller,
     required String hintText,
-    int maxLines = 1,
+    required IconData prefixIcon,
     TextInputType keyboardType = TextInputType.text,
   }) {
     return TextFormField(
       controller: controller,
-      maxLines: maxLines,
       keyboardType: keyboardType,
-      style: textStyle,
+      style: const TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+      ),
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: hintStyle,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        hintStyle: TextStyle(
+          fontSize: 14,
+          color: Colors.grey.shade500,
+        ),
+        prefixIcon: Icon(
+          prefixIcon,
+          size: 18,
+          color: Colors.grey.shade500,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: Colors.grey.shade300,
+            width: 0.5,
+          ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: Colors.grey.shade300,
+            width: 0.5,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: Colors.grey.shade600,
+            width: 1,
+          ),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(
+            color: Colors.red,
+            width: 1,
+          ),
+        ),
+        filled: true,
+        fillColor: Colors.grey.shade50,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),
       validator: (value) => value == null || value.trim().isEmpty
           ? 'Field tidak boleh kosong'
@@ -199,20 +324,7 @@ class _MRekanPicCrudFormBodyState extends State<MRekanPicCrudFormBody> {
     );
   }
 
-  // Dropdown Wrapper
-  Widget _buildStyledDropdown({required Widget child}) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade400),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: child,
-    );
-  }
-
-  // Dropdown Jabatan
-  Widget _buildFieldComboMJabatan() {
+  Widget _buildDropdownField() {
     return FormField<ComboMJabatanModel>(
       validator: (value) {
         if (fieldComboMJabatan == null) return 'Jabatan harus dipilih';
@@ -222,23 +334,39 @@ class _MRekanPicCrudFormBodyState extends State<MRekanPicCrudFormBody> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            buildFieldComboMJabatan(
-              comboKey: comboMJabatanKey,
-              labelText: 'Pilih Jabatan',
-              initItem: fieldComboMJabatan,
-              onChangedCallback: (value) {
-                setState(() => fieldComboMJabatan = value);
-                state.didChange(value);
-              },
-              onSaveCallback: (value) => fieldComboMJabatan = value,
-              validatorCallback: (_) {},
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.grey.shade50,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: state.hasError ? Colors.red : Colors.grey.shade300,
+                  width: state.hasError ? 1 : 0.5,
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                child: buildFieldComboMJabatan(
+                  comboKey: comboMJabatanKey,
+                  labelText: 'Pilih Jabatan',
+                  initItem: fieldComboMJabatan,
+                  onChangedCallback: (value) {
+                    setState(() => fieldComboMJabatan = value);
+                    state.didChange(value);
+                  },
+                  onSaveCallback: (value) => fieldComboMJabatan = value,
+                  validatorCallback: (_) {},
+                ),
+              ),
             ),
             if (state.hasError)
               Padding(
-                padding: const EdgeInsets.only(top: 5),
+                padding: const EdgeInsets.only(top: 8, left: 4),
                 child: Text(
                   state.errorText!,
-                  style: const TextStyle(color: Colors.red, fontSize: 12),
+                  style: const TextStyle(
+                    color: Colors.red,
+                    fontSize: 12,
+                  ),
                 ),
               ),
           ],
@@ -247,7 +375,50 @@ class _MRekanPicCrudFormBodyState extends State<MRekanPicCrudFormBody> {
     );
   }
 
-  // Simpan Form
+  Widget _buildCheckboxField() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Colors.grey.shade300,
+          width: 0.5,
+        ),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.star_outline,
+            size: 18,
+            color: Colors.grey.shade500,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              'Jadikan sebagai PIC default',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: Colors.grey.shade700,
+              ),
+            ),
+          ),
+          Switch(
+            value: isDefaultChecked,
+            onChanged: (value) {
+              setState(() => isDefaultChecked = value);
+            },
+            activeColor: Colors.green.shade600,
+            inactiveThumbColor: Colors.grey.shade400,
+            inactiveTrackColor: Colors.grey.shade300,
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          ),
+        ],
+      ),
+    );
+  }
+
   void onSaveForm() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();

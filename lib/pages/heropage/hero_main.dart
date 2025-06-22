@@ -49,7 +49,7 @@ class _HeroMainState extends State<HeroMain> {
     debugPrint("AuthenticationBloc state: $state");
 
     if (state is AuthenticationUnauthenticated) {
-      // CustomPopupsLoginUser.showLoginUserDialog(context);
+       await CustomPopupsLoginUser.showLoginUserDialog(context);
     } else if (state is AuthenticationRequireLoginClient) {
       if (Navigator.of(context, rootNavigator: true).canPop()) {
         Navigator.of(context, rootNavigator: true).pop();
@@ -81,14 +81,14 @@ class _HeroMainState extends State<HeroMain> {
 
       Future.microtask(() {
         if (state.authenticatedFrom == "login_user") {
-          context.go('/hero');
+          context.go('/loading_hero');
         } else if (state.authenticatedFrom == "login_client") {
-          context.go('/hero_user');
+          context.go('/loading_hero_user');
         } else if (state.authenticatedFrom == "login_token") {
-          context.go('/hero_user');
+          context.go('/loading_hero_user');
         }else {
           // Fallback kalau tidak terdeteksi
-          context.go('/hero');
+          context.go('/loading_hero');
         }
       });
     }

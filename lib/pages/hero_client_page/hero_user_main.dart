@@ -99,19 +99,39 @@ class _HeroUserPageState extends State<HeroUserPage> {
                   Positioned.fill(
                     child: isMobile
                         ? Container(color: const Color(0xFF79AB43))
-                        : Image.asset(
-                      'assets/images/home_3.jpg',
-                      fit: BoxFit.cover,
-                      alignment: const Alignment(0, 3),
-                      cacheWidth: 1440,
-                      cacheHeight: 800,
+                        : Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        Image.asset(
+                          'assets/images/bg-home.jpg',
+                          fit: BoxFit.cover,
+                          alignment: const Alignment(0, 3),
+                          cacheWidth: 1440,
+                          cacheHeight: 800,
+                        ),
+                        // Overlay gradient
+                        Container(
+                          decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                              colors: [
+                                Colors.black54, // paling kiri
+                                Colors.black26, // tengah kiri
+                                Colors.transparent, // kanan (transparan)
+                              ],
+                              stops: [0.0, 0.5, 0.9], // atur area gelapnya
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
 
                   // Konten
                   Positioned.fill(
                     child: SingleChildScrollView(
-                      padding: const EdgeInsets.only(top: 88),
+                      padding: EdgeInsets.only(top: isMobile ? 50 : 88),
                       child: Column(
                         children: [
                           // Tampilkan data client

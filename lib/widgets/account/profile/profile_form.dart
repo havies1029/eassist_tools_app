@@ -111,97 +111,158 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
   }
 
   Widget _buildProfilePicHeader() {
-    final controller = widget.controllers['namaUser'] ?? TextEditingController();
-    final nameField = _isEditingName
-        ? TextFormField(
-      controller: controller,
-      style: const TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.w600,
-        color: Color(0xFF2D3748),
-      ),
-      decoration: const InputDecoration(
-        border: UnderlineInputBorder(
-          borderSide: BorderSide(color: Color(0xFF4A5568)),
-        ),
-        focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Color(0xFF2D3748), width: 2),
-        ),
-        isDense: true,
-      ),
-    )
-        : Text(
-      controller.text.isEmpty ? 'Nama Anda' : controller.text,
-      style: const TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.w600,
-        color: Color(0xFF2D3748),
-      ),
-    );
+    return BlocBuilder<MRekan1CrudBloc, MRekan1CrudState>(
+      builder: (context, state) {
+        final namaRekan = state.record?.rekanNama ?? 'Nama Anda';
+        final controller = widget.controllers['namaUser'] ?? TextEditingController();
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 32),
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE2E8F0), width: 1),
-      ),
-      child: BlocBuilder<ProfileDownloadFotoBloc, ProfileDownloadFotoState>(
-        builder: (context, imageState) {
-          Uint8List? imageBytes;
-          if (imageState is ProfileDownloadFotoLoaded) {
-            imageBytes = imageState.imageBytes as Uint8List?;
-          }
+        if (controller.text.isEmpty) {
+          controller.text = namaRekan;
+        }
 
-          return Row(
-            children: [
-              ProfilePicture(
-                imageUrl: 'https://www.jayaproteksindo.co.id/image/Logo.png',
-                radius: 60,
-                blocImageBytes: imageBytes,
-                onImageSelected: (bytes, fileName) async {
-                  context.read<ProfileUploadFotoBloc>().add(
-                    UploadProfilePicture(bytes, fileName),
+        final nameField = _isEditingName
+            ? TextFormField(
+          controller: controller,
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF2D3748),
+          ),
+          decoration: const InputDecoration(
+            border: UnderlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFF4A5568)),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFF2D3748), width: 2),
+            ),
+            isDense: true,
+          ),
+        )
+            : Text(
+          controller.text,
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF2D3748),
+          ),
+        );
+
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final isMobile = constraints.maxWidth < 768;
+
+            return Container(
+              margin: const EdgeInsets.only(bottom: 32),
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFFE2E8F0), width: 1),
+              ),
+              child: BlocBuilder<ProfileDownloadFotoBloc, ProfileDownloadFotoState>(
+                builder: (context, imageState) {
+                  Uint8List? imageBytes;
+                  if (imageState is ProfileDownloadFotoLoaded) {
+                    imageBytes = imageState.imageBytes;
+                  }
+
+                  return isMobile
+                      ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: ProfilePicture(
+                          imageUrl: 'https://www.jayaproteksindo.co.id/image/Logo.png',
+                          radius: 60,
+                          blocImageBytes: imageBytes,
+                          onImageSelected: (bytes, fileName) async {
+                            context.read<ProfileUploadFotoBloc>().add(
+                              UploadProfilePicture(bytes, fileName),
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(child: nameField),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.check,
+                              size: 24,
+                              color: Color(0xFF4A5568),
+                            ),
+                            onPressed: _showSuccessPopup,
+                            tooltip: 'Lanjutkan Seluruh Form',
+                            padding: const EdgeInsets.all(12),
+                            constraints: const BoxConstraints(
+                              minWidth: 48,
+                              minHeight: 48,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  )
+                      : Row(
+                    children: [
+                      ProfilePicture(
+                        imageUrl: 'https://www.jayaproteksindo.co.id/image/Logo.png',
+                        radius: 60,
+                        blocImageBytes: imageBytes,
+                        onImageSelected: (bytes, fileName) async {
+                          context.read<ProfileUploadFotoBloc>().add(
+                            UploadProfilePicture(bytes, fileName),
+                          );
+                        },
+                      ),
+                      const SizedBox(width: 20),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Expanded(child: nameField),
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 4),
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.check,
+                                        size: 24,
+                                        color: Color(0xFF4A5568),
+                                      ),
+                                      onPressed: _showSuccessPopup,
+                                      tooltip: 'Lanjutkan Seluruh Form',
+                                      padding: const EdgeInsets.all(12),
+                                      constraints: const BoxConstraints(
+                                        minWidth: 48,
+                                        minHeight: 48,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   );
                 },
               ),
-              const SizedBox(width: 20),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(child: nameField),
-                        IconButton(
-                          icon: Icon(
-                            _isEditingName ? Icons.check : Icons.edit,
-                            size: 20,
-                            color: const Color(0xFF4A5568),
-                          ),
-                          onPressed: _toggleEditName,
-                          tooltip: _isEditingName ? 'Simpan Nama' : 'Edit Nama',
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Lengkapi profil Anda',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          );
-        },
-      ),
+            );
+          },
+        );
+      },
     );
   }
+
 
   Widget _buildPicSection() {
     return Column(
@@ -239,6 +300,12 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
             child: MRekanPicCrudFormBody(
               viewMode: _picFormMode,
               recordId: _selectedPicId ?? '',
+              onCancel: () {
+                setState(() {
+                  _showPicCrudForm = false;
+                  _selectedPicId = null;
+                });
+              },
             ),
             title: _picFormMode == 'tambah' ? 'Tambah PIC' : 'Edit PIC',
           ),
@@ -278,7 +345,7 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
           _buildProfilePicHeader(),
           ..._buildFormWidgets(),
           const SizedBox(height: 32),
-          _buildSubmitButton(),
+          
         ],
       ),
     );
@@ -334,7 +401,7 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
           ),
 
           const SizedBox(height: 32),
-          _buildSubmitButton(),
+          
         ],
       ),
     );
@@ -380,7 +447,7 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
           ]),
 
           const SizedBox(height: 32),
-          _buildSubmitButton(),
+          
         ],
       ),
     );
@@ -426,7 +493,7 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
           ),
 
           const SizedBox(height: 32),
-          _buildSubmitButton(),
+          
         ],
       ),
     );
@@ -481,32 +548,7 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
       ];
     }
   }
-
-  Widget _buildSubmitButton() {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: _showSuccessPopup,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF2D3748),
-          foregroundColor: Colors.white,
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          elevation: 0,
-        ),
-        child: const Text(
-          'Lanjutkan Seluruh Form',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ),
-    );
-  }
-
+  
   Widget _buildCard({required Widget child, required String title}) {
     return Container(
       decoration: BoxDecoration(
