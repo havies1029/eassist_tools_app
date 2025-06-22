@@ -1,7 +1,9 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import '../../../../blocs/authentication/authentication_bloc.dart';
-import 'profile_menu_item.dart'; // path ke ProfileMenuItem yang sudah kamu ekstrak
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../blocs/authentication/authentication_bloc.dart';
+import '../../../../blocs/profile/profile_download_foto_bloc.dart';
+import 'profile_menu_item.dart';
 
 class ProfileDropdownContent extends StatelessWidget {
   final VoidCallback onClose;
@@ -20,16 +22,18 @@ class ProfileDropdownContent extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [BoxShadow(
-          color: Colors.black.withOpacity(0.15),
-          blurRadius: 10,
-          offset: Offset(0,4),
-        )],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.15),
+            blurRadius: 10,
+            offset: Offset(0, 4),
+          )
+        ],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // header gradien
+          // Header gradien
           Container(
             padding: EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -42,41 +46,56 @@ class ProfileDropdownContent extends StatelessWidget {
             ),
             child: Row(
               children: [
-                // avatar + status
-                Stack(
-                  children: [
-                    Container(
-                      width:35, height:35,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width:2),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(17.5),
-                        child: Image.asset(
-                          'assets/images/profile_placeholder.jpg',
-                          fit: BoxFit.cover,
-                          errorBuilder:(c,e,s) => Container(
-                            color: Colors.white.withOpacity(0.3),
-                            child: Icon(Icons.person, color:Colors.white, size:20),
+                // Avatar + status
+                BlocBuilder<ProfileDownloadFotoBloc, ProfileDownloadFotoState>(
+                  builder: (context, imageState) {
+                    Uint8List? imageBytes;
+                    if (imageState is ProfileDownloadFotoLoaded) {
+                      imageBytes = imageState.imageBytes;
+                    }
+
+                    return Stack(
+                      children: [
+                        Container(
+                          width: 35,
+                          height: 35,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 2),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(17.5),
+                            child: imageBytes != null
+                                ? Image.memory(
+                              imageBytes,
+                              fit: BoxFit.cover,
+                              errorBuilder: (c, e, s) => _defaultIcon(),
+                            )
+                                : Image.asset(
+                              'assets/images/profile_placeholder.jpg',
+                              fit: BoxFit.cover,
+                              errorBuilder: (c, e, s) => _defaultIcon(),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom:0, right:0,
-                      child: Container(
-                        width:10, height:10,
-                        decoration: BoxDecoration(
-                          color: Color(0xFF4CAF50),
-                          shape: BoxShape.circle,
-                          border: Border.all(color:Colors.white, width:1.5),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: Container(
+                            width: 10,
+                            height: 10,
+                            decoration: BoxDecoration(
+                              color: Color(0xFF4CAF50),
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white, width: 1.5),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ],
+                      ],
+                    );
+                  },
                 ),
-                SizedBox(width:12),
+                SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,20 +120,19 @@ class ProfileDropdownContent extends StatelessWidget {
                           );
                         },
                       ),
-
                       Text(
                         'Online',
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.8),
-                          fontSize:12,
-                          fontFamily:'Satoshi-Regular',
+                          fontSize: 12,
+                          fontFamily: 'Satoshi-Regular',
                         ),
                       ),
                     ],
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.close, color:Colors.white, size:20),
+                  icon: Icon(Icons.close, color: Colors.white, size: 20),
                   onPressed: onClose,
                   padding: EdgeInsets.zero,
                   constraints: BoxConstraints(),
@@ -123,9 +141,9 @@ class ProfileDropdownContent extends StatelessWidget {
             ),
           ),
 
-          // daftar menu
+          // Daftar menu
           Padding(
-            padding: EdgeInsets.symmetric(vertical:8),
+            padding: EdgeInsets.symmetric(vertical: 8),
             child: Column(
               children: [
                 ProfileMenuItem(
@@ -139,8 +157,11 @@ class ProfileDropdownContent extends StatelessWidget {
                   onTap: () => onMenuTap('Reset Password'),
                 ),
                 Divider(
-                  height:1, thickness:1, color:Color(0xFFE5E5E5),
-                  indent:16, endIndent:16,
+                  height: 1,
+                  thickness: 1,
+                  color: Color(0xFFE5E5E5),
+                  indent: 16,
+                  endIndent: 16,
                 ),
                 ProfileMenuItem(
                   icon: Icons.logout,
@@ -154,4 +175,9 @@ class ProfileDropdownContent extends StatelessWidget {
       ),
     );
   }
+
+  Widget _defaultIcon() => Container(
+    color: Colors.white.withOpacity(0.3),
+    child: const Icon(Icons.person, color: Colors.white, size: 20),
+  );
 }

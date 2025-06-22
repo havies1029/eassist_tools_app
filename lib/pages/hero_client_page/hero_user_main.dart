@@ -115,54 +115,54 @@ class _HeroUserPageState extends State<HeroUserPage> {
                       child: Column(
                         children: [
                           // Tampilkan data client
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 20, horizontal: 16),
-                            child: Card(
-                              elevation: 2,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12)),
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text.rich(
-                                      TextSpan(
-                                        children: [
-                                          const TextSpan(
-                                            text: 'Nama Client: ',
-                                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                          ),
-                                          TextSpan(
-                                            text: state.record?.rekanNama.isNotEmpty == true
-                                                ? state.record!.rekanNama
-                                                : 'Tidak diketahui',
-                                            style: const TextStyle(fontSize: 16),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text.rich(
-                                      TextSpan(
-                                        children: [
-                                          const TextSpan(
-                                            text: 'Jenis Client ID: ',
-                                            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                                          ),
-                                          TextSpan(
-                                            text: state.record?.mjnsclientId?.toString() ?? 'Tidak diketahui',
-                                            style: const TextStyle(fontSize: 15),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
+                          // Padding(
+                          //   padding: const EdgeInsets.symmetric(
+                          //       vertical: 20, horizontal: 16),
+                          //   child: Card(
+                          //     elevation: 2,
+                          //     shape: RoundedRectangleBorder(
+                          //         borderRadius: BorderRadius.circular(12)),
+                          //     child: Padding(
+                          //       padding: const EdgeInsets.all(16.0),
+                          //       child: Column(
+                          //         crossAxisAlignment: CrossAxisAlignment.start,
+                          //         children: [
+                          //           Text.rich(
+                          //             TextSpan(
+                          //               children: [
+                          //                 const TextSpan(
+                          //                   text: 'Nama Client: ',
+                          //                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          //                 ),
+                          //                 TextSpan(
+                          //                   text: state.record?.rekanNama.isNotEmpty == true
+                          //                       ? state.record!.rekanNama
+                          //                       : 'Tidak diketahui',
+                          //                   style: const TextStyle(fontSize: 16),
+                          //                 ),
+                          //               ],
+                          //             ),
+                          //           ),
+                          //           const SizedBox(height: 8),
+                          //           Text.rich(
+                          //             TextSpan(
+                          //               children: [
+                          //                 const TextSpan(
+                          //                   text: 'Jenis Client ID: ',
+                          //                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                          //                 ),
+                          //                 TextSpan(
+                          //                   text: state.record?.mjnsclientId?.toString() ?? 'Tidak diketahui',
+                          //                   style: const TextStyle(fontSize: 15),
+                          //                 ),
+                          //               ],
+                          //             ),
+                          //           ),
+                          //         ],
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
                           HeroSection(
                               constraints: constraints,
                               pageType: PageType.home_client),
