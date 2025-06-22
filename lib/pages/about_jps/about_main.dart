@@ -7,7 +7,7 @@ import '../../widgets/components/hero/hero_section.dart';
 import '../../widgets/components/navbar/navbar_widget.dart';
 import '../../widgets/section/about/PencapaianAbout.dart';
 import '../../widgets/section/about/floating_buttons_about.dart';
-import '../../widgets/section/about/action_about_section.dart';
+import '../../widgets/components/action/action_section.dart';
 import '../../widgets/section/about/jps_intro_description_section.dart';
 import '../../widgets/section/about/visi_section.dart';
 import '../../widgets/section/about/value_section.dart';
@@ -86,7 +86,7 @@ class AboutPage extends StatelessWidget {
                       HeroSection(constraints: constraints,
                           pageType: PageType.about),
                       FloatingButtons(constraints: constraints),
-                      ActionSection(constraints: constraints),
+                      ActionSection(constraints: constraints, showCTAs: false, isAbout: true),
                       AboutJps(constraints: constraints),
                       VisiSection(constraints: constraints),
                       PeranJpsSection(constraints: constraints),

@@ -49,7 +49,8 @@ class UserRepository {
   }
 
   Future<void> uploadFotoProfile(File fileFoto) async {
-    await uploadImage2API(fileFoto.path);
+    UserFotoApi api = UserFotoApi();
+    await api.uploadImage2API(fileFoto.path);    
   }
 
   Future<User> getUserByToken(String token) async {

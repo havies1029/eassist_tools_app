@@ -12,7 +12,7 @@ class EnhancedHoverButton extends StatefulWidget {
     super.key,
     required this.onPressed,
     required this.isLogin,
-    this.delay = Duration.zero,
+    this.delay = Duration.zero, required double height,
   });
 
   @override
@@ -113,7 +113,8 @@ class _EnhancedHoverButtonState extends State<EnhancedHoverButton>
     final bool isClient = state is AuthenticationAuthenticated &&
         state.user.custType == "C";
 
-    // ❌ Sembunyikan tombol "Daftar Client" jika user adalah client
+    final bool isMobile = MediaQuery.of(context).size.width < 768;
+
     if (isClient && !widget.isLogin) {
       return const SizedBox.shrink();
     }
@@ -140,8 +141,10 @@ class _EnhancedHoverButtonState extends State<EnhancedHoverButton>
                   (1.0 - _pressController.value * 0.05),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                padding:
-                const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+                padding: EdgeInsets.symmetric(
+                  horizontal: isMobile ? 16.0 : 24.0,
+                  vertical: isMobile ? 10.0 : 16.0,
+                ),
                 decoration: BoxDecoration(
                   color: _backgroundAnimation.value,
                   borderRadius: BorderRadius.circular(16.13),
@@ -170,11 +173,11 @@ class _EnhancedHoverButtonState extends State<EnhancedHoverButton>
                           color: widget.isLogin
                               ? const Color(0xFF79AB43)
                               : Colors.white,
-                          size: 18.0,
+                          size: isMobile ? 16.0 : 18.0,
                         ),
                       ),
                     ),
-                    const SizedBox(width: 8.0),
+                    const SizedBox(width: 6.0),
                     Flexible(
                       child: Text(
                         widget.isLogin ? 'Masuk' : 'Daftar Client',
@@ -186,7 +189,7 @@ class _EnhancedHoverButtonState extends State<EnhancedHoverButton>
                               : Colors.white,
                           fontWeight:
                           _isHovered ? FontWeight.w600 : FontWeight.w500,
-                          fontSize: 16.0,
+                          fontSize: isMobile ? 14.0 : 16.0,
                         ),
                       ),
                     ),

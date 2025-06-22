@@ -131,7 +131,7 @@ class MRekan1ListListWidgetState extends State<MRekan1ListListWidget> {
 	}
 
 	onHapusFunction(String recordId) {
-		mRekan1CrudBloc.add(MRekan1CrudHapusEvent(recordId: recordId));
+		//mRekan1CrudBloc.add(MRekan1CrudHapusEvent(recordId: recordId));
 	}
 
 	void showDialogHapus(String recordId) {

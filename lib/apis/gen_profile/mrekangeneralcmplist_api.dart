@@ -5,7 +5,7 @@ import 'package:eassist_tools_app/models/gen_profile/mrekangeneralcmplist_model.
 
 class MRekanGeneralCmpListAPI{
 	Future<List<MRekanGeneralCmpListModel>> getMRekanGeneralCmpListAPI(String searchText, int hal) async {
-		String urlGetListEndPoint = "${AppData.prefixEndPoint}/api/gen_profile/mrekangeneralcmplist/getlist";
+		String urlGetListEndPoint = "${AppData.prefixEndPoint}/api/profile/mrekangeneralcmplist/getlist";
 
 		Map<String, String> queryParams = {"searchText": searchText, "hal": hal.toString()};
 		var uri = AppData.uriHtpp(AppData.httpAuthority, urlGetListEndPoint, queryParams);

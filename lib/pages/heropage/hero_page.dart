@@ -1,6 +1,14 @@
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
+import 'package:eassist_tools_app/blocs/gen_profile/mrekan1crud_bloc.dart';
+
 import '../../repositories/user/user_repository.dart';
-import '../../widgets/section/homepage/hero_section_heropage.dart';
+import '../../widgets/account/login/login_gmail/popup_dialog_login.dart';
+import '../../widgets/account/profile/profile_main_page.dart';
+import '../../widgets/components/hero/hero_section.dart';
 import '../../widgets/components/action/action_section.dart';
 import '../../widgets/components/carousel/carousel_section.dart';
 import '../../widgets/section/homeclientpage/client_section.dart';
@@ -10,9 +18,7 @@ import '../../widgets/components/footer/footer_section.dart';
 import '../../widgets/components/navbar/navbar_widget.dart';
 import '../../widgets/section/testimoni/testimonial_section.dart';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
+import '../gen_profile/test_profile_page.dart';
 import 'fixed_navbar_overlay.dart';
 
 class HeroPage extends StatefulWidget {
@@ -23,76 +29,53 @@ class HeroPage extends StatefulWidget {
 }
 
 class _HeroPageState extends State<HeroPage> {
-  @override
-  void initState() {
-    super.initState();
-
-    /*
-    // Memastikan dialog dipanggil setelah frame pertama selesai dirender
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      CustomPopupsLoginUser.showLoginDialog(context);
-    });
-    */
-  }
+  bool _dialogShown = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocListener<AuthenticationBloc, AuthenticationState>(
+      body: BlocListener<MRekan1CrudBloc, MRekan1CrudState>(
         listener: (context, state) {
-          if (state is AuthenticationAuthenticated) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Row(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(right: 12.0),
-                    child:
-                    Icon(Icons.check_circle_outline, color: Colors.white),
+          final mjnsclientId = state.record?.mjnsclientId?.toString();
+          if (!_dialogShown && (mjnsclientId == "10" || mjnsclientId == "20")) {
+            _dialogShown = true;
+            showDialog(
+              context: context,
+              builder: (context) => Dialog(
+                insetPadding: const EdgeInsets.all(32),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                child: SizedBox(
+                  width: 1200,
+                  child: ProfileMainPage(
+                    userid: 123,
+                    selectedChoice:
+                    mjnsclientId == "10" ? 'Individual' : 'Perusahaan',
                   ),
-                  Expanded(
-                    child: Builder(
-                      builder: (context) {
-                        final state = context.read<AuthenticationBloc>().state;
-                        String name = "[Nama User]";
-                        if (state is AuthenticationAuthenticated &&
-                            state.user.custType == "C") {
-                          name = state.user.nama ?? "[Nama User]";
-                        }
-
-                        return Text(
-                          "Selamat datang, $name",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
+                ),
               ),
-              backgroundColor: Colors.red[600],
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              margin: const EdgeInsets.all(16),
-              elevation: 3,
-              duration: const Duration(seconds: 3),
-            ));
+            );
           }
         },
         child: LayoutBuilder(
           builder: (context, constraints) {
             final bool isMobile = constraints.maxWidth < 768;
+
+            // Trigger login popup once on build
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (!_dialogShown) {
+                _dialogShown = true;
+                CustomPopupsLoginUser.showLoginUserDialog(context);
+              }
+            });
+
             return Stack(
               children: [
-                // Layer 1: Background (Image untuk non-mobile, hijau untuk mobile)
+                // Layer 1: Background
                 Positioned.fill(
                   child: isMobile
-                      ? Container(
-                    color: const Color(0xFF79AB43), // hijau full-screen
-                  )
+                      ? Container(color: const Color(0xFF79AB43))
                       : Image.asset(
                     'assets/images/bg-home.jpg',
                     fit: BoxFit.cover,
@@ -105,23 +88,15 @@ class _HeroPageState extends State<HeroPage> {
                 // Layer 2: Konten scrollable
                 Positioned.fill(
                   child: SingleChildScrollView(
-                    padding:
-                    const EdgeInsets.only(top: 88), // ruang untuk navbar
+                    padding: EdgeInsets.only(top: isMobile ? 50 : 88),
                     child: Column(
                       children: [
-                        // BlocBuilder<AuthenticationBloc, AuthenticationState>(
-                        //     builder: (context, state) {
-                        //       if (state is AuthenticationAuthenticated) {
-                        //         if (state.user.custType == "C") {
-                        //           return Text(
-                        //               'Username : ${state.user.username ?? "???"}');
-                        //         }
-                        //       }
-                        //       return Container();
-                        //     }),
-                        HeroSection(constraints: constraints),
-                        FloatingButtons(constraints: constraints),
-                        ActionSection(constraints: constraints),
+                        HeroSection(constraints: constraints, pageType: PageType.home),
+                        Transform.translate(
+                          offset: const Offset(0, -40),
+                          child: FloatingButtons(constraints: constraints),
+                        ),
+                        ActionSection(constraints: constraints, showCTAs: true),
                         CarouselSection(constraints: constraints),
                         FeatureSection(constraints: constraints),
                         TestimonialSection(constraints: constraints),
@@ -132,7 +107,7 @@ class _HeroPageState extends State<HeroPage> {
                   ),
                 ),
 
-                // Layer 3: Navbar overlay di atas semua
+                // Layer 3: Navbar overlay
                 const FixedNavbarOverlay(),
               ],
             );

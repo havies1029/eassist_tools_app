@@ -10,7 +10,6 @@ part 'profile_state.dart';
 class ProfileBloc extends Bloc<UserEvents, UserState> {
   final UserRepository userRepository;
   final int id;
-  late User _user;
 
   ProfileBloc({required this.userRepository, required this.id})
       : super(UserState(isLoading: true)) {

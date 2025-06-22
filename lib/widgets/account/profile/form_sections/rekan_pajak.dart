@@ -1,68 +1,63 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:eassist_tools_app/common/constants.dart';
-import 'package:eassist_tools_app/blocs/profile/rekanpajak_bloc.dart';
-import 'package:eassist_tools_app/models/profile/rekanpajak_model.dart';
+import 'package:eassist_tools_app/widgets/form_error.dart';
+import 'package:eassist_tools_app/blocs/gen_profile/mrekanpajakcrud_bloc.dart';
+import 'package:eassist_tools_app/models/gen_profile/mrekanpajakcrud_model.dart';
 import 'package:eassist_tools_app/models/combobox/combomkota_model.dart';
 import 'package:eassist_tools_app/widgets/combobox/combomkota_widget.dart';
 import 'package:eassist_tools_app/models/combobox/combompropinsi_model.dart';
 import 'package:eassist_tools_app/widgets/combobox/combompropinsi_widget.dart';
 import 'package:eassist_tools_app/models/combobox/comborkodepos_model.dart';
 import 'package:eassist_tools_app/widgets/combobox/comborkodepos_widget.dart';
-import '../inline_error_text.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 
-/// Widget yang hanya berisi “body” form Informasi Pajak (tanpa Dialog).
-class RekanPajak extends StatefulWidget {
+class MRekanPajakFormBody extends StatefulWidget {
   final String viewMode;
   final String recordId;
 
-  const RekanPajak({
-    Key? key,
+  const MRekanPajakFormBody({
+    super.key,
     required this.viewMode,
     required this.recordId,
-  }) : super(key: key);
+  });
 
   @override
-  _RekanPajakState createState() => _RekanPajakState();
+  State<MRekanPajakFormBody> createState() => _MRekanPajakFormBodyState();
 }
 
-class _RekanPajakState extends State<RekanPajak> {
-  late RekanPajakBloc rekanPajakBloc;
+class _MRekanPajakFormBodyState extends State<MRekanPajakFormBody> {
   final _formKey = GlobalKey<FormState>();
   final List<String> errors = [];
 
-  // Controllers
-  final TextEditingController fieldAlamat1Controller = TextEditingController();
-  final TextEditingController fieldNpwpNoController = TextEditingController();
+  late MRekanPajakCrudBloc bloc;
 
-  // Dropdown models
+  final fieldAlamat1Controller = TextEditingController();
+  final fieldNpwpNoController = TextEditingController();
+
   ComboMKotaModel? fieldComboMKota;
-  ComboMPropinsiModel? fieldComboMPropinsi;
-  ComboRKodeposModel? fieldComboRKodepos;
+  final comboMKotaKey = GlobalKey<DropdownSearchState<ComboMKotaModel>>();
 
-  // Edit mode flag
+  ComboMPropinsiModel? fieldComboMPropinsi;
+  final comboMPropinsiKey = GlobalKey<DropdownSearchState<ComboMPropinsiModel>>();
+
+  ComboRKodeposModel? fieldComboRKodepos;
+  final comboRKodeposKey = GlobalKey<DropdownSearchState<ComboRKodeposModel>>();
+
   bool isEditingSection = false;
-  Widget _buildDisabledDropdown({required String text}) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-      child: Text(
-        text,
-        style: const TextStyle(
-          fontFamily: 'Satoshi',
-          fontSize: 14,
-        ),
-      ),
-    );
-  }
+
+  final TextStyle labelStyle = const TextStyle(fontWeight: FontWeight.w500);
+  final TextStyle hintStyle = const TextStyle(fontFamily: 'Satoshi', fontSize: 14, color: Colors.grey);
+  final TextStyle textStyle = const TextStyle(fontFamily: 'Satoshi', fontSize: 14);
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(milliseconds: 500), () {
-      _loadData();
+    Future.delayed(Duration.zero, () {
+      bloc = BlocProvider.of<MRekanPajakCrudBloc>(context);
+      if (widget.viewMode == "ubah") {
+        bloc.add(MRekanPajakCrudLihatEvent(recordId: widget.recordId));
+      }
     });
   }
 
@@ -73,169 +68,103 @@ class _RekanPajakState extends State<RekanPajak> {
     super.dispose();
   }
 
-  void _loadData() {
-    if (widget.viewMode == "ubah") {
-      rekanPajakBloc.add(
-        RekanPajakLihatEvent(recordId: widget.recordId),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    rekanPajakBloc = BlocProvider.of<RekanPajakBloc>(context);
+    bloc = BlocProvider.of<MRekanPajakCrudBloc>(context);
 
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Judul + tombol edit/check
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    widget.viewMode == "tambah"
-                        ? "Tambah Informasi Pajak"
-                        : "Ubah Informasi Pajak",
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+    return BlocListener<MRekanPajakCrudBloc, MRekanPajakCrudState>(
+      listener: (context, state) {
+        if (state.isLoaded && state.record != null) {
+          setState(() {
+            fieldAlamat1Controller.text = state.record!.alamat1;
+            fieldNpwpNoController.text = state.record!.npwpNo;
+            fieldComboMPropinsi = state.comboMPropinsi;
+            fieldComboMKota = state.comboMKota;
+            fieldComboRKodepos = state.comboRKodepos;
+          });
+        }
+      },
+      child: Container(
+        color: Colors.white,
+        padding: const EdgeInsets.all(12),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                children: [
+                  const Expanded(
+                    child: Text("Informasi Pajak", style: TextStyle(fontSize: 17.5, fontWeight: FontWeight.bold)),
                   ),
-                ),
-                IconButton(
-                  icon: Icon(isEditingSection ? Icons.check : Icons.edit),
-                  onPressed: () {
-                    if (isEditingSection) {
-                      _onSaveForm();
-                    } else {
-                      setState(() {
-                        isEditingSection = true;
-                      });
-                    }
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
+                  IconButton(
+                    icon: Icon(isEditingSection ? Icons.check : Icons.edit),
+                    onPressed: () {
+                      if (isEditingSection) {
+                        _onSaveForm();
+                      } else {
+                        setState(() => isEditingSection = true);
+                      }
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              if (errors.isNotEmpty) FormError(errors: errors, key: null,),
 
-            // Inline error
-            if (errors.isNotEmpty)
-              const InlineErrorText("Silakan lengkapi semua kolom wajib."),
-            const SizedBox(height: 8),
+              _buildLabelText("Alamat"),
+              const SizedBox(height: 6),
+              _buildStyledTextField(controller: fieldAlamat1Controller, hintText: "Masukkan alamat lengkap", maxLines: 2),
 
-            // Field: Alamat
-            _buildLabelText('Alamat'),
-            const SizedBox(height: 6),
-            _buildStyledTextField(
-              controller: fieldAlamat1Controller,
-              hintText: 'Masukkan alamat lengkap',
-              keyboardType: TextInputType.multiline,
-              maxLines: 2,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  _addError(kStringNullError);
-                  return "";
-                }
-                return null;
-              },
-              onChanged: (value) {
-                if (value.isNotEmpty) _removeError(kStringNullError);
-              },
-            ),
-            const SizedBox(height: 12),
+              const SizedBox(height: 12),
+              _buildLabelText("Propinsi"),
+              const SizedBox(height: 6),
+              _buildStyledDropdown(child: _buildFieldMPropinsiDropdown()),
 
-            // Dropdown: Kota
-            _buildLabelText('Kota'),
-            const SizedBox(height: 6),
-            _buildStyledDropdown(child: buildFieldMkotaId()),
-            const SizedBox(height: 12),
+              const SizedBox(height: 12),
+              _buildLabelText("Kota"),
+              const SizedBox(height: 6),
+              _buildStyledDropdown(child: _buildFieldMKotaDropdown()),
 
-            // Dropdown: Propinsi
-            _buildLabelText('Propinsi'),
-            const SizedBox(height: 6),
-            _buildStyledDropdown(child: buildFieldMpropinsiId()),
-            const SizedBox(height: 12),
+              const SizedBox(height: 12),
+              _buildLabelText("Kode Pos"),
+              const SizedBox(height: 6),
+              _buildStyledDropdown(child: _buildFieldRKodeposDropdown()),
 
-            // Field: NPWP No
-            _buildLabelText('NPWP No'),
-            const SizedBox(height: 6),
-            _buildStyledTextField(
-              controller: fieldNpwpNoController,
-              hintText: 'Masukkan NPWP',
-              keyboardType: TextInputType.text,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  _addError(kStringNullError);
-                  return "";
-                }
-                return null;
-              },
-              onChanged: (value) {
-                if (value.isNotEmpty) _removeError(kStringNullError);
-              },
-            ),
-            const SizedBox(height: 12),
-
-            // Dropdown: Kode Pos
-            _buildLabelText('Kode Pos'),
-            const SizedBox(height: 6),
-            _buildStyledDropdown(child: buildFieldRkodeposId()),
-
-            const SizedBox(height: 16),
-          ],
+              const SizedBox(height: 12),
+              _buildLabelText("NPWP No"),
+              const SizedBox(height: 6),
+              _buildStyledTextField(controller: fieldNpwpNoController, hintText: "Masukkan NPWP"),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  // Helper: Label
-  Widget _buildLabelText(String text) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Text(
-        text,
-        style: const TextStyle(fontWeight: FontWeight.w600),
-      ),
-    );
-  }
+  Widget _buildLabelText(String text) => Align(alignment: Alignment.centerLeft, child: Text(text, style: labelStyle));
 
-  // Helper: TextField style Outline
   Widget _buildStyledTextField({
     required TextEditingController controller,
     required String hintText,
-    TextInputType keyboardType = TextInputType.text,
     int maxLines = 1,
-    List<TextInputFormatter>? inputFormatters,
-    String? Function(String?)? validator,
-    void Function(String)? onChanged,
+    TextInputType keyboardType = TextInputType.text,
   }) {
     return TextFormField(
       controller: controller,
       readOnly: !isEditingSection,
-      keyboardType: keyboardType,
       maxLines: maxLines,
-      inputFormatters: inputFormatters,
+      keyboardType: keyboardType,
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: const TextStyle(
-          fontFamily: 'Satoshi',
-          fontSize: 14,
-          color: Colors.grey,
-        ),
+        hintStyle: hintStyle,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-        contentPadding:
-        const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       ),
-      validator: validator,
-      onChanged: onChanged,
+      validator: (value) => value == null || value.isEmpty ? 'Field tidak boleh kosong' : null,
     );
   }
 
-  // Helper: Dropdown style Outline
   Widget _buildStyledDropdown({required Widget child}) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -247,117 +176,97 @@ class _RekanPajakState extends State<RekanPajak> {
     );
   }
 
-  // Simpan form (trigger Bloc event)
+  Widget _buildDisabledDropdown({required String text}) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+      child: Text(text, style: textStyle),
+    );
+  }
+
+  Widget _buildFieldMPropinsiDropdown() {
+    return isEditingSection
+        ? buildFieldComboMPropinsi(
+      comboKey: comboMPropinsiKey,
+      labelText: 'Pilih',
+      initItem: fieldComboMPropinsi,
+      onChangedCallback: (value) {
+        if (value != null) {
+          setState(() {
+            fieldComboMPropinsi = value;
+            fieldComboMKota = null;
+            fieldComboRKodepos = null;
+          });
+          bloc.add(ComboMPropinsiChangedEvent(comboMPropinsi: value));
+        }
+      },
+      onSaveCallback: (value) => fieldComboMPropinsi = value,
+      validatorCallback: (_) {},
+    )
+        : _buildDisabledDropdown(text: fieldComboMPropinsi?.propinsiNama ?? 'Belum diisi');
+  }
+
+  Widget _buildFieldMKotaDropdown() {
+    return isEditingSection
+        ? buildFieldComboMKota(
+      comboKey: comboMKotaKey,
+      labelText: 'Pilih',
+      initItem: fieldComboMKota,
+      propinsiId: fieldComboMPropinsi?.mpropinsiId ?? '',
+      onChangedCallback: (value) {
+        if (value != null) {
+          setState(() {
+            fieldComboMKota = value;
+            fieldComboRKodepos = null;
+          });
+          bloc.add(ComboMKotaChangedEvent(comboMKota: value));
+        }
+      },
+      onSaveCallback: (value) => fieldComboMKota = value,
+      validatorCallback: (_) {},
+    )
+        : _buildDisabledDropdown(text: fieldComboMKota?.kotaDesc ?? 'Belum diisi');
+  }
+
+  Widget _buildFieldRKodeposDropdown() {
+    return isEditingSection
+        ? buildFieldComboRKodepos(
+      comboKey: comboRKodeposKey,
+      labelText: 'Pilih',
+      initItem: fieldComboRKodepos,
+      kotaId: fieldComboMKota?.mkotaId ?? '',
+      onChangedCallback: (value) {
+        if (value != null) {
+          setState(() => fieldComboRKodepos = value);
+          bloc.add(ComboRKodeposChangedEvent(comboRKodepos: value));
+        }
+      },
+      onSaveCallback: (value) => fieldComboRKodepos = value,
+      validatorCallback: (_) {},
+    )
+        : _buildDisabledDropdown(text: fieldComboRKodepos?.kodeposNo ?? 'Belum diisi');
+  }
+
   void _onSaveForm() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      final record = RekanPajakModel(
+      final record = MRekanPajakCrudModel(
         alamat1: fieldAlamat1Controller.text,
         mkotaId: fieldComboMKota?.mkotaId,
         mpropinsiId: fieldComboMPropinsi?.mpropinsiId,
-        mrekanpajakId: '',
         npwpNo: fieldNpwpNoController.text,
         rkodeposId: fieldComboRKodepos?.rkodeposId,
+        mrekanpajakId: widget.viewMode == "ubah" ? bloc.state.record?.mrekanpajakId ?? '' : '',
       );
 
       if (widget.viewMode == "tambah") {
-        rekanPajakBloc.add(RekanPajakTambahEvent(record: record));
+        bloc.add(MRekanPajakCrudTambahEvent(record: record));
       } else {
-        record.mrekanpajakId = rekanPajakBloc.state.record!.mrekanpajakId;
-        rekanPajakBloc.add(RekanPajakUbahEvent(record: record));
+        bloc.add(MRekanPajakCrudUbahEvent(record: record));
       }
 
-      setState(() {
-        isEditingSection = false;
-      });
+      setState(() => isEditingSection = false);
     }
-  }
-
-  // Tambah/hapus error
-  void _addError(String error) {
-    if (!errors.contains(error)) {
-      setState(() {
-        errors.add(error);
-      });
-    }
-  }
-
-  void _removeError(String error) {
-    if (errors.contains(error)) {
-      setState(() {
-        errors.remove(error);
-      });
-    }
-  }
-
-  Widget buildFieldMkotaId() {
-    return isEditingSection
-        ? buildFieldComboMKota(
-      labelText: 'mkotaId',
-      initItem: fieldComboMKota,
-      onChangedCallback: (value) {
-        if (value != null) {
-          _removeError("Field ComboMKota tidak boleh kosong.");
-          rekanPajakBloc.add(ComboMKotaChangedEvent(comboMKota: value));
-        }
-      },
-      onSaveCallback: (value) {
-        if (value != null) fieldComboMKota = value;
-      },
-      validatorCallback: (value) {
-        if (value == null) _addError("Field ComboMKota tidak boleh kosong.");
-      }, propinsiId: '',
-    )
-        : _buildDisabledDropdown(
-      text: fieldComboMKota?.kotaDesc ?? '-',
-    );
-  }
-
-  Widget buildFieldMpropinsiId() {
-    return isEditingSection
-        ? buildFieldComboMPropinsi(
-      labelText: 'mpropinsiId',
-      initItem: fieldComboMPropinsi,
-      onChangedCallback: (value) {
-        if (value != null) {
-          _removeError("Field ComboMPropinsi tidak boleh kosong.");
-          rekanPajakBloc.add(ComboMPropinsiChangedEvent(comboMPropinsi: value));
-        }
-      },
-      onSaveCallback: (value) {
-        if (value != null) fieldComboMPropinsi = value;
-      },
-      validatorCallback: (value) {
-        if (value == null) _addError("Field ComboMPropinsi tidak boleh kosong.");
-      },
-    )
-        : _buildDisabledDropdown(
-      text: fieldComboMPropinsi?.propinsiNama ?? '-',
-    );
-  }
-
-
-  Widget buildFieldRkodeposId() {
-    return isEditingSection
-        ? buildFieldComboRKodepos(
-      labelText: 'rkodeposId',
-      initItem: fieldComboRKodepos,
-      onChangedCallback: (value) {
-        if (value != null) {
-          _removeError("Field ComboRKodepos tidak boleh kosong.");
-          rekanPajakBloc.add(ComboRKodeposChangedEvent(comboRKodepos: value));
-        }
-      },
-      onSaveCallback: (value) {
-        if (value != null) fieldComboRKodepos = value;
-      },
-      validatorCallback: (value) {
-        if (value == null) _addError("Field ComboRKodepos tidak boleh kosong.");
-      }, kotaId: '',
-    )
-        : _buildDisabledDropdown(
-      text: fieldComboRKodepos?.kodeposNo ?? '-',
-    );
   }
 }

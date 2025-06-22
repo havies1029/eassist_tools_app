@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../account/register/register_client/popup_client.dart';
 
 class PopupSuceedPage extends StatefulWidget {
   /// Pesan yang ingin ditampilkan di bagian body popup
@@ -141,7 +140,7 @@ class _PopupSuceedPageState extends State<PopupSuceedPage>
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: const BoxDecoration(
-        color: CustomPopupsClient.primaryGreen,
+        color: Color(0xFF79AB43),
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
@@ -202,11 +201,11 @@ class _PopupSuceedPageState extends State<PopupSuceedPage>
                     height: 80,
                     margin: const EdgeInsets.only(bottom: 25),
                     decoration: BoxDecoration(
-                      color: CustomPopupsClient.primaryGreen,
+                      color: Color(0xFF79AB43),
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: CustomPopupsClient.primaryGreen.withOpacity(0.3),
+                          color: Color(0xFF79AB43).withOpacity(0.3),
                           blurRadius: 15,
                           offset: const Offset(0, 5),
                         ),
@@ -246,19 +245,19 @@ class _PopupSuceedPageState extends State<PopupSuceedPage>
               decoration: BoxDecoration(
                 color: _isHovering
                     ? const Color(0xFF6B9639)
-                    : CustomPopupsClient.primaryGreen,
+                    : Color(0xFF79AB43),
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: _isHovering
                     ? [
                   BoxShadow(
-                    color: CustomPopupsClient.primaryGreen.withOpacity(0.4),
+                    color: Color(0xFF79AB43).withOpacity(0.4),
                     blurRadius: 15,
                     offset: const Offset(0, 8),
                   ),
                 ]
                     : [
                   BoxShadow(
-                    color: CustomPopupsClient.primaryGreen.withOpacity(0.2),
+                    color: Color(0xFF79AB43).withOpacity(0.2),
                     blurRadius: 5,
                     offset: const Offset(0, 3),
                   ),

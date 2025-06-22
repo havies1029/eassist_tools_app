@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-  import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../blocs/authentication/authentication_bloc.dart';
 
 class AppTheme {
   static const String fontFamily = 'Satoshi-Regular';
   static const Color white = Colors.white;
+  static const Color primaryColor = Color(0xFF79AB43);
 
-  static double titleSize(bool isMobile) => isMobile ? 25 : 45;
-  static double bodySize(bool isMobile) => isMobile ? 15 : 18;
-  static double smallSize(bool isMobile) => isMobile ? 14 : 16;
+  static double titleSize(bool isMobile) => isMobile ? 22 : 40;
+  static double bodySize(bool isMobile) => isMobile ? 12 : 15;
+  static double smallSize(bool isMobile) => isMobile ? 12 : 15;
 
   static EdgeInsets responsivePadding(BoxConstraints constraints) {
     final double width = constraints.maxWidth;
@@ -58,145 +59,184 @@ class HeroSection extends StatelessWidget {
   double get maxWidth =>
       constraints.maxWidth > 1200 ? 1200 : constraints.maxWidth * 0.95;
 
+  bool get hasBackgroundColor =>
+      pageType == PageType.home || pageType == PageType.home_client;
+
+  bool get hasHumanImage =>
+      pageType == PageType.home || pageType == PageType.home_client;
+
   @override
   Widget build(BuildContext context) {
     final titleData = _getTitleData(context);
     final descData = _getDescriptionData();
+
+    Widget content = hasHumanImage
+        ? _buildContentWithImage(titleData, descData)
+        : _buildContentWithoutImage(titleData, descData);
+
+    if (hasBackgroundColor) {
+      return Padding(
+        padding: AppTheme.responsivePadding(constraints),
+        child: Container(
+          width: maxWidth,
+          margin: AppTheme.responsiveMargin(constraints),
+          padding: EdgeInsets.all(isMobile ? 0 : 40),
+          decoration: BoxDecoration(
+            color: AppTheme.primaryColor,
+            borderRadius: BorderRadius.circular(isMobile ? 0 : 20),
+          ),
+          child: content,
+        ),
+      );
+    }
 
     return Padding(
       padding: AppTheme.responsivePadding(constraints),
       child: Container(
         width: maxWidth,
         margin: AppTheme.responsiveMargin(constraints),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Title
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: titleData['bold'],
-                    style: TextStyle(
-                      fontFamily: AppTheme.fontFamily,
-                      fontSize: AppTheme.titleSize(isMobile),
-                      fontWeight: FontWeight.w700,
-                      color: AppTheme.white,
-                      height: 1.2,
-                    ),
-                  ),
-                  if (titleData['normal'] != null)
-                    TextSpan(
-                      text: titleData['normal'],
-                      style: TextStyle(
-                        fontFamily: AppTheme.fontFamily,
-                        fontSize: AppTheme.titleSize(isMobile),
-                        fontWeight: FontWeight.w400,
-                        color: AppTheme.white,
-                        height: 1.2,
-                      ),
-                    ),
-                  if (titleData['bold1'] != null)
-                    TextSpan(
-                      text: titleData['bold1'],
-                      style: TextStyle(
-                        fontFamily: AppTheme.fontFamily,
-                        fontSize: AppTheme.titleSize(isMobile),
-                        fontWeight: FontWeight.w700,
-                        color: AppTheme.white,
-                        height: 1.2,
-                      ),
-                    ),
-                  if (titleData['normal3'] != null)
-                    TextSpan(
-                      text: titleData['normal3'],
-                      style: TextStyle(
-                        fontFamily: AppTheme.fontFamily,
-                        fontSize: AppTheme.titleSize(isMobile),
-                        fontWeight: FontWeight.w400,
-                        color: AppTheme.white,
-                        height: 1.2,
-                      ),
-                    ),
-                  if (titleData['bold3'] != null)
-                    TextSpan(
-                      text: titleData['bold3'],
-                      style: TextStyle(
-                        fontFamily: AppTheme.fontFamily,
-                        fontSize: AppTheme.titleSize(isMobile),
-                        fontWeight: FontWeight.w700,
-                        color: AppTheme.white,
-                        height: 1.2,
-                      ),
-                    ),
-                  if (titleData['normal4'] != null)
-                    TextSpan(
-                      text: titleData['normal4'],
-                      style: TextStyle(
-                        fontFamily: AppTheme.fontFamily,
-                        fontSize: AppTheme.titleSize(isMobile),
-                        fontWeight: FontWeight.w400,
-                        color: AppTheme.white,
-                        height: 1.2,
-                      ),
-                    ),
-                  if (titleData['bold4'] != null)
-                    TextSpan(
-                      text: titleData['bold4'],
-                      style: TextStyle(
-                        fontFamily: AppTheme.fontFamily,
-                        fontSize: AppTheme.titleSize(isMobile),
-                        fontWeight: FontWeight.w700,
-                        color: AppTheme.white,
-                        height: 1.2,
-                      ),
-                    ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 10),
+        child: content,
+      ),
+    );
+  }
 
-            // Description
-            Text.rich(
-              TextSpan(
-                children: [
-                  TextSpan(
-                    text: descData['normal1'],
-                    style: TextStyle(
-                      fontFamily: AppTheme.fontFamily,
-                      fontSize: AppTheme.bodySize(isMobile),
-                      color: AppTheme.white.withOpacity(0.9),
-                      height: 1.6,
-                    ),
-                  ),
-                  if (descData['bold'] != null)
-                    TextSpan(
-                      text: descData['bold'],
-                      style: TextStyle(
-                        fontFamily: AppTheme.fontFamily,
-                        fontSize: AppTheme.smallSize(isMobile),
-                        fontWeight: FontWeight.w600,
-                        color: AppTheme.white,
-                        height: 1.6,
-                      ),
-                    ),
-                  if (descData['normal2'] != null)
-                    TextSpan(
-                      text: descData['normal2'],
-                      style: TextStyle(
-                        fontFamily: AppTheme.fontFamily,
-                        fontSize: AppTheme.smallSize(isMobile),
-                        color: AppTheme.white.withOpacity(0.9),
-                        height: 1.6,
-                      ),
-                    ),
-                ],
-              ),
-              textAlign: TextAlign.left,
+  Widget _buildContentWithImage(Map<String, String> titleData, Map<String, String> descData) {
+    final bool isTablet = constraints.maxWidth >= 768 && constraints.maxWidth < 1024;
+
+    if (isMobile) {
+      return SizedBox(
+        height: 280,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Positioned(
+              right: 0,
+              top: 160,
+              child: _buildHumanImage(),
+            ),
+            Positioned(
+              left: 16,
+              top: 50,
+              right: 80,
+              child: _buildTextContent(titleData, descData),
             ),
           ],
         ),
-      ),
+      );
+    }
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Flexible(
+          flex: 1,
+          child: Padding(
+            padding: const EdgeInsets.only(right: 40.0),
+            child: Transform.translate(
+              offset: const Offset(0, -20),
+              child: _buildTextContent(titleData, descData),
+            ),
+          ),
+        ),
+        Stack(
+          clipBehavior: Clip.none,
+          children: [
+            const SizedBox(width: 300, height: 250),
+            Positioned(
+              right: -40,
+              bottom: isTablet ? -50 : -10,
+              child: SizedBox(width: 360, child: _buildHumanImage()),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildContentWithoutImage(Map<String, String> titleData, Map<String, String> descData) {
+    return _buildTextContent(titleData, descData);
+  }
+
+  Widget _buildTextContent(Map<String, String> titleData, Map<String, String> descData) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Title
+        RichText(
+          text: TextSpan(
+            children: _buildTitleSpans(titleData),
+          ),
+        ),
+        const SizedBox(height: 10),
+
+        // Description
+        Text.rich(
+          TextSpan(
+            children: _buildDescriptionSpans(descData),
+          ),
+          textAlign: TextAlign.left,
+        ),
+      ],
+    );
+  }
+
+  List<TextSpan> _buildTitleSpans(Map<String, String> titleData) {
+    List<TextSpan> spans = [];
+
+    final keys = ['bold', 'normal', 'bold1', 'normal3', 'bold3', 'normal4', 'bold4'];
+
+    for (String key in keys) {
+      if (titleData[key] != null && titleData[key]!.isNotEmpty) {
+        spans.add(
+          TextSpan(
+            text: titleData[key],
+            style: TextStyle(
+              fontFamily: AppTheme.fontFamily,
+              fontSize: AppTheme.titleSize(isMobile),
+              fontWeight: key.startsWith('bold') ? FontWeight.w700 : FontWeight.w400,
+              color: AppTheme.white,
+              height: 1.2,
+            ),
+          ),
+        );
+      }
+    }
+
+    return spans;
+  }
+
+  List<TextSpan> _buildDescriptionSpans(Map<String, String> descData) {
+    List<TextSpan> spans = [];
+
+    final keys = ['normal1', 'bold', 'normal2', 'bold1', 'normal3', 'bold3', 'normal4', 'bold4'];
+
+    for (String key in keys) {
+      if (descData[key] != null && descData[key]!.isNotEmpty) {
+        spans.add(
+          TextSpan(
+            text: descData[key],
+            style: TextStyle(
+              fontFamily: AppTheme.fontFamily,
+              fontSize: key.startsWith('bold') ? AppTheme.smallSize(isMobile) : AppTheme.bodySize(isMobile),
+              fontWeight: key.startsWith('bold') ? FontWeight.w600 : FontWeight.w400,
+              color: key.startsWith('bold') ? AppTheme.white : AppTheme.white.withOpacity(0.9),
+              height: 1.6,
+            ),
+          ),
+        );
+      }
+    }
+
+    return spans;
+  }
+
+  Widget _buildHumanImage() {
+    return Image.asset(
+      'assets/images/human.png',
+      width: isMobile ? 250 : null,
+      height: isMobile ? 250 : null,
+      fit: BoxFit.contain,
     );
   }
 
@@ -264,9 +304,7 @@ class HeroSection extends StatelessWidget {
       case PageType.about:
         return {
           'normal1':
-          'JPS hadir memberikan informasi yang jelas, layanan yang praktis, dan solusi yang tepat untuk membantu Anda memilih terbaik dengan cara paling ',
-          'bold': 'mudah',
-          'normal2': '.',
+          'JPS hadir memberikan informasi yang jelas, layanan yang praktis, dan solusi yang tepat untuk membantu Anda memilih terbaik dengan cara paling mudah.',
         };
       case PageType.article:
         return {
@@ -301,7 +339,7 @@ class HeroSection extends StatelessWidget {
           'normal1': 'Ajukan ',
           'bold': 'klaim asuransi ',
           'normal2': 'hanya dalam beberapa langkah ',
-          'bold1': 'pratiks. ',
+          'bold1': 'praktis. ',
           'normal3': 'Kami bantu pastikan prosesnya ',
           'bold3': 'lancar ',
           'normal4': 'dan ',
@@ -311,13 +349,19 @@ class HeroSection extends StatelessWidget {
       case PageType.user_non_jps:
         return {
           'bold': 'Asuransi aktif ',
-          'normal': 'menjamin perlindungan saat kamu membutuhkannya.',
+          'normal1': 'menjamin perlindungan saat kamu membutuhkannya.',
         };
       case PageType.management_polis:
         return {
           'normal1': 'Solusi lengkap pengelolaan polis aset Anda, hadir dengan informasi yang akurat, ringkas, dan selalu terpantau.',
         };
       case PageType.home:
+        return {
+          'normal1':
+          'JPS adalah platform asuransi pintar yang memudahkan kamu mencari, memilih,\ndan klaim asuransi hanya dalam hitungan menit ',
+          'bold': 'cepat, aman, dan terdaftar OJK',
+          'normal2': '.',
+        };
       default:
         return {};
     }

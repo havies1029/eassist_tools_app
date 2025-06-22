@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import '../../../blocs/authentication/authentication_bloc.dart';
 import '../../../pages/heropage/hero_main.dart';
 
@@ -81,10 +82,7 @@ class _LogoutPopupState extends State<LogoutPopup>
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         context.read<AuthenticationBloc>().add(LoggedOut());
-        Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => const HeroMain()),
-              (route) => false,
-        );
+        // context.go('/hero');
       });
     }
   }

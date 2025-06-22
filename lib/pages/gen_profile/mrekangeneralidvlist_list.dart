@@ -105,7 +105,7 @@ class MRekanGeneralIdvListPageState extends State<MRekanGeneralIdvListPage> {
 			context: context,
 			barrierDismissible: false,
 			builder: (BuildContext context) {
-				return MRekanGeneralIdvCrudFormPage(viewMode: viewMode, recordId: recordId);
+				return MRekanGeneralIdvCrudFormPage();
 			},
 			useSafeArea: true)
 		.then((value) {

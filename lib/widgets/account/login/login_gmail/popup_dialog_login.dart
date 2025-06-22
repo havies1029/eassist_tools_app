@@ -1,9 +1,9 @@
-import 'package:eassist_tools_app/widgets/account/login/login_gmail/login_client_dialog.dart';
+import 'package:eassist_tools_app/widgets/account/login/login_client/login_client_dialog.dart';
 import 'package:eassist_tools_app/widgets/account/login/login_gmail/login_user_dialog.dart';
-import 'package:eassist_tools_app/widgets/account/login/login_gmail/lupa_sandi_dialog.dart';
-import 'package:eassist_tools_app/widgets/account/login/login_gmail/otp_email_dialog.dart';
-import 'package:eassist_tools_app/widgets/account/login/login_gmail/otp_hp_dialog.dart';
-import 'package:eassist_tools_app/widgets/account/login/login_gmail/register_client_dialog.dart';
+import 'package:eassist_tools_app/widgets/dialog/forget_password/lupa_sandi_dialog.dart';
+import 'package:eassist_tools_app/widgets/dialog/reusable_otp/otp_email_dialog.dart';
+import 'package:eassist_tools_app/widgets/dialog/reusable_otp/otp_hp_dialog.dart';
+import 'package:eassist_tools_app/widgets/account/register/register_client/register_client_dialog.dart';
 // import 'package:eassist_tools_app/widgets/account/login/login_gmail/x_register_user_dialog.dart';
 import 'package:flutter/material.dart';
 

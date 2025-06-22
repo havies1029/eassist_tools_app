@@ -5,7 +5,7 @@ import 'package:eassist_tools_app/models/gen_profile/mrekan1list_model.dart';
 
 class MRekan1ListAPI{
 	Future<List<MRekan1ListModel>> getMRekan1ListAPI(String searchText, int hal) async {
-		String urlGetListEndPoint = "${AppData.prefixEndPoint}/api/gen_profile/mrekan1list/getlist";
+		String urlGetListEndPoint = "${AppData.prefixEndPoint}/api/profile/mrekan1list/getlist";
 
 		Map<String, String> queryParams = {"searchText": searchText, "hal": hal.toString()};
 		var uri = AppData.uriHtpp(AppData.httpAuthority, urlGetListEndPoint, queryParams);

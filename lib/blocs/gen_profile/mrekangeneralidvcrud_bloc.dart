@@ -1,6 +1,6 @@
+import 'package:eassist_tools_app/models/combobox/combomjnskel_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:eassist_tools_app/models/responseAPI/returndataapi_model.dart';
 import 'package:eassist_tools_app/models/combobox/combompekerjaan_model.dart';
 import 'package:eassist_tools_app/models/gen_profile/mrekangeneralidvcrud_model.dart';
 import 'package:eassist_tools_app/repositories/gen_profile/mrekangeneralidvcrud_repository.dart';
@@ -8,61 +8,57 @@ import 'package:eassist_tools_app/repositories/gen_profile/mrekangeneralidvcrud_
 part 'mrekangeneralidvcrud_event.dart';
 part 'mrekangeneralidvcrud_state.dart';
 
-class MRekanGeneralIdvCrudBloc extends Bloc<MRekanGeneralIdvCrudEvents, MRekanGeneralIdvCrudState> {
-	final MRekanGeneralIdvCrudRepository repository;
-	MRekanGeneralIdvCrudBloc({required this.repository}) : super(const MRekanGeneralIdvCrudState()) {
-		on<MRekanGeneralIdvCrudUbahEvent>(onUbahMRekanGeneralIdvCrud);
-		on<MRekanGeneralIdvCrudTambahEvent>(onTambahMRekanGeneralIdvCrud);
-		on<MRekanGeneralIdvCrudHapusEvent>(onHapusMRekanGeneralIdvCrud);
-		on<MRekanGeneralIdvCrudLihatEvent>(onLihatMRekanGeneralIdvCrud);
-		on<ComboMPekerjaanChangedEvent>(onComboMPekerjaanChanged);
-	}
+class MRekanGeneralIdvCrudBloc
+    extends Bloc<MRekanGeneralIdvCrudEvents, MRekanGeneralIdvCrudState> {
+  final MRekanGeneralIdvCrudRepository repository;
+  MRekanGeneralIdvCrudBloc({required this.repository})
+      : super(const MRekanGeneralIdvCrudState()) {
+    on<MRekanGeneralIdvCrudUbahEvent>(onUbahMRekanGeneralIdvCrud);
+    on<MRekanGeneralIdvCrudLihatEvent>(onLihatMRekanGeneralIdvCrud);
+    on<ComboMPekerjaanChangedEvent>(onComboMPekerjaanChanged);
+    on<ComboMJnskelChangedEvent>(onComboMJnskelChangedEvent);
+    on<UpdateIsKtpUploaded>(onUpdateIsKtpUploaded);
+  }
 
-	Future<void> onTambahMRekanGeneralIdvCrud(
-		MRekanGeneralIdvCrudTambahEvent event, Emitter<MRekanGeneralIdvCrudState> emit) async {
+  Future<void> onUbahMRekanGeneralIdvCrud(MRekanGeneralIdvCrudUbahEvent event,
+      Emitter<MRekanGeneralIdvCrudState> emit) async {
+    emit(state.copyWith(isSaving: true, isSaved: false));
+    bool hasFailure = !await repository.mRekanGeneralIdvCrudUbah(event.record);
+    emit(state.copyWith(
+        isSaving: false,
+        isSaved: true,
+        hasFailure: hasFailure,
+        record: event.record));
+  }
 
-		ReturnDataAPI returnData;
-		bool hasFailure = true;
-		emit(state.copyWith(isSaving: true, isSaved: false));
-		returnData = await repository.mRekanGeneralIdvCrudTambah(event.record);
-		hasFailure = !returnData.success;
-		emit(state.copyWith(
-			isSaving: false,
-			isSaved: true,
-			hasFailure: hasFailure));
-	}
+  Future<void> onLihatMRekanGeneralIdvCrud(MRekanGeneralIdvCrudLihatEvent event,
+      Emitter<MRekanGeneralIdvCrudState> emit) async {
+    emit(state.copyWith(isLoading: true, isLoaded: false));
+    MRekanGeneralIdvCrudModel record =
+        await repository.mRekanGeneralIdvCrudLihat();
+    emit(state.copyWith(
+        isLoading: false,
+        isLoaded: true,
+        record: record,
+        isKtpUploaded: record.isKtpUploaded));
+  }
 
-	Future<void> onUbahMRekanGeneralIdvCrud(
-		MRekanGeneralIdvCrudUbahEvent event, Emitter<MRekanGeneralIdvCrudState> emit) async {
-		emit(state.copyWith(isSaving: true, isSaved: false));
-		bool hasFailure = !await repository.mRekanGeneralIdvCrudUbah(event.record);
-		emit(state.copyWith(isSaving: false, isSaved: true, hasFailure: hasFailure));
-	}
+  Future<void> onComboMPekerjaanChanged(ComboMPekerjaanChangedEvent event,
+      Emitter<MRekanGeneralIdvCrudState> emit) async {
+    ComboMPekerjaanModel comboMPekerjaan = event.comboMPekerjaan;
+    emit(state.copyWith(comboMPekerjaan: comboMPekerjaan));
+  }
 
-	Future<void> onHapusMRekanGeneralIdvCrud(
-		MRekanGeneralIdvCrudHapusEvent event, Emitter<MRekanGeneralIdvCrudState> emit) async {
-		emit(state.copyWith(isSaving: true, isSaved: false));
-		bool hasFailure = !await repository.mRekanGeneralIdvCrudHapus(event.recordId);
-		emit(state.copyWith(isSaving: false, isSaved: true, hasFailure: hasFailure));
-	}
+  Future<void> onComboMJnskelChangedEvent(ComboMJnskelChangedEvent event,
+      Emitter<MRekanGeneralIdvCrudState> emit) async {
+    ComboMJnskelModel comboMJnskel = event.comboMJnskel;
+    emit(state.copyWith(comboMJnskel: comboMJnskel));
+  }
 
-	Future<void> onLihatMRekanGeneralIdvCrud(
-		MRekanGeneralIdvCrudLihatEvent event, Emitter<MRekanGeneralIdvCrudState> emit) async {
-		emit(state.copyWith(isLoading: true, isLoaded: false));
-		MRekanGeneralIdvCrudModel record = await repository.mRekanGeneralIdvCrudLihat(event.recordId);
-		emit(state.copyWith(isLoading: false, isLoaded: true, record: record));
-	}
+  Future<void> onUpdateIsKtpUploaded(UpdateIsKtpUploaded event,
+      Emitter<MRekanGeneralIdvCrudState> emit) async {
+    emit(state.copyWith(isKtpUploaded: false));
 
-	Future<void> onComboMPekerjaanChanged(
-			ComboMPekerjaanChangedEvent event, Emitter<MRekanGeneralIdvCrudState> emit) async {
-
-		emit(state.copyWith(isLoading: true, isLoaded: false));
-
-		ComboMPekerjaanModel comboMPekerjaan = event.comboMPekerjaan;
-		emit(state.copyWith(
-			isLoading: false,
-			isLoaded: true,
-			comboMPekerjaan: comboMPekerjaan));
-	}
-
+    emit(state.copyWith(isKtpUploaded: event.isUploaded));
+  }
 }

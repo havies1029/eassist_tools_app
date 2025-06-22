@@ -3,19 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/common/constants.dart';
 import 'package:eassist_tools_app/widgets/form_error.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekan1crud_bloc.dart';
-import 'package:eassist_tools_app/models/gen_profile/mrekan1crud_model.dart';
 import 'package:eassist_tools_app/models/combobox/combombentukcst_model.dart';
-import 'package:eassist_tools_app/widgets/combobox/combombentukcst_widget.dart';
 import 'package:eassist_tools_app/models/combobox/combombidang_model.dart';
-import 'package:eassist_tools_app/widgets/combobox/combombidang_widget.dart';
 import 'package:eassist_tools_app/models/combobox/combomjnsclient_model.dart';
-import 'package:eassist_tools_app/widgets/combobox/combomjnsclient_widget.dart';
 import 'package:eassist_tools_app/models/combobox/combomjnskel_model.dart';
-import 'package:eassist_tools_app/widgets/combobox/combomjnskel_widget.dart';
 import 'package:eassist_tools_app/models/combobox/combompekerjaan_model.dart';
-import 'package:eassist_tools_app/widgets/combobox/combompekerjaan_widget.dart';
 import 'package:eassist_tools_app/models/combobox/combomtitle_model.dart';
-import 'package:eassist_tools_app/widgets/combobox/combomtitle_widget.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
 
@@ -82,12 +75,6 @@ class MRekan1CrudFormPageFormState extends State<MRekan1CrudFormPage> {
 											),
 										),
 										const SizedBox(height: 25),
-										buildFieldMbentukcstId(),
-										buildFieldMbidangId(),
-										buildFieldMjnsclientId(),
-										buildFieldMjnskelId(),
-										buildFieldMpekerjaanId(),
-										buildFieldMtitleId(),
 										buildFieldRekanNama(),
 										const SizedBox(height: 25),
 										FormError(
@@ -120,7 +107,7 @@ class MRekan1CrudFormPageFormState extends State<MRekan1CrudFormPage> {
 														padding: const EdgeInsets.only(top: 30.0),
 														child: ElevatedButton(
 															onPressed: () {
-																onSaveForm();
+																//onSaveForm();
 															},
 															child: const Text(
 																'Save',
@@ -140,178 +127,15 @@ class MRekan1CrudFormPageFormState extends State<MRekan1CrudFormPage> {
 					if (state.isLoaded) {
 						if (state.record != null){
 							fieldRekanNamaController.text = state.record!.rekanNama;
-						}
-						fieldComboMBentukCst = state.comboMBentukCst;
-						fieldComboMBidang = state.comboMBidang;
-						fieldComboMJnsclient = state.comboMJnsclient;
-						fieldComboMJnskel = state.comboMJnskel;
-						fieldComboMPekerjaan = state.comboMPekerjaan;
-						fieldComboMTitle = state.comboMTitle;
+						}						
 					}
 				},
 			);
 		}
 	void loadData() {
 		if (widget.viewMode == "ubah") {
-		mRekan1CrudBloc.add(
-			MRekan1CrudLihatEvent(recordId: widget.recordId));
+		  //mRekan1CrudBloc.add(MRekan1CrudLihatEvent(recordId: widget.recordId));
 		}
-	}
-
-	Widget buildFieldMbentukcstId(){
-		return buildFieldComboMBentukCst(
-			comboKey: comboMBentukCstKey,
-			labelText: 'mbentukcstId',
-			initItem: fieldComboMBentukCst,
-			onChangedCallback: (value) {
-				if (value != null) {
-					removeError(
-						error: "Field ComboMBentukCst tidak boleh kosong.");
-					mRekan1CrudBloc.add(ComboMBentukCstChangedEvent(comboMBentukCst: value));
-				}
-			},
-			onSaveCallback: (value) {
-				if (value != null) {
-					fieldComboMBentukCst = value;
-				}
-			},
-			validatorCallback: (value) {
-				if (value == null) {
-					addError(
-						error: "Field ComboMBentukCst tidak boleh kosong.");
-				}
-			},
-		);
-	}
-
-	Widget buildFieldMbidangId(){
-		return buildFieldComboMBidang(
-			comboKey: comboMBidangKey,
-			labelText: 'mbidangId',
-			initItem: fieldComboMBidang,
-			onChangedCallback: (value) {
-				if (value != null) {
-					removeError(
-						error: "Field ComboMBidang tidak boleh kosong.");
-					mRekan1CrudBloc.add(ComboMBidangChangedEvent(comboMBidang: value));
-				}
-			},
-			onSaveCallback: (value) {
-				if (value != null) {
-					fieldComboMBidang = value;
-				}
-			},
-			validatorCallback: (value) {
-				if (value == null) {
-					addError(
-						error: "Field ComboMBidang tidak boleh kosong.");
-				}
-			},
-		);
-	}
-
-	Widget buildFieldMjnsclientId(){
-		return buildFieldComboMJnsclient(
-			comboKey: comboMJnsclientKey,
-			labelText: 'mjnsclientId',
-			initItem: fieldComboMJnsclient,
-			onChangedCallback: (value) {
-				if (value != null) {
-					removeError(
-						error: "Field ComboMJnsclient tidak boleh kosong.");
-					mRekan1CrudBloc.add(ComboMJnsclientChangedEvent(comboMJnsclient: value));
-				}
-			},
-			onSaveCallback: (value) {
-				if (value != null) {
-					fieldComboMJnsclient = value;
-				}
-			},
-			validatorCallback: (value) {
-				if (value == null) {
-					addError(
-						error: "Field ComboMJnsclient tidak boleh kosong.");
-				}
-			},
-		);
-	}
-
-	Widget buildFieldMjnskelId(){
-		return buildFieldComboMJnskel(
-			comboKey: comboMJnskelKey,
-			labelText: 'mjnskelId',
-			initItem: fieldComboMJnskel,
-			onChangedCallback: (value) {
-				if (value != null) {
-					removeError(
-						error: "Field ComboMJnskel tidak boleh kosong.");
-					mRekan1CrudBloc.add(ComboMJnskelChangedEvent(comboMJnskel: value));
-				}
-			},
-			onSaveCallback: (value) {
-				if (value != null) {
-					fieldComboMJnskel = value;
-				}
-			},
-			validatorCallback: (value) {
-				if (value == null) {
-					addError(
-						error: "Field ComboMJnskel tidak boleh kosong.");
-				}
-			},
-		);
-	}
-
-	Widget buildFieldMpekerjaanId(){
-		return buildFieldComboMPekerjaan(
-			comboKey: comboMPekerjaanKey,
-			labelText: 'mpekerjaanId',
-			initItem: fieldComboMPekerjaan,
-			onChangedCallback: (value) {
-				if (value != null) {
-					removeError(
-						error: "Field ComboMPekerjaan tidak boleh kosong.");
-					mRekan1CrudBloc.add(ComboMPekerjaanChangedEvent(comboMPekerjaan: value));
-				}
-			},
-			onSaveCallback: (value) {
-				if (value != null) {
-					fieldComboMPekerjaan = value;
-				}
-			},
-			validatorCallback: (value) {
-				if (value == null) {
-					addError(
-						error: "Field ComboMPekerjaan tidak boleh kosong.");
-				}
-			},
-		);
-	}
-
-	Widget buildFieldMtitleId(){
-		return buildFieldComboMTitle(
-			comboKey: comboMTitleKey,
-			labelText: 'mtitleId',
-			initItem: fieldComboMTitle,
-			onChangedCallback: (value) {
-				if (value != null) {
-					removeError(
-						error: "Field ComboMTitle tidak boleh kosong.");
-					mRekan1CrudBloc.add(ComboMTitleChangedEvent(comboMTitle: value));
-				}
-			},
-			onSaveCallback: (value) {
-				if (value != null) {
-					fieldComboMTitle = value;
-				}
-			},
-			validatorCallback: (value) {
-				if (value == null) {
-					addError(
-						error: "Field ComboMTitle tidak boleh kosong.");
-				}
-			},
-		);
 	}
 
 	Widget buildFieldRekanNama(){
@@ -343,28 +167,6 @@ class MRekan1CrudFormPageFormState extends State<MRekan1CrudFormPage> {
 		Navigator.pop(context);
 	}
 
-	void onSaveForm() {
-		if (_formKey.currentState!.validate()) {
-			_formKey.currentState!.save();
-			MRekan1CrudModel record = MRekan1CrudModel(
-				mbentukcstId: fieldComboMBentukCst?.mbentukcstId,
-				mbidangId: fieldComboMBidang?.mbidangId,
-				mjnsclientId: fieldComboMJnsclient?.mjnsclientId,
-				mjnskelId: fieldComboMJnskel?.mjnskelId,
-				mpekerjaanId: fieldComboMPekerjaan?.mpekerjaanId,
-				mrekan1Id: '',
-				mtitleId: fieldComboMTitle?.mtitleId,
-				rekanNama: fieldRekanNamaController.text,
-			);
-			if (widget.viewMode == "tambah") {
-				mRekan1CrudBloc.add(MRekan1CrudTambahEvent(record: record));
-			} else if (widget.viewMode == "ubah") {
-				record.mrekan1Id = mRekan1CrudBloc.state.record!.mrekan1Id;
-				mRekan1CrudBloc.add(MRekan1CrudUbahEvent(record: record));
-			}
-			_dismissDialog();
-		}
-	}
 
 	void addError({required String error}) {
 		if (!errors.contains(error)){
