@@ -27,8 +27,8 @@ class NavBar extends StatelessWidget {
     final double maxWidth =
     constraints.maxWidth > 1200 ? 1200 : constraints.maxWidth;
     final authState = context.watch<AuthenticationBloc>().state;
-    // final showHamburger = authState is AuthenticationAuthenticated &&
-    //     (authState.authenticatedFrom == 'login_user' || authState.authenticatedFrom == 'login_client');
+    final showHamburger = authState is AuthenticationAuthenticated &&
+        (authState.authenticatedFrom == 'login_user' || authState.authenticatedFrom == 'login_client');
 
     return Container(
       width: double.infinity,
@@ -51,17 +51,17 @@ class NavBar extends StatelessWidget {
                   if (authState is AuthenticationAuthenticated ||
                       authState is AuthenticationGoogleUserAuthenticated) {
                     // Sudah login → ke HeroUserMain
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (_) => const HeroUserMain()),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const HeroUserMain()),
+                    );
                     context.go('/hero_user');
                   } else {
                     // Belum login → ke HeroMain
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (_) => const HeroMain()),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const HeroMain()),
+                    );
                     context.go('/hero');
                   }
                 },
@@ -81,7 +81,7 @@ class NavBar extends StatelessWidget {
             const SizedBox(width: 16),
 
             // // Hamburger Menu Icon
-            // if (showHamburger)
+            if (showHamburger)
               Container(
                 key: menuButtonKey,
                 decoration: BoxDecoration(

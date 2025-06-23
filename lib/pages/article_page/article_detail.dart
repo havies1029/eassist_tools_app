@@ -1,3 +1,4 @@
+import 'package:eassist_tools_app/widgets/section/article/article_detail_page.dart';
 import 'package:flutter/material.dart';
 import '../../repositories/user/user_repository.dart';
 import '../../widgets/components/navbar/navbar_widget.dart';
@@ -5,13 +6,14 @@ import '../../widgets/section/about/floating_buttons_about.dart';
 import '../../widgets/components/footer/footer_section.dart';
 import '../../widgets/components/hero/hero_section.dart';
 import '../../widgets/section/article/action_article_section.dart';
+import '../../widgets/section/article/action_article_section2.dart';
 
 class DummyUserRepository extends UserRepository {
   // Override semua method yang dibutuhkan dengan return dummy data atau kosong
 }
 
-class ArticleMain extends StatelessWidget {
-  const ArticleMain({super.key});
+class ArticleDetailMain extends StatelessWidget {
+  const ArticleDetailMain({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +99,8 @@ class ArticlePage extends StatelessWidget {
                     children: [
                       HeroSection(constraints: constraints, pageType: PageType.article)  ,
                       FloatingButtons(constraints: constraints),
-                      ActionSection(constraints: constraints),
+                      ActionSection2(constraints: constraints),
+                      // ArticleDetailPage(constraints: constraints),
                       FooterSection(constraints: constraints),
                     ],
                   ),

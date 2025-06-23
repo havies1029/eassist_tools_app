@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'article_content.dart';
 
 class ArticleListPage extends StatefulWidget {
@@ -49,6 +50,9 @@ class _ArticleListPageState extends State<ArticleListPage> {
       child: GestureDetector(
         onTap: () {
           debugPrint('Klik artikel utama: ${article['title']}');
+          if (index == 0) {
+            context.go('/article_1'); // 👈 arahkan hanya untuk artikel pertama
+          }
         },
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),

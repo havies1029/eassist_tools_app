@@ -18,6 +18,20 @@ class ProfileSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authState = context.watch<AuthenticationBloc>().state;
+
+    // Cek apakah nama user tersedia
+    String? name;
+    if (authState is AuthenticationAuthenticated &&
+        authState.user.custType == "C") {
+      name = authState.user.nama;
+    }
+
+    // Jika nama kosong/null, jangan tampilkan apapun
+    if (name == null || name.trim().isEmpty) {
+      return const SizedBox.shrink();
+    }
+
     return Container(
       key: profileButtonKey,
       decoration: BoxDecoration(
@@ -34,7 +48,7 @@ class ProfileSection extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Profile Picture + Status Indicator
+              // Avatar + status
               BlocBuilder<ProfileDownloadFotoBloc, ProfileDownloadFotoState>(
                 builder: (context, imageState) {
                   Uint8List? imageBytes;
@@ -86,34 +100,19 @@ class ProfileSection extends StatelessWidget {
                   );
                 },
               ),
-
               const SizedBox(width: 12),
-
               // Nama User
-              Builder(
-                builder: (context) {
-                  final state = context.read<AuthenticationBloc>().state;
-                  String name = "[Nama User]";
-                  if (state is AuthenticationAuthenticated &&
-                      state.user.custType == "C") {
-                    name = state.user.nama ?? "[Nama User]";
-                  }
-
-                  return Text(
-                    name,
-                    style: const TextStyle(
-                      color: Color(0xFF2D5016),
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Satoshi-Regular',
-                    ),
-                  );
-                },
+              Text(
+                name!,
+                style: const TextStyle(
+                  color: Color(0xFF2D5016),
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Satoshi-Regular',
+                ),
               ),
-
               const SizedBox(width: 8),
-
-              // Dropdown Arrow
+              // Panah dropdown
               AnimatedRotation(
                 turns: isProfileMenuOpen ? 0.5 : 0,
                 duration: const Duration(milliseconds: 200),

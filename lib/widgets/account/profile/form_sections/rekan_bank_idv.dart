@@ -89,47 +89,6 @@ class _RekanBankIdvState extends State<RekanBankIdv> {
     }
   }
 
-  Widget _buildLabelText(String text) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Text(
-        text,
-        style: const TextStyle(fontWeight: FontWeight.w600),
-      ),
-    );
-  }
-
-  Widget _buildStyledTextField({
-    required TextEditingController controller,
-    required String hintText,
-    TextInputType keyboardType = TextInputType.text,
-    int maxLines = 1,
-    List<TextInputFormatter>? inputFormatters,
-    String? Function(String?)? validator,
-    void Function(String)? onChanged,
-  }) {
-    return TextFormField(
-      controller: controller,
-      readOnly: !isEditing,
-      keyboardType: keyboardType,
-      maxLines: maxLines,
-      inputFormatters: inputFormatters,
-      decoration: InputDecoration(
-        hintText: hintText,
-        hintStyle: const TextStyle(
-          fontFamily: 'Satoshi',
-          fontSize: 14,
-          color: Colors.grey,
-        ),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      ),
-      style: const TextStyle(fontSize: 16),
-      validator: validator,
-      onChanged: onChanged,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     bloc = BlocProvider.of<MRekanBankCrudBloc>(context);
@@ -149,89 +108,53 @@ class _RekanBankIdvState extends State<RekanBankIdv> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Header + Tombol Edit/Check
               Row(
                 children: [
                   const Expanded(
                     child: Text(
                       "Informasi Rekening Bank",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 17.5, fontWeight: FontWeight.bold),
                     ),
                   ),
                   IconButton(
                     icon: Icon(isEditing ? Icons.check : Icons.edit),
-                    onPressed: () {
-                      if (isEditing) {
-                        _onSave();
-                      } else {
-                        setState(() => isEditing = true);
-                      }
-                    },
-                  )
+                    tooltip: isEditing ? "Simpan" : "Ubah",
+                    onPressed: () => isEditing ? _onSave() : setState(() => isEditing = true),
+                  ),
                 ],
               ),
               const SizedBox(height: 12),
-              FormError(errors: _errors, key: null),
+              if (_errors.isNotEmpty)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: _errors.map((e) => Text(e, style: const TextStyle(color: Colors.red, fontSize: 12))).toList(),
+                ),
 
-              // ID Rekan
               _buildLabelText("ID Rekan"),
-              const SizedBox(height: 6),
               _buildStyledTextField(
                 controller: fieldMrekan1IdController,
                 hintText: "Masukkan ID rekan",
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    _addError(kStringNullError);
-                    return "";
-                  }
-                  return null;
-                },
-                onChanged: (value) {
-                  if (value.isNotEmpty) _removeError(kStringNullError);
-                },
+                errorKey: "ID rekan tidak boleh kosong.",
               ),
-              const SizedBox(height: 12),
 
-              // Nama Rekening
               _buildLabelText("Nama Rekening"),
-              const SizedBox(height: 6),
               _buildStyledTextField(
                 controller: fieldRekNamaController,
                 hintText: "Masukkan nama pemilik rekening",
-                keyboardType: TextInputType.name,
                 maxLines: 2,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    _addError(kStringNullError);
-                    return "";
-                  }
-                  return null;
-                },
-                onChanged: (value) {
-                  if (value.isNotEmpty) _removeError(kStringNullError);
-                },
+                keyboardType: TextInputType.name,
+                errorKey: "Nama rekening tidak boleh kosong.",
               ),
-              const SizedBox(height: 12),
 
-              // No. Rekening
               _buildLabelText("No. Rekening"),
-              const SizedBox(height: 6),
               _buildStyledTextField(
                 controller: fieldRekNoController,
                 hintText: "Masukkan nomor rekening",
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    _addError(kStringNullError);
-                    return "";
-                  }
-                  return null;
-                },
-                onChanged: (value) {
-                  if (value.isNotEmpty) _removeError(kStringNullError);
-                },
+                errorKey: "Nomor rekening tidak boleh kosong.",
               ),
+
               const SizedBox(height: 16),
             ],
           ),
@@ -239,4 +162,61 @@ class _RekanBankIdvState extends State<RekanBankIdv> {
       ),
     );
   }
+
+  Widget _buildLabelText(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 12, bottom: 6),
+      child: Text(text, style: const TextStyle(fontWeight: FontWeight.w400)),
+    );
+  }
+
+  Widget _buildStyledTextField({
+    required TextEditingController controller,
+    required String hintText,
+    TextInputType keyboardType = TextInputType.text,
+    List<TextInputFormatter>? inputFormatters,
+    int? maxLines,
+    required String errorKey,
+  }) {
+    return TextFormField(
+      controller: controller,
+      readOnly: !isEditing,
+      keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
+      maxLines: maxLines ?? 1,
+      decoration: InputDecoration(
+        hintText: hintText,
+        hintStyle: const TextStyle(fontFamily: 'Satoshi', fontSize: 14, color: Colors.grey),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.grey.shade400),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.blue.shade400),
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.grey.shade300),
+        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        filled: true,
+        fillColor: isEditing ? Colors.white : Colors.grey.shade50,
+        isDense: true,
+      ),
+      style: const TextStyle(fontFamily: 'Satoshi', fontSize: 14),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          _addError(errorKey);
+          return "";
+        }
+        return null;
+      },
+      onChanged: (value) {
+        if (value.isNotEmpty) _removeError(errorKey);
+      },
+    );
+  }
+
 }

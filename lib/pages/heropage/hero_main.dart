@@ -84,9 +84,11 @@ class _HeroMainState extends State<HeroMain> {
           context.go('/loading_hero');
         } else if (state.authenticatedFrom == "login_client") {
           context.go('/loading_hero_user');
-        } else if (state.authenticatedFrom == "login_token") {
-          context.go('/loading_hero_user');
-        }else {
+        }
+        // else if (state.authenticatedFrom == "login_token") {
+        //   context.go('/loading_hero_user');
+        // }
+        else {
           // Fallback kalau tidak terdeteksi
           context.go('/loading_hero');
         }

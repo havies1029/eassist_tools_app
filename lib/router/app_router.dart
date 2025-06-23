@@ -1,5 +1,6 @@
 import 'package:eassist_tools_app/pages/splash/loading_user_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:go_router/go_router.dart';
 // import 'package:go_router/src/refresh_stream.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +10,7 @@ import 'package:eassist_tools_app/widgets/account/profile/profile_main_page.dart
 import 'package:eassist_tools_app/pages/about_jps/about_main.dart';
 import 'package:eassist_tools_app/pages/active_assets/active_assets_main.dart';
 import 'package:eassist_tools_app/pages/article_page/article_main.dart';
+import 'package:eassist_tools_app/pages/article_page/article_detail.dart';
 import 'package:eassist_tools_app/pages/gen_profile/mrekanpajakcrud_form.dart';
 import 'package:eassist_tools_app/pages/summary_polis_assets/assets_management_main.dart';
 import 'package:eassist_tools_app/pages/find_insurance/find_insurance_main.dart';
@@ -25,6 +27,7 @@ import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart'
 import '../helper/go_router_refresh_stream.dart';
 import '../pages/gen_profile/test_profile_main.dart';
 import '../pages/splash/loading_client_page.dart';
+import '../widgets/section/article/article_detail_page.dart';
 
 /// Dummy fallback (tidak digunakan langsung dalam router)
 class DummyUserRepository extends UserRepository {}
@@ -34,6 +37,7 @@ final dummyUserRepository = DummyUserRepository();
 GoRouter buildRouter(BuildContext context) {
   final AuthenticationBloc authBloc = BlocProvider.of<AuthenticationBloc>(context, listen: false);
 
+  var constraints;
   return GoRouter(
     initialLocation: '/loading_hero',
 
@@ -47,23 +51,32 @@ GoRouter buildRouter(BuildContext context) {
 
       debugPrint('[DEBUG REDIRECT] location: $location, authState: $authState');
 
-      // Redirect jika belum login
-      if (authState is AuthenticationUnauthenticated && location != '/hero') {
+      // Daftar halaman yang boleh diakses oleh siapa saja (public route)
+      final publicRoutes = [
+        '/testimony',
+        '/about',
+        '/article',
+        '/article_1',
+      ];
+
+      // 1. Belum login diarahkan ke hero (kecuali public)
+      if (authState is AuthenticationUnauthenticated &&
+          !publicRoutes.contains(location)) {
         return '/loading_hero';
       }
 
-      // Redirect untuk yang sudah login
+      // 2. login_client boleh akses hero_user
       if (authState is AuthenticationAuthenticated) {
         final from = authState.authenticatedFrom;
 
-        // Semua login_client & login_token diarahkan ke /hero_user
-        if ((from == 'login_client' || from == 'login_token') && location == '/hero') {
+        if (from == 'login_client' && location == '/hero') {
           return '/loading_hero_user';
         }
 
-
-        // login_user diarahkan ke /hero
-        if (from == 'login_user' && location != '/hero') {
+        // 3. login_user boleh akses hero & public
+        if (from == 'login_user' &&
+            location != '/hero' &&
+            !publicRoutes.contains(location)) {
           return '/loading_hero';
         }
       }
@@ -97,6 +110,7 @@ GoRouter buildRouter(BuildContext context) {
           return ProfileMainPage(userid: userId, selectedChoice: 'Perusahaan');
         },
       ),
+      GoRoute(path: '/article_1', builder: (context, state) => const ArticleDetailMain()),
       GoRoute(path: '/test_profile', builder: (context, state) => const TestProfileMain()),
       GoRoute(path: '/about', builder: (context, state) => const AboutMain()),
       GoRoute(path: '/active_assets', builder: (context, state) => const ActiveAssetPage()),

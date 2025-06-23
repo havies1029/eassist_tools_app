@@ -20,8 +20,11 @@ class RekanContact extends StatefulWidget {
   State<RekanContact> createState() => _RekanContactState();
 }
 
+// Bagian import tetap, tidak perlu diubah
+
 class _RekanContactState extends State<RekanContact> {
   final _formKey = GlobalKey<FormState>();
+  final List<String> errors = [];
   final comboMPropinsiKey = GlobalKey<DropdownSearchState<ComboMPropinsiModel>>();
 
   final TextEditingController fieldAlamat1Controller = TextEditingController();
@@ -34,10 +37,6 @@ class _RekanContactState extends State<RekanContact> {
 
   bool isEditingSection = false;
   late MRekanContactCrudBloc bloc;
-
-  final TextStyle labelStyle = const TextStyle(fontWeight: FontWeight.w200);
-  final TextStyle hintStyle = const TextStyle(fontFamily: 'Satoshi', fontSize: 14, color: Colors.grey);
-  final TextStyle textStyle = const TextStyle(fontFamily: 'Satoshi', fontSize: 14);
 
   @override
   void initState() {
@@ -86,46 +85,112 @@ class _RekanContactState extends State<RekanContact> {
                   ),
                   IconButton(
                     icon: Icon(isEditingSection ? Icons.check : Icons.edit),
-                    onPressed: () {
-                      if (isEditingSection) {
-                        onSaveForm();
-                      } else {
-                        setState(() => isEditingSection = true);
-                      }
-                    },
+                    onPressed: () => isEditingSection ? onSaveForm() : setState(() => isEditingSection = true),
                   ),
                 ],
               ),
               const SizedBox(height: 12),
-              _buildLabelText("Alamat"),
-              const SizedBox(height: 6),
-              _buildStyledTextField(controller: fieldAlamat1Controller, hintText: "Masukkan alamat lengkap"),
-              const SizedBox(height: 12),
-              _buildLabelText("Email"),
-              const SizedBox(height: 6),
-              _buildStyledTextField(controller: fieldEmailController, hintText: "contoh@mail.com", keyboardType: TextInputType.emailAddress),
-              const SizedBox(height: 12),
-              _buildLabelText("Provinsi"),
-              const SizedBox(height: 6),
-              _buildStyledDropdown(child: _buildFieldMPropinsiDropdown()),
-              const SizedBox(height: 12),
-              _buildLabelText("Kota"),
-              const SizedBox(height: 6),
-              _buildStyledDropdown(child: _buildFieldMKotaDropdown()),
-              const SizedBox(height: 12),
-              _buildLabelText("Kode Pos"),
-              const SizedBox(height: 6),
-              _buildStyledDropdown(child: _buildFieldRKodeposDropdown()),
-              const SizedBox(height: 12),
-              _buildLabelText("No. HP"),
-              const SizedBox(height: 6),
-              _buildStyledTextField(
+
+              _buildLabel("Alamat"),
+              _buildTextField(
+                controller: fieldAlamat1Controller,
+                hintText: "Masukkan alamat lengkap",
+                maxLines: 2,
+                errorKey: "Alamat tidak boleh kosong.",
+              ),
+
+              _buildLabel("Email"),
+              _buildTextField(
+                controller: fieldEmailController,
+                hintText: "contoh@mail.com",
+                keyboardType: TextInputType.emailAddress,
+                errorKey: "Email tidak boleh kosong.",
+              ),
+
+              _buildLabel("Provinsi"),
+              _buildStyledDropdown(
+                child: isEditingSection ? buildFieldComboMPropinsi(
+                  comboKey: comboMPropinsiKey,
+                  labelText: "Pilih",
+                  initItem: fieldComboMPropinsi,
+                  onChangedCallback: (value) {
+                    if (value != null) {
+                      setState(() {
+                        fieldComboMPropinsi = value;
+                        fieldComboMKota = null;
+                        fieldComboRKodepos = null;
+                      });
+                      bloc.add(ComboMPropinsiChangedEvent(comboMPropinsi: value));
+                      removeError("Provinsi tidak boleh kosong.");
+                    }
+                  },
+                  onSaveCallback: (value) => fieldComboMPropinsi = value,
+                  validatorCallback: (value) {
+                    if (value == null) addError("Provinsi tidak boleh kosong.");
+                  },
+                ) : _buildDisabledDropdown(fieldComboMPropinsi?.propinsiNama ?? 'Belum diisi'),
+              ),
+
+              _buildLabel("Kota"),
+              _buildStyledDropdown(
+                child: isEditingSection ? buildFieldComboMKota(
+                  initItem: fieldComboMKota,
+                  propinsiId: fieldComboMPropinsi?.mpropinsiId ?? "",
+                  onChangedCallback: (value) {
+                    if (value != null) {
+                      setState(() {
+                        fieldComboMKota = value;
+                        fieldComboRKodepos = null;
+                      });
+                      bloc.add(ComboMKotaChangedEvent(comboMKota: value));
+                      removeError("Kota tidak boleh kosong.");
+                    }
+                  },
+                  onSaveCallback: (value) => fieldComboMKota = value,
+                  validatorCallback: (value) {
+                    if (value == null) addError("Kota tidak boleh kosong.");
+                  },
+                  labelText: 'Pilih',
+                ) : _buildDisabledDropdown(fieldComboMKota?.kotaDesc ?? 'Belum diisi'),
+              ),
+
+              _buildLabel("Kode Pos"),
+              _buildStyledDropdown(
+                child: isEditingSection ? buildFieldComboRKodepos(
+                  initItem: fieldComboRKodepos,
+                  kotaId: fieldComboMKota?.mkotaId ?? "",
+                  onChangedCallback: (value) {
+                    if (value != null) {
+                      fieldComboRKodepos = value;
+                      bloc.add(ComboRKodeposChangedEvent(comboRKodepos: value));
+                      removeError("Kode pos tidak boleh kosong.");
+                    }
+                  },
+                  onSaveCallback: (value) => fieldComboRKodepos = value,
+                  validatorCallback: (value) {
+                    if (value == null) addError("Kode pos tidak boleh kosong.");
+                  },
+                  labelText: 'Pilih',
+                ) : _buildDisabledDropdown(fieldComboRKodepos?.kodeposNo ?? 'Belum diisi'),
+              ),
+
+              _buildLabel("No. HP"),
+              _buildTextField(
                 controller: fieldTelpController,
                 hintText: "Contoh: 6283388774644",
                 keyboardType: TextInputType.phone,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                errorKey: "Nomor HP tidak boleh kosong.",
               ),
-              const SizedBox(height: 16),
+
+              if (errors.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: 12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: errors.map((e) => Text(e, style: const TextStyle(color: Colors.red, fontSize: 12))).toList(),
+                  ),
+                ),
             ],
           ),
         ),
@@ -133,26 +198,52 @@ class _RekanContactState extends State<RekanContact> {
     );
   }
 
-  Widget _buildLabelText(String text) => Align(alignment: Alignment.centerLeft, child: Text(text, style: labelStyle));
+  Widget _buildLabel(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 12, bottom: 6),
+      child: Text(text, style: const TextStyle(fontWeight: FontWeight.w400)),
+    );
+  }
 
-  Widget _buildStyledTextField({
+  Widget _buildTextField({
     required TextEditingController controller,
     required String hintText,
     TextInputType keyboardType = TextInputType.text,
     List<TextInputFormatter>? inputFormatters,
+    int? maxLines,
+    required String errorKey,
   }) {
     return TextFormField(
       controller: controller,
       readOnly: !isEditingSection,
       keyboardType: keyboardType,
       inputFormatters: inputFormatters,
+      maxLines: maxLines ?? 1,
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: hintStyle,
+        hintStyle: const TextStyle(fontFamily: 'Satoshi', fontSize: 14, color: Colors.grey),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: Colors.grey.shade400)),
+        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: Colors.blue.shade400)),
+        disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: Colors.grey.shade300)),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        filled: true,
+        fillColor: isEditingSection ? Colors.white : Colors.grey.shade50,
+        isDense: true,
       ),
-      validator: (value) => value == null || value.isEmpty ? 'Field tidak boleh kosong' : null,
+      style: const TextStyle(fontFamily: 'Satoshi', fontSize: 14),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          addError(errorKey);
+          return "";
+        }
+        return null;
+      },
+      onChanged: (value) {
+        if (value.isNotEmpty) {
+          removeError(errorKey);
+        }
+      },
     );
   }
 
@@ -162,81 +253,23 @@ class _RekanContactState extends State<RekanContact> {
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey.shade400),
         borderRadius: BorderRadius.circular(8),
+        color: Colors.white,
       ),
       child: child,
     );
   }
 
-  Widget _buildDisabledDropdown({required String text}) {
+  Widget _buildDisabledDropdown(String text) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-      child: Text(text, style: textStyle),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(text, style: const TextStyle(fontFamily: 'Satoshi', fontSize: 14, color: Colors.black87)),
     );
   }
-
-  Widget _buildFieldMKotaDropdown() {
-    return isEditingSection
-        ? buildFieldComboMKota(
-      labelText: 'Pilih',
-      initItem: fieldComboMKota,
-      propinsiId: fieldComboMPropinsi?.mpropinsiId ?? "",
-      onChangedCallback: (value) {
-        if (value != null) {
-          setState(() {
-            fieldComboMKota = value;
-            fieldComboRKodepos = null;
-          });
-          bloc.add(ComboMKotaChangedEvent(comboMKota: value));
-        }
-      },
-      onSaveCallback: (value) => fieldComboMKota = value,
-      validatorCallback: (value) {},
-    )
-        : _buildDisabledDropdown(text: fieldComboMKota?.kotaDesc ?? 'Belum diisi');
-  }
-
-  Widget _buildFieldMPropinsiDropdown() {
-    return isEditingSection
-        ? buildFieldComboMPropinsi(
-      comboKey: comboMPropinsiKey,
-      labelText: 'Pilih',
-      initItem: fieldComboMPropinsi,
-      onChangedCallback: (value) {
-        if (value != null) {
-          setState(() {
-            fieldComboMPropinsi = value;
-            fieldComboMKota = null;
-            fieldComboRKodepos = null;
-          });
-          bloc.add(ComboMPropinsiChangedEvent(comboMPropinsi: value));
-        }
-      },
-      onSaveCallback: (value) => fieldComboMPropinsi = value,
-      validatorCallback: (value) {},
-    )
-        : _buildDisabledDropdown(text: fieldComboMPropinsi?.propinsiNama ?? 'Belum diisi');
-  }
-
-  Widget _buildFieldRKodeposDropdown() {
-    return isEditingSection
-        ? buildFieldComboRKodepos(
-      labelText: 'Pilih',
-      initItem: fieldComboRKodepos,
-      kotaId: fieldComboMKota?.mkotaId ?? "",
-      onChangedCallback: (value) {
-        if (value != null) {
-          fieldComboRKodepos = value;
-          bloc.add(ComboRKodeposChangedEvent(comboRKodepos: value));
-        }
-      },
-      onSaveCallback: (value) => fieldComboRKodepos = value,
-      validatorCallback: (value) {},
-    )
-        : _buildDisabledDropdown(text: fieldComboRKodepos?.kodeposNo ?? 'Belum diisi');
-  }
-
-  // =========================== API Actions =============================
 
   void onSaveForm() {
     if (_formKey.currentState!.validate()) {
@@ -253,8 +286,19 @@ class _RekanContactState extends State<RekanContact> {
       );
 
       bloc.add(MRekanContactCrudUbahEvent(record: record));
-
       setState(() => isEditingSection = false);
+    }
+  }
+
+  void addError(String error) {
+    if (!errors.contains(error)) {
+      setState(() => errors.add(error));
+    }
+  }
+
+  void removeError(String error) {
+    if (errors.contains(error)) {
+      setState(() => errors.remove(error));
     }
   }
 }

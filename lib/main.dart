@@ -84,8 +84,16 @@ import 'blocs/simulmb/simulmbcrud_bloc.dart';
 import 'blocs/simultree/simultreecrud_bloc.dart';
 import 'router/app_router.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'dart:async';
+import 'package:flutter/foundation.dart';
+import 'dart:html' as html; // Untuk web
+import 'package:js/js.dart'; // Tambahkan ke pubspec.yaml
+import 'dart:js_util' as js_util;
+
+// NONAKTIFKAN DEBUG PRINT & ERROR MERAH
 
 Future<void> main() async {
+  disableAllLogs();
 
   final userRepository = UserRepository();
   AppData.kIsWeb = kIsWeb;
@@ -280,7 +288,32 @@ class App extends StatelessWidget {
   }
 }
 
-/*
-final GoRouter router = GoRouter(
-  initialLocation: '/splash',
-*/
+
+
+void disableAllLogs() {
+  // 1. Matikan semua print/debugPrint
+  debugPrint = (String? message, {int? wrapWidth}) {};
+
+  // 2. Matikan error dari Flutter framework
+  FlutterError.onError = (FlutterErrorDetails details) {};
+
+  // 3. Tangani semua error global (termasuk Web & Mobile)
+  PlatformDispatcher.instance.onError = (error, stack) => true;
+
+  // 4. Matikan console log di Web
+  if (kIsWeb) {
+    try {
+      final console = js_util.getProperty(html.window, 'console');
+      js_util.setProperty(console, 'log', allowInterop((_) {}));
+      js_util.setProperty(console, 'warn', allowInterop((_) {}));
+      js_util.setProperty(console, 'error', allowInterop((_) {}));
+    } catch (_) {
+      // jika browser tidak support
+    }
+  }
+
+  // 5. Hilangkan widget error merah dari UI
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    return const SizedBox();
+  };
+}

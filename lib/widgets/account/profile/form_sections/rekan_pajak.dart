@@ -142,7 +142,19 @@ class _MRekanPajakFormBodyState extends State<MRekanPajakFormBody> {
     );
   }
 
-  Widget _buildLabelText(String text) => Align(alignment: Alignment.centerLeft, child: Text(text, style: labelStyle));
+  Widget _buildLabelText(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 12, bottom: 6),
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontFamily: 'Satoshi',
+          fontWeight: FontWeight.w400,
+          fontSize: 14,
+        ),
+      ),
+    );
+  }
 
   Widget _buildStyledTextField({
     required TextEditingController controller,
@@ -153,17 +165,37 @@ class _MRekanPajakFormBodyState extends State<MRekanPajakFormBody> {
     return TextFormField(
       controller: controller,
       readOnly: !isEditingSection,
-      maxLines: maxLines,
       keyboardType: keyboardType,
+      maxLines: maxLines,
+      style: const TextStyle(fontFamily: 'Satoshi', fontSize: 14),
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: hintStyle,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        hintStyle: const TextStyle(fontFamily: 'Satoshi', fontSize: 14, color: Colors.grey),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.grey.shade400),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.grey.shade400),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.blue.shade400),
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.grey.shade300),
+        ),
+        filled: true,
+        fillColor: isEditingSection ? Colors.white : Colors.grey.shade50,
+        isDense: true,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       ),
       validator: (value) => value == null || value.isEmpty ? 'Field tidak boleh kosong' : null,
     );
   }
+
 
   Widget _buildStyledDropdown({required Widget child}) {
     return Container(
@@ -171,6 +203,7 @@ class _MRekanPajakFormBodyState extends State<MRekanPajakFormBody> {
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey.shade400),
         borderRadius: BorderRadius.circular(8),
+        color: Colors.white,
       ),
       child: child,
     );
@@ -180,9 +213,21 @@ class _MRekanPajakFormBodyState extends State<MRekanPajakFormBody> {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-      child: Text(text, style: textStyle),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontFamily: 'Satoshi',
+          fontSize: 14,
+          color: Colors.black87,
+        ),
+      ),
     );
   }
+
 
   Widget _buildFieldMPropinsiDropdown() {
     return isEditingSection

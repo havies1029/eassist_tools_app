@@ -139,24 +139,25 @@ class _RekanBankCmpState extends State<RekanBankCmp> {
   }
 
   Widget _buildLabelText(String text) {
-    return Align(
-      alignment: Alignment.centerLeft,
+    return Padding(
+      padding: const EdgeInsets.only(top: 12, bottom: 6),
       child: Text(
         text,
         style: const TextStyle(
           fontFamily: 'Satoshi',
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w400,
           fontSize: 14,
         ),
       ),
     );
   }
 
+
   Widget _buildStyledTextField({
     required TextEditingController controller,
     String? hintText,
     TextInputType keyboardType = TextInputType.text,
-    int maxLines = 1,
+    int? maxLines,
     List<TextInputFormatter>? inputFormatters,
     String? Function(String?)? validator,
     void Function(String)? onChanged,
@@ -165,34 +166,32 @@ class _RekanBankCmpState extends State<RekanBankCmp> {
       controller: controller,
       readOnly: !isEditingSection,
       keyboardType: keyboardType,
-      maxLines: maxLines,
       inputFormatters: inputFormatters,
-      style: const TextStyle(
-        fontFamily: 'Satoshi',
-        fontSize: 14,
-      ),
+      maxLines: maxLines ?? 1,
+      style: const TextStyle(fontFamily: 'Satoshi', fontSize: 14),
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: const TextStyle(
-          fontFamily: 'Satoshi',
-          fontSize: 14,
-          color: Colors.grey,
-        ),
-        filled: true,
-        fillColor: Colors.white,
+        hintStyle: const TextStyle(fontFamily: 'Satoshi', fontSize: 14, color: Colors.grey),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: Colors.grey),
+          borderSide: BorderSide(color: Colors.grey.shade400),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: Colors.grey),
+          borderSide: BorderSide(color: Colors.grey.shade400),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: Colors.grey),
+          borderSide: BorderSide(color: Colors.blue.shade400),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.grey.shade300),
+        ),
+        filled: true,
+        fillColor: isEditingSection ? Colors.white : Colors.grey.shade50,
+        isDense: true,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       ),
       validator: validator,
       onChanged: onChanged,

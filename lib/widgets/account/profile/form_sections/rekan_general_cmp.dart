@@ -21,23 +21,11 @@ class _RekanGeneralCmpState extends State<RekanGeneralCmp> {
   late MRekanGeneralCmpCrudBloc bloc;
 
   final TextEditingController fieldRekanNamaController = TextEditingController();
-
   ComboMBentukCstModel? fieldComboMBentukCst;
   ComboMBidangModel? fieldComboMBidang;
 
   bool isEditingSection = false;
-
-  // === Styles ===
-  static const TextStyle labelStyle = TextStyle(fontWeight: FontWeight.w200);
-  static const TextStyle hintStyle = TextStyle(
-    fontFamily: 'Satoshi',
-    fontSize: 14,
-    color: Colors.grey,
-  );
-  static const TextStyle textStyle = TextStyle(
-    fontFamily: 'Satoshi',
-    fontSize: 14,
-  );
+  final List<String> errors = [];
 
   @override
   void initState() {
@@ -60,7 +48,7 @@ class _RekanGeneralCmpState extends State<RekanGeneralCmp> {
     return BlocListener<MRekanGeneralCmpCrudBloc, MRekanGeneralCmpCrudState>(
       listener: (context, state) {
         if (state.isLoaded && state.record != null) {
-          fieldRekanNamaController.text = state.record!.rekanNama!;
+          fieldRekanNamaController.text = state.record?.rekanNama ?? '';
           fieldComboMBentukCst = state.comboMBentukCst;
           fieldComboMBidang = state.comboMBidang;
         }
@@ -82,6 +70,7 @@ class _RekanGeneralCmpState extends State<RekanGeneralCmp> {
                   ),
                   IconButton(
                     icon: Icon(isEditingSection ? Icons.check : Icons.edit),
+                    tooltip: isEditingSection ? "Simpan" : "Ubah",
                     onPressed: () {
                       isEditingSection ? onSaveForm() : setState(() => isEditingSection = true);
                     },
@@ -92,24 +81,69 @@ class _RekanGeneralCmpState extends State<RekanGeneralCmp> {
 
               _buildLabelText("Nama Badan Usaha"),
               const SizedBox(height: 6),
-              _buildStyledTextField(
+              _buildTextField(
                 controller: fieldRekanNamaController,
                 hintText: "Masukkan nama perusahaan",
-                keyboardType: TextInputType.multiline,
-                maxLines: 2,
-                validator: (value) => (value == null || value.isEmpty) ? 'Field tidak boleh kosong' : null,
               ),
               const SizedBox(height: 12),
 
               _buildLabelText("Bentuk Badan Usaha"),
               const SizedBox(height: 6),
-              _buildStyledDropdown(child: _buildComboMBentukCst()),
+              _buildStyledDropdown(
+                child: isEditingSection
+                    ? buildFieldComboMBentukCst(
+                  labelText: 'Pilih',
+                  initItem: fieldComboMBentukCst,
+                  onChangedCallback: (value) {
+                    if (value != null) {
+                      fieldComboMBentukCst = value;
+                      bloc.add(ComboMBentukCstChangedEvent(comboMBentukCst: value));
+                      removeError("Field bentuk usaha tidak boleh kosong.");
+                    }
+                  },
+                  onSaveCallback: (value) {
+                    if (value != null) fieldComboMBentukCst = value;
+                  },
+                  validatorCallback: (value) {
+                    if (value == null) addError("Field bentuk usaha tidak boleh kosong.");
+                  },
+                  comboKey: null,
+                )
+                    : _buildDisabledDropdown(text: fieldComboMBentukCst?.bentukNama ?? 'Belum diisi'),
+              ),
               const SizedBox(height: 12),
 
               _buildLabelText("Bidang Usaha"),
               const SizedBox(height: 6),
-              _buildStyledDropdown(child: _buildComboMBidang()),
+              _buildStyledDropdown(
+                child: isEditingSection
+                    ? buildFieldComboMBidang(
+                  labelText: 'Pilih',
+                  initItem: fieldComboMBidang,
+                  onChangedCallback: (value) {
+                    if (value != null) {
+                      fieldComboMBidang = value;
+                      bloc.add(ComboMBidangChangedEvent(comboMBidang: value));
+                      removeError("Field bidang usaha tidak boleh kosong.");
+                    }
+                  },
+                  onSaveCallback: (value) {
+                    if (value != null) fieldComboMBidang = value;
+                  },
+                  validatorCallback: (value) {
+                    if (value == null) addError("Field bidang usaha tidak boleh kosong.");
+                  },
+                  comboKey: null,
+                )
+                    : _buildDisabledDropdown(text: fieldComboMBidang?.bidangNama ?? 'Belum diisi'),
+              ),
               const SizedBox(height: 16),
+
+              if (errors.isNotEmpty)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: errors.map((e) => Text(e, style: const TextStyle(color: Colors.red, fontSize: 12))).toList(),
+                ),
             ],
           ),
         ),
@@ -120,17 +154,15 @@ class _RekanGeneralCmpState extends State<RekanGeneralCmp> {
   Widget _buildLabelText(String text) {
     return Align(
       alignment: Alignment.centerLeft,
-      child: Text(text, style: labelStyle),
+      child: Text(text, style: const TextStyle(fontWeight: FontWeight.w400)),
     );
   }
 
-  Widget _buildStyledTextField({
+  Widget _buildTextField({
     required TextEditingController controller,
     required String hintText,
     TextInputType keyboardType = TextInputType.text,
-    int maxLines = 1,
-    String? Function(String?)? validator,
-    void Function(String)? onChanged,
+    int? maxLines = 1,
   }) {
     return TextFormField(
       controller: controller,
@@ -139,12 +171,43 @@ class _RekanGeneralCmpState extends State<RekanGeneralCmp> {
       maxLines: maxLines,
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: hintStyle,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        hintStyle: const TextStyle(fontFamily: 'Satoshi', fontSize: 14, color: Colors.grey),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.grey.shade400, width: 1),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.grey.shade400, width: 1),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.blue.shade400, width: 1.5),
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
+        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        filled: true,
+        fillColor: isEditingSection ? Colors.white : Colors.grey.shade50,
+        alignLabelWithHint: true,
+        isDense: true,
       ),
-      validator: validator,
-      onChanged: onChanged,
+      style: const TextStyle(fontFamily: 'Satoshi', fontSize: 14, height: 1.3),
+      textAlignVertical: TextAlignVertical.top,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          addError("Field nama badan usaha tidak boleh kosong.");
+          return "";
+        }
+        return null;
+      },
+      onChanged: (value) {
+        if (value.isNotEmpty) {
+          removeError("Field nama badan usaha tidak boleh kosong.");
+        }
+      },
     );
   }
 
@@ -154,6 +217,7 @@ class _RekanGeneralCmpState extends State<RekanGeneralCmp> {
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey.shade400),
         borderRadius: BorderRadius.circular(8),
+        color: Colors.white,
       ),
       child: child,
     );
@@ -163,47 +227,17 @@ class _RekanGeneralCmpState extends State<RekanGeneralCmp> {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-      child: Text(text, style: textStyle),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(fontFamily: 'Satoshi', fontSize: 14, color: Colors.black87),
+      ),
     );
   }
 
-  Widget _buildComboMBentukCst() {
-    return isEditingSection
-        ? buildFieldComboMBentukCst(
-      labelText: 'Pilih',
-      initItem: fieldComboMBentukCst,
-      onChangedCallback: (value) {
-        if (value != null) {
-          fieldComboMBentukCst = value;
-          bloc.add(ComboMBentukCstChangedEvent(comboMBentukCst: value));
-        }
-      },
-      onSaveCallback: (value) => fieldComboMBentukCst = value,
-      validatorCallback: (value) {},
-      comboKey: null,
-    )
-        : _buildDisabledDropdown(text: fieldComboMBentukCst?.bentukNama ?? 'Belum diisi');
-  }
-
-  Widget _buildComboMBidang() {
-    return isEditingSection
-        ? buildFieldComboMBidang(
-      labelText: 'Pilih',
-      initItem: fieldComboMBidang,
-      onChangedCallback: (value) {
-        if (value != null) {
-          fieldComboMBidang = value;
-          bloc.add(ComboMBidangChangedEvent(comboMBidang: value));
-        }
-      },
-      onSaveCallback: (value) => fieldComboMBidang = value,
-      validatorCallback: (value) {},
-      comboKey: null,
-    )
-        : _buildDisabledDropdown(text: fieldComboMBidang?.bidangNama ?? 'Belum diisi');
-  }
-
-  // === API Submit & Logic ===
   void onSaveForm() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
@@ -217,6 +251,18 @@ class _RekanGeneralCmpState extends State<RekanGeneralCmp> {
       bloc.add(MRekanGeneralCmpCrudUbahEvent(record: record));
 
       setState(() => isEditingSection = false);
+    }
+  }
+
+  void addError(String error) {
+    if (!errors.contains(error)) {
+      setState(() => errors.add(error));
+    }
+  }
+
+  void removeError(String error) {
+    if (errors.contains(error)) {
+      setState(() => errors.remove(error));
     }
   }
 }

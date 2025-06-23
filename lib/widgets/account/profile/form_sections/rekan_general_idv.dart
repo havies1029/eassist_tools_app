@@ -47,9 +47,11 @@ class _RekanGeneralIdvState extends State<RekanGeneralIdv> {
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
-      if (widget.viewMode == "ubah") {
-        context.read<MRekanGeneralIdvCrudBloc>().add(MRekanGeneralIdvCrudLihatEvent());
-      }
+      bloc = context.read<MRekanGeneralIdvCrudBloc>();
+      bloc.add(MRekanGeneralIdvCrudLihatEvent());
+
+      // Buka langsung mode edit jika perlu (opsional)
+      setState(() => isEditingSection = true);
     });
   }
 
@@ -168,13 +170,15 @@ class _RekanGeneralIdvState extends State<RekanGeneralIdv> {
     required TextEditingController controller,
     required String hintText,
     TextInputType keyboardType = TextInputType.text,
-    int maxLines = 2,
+    int? minLines,
+    int? maxLines,
   }) {
     return TextFormField(
       controller: controller,
       readOnly: !isEditingSection,
       keyboardType: keyboardType,
-      maxLines: maxLines,
+      minLines: minLines ?? 1,
+      maxLines: maxLines ?? 5, // Limit to maximum 5 lines
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: const TextStyle(
@@ -182,13 +186,38 @@ class _RekanGeneralIdvState extends State<RekanGeneralIdv> {
           fontSize: 14,
           color: Colors.grey,
         ),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.grey.shade400, width: 1),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.grey.shade400, width: 1),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.blue.shade400, width: 1.5),
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
+        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        filled: true,
+        fillColor: isEditingSection ? Colors.white : Colors.grey.shade50,
+        alignLabelWithHint: true,
+        isDense: true, // Makes the field more compact
       ),
+      style: const TextStyle(
+        fontFamily: 'Satoshi',
+        fontSize: 14,
+        height: 1.3, // Slightly reduced line height
+      ),
+      textAlignVertical: TextAlignVertical.top,
       validator: (value) {
         if (value == null || value.isEmpty) {
-          addError(kStringNullError);
-          return "";
+          addError("Field nama rekan harus diisi.");
+          return "Field nama rekan harus diisi.";
         }
         return null;
       },
@@ -206,6 +235,7 @@ class _RekanGeneralIdvState extends State<RekanGeneralIdv> {
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey.shade400),
         borderRadius: BorderRadius.circular(8),
+        color: Colors.white,
       ),
       child: child,
     );
@@ -215,11 +245,16 @@ class _RekanGeneralIdvState extends State<RekanGeneralIdv> {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: Text(
         text,
         style: const TextStyle(
           fontFamily: 'Satoshi',
           fontSize: 14,
+          color: Colors.black87,
         ),
       ),
     );
@@ -240,7 +275,11 @@ class _RekanGeneralIdvState extends State<RekanGeneralIdv> {
         if (value != null) fieldComboMPekerjaan = value;
       },
       validatorCallback: (value) {
-        if (value == null) addError("Field pekerjaan tidak boleh kosong.");
+        if (value == null) {
+          addError("Field pekerjaan tidak boleh kosong.");
+          return "Field pekerjaan harus diisi";
+        }
+        return null;
       },
       comboKey: comboMPekerjaanKey,
     );
@@ -261,32 +300,53 @@ class _RekanGeneralIdvState extends State<RekanGeneralIdv> {
         if (value != null) fieldComboMJnskel = value;
       },
       validatorCallback: (value) {
-        if (value == null) addError("Field jenis kelamin tidak boleh kosong.");
+        if (value == null) {
+          addError("Field jenis kelamin tidak boleh kosong.");
+          return "Field jenis kelamin harus diisi";
+        }
+        return null;
       },
       comboKey: comboMJnskelKey,
     );
   }
 
   void onSaveForm() {
+    errors.clear();
+
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
+      if (fieldComboMJnskel == null) {
+        addError("Field jenis kelamin tidak boleh kosong.");
+      }
+
+      if (fieldComboMPekerjaan == null) {
+        addError("Field pekerjaan tidak boleh kosong.");
+      }
+
+      if (fieldRekanNamaController.text.trim().isEmpty) {
+        addError("Field nama rekan harus diisi.");
+      }
+
+      if (errors.isNotEmpty) return;
+
+      // ⛔ Ambil mrekan1Id dari state (harus dipastikan di-load saat init)
+      final currentId = bloc.state.record?.mrekan1Id ?? '';
       final record = MRekanGeneralIdvCrudModel(
-        mjnskelId: fieldComboMJnskel?.mjnskelId,
-        mpekerjaanId: fieldComboMPekerjaan?.mpekerjaanId,
-        rekanNama: fieldRekanNamaController.text,
-        mrekan1Id: bloc.state.record?.mrekan1Id ?? '',
+        mjnskelId: fieldComboMJnskel!.mjnskelId,
+        mpekerjaanId: fieldComboMPekerjaan!.mpekerjaanId,
+        rekanNama: fieldRekanNamaController.text.trim(),
+        mrekan1Id: currentId,
       );
 
-      if (widget.viewMode == "tambah") {
-        bloc.add(MRekanGeneralIdvCrudTambahEvent(record: record));
-      } else {
-        bloc.add(MRekanGeneralIdvCrudUbahEvent(record: record));
-      }
+      // ✅ Selalu gunakan UbahEvent
+      bloc.add(MRekanGeneralIdvCrudUbahEvent(record: record));
 
       setState(() => isEditingSection = false);
     }
   }
+
+
 
   void addError(String error) {
     if (!errors.contains(error)) {
