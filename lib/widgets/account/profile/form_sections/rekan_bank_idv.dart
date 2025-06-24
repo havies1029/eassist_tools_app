@@ -30,7 +30,7 @@ class _RekanBankIdvState extends State<RekanBankIdv> {
   final TextEditingController fieldRekNamaController = TextEditingController();
   final TextEditingController fieldRekNoController = TextEditingController();
 
-  bool isEditing = true;
+  bool isEditing = false;
 
   @override
   void initState() {

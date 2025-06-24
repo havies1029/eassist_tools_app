@@ -49,9 +49,6 @@ class _RekanGeneralIdvState extends State<RekanGeneralIdv> {
     Future.delayed(Duration.zero, () {
       bloc = context.read<MRekanGeneralIdvCrudBloc>();
       bloc.add(MRekanGeneralIdvCrudLihatEvent());
-
-      // Buka langsung mode edit jika perlu (opsional)
-      setState(() => isEditingSection = true);
     });
   }
 

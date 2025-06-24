@@ -51,17 +51,9 @@ class NavBar extends StatelessWidget {
                   if (authState is AuthenticationAuthenticated ||
                       authState is AuthenticationGoogleUserAuthenticated) {
                     // Sudah login → ke HeroUserMain
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const HeroUserMain()),
-                    );
                     context.go('/hero_user');
                   } else {
                     // Belum login → ke HeroMain
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const HeroMain()),
-                    );
                     context.go('/hero');
                   }
                 },

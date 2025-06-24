@@ -39,7 +39,7 @@ GoRouter buildRouter(BuildContext context) {
 
   var constraints;
   return GoRouter(
-    initialLocation: '/loading_hero',
+    initialLocation: '/hero',
 
     /// 👇 Sangat penting agar GoRouter tahu ketika state berubah
     refreshListenable: GoRouterRefreshStream(authBloc.stream),
@@ -62,14 +62,14 @@ GoRouter buildRouter(BuildContext context) {
       // 1. Belum login diarahkan ke hero (kecuali public)
       if (authState is AuthenticationUnauthenticated &&
           !publicRoutes.contains(location)) {
-        return '/loading_hero';
+        return '/hero';
       }
 
       // 2. login_client boleh akses hero_user
       if (authState is AuthenticationAuthenticated) {
         final from = authState.authenticatedFrom;
 
-        if (from == 'login_client' && location == '/hero') {
+        if ((from == 'login_client' && from == 'login_token') && location == '/hero') {
           return '/loading_hero_user';
         }
 
@@ -77,7 +77,7 @@ GoRouter buildRouter(BuildContext context) {
         if (from == 'login_user' &&
             location != '/hero' &&
             !publicRoutes.contains(location)) {
-          return '/loading_hero';
+          return '/hero';
         }
       }
 

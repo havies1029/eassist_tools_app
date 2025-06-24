@@ -109,21 +109,6 @@ class _HeroUserPageState extends State<HeroUserPage> {
                           cacheWidth: 1440,
                           cacheHeight: 800,
                         ),
-                        // Overlay gradient
-                        Container(
-                          decoration: const BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
-                              colors: [
-                                Colors.black54, // paling kiri
-                                Colors.black26, // tengah kiri
-                                Colors.transparent, // kanan (transparan)
-                              ],
-                              stops: [0.0, 0.5, 0.9], // atur area gelapnya
-                            ),
-                          ),
-                        ),
                       ],
                     ),
                   ),

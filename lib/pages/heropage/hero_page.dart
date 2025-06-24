@@ -63,13 +63,18 @@ class _HeroPageState extends State<HeroPage> {
             final bool isMobile = constraints.maxWidth < 768;
 
             // Trigger login popup once on build
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (!_dialogShown) {
-                _dialogShown = true;
-                CustomPopupsLoginUser.showLoginUserDialog(context);
-              }
-            });
+            final authState = context.read<AuthenticationBloc>().state;
 
+            // ⛔️ Jangan munculkan kalau SUDAH login
+            final sudahLogin = authState is AuthenticationAuthenticated;
+
+            if (!_dialogShown && !sudahLogin) {
+              _dialogShown = true;
+
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                CustomPopupsLoginUser.showLoginUserDialog(context);
+              });
+            }
             return Stack(
               children: [
                 // Layer 1: Background
@@ -85,21 +90,6 @@ class _HeroPageState extends State<HeroPage> {
                         alignment: const Alignment(0, 3),
                         cacheWidth: 1440,
                         cacheHeight: 800,
-                      ),
-                      // Overlay gradient
-                      Container(
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                            colors: [
-                              Colors.black54, // paling kiri
-                              Colors.black26, // tengah kiri
-                              Colors.transparent, // kanan (transparan)
-                            ],
-                            stops: [0.0, 0.5, 0.9], // atur area gelapnya
-                          ),
-                        ),
                       ),
                     ],
                   ),
