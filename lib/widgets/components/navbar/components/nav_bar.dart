@@ -28,7 +28,7 @@ class NavBar extends StatelessWidget {
     constraints.maxWidth > 1200 ? 1200 : constraints.maxWidth;
     final authState = context.watch<AuthenticationBloc>().state;
     final showHamburger = authState is AuthenticationAuthenticated &&
-        (authState.authenticatedFrom == 'login_user' || authState.authenticatedFrom == 'login_client');
+        (authState.authenticatedFrom == 'login_user' || authState.authenticatedFrom == 'login_client' || authState.authenticatedFrom == 'login_token');
 
     return Container(
       width: double.infinity,

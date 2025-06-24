@@ -81,16 +81,14 @@ class _HeroMainState extends State<HeroMain> {
 
       Future.microtask(() {
         if (state.authenticatedFrom == "login_user") {
-          context.go('/hero');
+          context.go('/loading_hero');
         } else if (state.authenticatedFrom == "login_client") {
           context.go('/loading_hero_user');
-        }
-        else if (state.authenticatedFrom == "login_token") {
+        } else if (state.authenticatedFrom == "login_token") {
           context.go('/loading_hero_user');
-        }
-        else {
+        }else {
           // Fallback kalau tidak terdeteksi
-          context.go('/hero');
+          context.go('/loading_hero');
         }
       });
     }

@@ -51,38 +51,29 @@ GoRouter buildRouter(BuildContext context) {
 
       debugPrint('[DEBUG REDIRECT] location: $location, authState: $authState');
 
-      // Daftar halaman yang boleh diakses oleh siapa saja (public route)
-      final publicRoutes = [
-        '/testimony',
-        '/about',
-        '/article',
-        '/article_1',
-      ];
-
-      // 1. Belum login diarahkan ke hero (kecuali public)
-      if (authState is AuthenticationUnauthenticated &&
-          !publicRoutes.contains(location)) {
-        return '/hero';
+      // Redirect jika belum login
+      if (authState is AuthenticationUnauthenticated && location != '/hero') {
+        return '/loading_hero';
       }
 
-      // 2. login_client boleh akses hero_user
+      // Redirect untuk yang sudah login
       if (authState is AuthenticationAuthenticated) {
         final from = authState.authenticatedFrom;
 
-        if ((from == 'login_client' && from == 'login_token') && location == '/hero') {
+        // Semua login_client & login_token diarahkan ke /hero_user
+        if ((from == 'login_client' || from == 'login_token') && location == '/hero') {
           return '/loading_hero_user';
         }
 
-        // 3. login_user boleh akses hero & public
-        if (from == 'login_user' &&
-            location != '/hero' &&
-            !publicRoutes.contains(location)) {
-          return '/hero';
+
+        // login_user diarahkan ke /hero
+        if (from == 'login_user' && location != '/hero') {
+          return '/loading_hero';
         }
       }
 
       return null;
-    },
+      },
 
 
     /// 👇 Semua route aplikasi
