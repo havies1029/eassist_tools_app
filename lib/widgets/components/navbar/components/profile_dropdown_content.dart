@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../blocs/authentication/authentication_bloc.dart';
+import '../../../../blocs/gen_profile/mrekan1crud_bloc.dart';
 import '../../../../blocs/profile/profile_download_foto_bloc.dart';
 import 'profile_menu_item.dart';
 
@@ -96,19 +97,15 @@ class ProfileDropdownContent extends StatelessWidget {
                   },
                 ),
                 SizedBox(width: 12),
+
+                // Nama Rekan dan status
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Builder(
-                        builder: (context) {
-                          final state = context.read<AuthenticationBloc>().state;
-                          String name = "[Nama User]";
-                          if (state is AuthenticationAuthenticated &&
-                              state.user.custType == "C") {
-                            name = state.user.nama ?? "[Nama User]";
-                          }
-
+                      BlocBuilder<MRekan1CrudBloc, MRekan1CrudState>(
+                        builder: (context, state) {
+                          final name = state.record?.rekanNama ?? 'Nama Anda';
                           return Text(
                             name,
                             style: const TextStyle(
@@ -131,6 +128,8 @@ class ProfileDropdownContent extends StatelessWidget {
                     ],
                   ),
                 ),
+
+                // Tombol close
                 IconButton(
                   icon: Icon(Icons.close, color: Colors.white, size: 20),
                   onPressed: onClose,

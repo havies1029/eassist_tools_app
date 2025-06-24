@@ -49,7 +49,10 @@ class _RekanBankIdvState extends State<RekanBankIdv> {
 
   @override
   void dispose() {
-    super.dispose(); // Controller dikelola di luar jika ingin modular
+    fieldMrekan1IdController.dispose();
+    fieldRekNamaController.dispose();
+    fieldRekNoController.dispose();
+    super.dispose();
   }
 
   void _addError(String error) {
@@ -69,25 +72,36 @@ class _RekanBankIdvState extends State<RekanBankIdv> {
   }
 
   void _onSave() {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
+    if (!_formKey.currentState!.validate()) {
+      debugPrint("❌ Validasi gagal");
+      return;
+    }
 
-      final record = MRekanBankCrudModel(
-        mrekan1Id: fieldMrekan1IdController.text,
-        rekNama: fieldRekNamaController.text,
-        rekNo: fieldRekNoController.text,
-        mrekanbankId: bloc.state.record?.mrekanbankId ?? '',
-      );
+    final id = bloc.state.record?.mrekanbankId;
+    if (widget.viewMode == "ubah" && (id == null || id.isEmpty)) {
+      _addError("ID belum dimuat. Coba lagi.");
+      debugPrint("❌ Gagal: mrekanbankId kosong");
+      return;
+    }
 
-      if (widget.viewMode == "tambah") {
-        bloc.add(MRekanBankCrudTambahEvent(record: record));
-      } else {
-        bloc.add(MRekanBankCrudUbahEvent(record: record));
-      }
+    final record = MRekanBankCrudModel(
+      mrekan1Id: fieldMrekan1IdController.text,
+      rekNama: fieldRekNamaController.text,
+      rekNo: fieldRekNoController.text,
+      mrekanbankId: widget.viewMode == "ubah" ? id! : '',
+      comboMBank: null, // ❗ Jika perlu, pastikan field ini diisi dengan data valid
+    );
 
-      Navigator.pop(context);
+    debugPrint("📤 Menyimpan data: ${record.toJson()}");
+
+    if (widget.viewMode == "tambah") {
+      bloc.add(MRekanBankCrudTambahEvent(record: record));
+    } else {
+      bloc.add(MRekanBankCrudUbahEvent(record: record));
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -101,6 +115,7 @@ class _RekanBankIdvState extends State<RekanBankIdv> {
           fieldRekNoController.text = state.record!.rekNo;
         }
       },
+
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Form(

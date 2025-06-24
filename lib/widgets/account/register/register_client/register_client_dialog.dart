@@ -54,22 +54,22 @@ class _RegisterClientDialogState extends BaseDialogState<RegisterClientDialog> {
                   const SizedBox(height: 20),
 
                   // Input HP
-                  // Input HP dengan prefix +62 dan bendera Indonesia
                   TextFormField(
                     controller: hpController,
                     keyboardType: TextInputType.phone,
                     decoration: InputDecoration(
                       prefixIcon: Row(
                         mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const SizedBox(width: 15),
-                          const Text(
+                        children: const [
+                          SizedBox(width: 15),
+                          Text(
                             '+62',
                             style: TextStyle(fontSize: 16),
                           ),
-                          const SizedBox(width: 5),
+                          SizedBox(width: 5),
                         ],
                       ),
+                      hintText: '8xxxxxxx',
                       contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -79,14 +79,18 @@ class _RegisterClientDialogState extends BaseDialogState<RegisterClientDialog> {
                       if (value == null || value.isEmpty) {
                         return 'Nomor HP wajib diisi';
                       }
-                      if (!RegExp(r'^[0-9]{9,13}$').hasMatch(value)) {
-                        return 'Format nomor tidak valid';
+                      if (!RegExp(r'^8[0-9]{8,12}$').hasMatch(value)) {
+                        return 'Format nomor harus diawali 8 dan panjang 9-13 digit';
                       }
                       return null;
                     },
                     onTap: () {
+                      // Jika kosong, otomatis isi awalan 8
                       if (hpController.text.isEmpty) {
-                        hpController.text = '8'; // hanya angka setelah +62
+                        hpController.text = '8';
+                        hpController.selection = TextSelection.fromPosition(
+                          TextPosition(offset: hpController.text.length),
+                        );
                       }
                     },
                   ),
@@ -192,13 +196,15 @@ class _RegisterClientDialogState extends BaseDialogState<RegisterClientDialog> {
         return;
       }
 
+      final fullPhone = '62${hpController.text}';
+
       RegUserModel record = RegUserModel(
-          userNama: AppData.user.username??"",
-          personalNama: _nameController.text,
-          telepon: hpController.text,
-          password: pswdController.text,
-          jnsClientId: _selectedChoice,
-          email: AppData.user.username??""
+        userNama: AppData.user.username ?? "",
+        personalNama: _nameController.text,
+        telepon: fullPhone,
+        password: pswdController.text,
+        jnsClientId: _selectedChoice,
+        email: AppData.user.username ?? "",
       );
 
       context.read<RegUserBloc>().add(

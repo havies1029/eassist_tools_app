@@ -307,41 +307,52 @@ class _RekanGeneralIdvState extends State<RekanGeneralIdv> {
     );
   }
 
+
   void onSaveForm() {
-    errors.clear();
+    setState(() {
+      errors.clear();
+    });
 
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
+    final isFormValid = _formKey.currentState!.validate();
 
-      if (fieldComboMJnskel == null) {
-        addError("Field jenis kelamin tidak boleh kosong.");
-      }
-
-      if (fieldComboMPekerjaan == null) {
-        addError("Field pekerjaan tidak boleh kosong.");
-      }
-
-      if (fieldRekanNamaController.text.trim().isEmpty) {
-        addError("Field nama rekan harus diisi.");
-      }
-
-      if (errors.isNotEmpty) return;
-
-      // ⛔ Ambil mrekan1Id dari state (harus dipastikan di-load saat init)
-      final currentId = bloc.state.record?.mrekan1Id ?? '';
-      final record = MRekanGeneralIdvCrudModel(
-        mjnskelId: fieldComboMJnskel!.mjnskelId,
-        mpekerjaanId: fieldComboMPekerjaan!.mpekerjaanId,
-        rekanNama: fieldRekanNamaController.text.trim(),
-        mrekan1Id: currentId,
-      );
-
-      // ✅ Selalu gunakan UbahEvent
-      bloc.add(MRekanGeneralIdvCrudUbahEvent(record: record));
-
-      setState(() => isEditingSection = false);
+    // Validasi manual untuk dropdown dan text
+    if (fieldComboMJnskel == null) {
+      addError("Field jenis kelamin tidak boleh kosong.");
     }
+    if (fieldComboMPekerjaan == null) {
+      addError("Field pekerjaan tidak boleh kosong.");
+    }
+    if (fieldRekanNamaController.text.trim().isEmpty) {
+      addError("Field nama rekan harus diisi.");
+    }
+
+    // Jika ada error, hentikan proses
+    if (!isFormValid || errors.isNotEmpty) return;
+
+    // Ambil ID dari state bloc (pastikan record sudah dimuat)
+    final currentId = bloc.state.record?.mrekan1Id;
+    if (currentId == null || currentId.isEmpty) {
+      addError("Data belum dimuat, tidak dapat menyimpan.");
+      return;
+    }
+
+    // Buat model baru
+    final record = MRekanGeneralIdvCrudModel(
+      mjnskelId: fieldComboMJnskel!.mjnskelId,
+      mpekerjaanId: fieldComboMPekerjaan!.mpekerjaanId,
+      rekanNama: fieldRekanNamaController.text.trim(),
+      mrekan1Id: currentId,
+    );
+
+    // Kirim ke Bloc untuk disimpan
+    bloc.add(MRekanGeneralIdvCrudUbahEvent(record: record));
+
+    // Matikan mode edit jika ada
+    setState(() {
+      isEditingSection = false;
+    });
   }
+
 
 
 
