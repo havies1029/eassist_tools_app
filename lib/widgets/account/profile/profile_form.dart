@@ -465,10 +465,11 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
         Container(
           height: 4,
           color: const Color(0xFFF7FAFC),
-          child: FractionallySizedBox(
+          child: Align(
             alignment: Alignment.centerLeft,
-            widthFactor: (_currentStep + 1) / _totalSteps,
             child: Container(
+              height: 4,
+              width: MediaQuery.of(context).size.width * ((_currentStep + 1) / _totalSteps),
               color: const Color(0xFF4A5568),
             ),
           ),
