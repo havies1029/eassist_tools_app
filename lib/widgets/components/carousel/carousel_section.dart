@@ -117,6 +117,28 @@ class _CarouselSectionState extends State<CarouselSection>
     return 0.6;
   }
 
+  // 🔥 Method untuk menghitung tinggi carousel yang optimal
+  double _getCarouselHeight() {
+    final isMobile = widget.constraints.maxWidth < 768;
+    final isTablet = widget.constraints.maxWidth >= 768 && widget.constraints.maxWidth < 1024;
+
+    if (isMobile) {
+      // 🔥 Tinggi mobile disesuaikan dengan screen height dan width ratio
+      final screenHeight = MediaQuery.of(context).size.height;
+      final screenWidth = widget.constraints.maxWidth;
+
+      // Menghitung tinggi berdasarkan rasio layar mobile yang umum (16:9 atau 18:9)
+      final optimalHeight = screenWidth * 0.45  ; // Rasio 1:0.6 untuk mobile
+
+      // Batasi tinggi minimum dan maksimum untuk mobile
+      return optimalHeight.clamp(200.0, screenHeight * 0.35);
+    } else if (isTablet) {
+      return 380.0;
+    } else {
+      return 450.0;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final isMobile = widget.constraints.maxWidth < 768;
@@ -173,7 +195,7 @@ class _CarouselSectionState extends State<CarouselSection>
                 ),
               ),
 
-              // Carousel dengan efek blur dan scale
+              // Carousel dengan efek blur dan scale - TINGGI DIOPTIMALKAN
               MouseRegion(
                 onEnter: (_) => _onHoverEnter(),
                 onExit: (_) => _onHoverExit(),
@@ -203,7 +225,8 @@ class _CarouselSectionState extends State<CarouselSection>
                       return Transform.scale(
                         scale: _hoverAnimation.value,
                         child: Container(
-                          height: isMobile ? 200 : (isTablet ? 280 : 320), // 🔥 Fixed height
+                          // 🔥 MENGGUNAKAN METHOD UNTUK MENGHITUNG TINGGI OPTIMAL
+                          height: _getCarouselHeight(),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(16.0),
                           ),

@@ -16,14 +16,11 @@ import '../../showdialoghapus_widget.dart';
 import '../login/login_client/login_client_dialog.dart';
 
 // Import semua form individu & perusahaan
-import '../login/login_gmail/popup_dialog_login.dart';
 import 'form_sections/rekan_general_idv.dart';
 import 'form_sections/rekan_contact.dart';
-import 'form_sections/rekan_bank_idv.dart';
+import 'form_sections/rekan_bank.dart';
 import 'form_sections/rekan_general_cmp.dart';
 import 'form_sections/rekan_pajak.dart';
-import 'form_sections/rekan_pic.dart';
-import 'form_sections/rekan_bank_cmp.dart';
 
 class ProfileFormSection extends StatefulWidget {
   final Map<String, bool> editSection;
@@ -49,6 +46,10 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
   String? _selectedPicId;
   String _picFormMode = 'tambah';
 
+  // Mobile wizard state
+  int _currentStep = 0;
+  PageController _pageController = PageController();
+
   void loadData() {
     context.read<ProfileDownloadFotoBloc>().add(LoadSecureImage());
     context.read<MRekan1CrudBloc>().add(MRekan1CrudLihatEvent());
@@ -66,6 +67,12 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
   void initState() {
     super.initState();
     loadData();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   void _showSuccessPopup() {
@@ -94,6 +101,61 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
     );
   }
 
+  // Get total steps based on selectedChoice
+  int get _totalSteps {
+    if (widget.selectedChoice == 'Individual') {
+      return 4; // General, Contact, Bank, Pajak
+    } else {
+      return 5; // General, Contact, PIC, Bank, Pajak
+    }
+  }
+
+  // Get step titles
+  List<String> get _stepTitles {
+    if (widget.selectedChoice == 'Individual') {
+      return [
+        'Mobile Informasi Klien',
+        'Mobile Kontak Klien',
+        'Mobile Identitas Rekening',
+        'Mobile Identitas dan Rekening'
+      ];
+    } else {
+      return [
+        'Mobile Informasi Perusahaan',
+        'Mobile Kontak Perusahaan',
+        'Mobile Informasi PIC',
+        'Mobile Bank Perusahaan',
+        'Mobile Identitas dan Rekening'
+      ];
+    }
+  }
+
+  // Navigate to next step
+  void _nextStep() {
+    if (_currentStep < _totalSteps - 1) {
+      setState(() {
+        _currentStep++;
+      });
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  // Navigate to previous step
+  void _previousStep() {
+    if (_currentStep > 0) {
+      setState(() {
+        _currentStep--;
+      });
+      _pageController.previousPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,7 +182,37 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
           controller.text = namaRekan;
         }
 
-        final nameField = _isEditingName
+        // Buat nameField yang berbeda untuk mobile dan non-mobile
+        final nameFieldMobile = _isEditingName
+            ? TextFormField(
+          controller: controller,
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF2D3748),
+          ),
+          decoration: const InputDecoration(
+            border: UnderlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFF4A5568)),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFF2D3748), width: 2),
+            ),
+            isDense: true,
+          ),
+          textAlign: TextAlign.center, // Center untuk mobile
+        )
+            : Text(
+          controller.text,
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF2D3748),
+          ),
+          textAlign: TextAlign.center, // Center untuk mobile
+        );
+
+        final nameFieldDesktop = _isEditingName
             ? TextFormField(
           controller: controller,
           style: const TextStyle(
@@ -167,11 +259,13 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
                   }
 
                   return isMobile
-                      ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Center(
-                        child: ProfilePicture(
+                      ? SizedBox(
+                    width: double.infinity, // Mempertahankan lebar penuh
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center, // Center semua konten untuk mobile
+                      children: [
+                        // Profile Picture
+                        ProfilePicture(
                           imageUrl: 'https://www.jayaproteksindo.co.id/image/Logo.png',
                           radius: 60,
                           blocImageBytes: imageBytes,
@@ -181,30 +275,14 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
                             );
                           },
                         ),
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(child: nameField),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.check,
-                              size: 24,
-                              color: Color(0xFF4A5568),
-                            ),
-                            onPressed: _showSuccessPopup,
-                            tooltip: 'Lanjutkan Seluruh Form',
-                            padding: const EdgeInsets.all(12),
-                            constraints: const BoxConstraints(
-                              minWidth: 48,
-                              minHeight: 48,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                        const SizedBox(height: 16),
+                        // Nama tepat di bawah foto profile, tanpa tombol centang
+                        SizedBox(
+                          width: double.infinity, // Memastikan nama tetap menggunakan lebar penuh
+                          child: nameFieldMobile,
+                        ),
+                      ],
+                    ),
                   )
                       : Row(
                     children: [
@@ -220,34 +298,30 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
                       ),
                       const SizedBox(width: 20),
                       Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        child: Row(
                           children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Expanded(child: nameField),
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(top: 4),
-                                    child: IconButton(
-                                      icon: const Icon(
-                                        Icons.check,
-                                        size: 24,
-                                        color: Color(0xFF4A5568),
-                                      ),
-                                      onPressed: _showSuccessPopup,
-                                      tooltip: 'Lanjutkan Seluruh Form',
-                                      padding: const EdgeInsets.all(12),
-                                      constraints: const BoxConstraints(
-                                        minWidth: 48,
-                                        minHeight: 48,
-                                      ),
-                                    ),
+                            // Nama tepat di samping kanan gambar profil
+                            Expanded(child: nameFieldDesktop),
+                            // Tombol centang tetap di ujung kanan
+                            Align(
+                              alignment: Alignment.center,
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 4),
+                                child: IconButton(
+                                  icon: const Icon(
+                                    Icons.check,
+                                    size: 24,
+                                    color: Color(0xFF4A5568),
+                                  ),
+                                  onPressed: _showSuccessPopup,
+                                  tooltip: 'Lanjutkan Seluruh Form',
+                                  padding: const EdgeInsets.all(12),
+                                  constraints: const BoxConstraints(
+                                    minWidth: 48,
+                                    minHeight: 48,
                                   ),
                                 ),
-                              ],
+                              ),
                             ),
                           ],
                         ),
@@ -262,7 +336,6 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
       },
     );
   }
-
 
   Widget _buildPicSection() {
     return Column(
@@ -292,7 +365,6 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
               );
             },
           ),
-          title: 'Person In Charge',
         ),
         const SizedBox(height: 16),
         if (_showPicCrudForm)
@@ -307,7 +379,6 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
                 });
               },
             ),
-            title: _picFormMode == 'tambah' ? 'Tambah PIC' : 'Edit PIC',
           ),
         const SizedBox(height: 12),
         SizedBox(
@@ -337,166 +408,278 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
     );
   }
 
+  // Mobile Multi-Step Form Build
   Widget _buildMobile() {
+    return Column(
+      children: [
+        // Header with back button and title
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            border: Border(
+              bottom: BorderSide(color: Color(0xFFE2E8F0), width: 1),
+            ),
+          ),
+          child: Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_back, color: Color(0xFF4A5568)),
+                onPressed: () => Navigator.pop(context),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  _stepTitles[_currentStep],
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF2D3748),
+                  ),
+                ),
+              ),
+              // Progress indicator
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF7FAFC),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: const Color(0xFFE2E8F0)),
+                ),
+                child: Text(
+                  '${_currentStep + 1}/${_totalSteps}',
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFF4A5568),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        // Progress bar
+        Container(
+          height: 4,
+          color: const Color(0xFFF7FAFC),
+          child: FractionallySizedBox(
+            alignment: Alignment.centerLeft,
+            widthFactor: (_currentStep + 1) / _totalSteps,
+            child: Container(
+              color: const Color(0xFF4A5568),
+            ),
+          ),
+        ),
+
+        // Form content
+        Expanded(
+          child: PageView(
+            controller: _pageController,
+            onPageChanged: (index) {
+              setState(() {
+                _currentStep = index;
+              });
+            },
+            children: _buildMobileSteps(),
+          ),
+        ),
+
+        // Navigation buttons
+        Container(
+          padding: const EdgeInsets.all(20),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            border: Border(
+              top: BorderSide(color: Color(0xFFE2E8F0), width: 1),
+            ),
+          ),
+          child: Row(
+            children: [
+              // Previous button
+              if (_currentStep > 0)
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: _previousStep,
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      side: const BorderSide(color: Color(0xFF4A5568)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.chevron_left, color: Color(0xFF4A5568)),
+                        Text(
+                          'Sebelumnya',
+                          style: TextStyle(
+                            color: Color(0xFF4A5568),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+              if (_currentStep > 0) const SizedBox(width: 12),
+
+              // Next/Finish button
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: _currentStep == _totalSteps - 1
+                      ? _showSuccessPopup
+                      : _nextStep,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF4A5568),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        _currentStep == _totalSteps - 1 ? 'Selesai' : 'Selanjutnya',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      if (_currentStep < _totalSteps - 1)
+                        const Icon(Icons.chevron_right),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Build mobile steps based on selectedChoice
+  List<Widget> _buildMobileSteps() {
+    List<Widget> steps = [];
+
+    if (widget.selectedChoice == 'Individual') {
+      steps = [
+        _buildMobileStepContent(RekanGeneralIdv(viewMode: 'tambah', recordId: '')),
+        _buildMobileStepContent(RekanContact()),
+        _buildMobileStepContent(RekanBank(viewMode: 'tambah', recordId: '')),
+        _buildMobileStepContent(MRekanPajakFormBody(viewMode: 'tambah', recordId: '')),
+      ];
+    } else {
+      steps = [
+        _buildMobileStepContent(RekanGeneralCmp()),
+        _buildMobileStepContent(RekanContact()),
+        _buildMobileStepContent(_buildPicSection()),
+        _buildMobileStepContent(RekanBank(viewMode: 'tambah', recordId: '')),
+        _buildMobileStepContent(MRekanPajakFormBody(viewMode: 'tambah', recordId: '')),
+      ];
+    }
+
+    return steps;
+  }
+
+  Widget _buildMobileStepContent(Widget child) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
         children: [
-          _buildProfilePicHeader(),
-          ..._buildFormWidgets(),
+          // Profile picture header only on first step
+          if (_currentStep == 0) ...[
+            _buildProfilePicHeader(),
+            const SizedBox(height: 16),
+          ],
+          _buildCard(child: child),
           const SizedBox(height: 32),
-          
         ],
       ),
     );
   }
 
   Widget _buildTablet() {
-    if (widget.selectedChoice == 'Individual') {
-      return _buildIndividualLayout();
-    }
-
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
         children: [
           _buildProfilePicHeader(),
-
-          // Row 1: General Company + Contact
-          _buildRow([
-            _buildCard(
-              child: RekanGeneralCmp(),
-              title: 'Informasi Perusahaan',
-            ),
-            _buildCard(
-              child: RekanContact(),
-              title: 'Informasi Kontak',
-            ),
-          ]),
-
-          const SizedBox(height: 20),
-
-          // Row 2: PIC + Bank
-          _buildRow([
-            _buildPicSection(),
-            _buildCard(
-              child: RekanBankCmp(viewMode: 'tambah', recordId: ''),
-              title: 'Informasi Bank Perusahaan',
-            ),
-          ]),
-
-          const SizedBox(height: 20),
-
-          // Row 3: Tax (centered)
-          Row(
-            children: [
-              Expanded(
-                child: _buildCard(
-                  child: MRekanPajakFormBody(viewMode: 'tambah', recordId: ''),
-                  title: 'Informasi Pajak',
-                ),
-              ),
-              const Expanded(child: SizedBox()),
-            ],
-          ),
-
+          _buildMasonryLayout(),
           const SizedBox(height: 32),
-          
         ],
       ),
     );
   }
 
   Widget _buildDesktop() {
-    if (widget.selectedChoice == 'Individual') {
-      return _buildIndividualLayout();
-    }
-
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
       child: Column(
         children: [
           _buildProfilePicHeader(),
-
-          // Row 1: General + Contact + PIC
-          _buildRow([
-            _buildCard(
-              child: RekanGeneralCmp(),
-              title: 'Informasi Perusahaan',
-            ),
-            _buildCard(
-              child: RekanContact(),
-              title: 'Informasi Kontak',
-            ),
-            _buildPicSection(),
-          ]),
-
-          const SizedBox(height: 24),
-
-          // Row 2: Bank + Tax + Spacer
-          _buildRow([
-            _buildCard(
-              child: RekanBankCmp(viewMode: 'tambah', recordId: ''),
-              title: 'Informasi Bank Perusahaan',
-            ),
-            _buildCard(
-              child: MRekanPajakFormBody(viewMode: 'tambah', recordId: ''),
-              title: 'Informasi Pajak',
-            ),
-            const SizedBox(),
-          ]),
-
+          _buildMasonryLayout(),
           const SizedBox(height: 32),
-          
         ],
       ),
     );
   }
 
-  Widget _buildIndividualLayout() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        children: [
-          _buildProfilePicHeader(),
+  Widget _buildMasonryLayout() {
+    List<Widget> cards = _getMasonryCards();
 
-          // Row 1: General + Contact + Bank
-          _buildRow([
-            _buildCard(
-              child: RekanGeneralIdv(viewMode: 'tambah', recordId: ''),
-              title: 'Informasi Pribadi',
-            ),
-            _buildCard(
-              child: RekanContact(),
-              title: 'Informasi Kontak',
-            ),
-            _buildCard(
-              child: RekanBankIdv(viewMode: 'tambah', recordId: ''),
-              title: 'Informasi Bank',
-            ),
-          ]),
-
-          const SizedBox(height: 20),
-
-          // Row 2: Tax (centered)
-          Row(
-            children: [
-              Expanded(
-                child: _buildCard(
-                  child: MRekanPajakFormBody(viewMode: 'tambah', recordId: ''),
-                  title: 'Informasi Pajak',
-                ),
-              ),
-              const Expanded(child: SizedBox()),
-              const Expanded(child: SizedBox()),
-            ],
-          ),
-
-          const SizedBox(height: 32),
-          
-        ],
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return MasonryGridView(
+          crossAxisCount: 3,
+          mainAxisSpacing: 16,
+          crossAxisSpacing: 16,
+          children: cards,
+        );
+      },
     );
+  }
+
+  List<Widget> _getMasonryCards() {
+    if (widget.selectedChoice == 'Individual') {
+      return [
+        _buildCard(
+          child: RekanGeneralIdv(viewMode: 'tambah', recordId: ''),
+        ),
+        _buildCard(
+          child: RekanContact(),
+        ),
+        _buildCard(
+          child: RekanBank(viewMode: 'tambah', recordId: ''),
+        ),
+        _buildCard(
+          child: MRekanPajakFormBody(viewMode: 'tambah', recordId: ''),
+        ),
+      ];
+    } else {
+      return [
+        _buildCard(
+          child: RekanGeneralCmp(),
+        ),
+        _buildCard(
+          child: RekanContact(),
+        ),
+        _buildPicSection(),
+        _buildCard(
+          child: RekanBank(viewMode: 'tambah', recordId: ''),
+        ),
+        _buildCard(
+          child: MRekanPajakFormBody(viewMode: 'tambah', recordId: ''),
+        ),
+      ];
+    }
   }
 
   List<Widget> _buildFormWidgets() {
@@ -504,109 +687,157 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
       return [
         _buildCard(
           child: RekanGeneralIdv(viewMode: 'tambah', recordId: ''),
-          title: 'Informasi Pribadi',
         ),
         const SizedBox(height: 16),
         _buildCard(
           child: RekanContact(),
-          title: 'Informasi Kontak',
         ),
         const SizedBox(height: 16),
         _buildCard(
-          child: RekanBankIdv(viewMode: 'tambah', recordId: ''),
-          title: 'Informasi Bank',
+          child: RekanBank(viewMode: 'tambah', recordId: ''),
         ),
         const SizedBox(height: 16),
         _buildCard(
           child: MRekanPajakFormBody(viewMode: 'tambah', recordId: ''),
-          title: 'Informasi Pajak',
         ),
       ];
     } else {
       return [
         _buildCard(
           child: RekanGeneralCmp(),
-          title: 'Informasi Perusahaan',
         ),
         const SizedBox(height: 16),
         _buildCard(
           child: RekanContact(),
-          title: 'Informasi Kontak',
         ),
         const SizedBox(height: 16),
         _buildPicSection(),
         const SizedBox(height: 16),
         _buildCard(
-          child: RekanBankCmp(viewMode: 'tambah', recordId: ''),
-          title: 'Informasi Bank Perusahaan',
+          child: RekanBank(viewMode: 'tambah', recordId: ''),
         ),
         const SizedBox(height: 16),
         _buildCard(
           child: MRekanPajakFormBody(viewMode: 'tambah', recordId: ''),
-          title: 'Informasi Pajak',
         ),
       ];
     }
   }
-  
-  Widget _buildCard({required Widget child, required String title}) {
+
+  Widget _buildCard({required Widget child}) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: const Color(0xFFE2E8F0), width: 1),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Card Header
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(16),
-            decoration: const BoxDecoration(
-              color: Color(0xFFF7FAFC),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(12),
-                topRight: Radius.circular(12),
-              ),
-            ),
-            child: Text(
-              title,
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF2D3748),
-              ),
-            ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: DefaultTextStyle(
+          style: const TextStyle(
+            fontFamily: 'Satoshi',
+            fontSize: 14,
+            color: Color(0xFF2D3748),
           ),
-          // Card Content
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: DefaultTextStyle(
-              style: const TextStyle(
-                fontFamily: 'Satoshi',
-                fontSize: 14,
-                color: Color(0xFF2D3748),
-              ),
-              child: child,
-            ),
-          ),
-        ],
+          child: child,
+        ),
       ),
     );
   }
+}
 
-  Widget _buildRow(List<Widget> children) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: children
-          .map((widget) => Expanded(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 6),
-          child: widget,
-        ),
-      ))
-          .toList(),
+// Custom Masonry Grid Widget
+class MasonryGridView extends StatelessWidget {
+  final int crossAxisCount;
+  final double mainAxisSpacing;
+  final double crossAxisSpacing;
+  final List<Widget> children;
+
+  const MasonryGridView({
+    Key? key,
+    required this.crossAxisCount,
+    this.mainAxisSpacing = 8.0,
+    this.crossAxisSpacing = 8.0,
+    required this.children,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final itemWidth = (constraints.maxWidth - (crossAxisSpacing * (crossAxisCount - 1))) / crossAxisCount;
+
+        // Create columns
+        List<List<Widget>> columns = List.generate(crossAxisCount, (index) => <Widget>[]);
+        List<double> columnHeights = List.generate(crossAxisCount, (index) => 0.0);
+
+        // Distribute widgets to columns
+        for (int i = 0; i < children.length; i++) {
+          // Find the shortest column
+          int shortestColumnIndex = 0;
+          for (int j = 1; j < columnHeights.length; j++) {
+            if (columnHeights[j] < columnHeights[shortestColumnIndex]) {
+              shortestColumnIndex = j;
+            }
+          }
+
+          // Add widget to the shortest column
+          columns[shortestColumnIndex].add(children[i]);
+
+          // Estimate height (this is a rough approximation)
+          columnHeights[shortestColumnIndex] += _estimateWidgetHeight(children[i]) + mainAxisSpacing;
+        }
+
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: columns.asMap().entries.map((entry) {
+            int columnIndex = entry.key;
+            List<Widget> columnChildren = entry.value;
+
+            return Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(
+                  right: columnIndex < crossAxisCount - 1 ? crossAxisSpacing : 0,
+                ),
+                child: Column(
+                  children: columnChildren
+                      .asMap()
+                      .entries
+                      .map((childEntry) {
+                    int childIndex = childEntry.key;
+                    Widget child = childEntry.value;
+
+                    return Padding(
+                      padding: EdgeInsets.only(
+                        bottom: childIndex < columnChildren.length - 1 ? mainAxisSpacing : 0,
+                      ),
+                      child: child,
+                    );
+                  }).toList(),
+                ),
+              ),
+            );
+          }).toList(),
+        );
+      },
     );
+  }
+
+  double _estimateWidgetHeight(Widget widget) {
+    // This is a rough estimation. In a real implementation, you might want to
+    // measure the actual height or use a more sophisticated approach
+    if (widget.toString().contains('_buildPicSection')) {
+      return 400.0; // PIC section is usually taller
+    } else if (widget.toString().contains('RekanGeneralCmp') ||
+        widget.toString().contains('RekanGeneralIdv')) {
+      return 350.0; // General forms are medium height
+    } else if (widget.toString().contains('RekanContact')) {
+      return 300.0; // Contact form is medium height
+    } else if (widget.toString().contains('Bank')) {
+      return 280.0; // Bank forms are shorter
+    } else if (widget.toString().contains('Pajak')) {
+      return 250.0; // Tax form is shortest
+    }
+    return 300.0; // Default height
   }
 }

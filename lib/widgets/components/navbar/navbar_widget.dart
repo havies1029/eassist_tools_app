@@ -223,17 +223,30 @@ class _NavbarWidgetState extends State<NavbarWidget> {
           await showDialog(
             context: context,
             barrierDismissible: true,
-            builder: (context) => Dialog(
-              insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-              child: SizedBox(
-                width: 1300,
-                child: ProfileMainPage(
-                  userid: 123,
-                  selectedChoice: mjnsclientId == "10" ? 'Individual' : 'Perusahaan',
+            builder: (context) {
+              final isMobile = MediaQuery.of(context).size.width < 600; // definisi mobile
+              final screenSize = MediaQuery.of(context).size;
+
+              return Dialog(
+                insetPadding: isMobile
+                    ? EdgeInsets.zero // ❗ hapus padding supaya full
+                    : const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(isMobile ? 0 : 16.13),
                 ),
-              ),
-            ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(isMobile ? 0 : 16.13),
+                  child: SizedBox(
+                    width: isMobile ? screenSize.width : 1300,
+                    height: isMobile ? screenSize.height : null,
+                    child: ProfileMainPage(
+                      userid: 123,
+                      selectedChoice: mjnsclientId == "10" ? 'Individual' : 'Perusahaan',
+                    ),
+                  ),
+                ),
+              );
+            },
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -413,37 +426,60 @@ class _NavbarWidgetState extends State<NavbarWidget> {
     }else if (title == 'Profile Individu') {
       showDialog(
         context: context,
-        builder: (context) => Dialog(
-          insetPadding: const EdgeInsets.all(32),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-          child: SizedBox(
-            width: 1200,
-            child: ProfileMainPage(
-              userid: 123,
-              selectedChoice: 'Individual',
+        builder: (context) {
+          final isMobile = MediaQuery.of(context).size.width < 600;
+          final screenSize = MediaQuery.of(context).size;
+
+          return Dialog(
+            insetPadding: isMobile
+                ? EdgeInsets.zero
+                : const EdgeInsets.all(32),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(isMobile ? 0 : 20.0),
             ),
-          ),
-        ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(isMobile ? 0 : 20.0),
+              child: SizedBox(
+                width: isMobile ? screenSize.width : 1200,
+                height: isMobile ? screenSize.height : null,
+                child: ProfileMainPage(
+                  userid: 123,
+                  selectedChoice: 'Individual',
+                ),
+              ),
+            ),
+          );
+        },
       );
     } else if (title == 'Profile Perusahaan') {
       showDialog(
         context: context,
-        builder: (context) => Dialog(
-          insetPadding: const EdgeInsets.all(32),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-          child: SizedBox(
-            width: 1200,
-            child: ProfileMainPage(
-                userid: 123,
-                selectedChoice: 'Perusahaan',
+        builder: (context) {
+          final isMobile = MediaQuery.of(context).size.width < 600;
+          final screenSize = MediaQuery.of(context).size;
+
+          return Dialog(
+            insetPadding: isMobile
+                ? EdgeInsets.zero
+                : const EdgeInsets.all(32),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(isMobile ? 0 : 20.0),
             ),
-          ),
-        ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(isMobile ? 0 : 20.0),
+              child: SizedBox(
+                width: isMobile ? screenSize.width : 1200,
+                height: isMobile ? screenSize.height : null,
+                child: ProfileMainPage(
+                  userid: 123,
+                  selectedChoice: 'Perusahaan',
+                ),
+              ),
+            ),
+          );
+        },
       );
+
       // context.go('/rekanpajak1');
     // } else if (title == 'Dialog Confirmation') {
     //   showDialog(

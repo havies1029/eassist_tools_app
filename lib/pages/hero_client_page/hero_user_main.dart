@@ -71,20 +71,30 @@ class _HeroUserPageState extends State<HeroUserPage> {
             _dialogShown = true;
             showDialog(
               context: context,
-              builder: (context) => Dialog(
-                insetPadding: const EdgeInsets.all(32),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                child: SizedBox(
-                  width: 1200,
-                  child: ProfileMainPage(
-                    userid: 123,
-                    selectedChoice:
-                    mjnsclientId == "10" ? 'Individual' : 'Perusahaan',
+              builder: (context) {
+                final isMobile = MediaQuery.of(context).size.width < 600;
+                final screenSize = MediaQuery.of(context).size;
+
+                return Dialog(
+                  insetPadding: isMobile
+                      ? EdgeInsets.zero
+                      : const EdgeInsets.all(32),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(isMobile ? 0 : 16.13),
                   ),
-                ),
-              ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(isMobile ? 0 : 16.13),
+                    child: SizedBox(
+                      width: isMobile ? screenSize.width : 1200,
+                      height: isMobile ? screenSize.height : null,
+                      child: ProfileMainPage(
+                        userid: 123,
+                        selectedChoice: mjnsclientId == "10" ? 'Individual' : 'Perusahaan',
+                      ),
+                    ),
+                  ),
+                );
+              },
             );
           }
         },

@@ -112,6 +112,8 @@ GoRouter buildRouter(BuildContext context) {
       GoRoute(path: '/hero', builder: (context, state) => const HeroMain()),
       GoRoute(path: '/testimony', builder: (context, state) => const TestimonyMain()),
       GoRoute(path: '/cs', builder: (context, state) => const CSMain()),
+      GoRoute(path: '/user_non_jps', builder: (context, state) => const UserNonJpsMain()),
+      GoRoute(path: '/user_jps', builder: (context, state) => const UserJpsMain()),
 
       // 👇 Contoh form dengan query param
       GoRoute(
