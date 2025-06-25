@@ -81,7 +81,7 @@ class _HeroPageState extends State<HeroPage> {
                         if (state is AuthenticationAuthenticated) {
                           if (state.user.custType == "C") {
                             return Text(
-                                'Username : ${state.user.username ?? "???"}');
+                                'Nama : ${state.user.nama ?? "???"}');
                           }
                         }
                         return Container();

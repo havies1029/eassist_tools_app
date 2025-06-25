@@ -18,3 +18,11 @@ class MRekan1CrudSetujuTCEvent extends MRekan1CrudEvents {
   List<Object> get props => [mrekanId];
 }
 
+class SetDataGroup1 extends MRekan1CrudEvents {
+  final MRekan1CrudModel record;
+
+  const SetDataGroup1({required this.record});
+
+  @override
+  List<Object> get props => [record];
+}

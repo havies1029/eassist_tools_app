@@ -339,7 +339,7 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
     );
 
     BlocProvider.of<LoginBloc>(context).add(LoginButtonPressed(
-      username: email,
+      email: email,
       password: password,
       rememberMe: _rememberLogin,
     ));

@@ -12,13 +12,13 @@ class UserInfo {
 }
 
 class UserLogin {
-  String? username;
+  String? email;
   String? password;
 
-  UserLogin({this.username, this.password});
+  UserLogin({this.email, this.password});
 
   Map<String, dynamic> toDatabaseJson() =>
-      {"username": username, "password": password};
+      {"email": email, "password": password};
 }
 
 class Token {

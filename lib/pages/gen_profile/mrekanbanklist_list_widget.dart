@@ -81,6 +81,7 @@ class MRekanBankListListWidgetState extends State<MRekanBankListListWidget> {
 													),
 												]),
 											child: MRekanBankListTileWidget(
+												bankNama: state.items[index].bankNama,
 												mrekan1Id: state.items[index].mrekan1Id,
 												mrekanbankId: state.items[index].mrekanbankId,
 												rekNama: state.items[index].rekNama,

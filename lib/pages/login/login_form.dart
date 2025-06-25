@@ -190,7 +190,7 @@ class _LoginFormState extends State<LoginForm>
   // Fungsi untuk memicu event login
   void onLoginButtonPressed() {
     BlocProvider.of<LoginBloc>(context).add(LoginButtonPressed(
-      username: _usernameController.text,
+      email: _usernameController.text,
       password: _passwordController.text,
       rememberMe: true
     ));

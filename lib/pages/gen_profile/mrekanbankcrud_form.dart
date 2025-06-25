@@ -4,6 +4,9 @@ import 'package:eassist_tools_app/common/constants.dart';
 import 'package:eassist_tools_app/widgets/form_error.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekanbankcrud_bloc.dart';
 import 'package:eassist_tools_app/models/gen_profile/mrekanbankcrud_model.dart';
+import 'package:eassist_tools_app/models/combobox/combombank_model.dart';
+import 'package:eassist_tools_app/widgets/combobox/combombank_widget.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 
 
 class MRekanBankCrudFormPage extends StatefulWidget {
@@ -20,6 +23,8 @@ class MRekanBankCrudFormPageFormState extends State<MRekanBankCrudFormPage> {
 	late MRekanBankCrudBloc mRekanBankCrudBloc;
 	final _formKey = GlobalKey<FormState>();
 	final List<String> errors = [];
+	ComboMBankModel? fieldComboMBank;
+	final comboMBankKey = GlobalKey<DropdownSearchState<ComboMBankModel>>();
 	var fieldMrekan1IdController = TextEditingController();
 	var fieldRekNamaController = TextEditingController();
 	var fieldRekNoController = TextEditingController();
@@ -117,6 +122,7 @@ class MRekanBankCrudFormPageFormState extends State<MRekanBankCrudFormPage> {
 							fieldRekNamaController.text = state.record!.rekNama;
 							fieldRekNoController.text = state.record!.rekNo;
 						}
+						fieldComboMBank = state.comboMBank;
 					}
 				},
 			);
@@ -129,7 +135,28 @@ class MRekanBankCrudFormPageFormState extends State<MRekanBankCrudFormPage> {
 	}
 
 	Widget buildFieldMbankId(){
-		return TextFormField(
+		return buildFieldComboMBank(
+			comboKey: comboMBankKey,
+			labelText: 'mbankId',
+			initItem: fieldComboMBank,
+			onChangedCallback: (value) {
+				if (value != null) {
+					removeError(
+						error: "Field ComboMBank tidak boleh kosong.");
+					mRekanBankCrudBloc.add(ComboMBankChangedEvent(comboMBank: value));
+				}
+			},
+			onSaveCallback: (value) {
+				if (value != null) {
+					fieldComboMBank = value;
+				}
+			},
+			validatorCallback: (value) {
+				if (value == null) {
+					addError(
+						error: "Field ComboMBank tidak boleh kosong.");
+				}
+			},
 		);
 	}
 
@@ -210,6 +237,7 @@ class MRekanBankCrudFormPageFormState extends State<MRekanBankCrudFormPage> {
 		if (_formKey.currentState!.validate()) {
 			_formKey.currentState!.save();
 			MRekanBankCrudModel record = MRekanBankCrudModel(
+				mbankId: fieldComboMBank?.mbankId,
 				mrekan1Id: fieldMrekan1IdController.text,
 				mrekanbankId: '',
 				rekNama: fieldRekNamaController.text,

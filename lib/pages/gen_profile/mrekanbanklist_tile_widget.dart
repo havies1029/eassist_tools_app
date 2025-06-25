@@ -3,6 +3,7 @@ import 'package:eassist_tools_app/widgets/my_colors.dart';
 import 'package:eassist_tools_app/widgets/my_text.dart';
 
 class MRekanBankListTileWidget extends StatelessWidget {
+	final String bankNama;
 	final String mrekan1Id;
 	final String mrekanbankId;
 	final String rekNama;
@@ -10,6 +11,7 @@ class MRekanBankListTileWidget extends StatelessWidget {
 
 	const MRekanBankListTileWidget(
 		{super.key,
+		required this.bankNama, 
 		required this.mrekan1Id, 
 		required this.mrekanbankId, 
 		required this.rekNama, 
@@ -31,6 +33,15 @@ class MRekanBankListTileWidget extends StatelessWidget {
 				child: Column(
 					crossAxisAlignment: CrossAxisAlignment.start,
 					children: [
+						Text("bankNama",
+							style: MyText.bodyLarge(context)!
+								.copyWith(color: MyColors.grey_40)),
+						Container(height: 5),
+						Text(
+							bankNama,
+							style: MyText.bodyLarge(context)!
+								.copyWith(color: MyColors.grey_80)),
+						Container(height: 10),
 						Text("mrekan1Id",
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_40)),

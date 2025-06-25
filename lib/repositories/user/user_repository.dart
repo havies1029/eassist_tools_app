@@ -11,10 +11,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class UserRepository {
   Future<User> authenticate({
-    String? username,
+    String? email,
     String? password,
   }) async {
-    UserLogin userLogin = UserLogin(username: username, password: password);
+    UserLogin userLogin = UserLogin(email: email, password: password);
     LoginApi loginApi = LoginApi();
     User user = await loginApi.validateUserLoginAPI(userLogin);
 

@@ -1,4 +1,3 @@
-
 import 'package:eassist_tools_app/models/combobox/combombank_model.dart';
 
 class MRekanBankCrudModel {
@@ -6,13 +5,15 @@ class MRekanBankCrudModel {
 	String mrekanbankId;
 	String rekNama;
 	String rekNo;
+	String? mbankId;
 	ComboMBankModel? comboMBank;
 
 	MRekanBankCrudModel({required this.mrekan1Id, required this.mrekanbankId, 
-		required this.rekNama, required this.rekNo, ComboMBankModel? comboMBank});
+		required this.rekNama, required this.rekNo, 
+		this.mbankId, this.comboMBank});
 
 	factory MRekanBankCrudModel.fromJson(Map<String, dynamic> data) {
-    ComboMBankModel? comboMBank;
+		ComboMBankModel? comboMBank;
 		if (data['comboMBank'] != null) {
 			comboMBank = ComboMBankModel.fromJson(data['comboMBank']);
 		}
@@ -22,7 +23,8 @@ class MRekanBankCrudModel {
 			mrekanbankId: data['mrekanbankId']??'',
 			rekNama: data['rekNama']??'',
 			rekNo: data['rekNo']??'',
-      comboMBank: comboMBank
+			mbankId: data['mbankId']??'',
+			comboMBank: comboMBank
 		);
 
 	}
@@ -32,6 +34,7 @@ class MRekanBankCrudModel {
 		'mrekanbankId': mrekanbankId,
 		'rekNama': rekNama,
 		'rekNo': rekNo,
-    'comboMBank': comboMBank?.toJson()};
+		'mbankId': mbankId,
+		'comboMBank': comboMBank?.toJson()};
 
 }

@@ -140,7 +140,7 @@ class _RegisterClientDialogState extends BaseDialogState<RegisterClientDialog> {
         telepon: hpController.text,
         password: pswdController.text,
         jnsClientId: _selectedChoice,
-        email: AppData.user.username??""
+        email: AppData.user.email??""
       );
 
       context.read<RegUserBloc>().add(

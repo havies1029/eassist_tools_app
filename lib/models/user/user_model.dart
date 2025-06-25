@@ -17,7 +17,6 @@ class User {
   String? userCabang;
   bool hasDownline;
   Uint8List? foto;
-  String? personId;
   String custType;
 
   User({
@@ -35,7 +34,6 @@ class User {
     this.userCabang,
     this.hasDownline = false,
     this.foto,
-    this.personId,
     this.custType = '',
   });
 
@@ -54,7 +52,6 @@ class User {
         hasDownline: toBoolean(data['hasDownline'].toString(), false),
         foto: data['foto'] ?? '',
         token: data['token'],
-        personId: data['personId'],
         custType: data['custType'] ?? '',
       );
 
@@ -62,7 +59,6 @@ class User {
         "id": id,
         "username": username,
         "nama": nama,
-        "personId": personId,
         "hp": hp,
         "email": email,
         "alamat1": alamat1,
