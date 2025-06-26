@@ -20,7 +20,7 @@ class ShowDialogHapusWidgetState extends State<ShowDialogHapusWidget> {
     Widget cancelButton = TextButton(
       child: const Text("Batal"),
       onPressed: () {
-        Navigator.pop(context);
+        Navigator.pop(context, false);
       },
     );
 
@@ -28,7 +28,7 @@ class ShowDialogHapusWidgetState extends State<ShowDialogHapusWidget> {
       child: const Text("Ya"),
       onPressed: () {
         widget.onHapusFunction(widget.recordId);
-        Navigator.pop(context);
+        Navigator.pop(context, true);
       },
     );
 

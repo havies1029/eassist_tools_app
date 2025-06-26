@@ -21,7 +21,7 @@ class _RegisterClientDialogState extends BaseDialogState<RegisterClientDialog> {
   final pswdController = TextEditingController();
   final confirmPswdController = TextEditingController();
   ComboMJnsclientModel? fieldComboJnsClient;
-  String _selectedChoice = 'Pilihan';
+  String _selectedChoice = '';
   bool _isHovering = false;
   final _formKey = GlobalKey<FormState>();
 
@@ -204,7 +204,7 @@ class _RegisterClientDialogState extends BaseDialogState<RegisterClientDialog> {
         telepon: fullPhone,
         password: pswdController.text,
         jnsClientId: _selectedChoice,
-        email: AppData.user.username ?? "",
+        email: AppData.user.email ?? "",
       );
 
       context.read<RegUserBloc>().add(

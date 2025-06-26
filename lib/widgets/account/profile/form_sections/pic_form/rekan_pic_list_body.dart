@@ -40,18 +40,25 @@ class _MRekanPicListListWidgetState extends State<MRekanPicListListWidget> {
     mRekanPicListBloc = BlocProvider.of<MRekanPicListBloc>(context);
     mRekanPicCrudBloc = BlocProvider.of<MRekanPicCrudBloc>(context);
 
-    return BlocConsumer<MRekanPicListBloc, MRekanPicListState>(
-      buildWhen: (previous, current) => current.status == ListStatus.success,
-      listener: (context, state) {},
-      builder: (context, state) {
-        if (state.status == ListStatus.success) {
-          if (state.items.isEmpty) return _buildEmptyState();
-
-          return _buildListView(state);
-        } else {
-          return _buildEmptyState();
+    return BlocListener<MRekanPicCrudBloc, MRekanPicCrudState>(
+      listener: (context, state) {
+        if (state.isSaved) {
+          print("[🌀 BlocListener] isSaved == true → Refresh list triggered");
+          mRekanPicListBloc.add(FetchMRekanPicListEvent());
         }
       },
+      child: BlocConsumer<MRekanPicListBloc, MRekanPicListState>(
+        buildWhen: (previous, current) => current.status == ListStatus.success,
+        listener: (context, state) {},
+        builder: (context, state) {
+          if (state.status == ListStatus.success) {
+            if (state.items.isEmpty) return _buildEmptyState();
+            return _buildListView(state);
+          } else {
+            return _buildEmptyState();
+          }
+        },
+      ),
     );
   }
 
@@ -326,6 +333,7 @@ class _MRekanPicListListWidgetState extends State<MRekanPicListListWidget> {
   }
 
   void onHapusFunction(String recordId) {
+    print("[🧨 DEBUG] Deleting ID: $recordId");
     mRekanPicCrudBloc.add(MRekanPicCrudHapusEvent(recordId: recordId));
   }
 

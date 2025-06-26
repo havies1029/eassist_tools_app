@@ -577,7 +577,7 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
       '🔵 Tombol Masuk ditekan dengan email="$email" dan password(tersimpan)"',
     );
     BlocProvider.of<LoginBloc>(context).add(LoginButtonPressed(
-      username: email,
+      email: email,
       password: password,
       rememberMe: _rememberLogin,
     ));

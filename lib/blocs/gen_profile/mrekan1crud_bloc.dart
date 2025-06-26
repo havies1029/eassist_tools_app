@@ -11,6 +11,7 @@ class MRekan1CrudBloc extends Bloc<MRekan1CrudEvents, MRekan1CrudState> {
 	MRekan1CrudBloc({required this.repository}) : super(const MRekan1CrudState()) {
 		on<MRekan1CrudLihatEvent>(onLihatMRekan1Crud);
     on<MRekan1CrudSetujuTCEvent>(onSetujuTC);
+    on<SetDataGroup1>(onSetDataGroup1);
 	}
 
 	Future<void> onLihatMRekan1Crud(
@@ -27,5 +28,11 @@ class MRekan1CrudBloc extends Bloc<MRekan1CrudEvents, MRekan1CrudState> {
 		bool success = await repository.mRekan1SetujuTC(event.mrekanId);
 		emit(state.copyWith(isSetujuTC: success));
 	}
+
+  Future<void> onSetDataGroup1(
+	SetDataGroup1 event, Emitter<MRekan1CrudState> emit) async {
+    emit(state.copyWith(isDataGroup1Changed: false));
+    emit(state.copyWith(isDataGroup1Changed: true, record: event.record));
+  }
 
 }

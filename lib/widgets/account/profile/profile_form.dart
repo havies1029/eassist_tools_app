@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../blocs/gen_profile/mrekan1crud_bloc.dart';
 import '../../../blocs/gen_profile/mrekanpiccrud_bloc.dart';
+import '../../../blocs/gen_profile/mrekanpiclist_bloc.dart';
 import '../../../blocs/profile/profile_download_foto_bloc.dart';
 import '../../../blocs/profile/profile_upload_foto_bloc.dart';
-import '../../../pages/gen_profile/m_rekan_pic_crud_body.dart';
-import '../../../pages/gen_profile/m_rekan_pic_list_body.dart';
+import 'form_sections/pic_form/rekan_pic_crud_body.dart';
+import '../../../widgets/account/profile/form_sections/pic_form//rekan_pic_list_body.dart';
 import '../../../pages/gen_profile/profile_picture.dart';
 import '../../dialog/PopUp/confirmation_dialog.dart';
 import '../../dialog/PopUp/success_popup.dart';
@@ -104,9 +105,9 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
   // Get total steps based on selectedChoice
   int get _totalSteps {
     if (widget.selectedChoice == 'Individual') {
-      return 4; // General, Contact, Bank, Pajak
+      return 3; // General, Contact, Bank, Pajak
     } else {
-      return 5; // General, Contact, PIC, Bank, Pajak
+      return 4; // General, Contact, PIC, Bank, Pajak
     }
   }
 
@@ -117,7 +118,6 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
         'Mobile Informasi Klien',
         'Mobile Kontak Klien',
         'Mobile Identitas Rekening',
-        'Mobile Identitas dan Rekening'
       ];
     } else {
       return [
@@ -125,7 +125,6 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
         'Mobile Kontak Perusahaan',
         'Mobile Informasi PIC',
         'Mobile Bank Perusahaan',
-        'Mobile Identitas dan Rekening'
       ];
     }
   }
@@ -337,6 +336,11 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
     );
   }
 
+  void refreshPicList() {
+    context.read<MRekanPicListBloc>().add(FetchMRekanPicListEvent());
+  }
+
+
   Widget _buildPicSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -344,12 +348,17 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
         _buildCard(
           child: MRekanPicListListWidget(
             onEdit: (recordId) {
+              if (recordId.isEmpty) return;
+
+              context.read<MRekanPicCrudBloc>().add(MRekanPicCrudResetEvent()); // ⬅️ reset dulu
+
               setState(() {
                 _selectedPicId = recordId;
                 _picFormMode = 'ubah';
                 _showPicCrudForm = true;
               });
             },
+
             onDelete: (recordId) {
               showDialog(
                 context: context,
@@ -357,12 +366,17 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
                 builder: (_) => ShowDialogHapusWidget(
                   recordId: recordId,
                   onHapusFunction: (id) {
+                    print('[🧨 DEBUG] Deleting ID: $id');
                     context.read<MRekanPicCrudBloc>().add(
                       MRekanPicCrudHapusEvent(recordId: id),
                     );
                   },
                 ),
-              );
+              ).then((result) {
+                if (result == true) {
+                  refreshPicList(); // ✅ refresh list setelah hapus
+                }
+              });
             },
           ),
         ),
@@ -370,39 +384,60 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
         if (_showPicCrudForm)
           _buildCard(
             child: MRekanPicCrudFormBody(
+              key: ValueKey('${_picFormMode}_${_selectedPicId ?? 'new'}'), // 💡 Pakai ValueKey unik
               viewMode: _picFormMode,
               recordId: _selectedPicId ?? '',
               onCancel: () {
-                setState(() {
-                  _showPicCrudForm = false;
-                  _selectedPicId = null;
+                refreshPicList(); // ⏳ trigger dulu
+
+                // Delay `setState` agar tombol tidak muncul sekejap
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  setState(() {
+                    _showPicCrudForm = false;
+                    _selectedPicId = null;
+                    _picFormMode = ''; // kosongkan juga mode
+                  });
                 });
               },
             ),
           ),
         const SizedBox(height: 12),
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton.icon(
-            onPressed: () {
-              setState(() {
-                _selectedPicId = null;
-                _picFormMode = 'tambah';
-                _showPicCrudForm = !_showPicCrudForm;
-              });
-            },
-            icon: Icon(_showPicCrudForm ? Icons.close : Icons.add, size: 18),
-            label: Text(_showPicCrudForm ? 'Tutup Form PIC' : 'Tambah PIC'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: _showPicCrudForm ? const Color(0xFF718096) : const Color(0xFF4A5568),
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+        BlocBuilder<MRekanPicListBloc, MRekanPicListState>(
+          builder: (context, state) {
+            final isMaxPIC = state.items.length >= 3;
+
+            if (isMaxPIC) return const SizedBox.shrink(); // 🔒 Jangan tampilkan tombol sama sekali
+
+            return SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  setState(() {
+                    if (_showPicCrudForm && _picFormMode == 'tambah') {
+                      _showPicCrudForm = false;
+                    } else {
+                      _picFormMode = 'tambah';
+                      _selectedPicId = null;
+                      _showPicCrudForm = true;
+                    }
+                  });
+                },
+                icon: Icon(_showPicCrudForm ? Icons.close : Icons.add, size: 18),
+                label: Text(_showPicCrudForm ? 'Tutup Form PIC' : 'Tambah PIC'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: _showPicCrudForm
+                      ? const Color(0xFF718096)
+                      : const Color(0xFF4A5568),
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  elevation: 0,
+                ),
               ),
-              elevation: 0,
-            ),
-          ),
+            );
+          },
         ),
       ],
     );
@@ -574,16 +609,16 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
       steps = [
         _buildMobileStepContent(RekanGeneralIdv(viewMode: 'tambah', recordId: '')),
         _buildMobileStepContent(RekanContact()),
-        _buildMobileStepContent(RekanBank(viewMode: 'tambah', recordId: '')),
-        _buildMobileStepContent(MRekanPajakFormBody(viewMode: 'tambah', recordId: '')),
+        _buildMobileStepContent(RekanBank()),
+        // _buildMobileStepContent(MRekanPajakFormBody(viewMode: 'tambah', recordId: '')),
       ];
     } else {
       steps = [
         _buildMobileStepContent(RekanGeneralCmp()),
         _buildMobileStepContent(RekanContact()),
         _buildMobileStepContent(_buildPicSection()),
-        _buildMobileStepContent(RekanBank(viewMode: 'tambah', recordId: '')),
-        _buildMobileStepContent(MRekanPajakFormBody(viewMode: 'tambah', recordId: '')),
+        _buildMobileStepContent(RekanBank()),
+        // _buildMobileStepContent(MRekanPajakFormBody(viewMode: 'tambah', recordId: '')),
       ];
     }
 
@@ -658,11 +693,11 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
           child: RekanContact(),
         ),
         _buildCard(
-          child: RekanBank(viewMode: 'tambah', recordId: ''),
+          child: RekanBank(),
         ),
-        _buildCard(
-          child: MRekanPajakFormBody(viewMode: 'tambah', recordId: ''),
-        ),
+        // _buildCard(
+        // child: MRekanPajakFormBody(viewMode: 'tambah', recordId: ''),
+        // ),
       ];
     } else {
       return [
@@ -674,11 +709,11 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
         ),
         _buildPicSection(),
         _buildCard(
-          child: RekanBank(viewMode: 'tambah', recordId: ''),
+          child: RekanBank(),
         ),
-        _buildCard(
-          child: MRekanPajakFormBody(viewMode: 'tambah', recordId: ''),
-        ),
+        // _buildCard(
+        // child: MRekanPajakFormBody(viewMode: 'tambah', recordId: ''),
+        // ),
       ];
     }
   }
@@ -695,12 +730,12 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
         ),
         const SizedBox(height: 16),
         _buildCard(
-          child: RekanBank(viewMode: 'tambah', recordId: ''),
+          child: RekanBank(),
         ),
         const SizedBox(height: 16),
-        _buildCard(
-          child: MRekanPajakFormBody(viewMode: 'tambah', recordId: ''),
-        ),
+        // _buildCard(
+        // child: MRekanPajakFormBody(viewMode: 'tambah', recordId: ''),
+        // ),
       ];
     } else {
       return [
@@ -715,12 +750,12 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
         _buildPicSection(),
         const SizedBox(height: 16),
         _buildCard(
-          child: RekanBank(viewMode: 'tambah', recordId: ''),
+          child: RekanBank(),
         ),
         const SizedBox(height: 16),
-        _buildCard(
-          child: MRekanPajakFormBody(viewMode: 'tambah', recordId: ''),
-        ),
+        // _buildCard(
+        // child: MRekanPajakFormBody(viewMode: 'tambah', recordId: ''),
+        // ),
       ];
     }
   }

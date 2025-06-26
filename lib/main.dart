@@ -235,7 +235,7 @@ class App extends StatelessWidget {
           create: (context) => MRekanGeneralIdvCrudBloc(repository: MRekanGeneralIdvCrudRepository()),
         ),
         BlocProvider<MRekanPicListBloc>(
-          create: (context) => MRekanPicListBloc()..add(FetchMRekanPicListEvent()),
+          create: (context) => MRekanPicListBloc(repository: MRekanPicListRepository())..add(FetchMRekanPicListEvent()),
         ),
         BlocProvider<MRekan1CrudBloc>(
           create: (context) => MRekan1CrudBloc(repository: MRekan1CrudRepository()),

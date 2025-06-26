@@ -24,13 +24,12 @@ DropdownSearch<ComboMBankModel> buildFieldComboMBank({
 				return ComboMBankRepository().getComboMBank();
 			},
 			suffixProps: const DropdownSuffixProps(clearButtonProps: ClearButtonProps(isVisible: false)),
-			popupProps: const PopupPropsMultiSelection.modalBottomSheet(
-				disableFilter: false,
-				showSelectedItems: true,
+			popupProps: PopupProps.modalBottomSheet(
 				showSearchBox: false,
+				showSelectedItems: true,
 				itemBuilder: itemBuilderComboMBank,
 			),
-			compareFn: (item, sItem) => item.mbankId == sItem.mbankId,
+		compareFn: (item, sItem) => item.mbankId == sItem.mbankId,
 			itemAsString: (item) {
 				return item.bankNama;
 			},

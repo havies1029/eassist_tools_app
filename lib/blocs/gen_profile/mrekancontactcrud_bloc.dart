@@ -42,11 +42,7 @@ class MRekanContactCrudBloc extends Bloc<MRekanContactCrudEvents, MRekanContactC
 		emit(state.copyWith(
 			isLoading: false,
 			isLoaded: true,
-			comboMPropinsi: comboMPropinsi,
-			comboMKota: null,
-			comboRKodepos: null,
-			record: state.record,
-		));
+			comboMPropinsi: comboMPropinsi));
 	}
 
 	Future<void> onComboMKotaChanged(
@@ -58,10 +54,7 @@ class MRekanContactCrudBloc extends Bloc<MRekanContactCrudEvents, MRekanContactC
 		emit(state.copyWith(
 			isLoading: false,
 			isLoaded: true,
-			comboMKota: comboMKota,
-			comboRKodepos: null,
-			record: state.record,
-		));
+			comboMKota: comboMKota));
 	}
 
 	Future<void> onComboRKodeposChanged(
@@ -73,9 +66,7 @@ class MRekanContactCrudBloc extends Bloc<MRekanContactCrudEvents, MRekanContactC
 		emit(state.copyWith(
 			isLoading: false,
 			isLoaded: true,
-			comboRKodepos: comboRKodepos,
-			record: state.record,
-		));
+			comboRKodepos: comboRKodepos));
 	}
 
 }

@@ -78,19 +78,13 @@ class AuthenticationBloc
 
   Future<void> _onLoggedIn(
       LoggedIn event, Emitter<AuthenticationState> emit) async {
-    debugPrint("_onLoggedIn universal");
+    debugPrint("_onLoggedIn dari Form Login Client");
 
     emit(AuthenticationLoading());
 
-    if (event.user.custType == 'U') {
-      emit(AuthenticationAuthenticated(
-          user: event.user, authenticatedFrom: "login_user"));
-    } else if (event.user.custType == 'C') {
-      emit(AuthenticationAuthenticated(
-          user: event.user, authenticatedFrom: "login_client"));
-    } else {
-      emit(AuthenticationUnauthenticated());
-    }
+    //emit(AuthenticationClientAuthenticated(user: event.user));
+    emit(AuthenticationAuthenticated(
+        user: event.user, authenticatedFrom: "login_client"));
   }
 
   Future<void> _onLoggedOut(

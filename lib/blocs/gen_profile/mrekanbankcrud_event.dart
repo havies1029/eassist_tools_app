@@ -39,3 +39,9 @@ class MRekanBankCrudLihatEvent extends MRekanBankCrudEvents {
 	List<Object> get props => [recordId];
 }
 
+class ComboMBankChangedEvent extends MRekanBankCrudEvents{
+	final ComboMBankModel comboMBank;
+	const ComboMBankChangedEvent({required this.comboMBank});
+
+	@override	List<Object> get props => [comboMBank];}
+

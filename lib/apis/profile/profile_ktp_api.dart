@@ -21,6 +21,7 @@ class ProfileKtpApi {
     _dio.options.headers = headers;
 
     try {
+      // Step 1: Upload file
       final uploadResponse = await _dio.post(
         uploadKtpURL,
         data: FormData.fromMap({
@@ -28,13 +29,14 @@ class ProfileKtpApi {
         }),
       );
 
-      print("UPLOAD STATUS: ${uploadResponse.statusCode}");
-      print("UPLOAD DATA: ${uploadResponse.data}");
-
-      return uploadResponse.statusCode == 200;
+      if (uploadResponse.statusCode == 200 &&
+          uploadResponse.data['url'] != null) {
+        return true;
+      } else {
+        return false;
+      }
     } catch (e) {
-      print("Upload Error: $e");
-      return false;
+      throw Exception('Gagal mengambil gambar: ${e.toString()}');
     }
   }
 

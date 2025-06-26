@@ -46,9 +46,11 @@ class ComboMJabatanChangedEvent extends MRekanPicCrudEvents{
 	@override	List<Object> get props => [comboMJabatan];}
 
 class CheckboxIsDefaultChangedEvent extends MRekanPicCrudEvents {
-  final bool isChecked;
-  const CheckboxIsDefaultChangedEvent({required this.isChecked});
+	final bool isChecked;
+	const CheckboxIsDefaultChangedEvent({required this.isChecked});
 
-  @override
-  List<Object> get props => [isChecked];
+	@override
+	List<Object> get props => [isChecked];
 }
+
+class MRekanPicCrudResetEvent extends MRekanPicCrudEvents {}

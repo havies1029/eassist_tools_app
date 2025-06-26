@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 import 'package:eassist_tools_app/models/authentication/auth_model.dart';
 import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:eassist_tools_app/models/user/user_model.dart';
-import 'package:string_validator/string_validator.dart';
 
 class LoginApi {
   final _base = AppData.apiDomain;
@@ -57,17 +56,16 @@ class LoginApi {
 
       String tokeninfo = jsonDecode(response.body);
       List<String> info = tokeninfo.split(";");
-
-      Token token = Token.split(userLogin.username!, tokeninfo);
+      String username = info[8];
+      Token token = Token.split(username, tokeninfo);
 
       try {
         User user = User(
             id: 0,
             token: token.token,
-            username: userLogin.username,
+            username: username,
             nama: info[2],
             email: info[5],
-            personId: info[12],
             userCabang: info[1],
             custType: "C",);
         return user;
@@ -102,7 +100,7 @@ class LoginApi {
             token: token,
             username: info[1],
             nama: info[1],
-            email: info[1],
+            email: info[2],
             custType: info[0],);
         return user;
       } else if (info[0] == "C") {
@@ -111,14 +109,14 @@ class LoginApi {
             token: token,
             username: info[1],
             nama: info[2],
-            email: info[1],
+            email: info[3],
             custType: info[0],);
         return user;
       } else {
         throw Exception("User not found or invalid token");
       }
     } else {
-      throw Exception("Failed to load data");
+      throw Exception("Failed to load data getUserByTokenAPI: ${response.statusCode}");
     }
   }
 }

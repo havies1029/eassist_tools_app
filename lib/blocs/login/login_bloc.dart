@@ -28,25 +28,20 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
     try {
       final user = await userRepository.authenticate(
-        username: event.username,
+        email: event.email,
         password: event.password,
       );
 
       AppData.user = user;
       AppData.userToken = user.token!;
 
-      // ⬇️ Selalu simpan token untuk restore session
-      await userRepository.persistToken(userToken: user.token ?? "");
-
-      // ⬇️ Simpan flag "remember me" kalau diaktifkan
-      if (event.rememberMe) {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setBool("remember_me", true);
-      }
-
       emit(LoginPreAuthenticate());
 
-      // ⬇️ Kirim event ke AuthenticationBloc
+      // Simpan password jika rememberMe true
+      if (event.rememberMe) {
+        userRepository.persistToken(userToken: user.token ?? "");
+      }
+
       authenticationBloc.add(LoggedIn(user: user));
 
       emit(LoginPostAuthenticate());
@@ -54,5 +49,4 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       emit(LoginFailure(error: "username atau password salah"));
     }
   }
-
 }

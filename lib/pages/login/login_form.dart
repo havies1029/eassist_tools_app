@@ -190,9 +190,9 @@ class _LoginFormState extends State<LoginForm>
   // Fungsi untuk memicu event login
   void onLoginButtonPressed() {
     BlocProvider.of<LoginBloc>(context).add(LoginButtonPressed(
-      username: _usernameController.text,
-      password: _passwordController.text,
-      rememberMe: true
+        email: _usernameController.text,
+        password: _passwordController.text,
+        rememberMe: true
     ));
   }
 
@@ -725,105 +725,3 @@ class _LoginFormState extends State<LoginForm>
     );
   }
 }
-
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
-  @override
-  _LoginPageState createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  final FocusNode _emailFocusNode = FocusNode();
-  final FocusNode _passwordFocusNode = FocusNode();
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 500),
-      vsync: this,
-    );
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    _emailFocusNode.dispose();
-    _passwordFocusNode.dispose();
-    super.dispose();
-  }
-
-  Widget _buildHeaderSection() {
-    return Column(
-      children: const [
-        HeaderSection(),
-        SizedBox(height: 10),
-        Text(
-          "Login",
-          style: TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-            color: MyColors.black,
-          ),
-        ),
-      ],
-    );
-  }
-
-  // Widget yang mengandung LoginForm
-  Widget _buildDesignLoginForm() {
-    return const LoginForm();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // Nilai responsif berdasarkan ukuran layar
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-    final horizontalPadding = screenWidth * 0.03;
-    final verticalPadding = screenHeight * 0.03;
-    final headerSpacing = screenHeight * 0.025;
-    // Deteksi apakah keyboard terbuka
-    final bool isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
-
-    return Scaffold(
-      backgroundColor: MyColors.white,
-      resizeToAvoidBottomInset: true,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.only(
-                  top: verticalPadding,
-                  bottom: verticalPadding,
-                ),
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      _buildHeaderSection(),
-                      SizedBox(height: headerSpacing),
-                      _buildDesignLoginForm(),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            if (!isKeyboardOpen)
-              MediaQuery.removeViewInsets(
-                context: context,
-                removeBottom: true,
-                child: const BottomShape(),
-              )
-            else
-              const SizedBox.shrink(),
-          ],
-        ),
-      ),
-    );
-  }
-}
-

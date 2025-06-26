@@ -42,13 +42,31 @@ class _MRekanPicCrudFormBodyState extends State<MRekanPicCrudFormBody> {
     super.initState();
     bloc = BlocProvider.of<MRekanPicCrudBloc>(context);
 
+    print("[⚙️ INIT] Mode: ${widget.viewMode}, RecordID: ${widget.recordId}");
+
     Future.delayed(Duration.zero, () {
       if (widget.viewMode == 'ubah' && widget.recordId.isNotEmpty) {
         bloc.add(MRekanPicCrudLihatEvent(recordId: widget.recordId));
       } else {
         clearAllFields();
+        bloc.emit(bloc.state.copyWith(
+          isLoaded: true,
+          record: null,
+          comboMJabatan: null,
+        ));
       }
     });
+  }
+
+
+  @override
+  void didUpdateWidget(covariant MRekanPicCrudFormBody oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.recordId != oldWidget.recordId && widget.viewMode == 'ubah') {
+      context.read<MRekanPicCrudBloc>().add(
+        MRekanPicCrudLihatEvent(recordId: widget.recordId),
+      );
+    }
   }
 
   void clearAllFields() {
@@ -73,18 +91,26 @@ class _MRekanPicCrudFormBodyState extends State<MRekanPicCrudFormBody> {
             fieldComboMJabatan = state.comboMJabatan;
           });
         }
+
+        if (state.isSaved) {
+          if (widget.onCancel != null) {
+            widget.onCancel!(); // Tutup form dan refresh list
+          } else {
+            Navigator.of(context).pop(); // Fallback jika tidak ada callback
+          }
+        }
       },
       child: BlocBuilder<MRekanPicCrudBloc, MRekanPicCrudState>(
         builder: (context, state) {
           if (!state.isLoaded) {
             return _buildLoadingState();
           }
-
           return _buildFormContent();
         },
       ),
     );
   }
+
 
   Widget _buildLoadingState() {
     return Container(
@@ -422,12 +448,15 @@ class _MRekanPicCrudFormBodyState extends State<MRekanPicCrudFormBody> {
   void onSaveForm() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+
       final isTambah = widget.viewMode == "tambah";
+      final recordId = isTambah ? '' : (bloc.state.record?.mrekanpicId ?? '');
+      print("[🟢 DEBUG] Saving Form with ID: $recordId");
 
       final record = MRekanPicCrudModel(
         isDefault: isDefaultChecked,
         mjabatanId: fieldComboMJabatan?.mjabatanId,
-        mrekanpicId: isTambah ? '' : (bloc.state.record?.mrekanpicId ?? ''),
+        mrekanpicId: recordId,
         picEmail: fieldPicEmailController.text,
         picHp: fieldPicHpController.text,
         picNama: fieldPicNamaController.text,
@@ -438,6 +467,9 @@ class _MRekanPicCrudFormBodyState extends State<MRekanPicCrudFormBody> {
       } else {
         bloc.add(MRekanPicCrudUbahEvent(record: record));
       }
+    } else {
+      print("[❌ DEBUG] Form is invalid");
     }
   }
+
 }

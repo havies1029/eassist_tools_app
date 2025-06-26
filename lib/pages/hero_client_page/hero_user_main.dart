@@ -66,37 +66,37 @@ class _HeroUserPageState extends State<HeroUserPage> {
     return Scaffold(
       body: BlocConsumer<MRekan1CrudBloc, MRekan1CrudState>(
         listener: (context, state) {
-          final mjnsclientId = state.record?.mjnsclientId.toString();
-          if (!_dialogShown && (mjnsclientId == "10" || mjnsclientId == "20")) {
-            _dialogShown = true;
-            showDialog(
-              context: context,
-              builder: (context) {
-                final isMobile = MediaQuery.of(context).size.width < 600;
-                final screenSize = MediaQuery.of(context).size;
-
-                return Dialog(
-                  insetPadding: isMobile
-                      ? EdgeInsets.zero
-                      : const EdgeInsets.all(32),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(isMobile ? 0 : 16.13),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(isMobile ? 0 : 16.13),
-                    child: SizedBox(
-                      width: isMobile ? screenSize.width : 1200,
-                      height: isMobile ? screenSize.height : null,
-                      child: ProfileMainPage(
-                        userid: 123,
-                        selectedChoice: mjnsclientId == "10" ? 'Individual' : 'Perusahaan',
-                      ),
-                    ),
-                  ),
-                );
-              },
-            );
-          }
+          // final mjnsclientId = state.record?.mjnsclientId.toString();
+          // if (!_dialogShown && (mjnsclientId == "10" || mjnsclientId == "20")) {
+          //   _dialogShown = true;
+          //   showDialog(
+          //     context: context,
+          //     builder: (context) {
+          //       final isMobile = MediaQuery.of(context).size.width < 600;
+          //       final screenSize = MediaQuery.of(context).size;
+          //
+          //       return Dialog(
+          //         insetPadding: isMobile
+          //             ? EdgeInsets.zero
+          //             : const EdgeInsets.all(32),
+          //         shape: RoundedRectangleBorder(
+          //           borderRadius: BorderRadius.circular(isMobile ? 0 : 16.13),
+          //         ),
+          //         child: ClipRRect(
+          //           borderRadius: BorderRadius.circular(isMobile ? 0 : 16.13),
+          //           child: SizedBox(
+          //             width: isMobile ? screenSize.width : 1200,
+          //             height: isMobile ? screenSize.height : null,
+          //             child: ProfileMainPage(
+          //               userid: 123,
+          //               selectedChoice: mjnsclientId == "10" ? 'Individual' : 'Perusahaan',
+          //             ),
+          //           ),
+          //         ),
+          //       );
+          //     },
+          //   );
+          // }
         },
         builder: (context, state) {
           return LayoutBuilder(
@@ -168,6 +168,21 @@ class _HeroUserPageState extends State<HeroUserPage> {
                           //                 ),
                           //                 TextSpan(
                           //                   text: state.record?.mjnsclientId?.toString() ?? 'Tidak diketahui',
+                          //                   style: const TextStyle(fontSize: 15),
+                          //                 ),
+                          //               ],
+                          //             ),
+                          //           ),
+                          //           const SizedBox(height: 8),
+                          //           Text.rich(
+                          //             TextSpan(
+                          //               children: [
+                          //                 const TextSpan(
+                          //                   text: 'Rekan ID: ',
+                          //                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                          //                 ),
+                          //                 TextSpan(
+                          //                   text: state.record?.mrekan1Id?.toString() ?? 'Tidak diketahui',
                           //                   style: const TextStyle(fontSize: 15),
                           //                 ),
                           //               ],

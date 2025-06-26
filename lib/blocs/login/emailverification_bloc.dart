@@ -103,16 +103,21 @@ class EmailVerificationBloc
     ));
 
     if (!hasFailure && returnData.data.isNotEmpty) {
-      Token token = Token.split(event.record.email, returnData.data);
+      
+      List<String> info = returnData.data.split(";");
+      Token token = Token.split(info[0], info[1]);
 
       UserRepository userRepository = UserRepository();
 
       User user = User(
         id: 0,
-        username: event.record.email,
+        username: info[0],
         email: event.record.email,
         token: token.token,
       );
+
+      AppData.user = user;
+      AppData.userToken = token.token!;
 
       if (state.isSimpanPassword) {
         userRepository.persistToken(userToken: token.token!);

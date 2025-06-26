@@ -19,6 +19,10 @@ class MRekanPicCrudBloc extends Bloc<MRekanPicCrudEvents, MRekanPicCrudState> {
     on<MRekanPicCrudLihatEvent>(onLihatMRekanPicCrud);
     on<ComboMJabatanChangedEvent>(onComboMJabatanChanged);
     on<CheckboxIsDefaultChangedEvent>(onCheckboxIsDefaultChangedEvent);
+    on<MRekanPicCrudResetEvent>((event, emit) {
+      emit(state.copyWith(isSaved: false));
+    });
+
   }
 
   Future<void> onTambahMRekanPicCrud(
@@ -33,11 +37,31 @@ class MRekanPicCrudBloc extends Bloc<MRekanPicCrudEvents, MRekanPicCrudState> {
   }
 
   Future<void> onUbahMRekanPicCrud(
-      MRekanPicCrudUbahEvent event, Emitter<MRekanPicCrudState> emit) async {
+      MRekanPicCrudUbahEvent event,
+      Emitter<MRekanPicCrudState> emit,
+      ) async {
+    debugPrint('[🟡 Bloc] MRekanPicCrudUbahEvent diterima');
+    debugPrint('[📥 Bloc] Data yang dikirim: ${event.record.toJson()}');
+
     emit(state.copyWith(isSaving: true, isSaved: false));
-    bool hasFailure = !await repository.mRekanPicCrudUbah(event.record);
-    emit(
-        state.copyWith(isSaving: false, isSaved: true, hasFailure: hasFailure));
+
+    bool result = await repository.mRekanPicCrudUbah(event.record);
+
+    debugPrint('[📤 Bloc] Hasil pemanggilan repository: $result');
+
+    bool hasFailure = !result;
+
+    emit(state.copyWith(
+      isSaving: false,
+      isSaved: true,
+      hasFailure: hasFailure,
+    ));
+
+    if (!hasFailure) {
+      debugPrint('[✅ Bloc] Data berhasil diubah dan disimpan');
+    } else {
+      debugPrint('[❌ Bloc] Gagal menyimpan perubahan');
+    }
   }
 
   Future<void> onHapusMRekanPicCrud(
@@ -52,8 +76,8 @@ class MRekanPicCrudBloc extends Bloc<MRekanPicCrudEvents, MRekanPicCrudState> {
       MRekanPicCrudLihatEvent event, Emitter<MRekanPicCrudState> emit) async {
     emit(state.copyWith(isLoading: true, isLoaded: false));
     MRekanPicCrudModel record =
-        await repository.mRekanPicCrudLihat(event.recordId);
-    
+    await repository.mRekanPicCrudLihat(event.recordId);
+
     emit(state.copyWith(isLoading: false, isLoaded: true, record: record, comboMJabatan: record.comboMJabatan));
   }
 
