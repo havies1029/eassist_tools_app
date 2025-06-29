@@ -1,3 +1,4 @@
+import 'package:eassist_tools_app/blocs/gen_profile/mrekan1crud_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/common/constants.dart';
@@ -100,6 +101,16 @@ class MRekanGeneralCmpCrudFormPageFormState
           }
           fieldComboMBentukCst = state.comboMBentukCst;
           fieldComboMBidang = state.comboMBidang;
+        } 
+        if (state.isSaved && !state.hasFailure) {
+          context.read<MRekan1CrudBloc>().add(
+            MRekan1CrudLihatEvent(),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Data berhasil disimpan."),
+            ),
+          );
         }
       },
     );

@@ -7,7 +7,6 @@ class MRekanGeneralIdvCrudState extends Equatable {
   final bool isSaving;
   final bool isSaved;
   final bool hasFailure;
-  final bool isKtpUploaded;
   final ComboMPekerjaanModel? comboMPekerjaan;
   final ComboMJnskelModel? comboMJnskel;
   const MRekanGeneralIdvCrudState(
@@ -17,7 +16,6 @@ class MRekanGeneralIdvCrudState extends Equatable {
       this.isSaving = false,
       this.isSaved = false,
       this.hasFailure = false,
-      this.isKtpUploaded = false,
       this.comboMPekerjaan,
       this.comboMJnskel});
 
@@ -28,7 +26,6 @@ class MRekanGeneralIdvCrudState extends Equatable {
       bool? isSaving,
       bool? isSaved,
       bool? hasFailure,
-      bool? isKtpUploaded,
       ComboMPekerjaanModel? comboMPekerjaan,
       ComboMJnskelModel? comboMJnskel}) {
     return MRekanGeneralIdvCrudState(
@@ -38,7 +35,6 @@ class MRekanGeneralIdvCrudState extends Equatable {
       isSaving: isSaving ?? this.isSaving,
       isSaved: isSaved ?? this.isSaved,
       hasFailure: hasFailure ?? this.hasFailure,
-      isKtpUploaded: isKtpUploaded ?? this.isKtpUploaded,
       comboMPekerjaan: comboMPekerjaan ?? this.comboMPekerjaan,
       comboMJnskel: comboMJnskel ?? this.comboMJnskel,
     );
@@ -46,5 +42,5 @@ class MRekanGeneralIdvCrudState extends Equatable {
 
   @override
   List<Object> get props =>
-      [isLoading, isLoaded, isSaving, isSaved, hasFailure, isKtpUploaded];
+      [isLoading, isLoaded, isSaving, isSaved, hasFailure];
 }

@@ -1,4 +1,5 @@
 import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
+import 'package:eassist_tools_app/blocs/gen_profile/mrekan1crud_bloc.dart';
 import 'package:eassist_tools_app/pages/about_jps/action_about_section.dart';
 import 'package:eassist_tools_app/pages/find_insurance/find_section_insurance.dart';
 import 'package:eassist_tools_app/pages/find_insurance/floating_buttons_insurance.dart';
@@ -81,8 +82,15 @@ class _HeroPageState extends State<HeroPage> {
                         if (state is AuthenticationAuthenticated) {
                           if (state.user.custType == "C") {
                             return Text(
-                                'Nama : ${state.user.nama ?? "???"}');
+                                'Nama User : ${state.user.nama ?? "???"}');
                           }
+                        }
+                        return Container();
+                      }),
+                      BlocBuilder<MRekan1CrudBloc, MRekan1CrudState>(
+                          builder: (context, state) {
+                        if (state.isLoaded) {
+                          return Text('Nama Rekan : ${state.record?.rekanNama.isNotEmpty ?? false ? state.record?.rekanNama : "(belum diupdate di profile)"}');
                         }
                         return Container();
                       }),
@@ -105,10 +113,10 @@ class _HeroPageState extends State<HeroPage> {
                         }
                         return Container();
                       }),
-                      BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                      BlocBuilder<MRekan1CrudBloc, MRekan1CrudState>(
                           builder: (context, state) {
-                        if (state is AuthenticationAuthenticated) {
-                          if (state.user.custType == "C") {
+                        if (state.isLoaded) {
+                          if (state.record?.mjnsclientId == "20") {
                             return TextButton(
                               onPressed: () {
                                 Navigator.push(
@@ -124,6 +132,7 @@ class _HeroPageState extends State<HeroPage> {
                         }
                         return Container();
                       }),
+                      
                       HeroSection(constraints: constraints),
                       FloatingButtons(constraints: constraints),
                       ActionSection(constraints: constraints),

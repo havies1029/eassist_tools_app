@@ -1,6 +1,6 @@
 
 class MRekanPicListModel {
-	int isDefault;
+	bool isDefault;
 	String mjabatanId;
 	String mrekan1Id;
 	String mrekanpicId;
@@ -16,7 +16,7 @@ class MRekanPicListModel {
 
 	factory MRekanPicListModel.fromJson(Map<String, dynamic> data) {
 		return MRekanPicListModel(
-			isDefault: int.tryParse(data['isDefault'].toString())??0,
+			isDefault: data['isDefault']??false,
 			mjabatanId: data['mjabatanId']??'',
 			mrekan1Id: data['mrekan1Id']??'',
 			mrekanpicId: data['mrekanpicId']??'',
@@ -29,7 +29,7 @@ class MRekanPicListModel {
 	}
 
 	Map<String, dynamic> toJson() =>
-		{'isDefault': isDefault.toString(),
+		{'isDefault': isDefault,
 		'mjabatanId': mjabatanId,
 		'mrekan1Id': mrekan1Id,
 		'mrekanpicId': mrekanpicId,

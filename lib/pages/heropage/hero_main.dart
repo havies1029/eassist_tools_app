@@ -1,4 +1,5 @@
 import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
+import 'package:eassist_tools_app/blocs/gen_profile/mrekan1crud_bloc.dart';
 import 'package:eassist_tools_app/blocs/login/emailverification_bloc.dart';
 import 'package:eassist_tools_app/pages/heropage/hero_page.dart';
 import 'package:eassist_tools_app/widgets/login/login_gmail/popup_dialog_login.dart';
@@ -78,7 +79,13 @@ class HeroMainState extends State<HeroMain> {
               debugPrint("AuthenticationAuthenticated");
               if ((state.authenticatedFrom == "login_user") || (state.authenticatedFrom == "login_client")) {
                 Navigator.of(context).pop();
-              }              
+              }                            
+              if (state.user.custType == "C") {
+                debugPrint("User is a client, Load Mrekan state");
+                BlocProvider.of<MRekan1CrudBloc>(context).add(MRekan1CrudLihatEvent());
+              } else {
+                debugPrint("User is not a client, staying on HeroMain");
+              }
             }
           },
         ),

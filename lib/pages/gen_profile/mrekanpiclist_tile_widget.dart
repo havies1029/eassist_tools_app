@@ -4,7 +4,7 @@ import 'package:eassist_tools_app/widgets/my_colors.dart';
 import 'package:eassist_tools_app/widgets/my_text.dart';
 
 class MRekanPicListTileWidget extends StatelessWidget {
-	final int isDefault;
+	final bool isDefault;
 	final String jabatanDesc;
 	final String mrekanpicId;
 	final String picEmail;
@@ -36,52 +36,15 @@ class MRekanPicListTileWidget extends StatelessWidget {
 				child: Column(
 					crossAxisAlignment: CrossAxisAlignment.start,
 					children: [
-						Text("isDefault",
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_40)),
-						Container(height: 5),
-						Text(
-							NumberFormat("#,###").format(isDefault),
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_80)),
+						CheckboxListTile(
+							title: Text("Admin"),
+							value: isDefault,
+							onChanged: null,
+							contentPadding: EdgeInsets.zero,
+							controlAffinity: ListTileControlAffinity.leading,
+						),						
 						Container(height: 10),
-						Text("jabatanDesc",
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_40)),
-						Container(height: 5),
-						Text(
-							jabatanDesc,
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_80)),
-						Container(height: 10),
-						Text("mrekanpicId",
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_40)),
-						Container(height: 5),
-						Text(
-							mrekanpicId,
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_80)),
-						Container(height: 10),
-						Text("picEmail",
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_40)),
-						Container(height: 5),
-						Text(
-							picEmail,
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_80)),
-						Container(height: 10),
-						Text("picHp",
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_40)),
-						Container(height: 5),
-						Text(
-							picHp,
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_80)),
-						Container(height: 10),
-						Text("picNama",
+						Text("Nama",
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_40)),
 						Container(height: 5),
@@ -90,6 +53,37 @@ class MRekanPicListTileWidget extends StatelessWidget {
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
+						Text("Jabatan",
+							style: MyText.bodyLarge(context)!
+								.copyWith(color: MyColors.grey_40)),
+						Container(height: 5),
+						Text(
+							jabatanDesc,
+							style: MyText.bodyLarge(context)!
+								.copyWith(color: MyColors.grey_80)),
+						Container(height: 10),
+
+						Text("HP",
+							style: MyText.bodyLarge(context)!
+								.copyWith(color: MyColors.grey_40)),
+						Container(height: 5),
+						Text(
+							picHp,
+							style: MyText.bodyLarge(context)!
+								.copyWith(color: MyColors.grey_80)),
+						Container(height: 10),
+						
+						Text("Email",
+							style: MyText.bodyLarge(context)!
+								.copyWith(color: MyColors.grey_40)),
+						Container(height: 5),
+						Text(
+							picEmail,
+							style: MyText.bodyLarge(context)!
+								.copyWith(color: MyColors.grey_80)),
+						Container(height: 10),
+						
+						
 				]),
 			)
 		);

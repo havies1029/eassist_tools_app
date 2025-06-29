@@ -47,7 +47,7 @@ class MRekanPicCrudFormPageFormState extends State<MRekanPicCrudFormPage> {
 		mRekanPicCrudBloc = BlocProvider.of<MRekanPicCrudBloc>(context);
 		return BlocConsumer<MRekanPicCrudBloc, MRekanPicCrudState>(
 			builder: (context, state) { 
-				return state.isLoaded ? Dialog(
+				return Dialog(
 					shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
 					child: SingleChildScrollView(
 						child: Padding(
@@ -69,9 +69,9 @@ class MRekanPicCrudFormPageFormState extends State<MRekanPicCrudFormPage> {
 											),
 										),
 										const SizedBox(height: 25),
-										buildFieldIsDefault(), 
+										buildFieldIsDefault(),                                    
+										buildFieldPicNama(),     
 										buildFieldMjabatanId(),                  
-										buildFieldPicNama(),                    
 										buildFieldPicHp(),
 										buildFieldPicEmail(),
 										const SizedBox(height: 25),
@@ -119,7 +119,7 @@ class MRekanPicCrudFormPageFormState extends State<MRekanPicCrudFormPage> {
 									],
 								)),
 						),
-					)):CircularProgressIndicator();
+					));
 				},
 				listener: (context, state) {
 					if (state.isLoaded) {

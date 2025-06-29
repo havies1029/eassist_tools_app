@@ -6,7 +6,6 @@ class MRekanGeneralIdvCrudModel {
   String mrekan1Id;
   String rekanNama;
   String? mpekerjaanId;
-  bool? isKtpUploaded;
   ComboMPekerjaanModel? comboMPekerjaan;
   ComboMJnskelModel? comboMJnskel;
 
@@ -15,7 +14,6 @@ class MRekanGeneralIdvCrudModel {
       required this.mrekan1Id,
       required this.rekanNama,
       this.mpekerjaanId,
-      this.isKtpUploaded,
       this.comboMPekerjaan,
       this.comboMJnskel});
 
@@ -34,8 +32,7 @@ class MRekanGeneralIdvCrudModel {
         mjnskelId: data['mjnskelId'] ?? '',
         mrekan1Id: data['mrekan1Id'] ?? '',
         rekanNama: data['rekanNama'] ?? '',
-        mpekerjaanId: data['mpekerjaanId'] ?? '',        
-			  isKtpUploaded: data['isKtpUploaded']??false,
+        mpekerjaanId: data['mpekerjaanId'] ?? '',     
         comboMPekerjaan: comboMPekerjaan,
         comboMJnskel: comboMJnskel);
   }
@@ -45,7 +42,6 @@ class MRekanGeneralIdvCrudModel {
         'mrekan1Id': mrekan1Id,
         'rekanNama': rekanNama,
         'mpekerjaanId': mpekerjaanId,
-        'isKtpUploaded': isKtpUploaded,
         'comboMPekerjaan': comboMPekerjaan?.toJson(),
         'comboMJnsKel': comboMJnskel?.toJson()
       };

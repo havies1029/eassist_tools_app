@@ -20,13 +20,6 @@ class TestProfilePage extends StatefulWidget {
 class _TestProfilePageState extends State<TestProfilePage> {    
   late MRekan1CrudBloc mRekan1CrudBloc;
 
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(const Duration(milliseconds: 500), () {
-      loadData();
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,12 +31,13 @@ class _TestProfilePageState extends State<TestProfilePage> {
       body: BlocConsumer<MRekan1CrudBloc, MRekan1CrudState>(
       builder: (context, state) {       
         debugPrint("TestProfilePage: state.isSetujuTC: ${state.isSetujuTC}");   
-          return state.isLoaded ? SingleChildScrollView(
+          if (state.isLoaded) {
+            return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(16.0),  
               child: Column(
                 children: [
-                  Text("Nama Client : ${state.record?.rekanNama ?? "????"}"),
+                  Text("Nama Client : ${state.record?.rekanNama.isEmpty ?? true ? "(belum diupdate di profile)" : state.record?.rekanNama}"),
                   Text("JenisClientId :${state.record?.mjnsclientId??"???"}"),
                   BlocBuilder<ProfileDownloadFotoBloc, ProfileDownloadFotoState>(
                     builder: (context, imageState) {
@@ -64,12 +58,16 @@ class _TestProfilePageState extends State<TestProfilePage> {
                       );
                     },
                   ),
-                  MRekanGeneralCmpCrudFormPage(),
-                  const SizedBox(height: 24),            
-                  MRekanContactCrudFormPage(),
+                  if (state.record?.mjnsclientId == "10") ...[
+                    MRekanGeneralIdvCrudFormPage(),
+                  ] else if (state.record?.mjnsclientId == "20") ...[
+                    MRekanGeneralCmpCrudFormPage(),                      
+                    const SizedBox(height: 24),            
+                    MRekanContactCrudFormPage(),
+                  ] else ...[
+                    Text("Jenis Client : Tidak Diketahui"),
+                  ],                    
                   const SizedBox(height: 24),   
-                  MRekanGeneralIdvCrudFormPage(),
-                  const SizedBox(height: 24),  
                   Text("state.isSetujuTC : ${state.isSetujuTC}"),
                   if (!state.isSetujuTC) 
                     ElevatedButton(
@@ -81,9 +79,14 @@ class _TestProfilePageState extends State<TestProfilePage> {
                 ],
               ),
             ),
-          ): CircularProgressIndicator();
+          );
+          } else {
+            return CircularProgressIndicator();
+          }
         }, 
-        listener: (BuildContext context, MRekan1CrudState state) {  },
+        listener: (BuildContext context, MRekan1CrudState state) { 
+         
+         },
         buildWhen: (previous, current) {
           return current.isSetujuTC || current.isLoaded;
         },
@@ -91,9 +94,5 @@ class _TestProfilePageState extends State<TestProfilePage> {
     );
   }
 
-void loadData() {
-  context.read<ProfileDownloadFotoBloc>().add(LoadSecureImage());
-  mRekan1CrudBloc.add(MRekan1CrudLihatEvent());
-}
 
 }
