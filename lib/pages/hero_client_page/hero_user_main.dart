@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math' show pi;
 
+import '../../blocs/gen_profile/mrekanbankcrud_bloc.dart';
 import '../../repositories/user/user_repository.dart';
 import '../../widgets/components/action/action_section.dart';
 import '../../widgets/components/navbar/navbar_widget.dart';
@@ -193,9 +194,8 @@ class _HeroUserPageState extends State<HeroUserPage> {
                           //     ),
                           //   ),
                           // ),
-                          HeroSection(
-                              constraints: constraints,
-                              pageType: PageType.home_client),
+                          // Lanjut section bawahnya
+                          HeroSection(constraints: constraints, pageType: PageType.home_client),
                           Transform.translate(
                             offset: Offset(0, -40),
                             child: FloatingButtons(constraints: constraints),
@@ -210,6 +210,7 @@ class _HeroUserPageState extends State<HeroUserPage> {
                       ),
                     ),
                   ),
+
 
                   // Navbar overlay
                   const _FixedNavbarOverlay(),

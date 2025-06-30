@@ -46,11 +46,3 @@ class ComboMJnskelChangedEvent extends MRekanGeneralIdvCrudEvents{
 
 	@override	List<Object> get props => [comboMJnskel];
 }
-
-class UpdateIsKtpUploaded extends MRekanGeneralIdvCrudEvents{
-	final bool isUploaded;
-	const UpdateIsKtpUploaded({required this.isUploaded});
-
-	@override	List<Object> get props => [isUploaded];
-}
-

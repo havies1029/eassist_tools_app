@@ -74,7 +74,6 @@ import 'blocs/gen_profile/mrekangeneralidvcrud_bloc.dart';
 import 'blocs/gen_profile/mrekanpiccrud_bloc.dart';
 import 'blocs/profile/profile_download_foto_bloc.dart';
 import 'blocs/profile/profile_upload_foto_bloc.dart';
-import 'blocs/profile/profile_upload_ktp_bloc.dart';
 import 'blocs/profile/rekanbank_bloc.dart';
 import 'blocs/profile/rekangeneral_bloc.dart';
 import 'blocs/profile/rekanpajak_bloc.dart';
@@ -246,9 +245,6 @@ class App extends StatelessWidget {
         BlocProvider<GallerymemberCariBloc>(
             create: (context) =>
                 GallerymemberCariBloc()),
-        BlocProvider<ProfileUploadKtpBloc>(
-            create: (context) =>
-                ProfileUploadKtpBloc(repository: ProfileKtpRepository())),
         BlocProvider<ProfileUploadFotoBloc>(
             create: (context) =>
                 ProfileUploadFotoBloc()),

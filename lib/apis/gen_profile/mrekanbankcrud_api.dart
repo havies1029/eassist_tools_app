@@ -8,7 +8,7 @@ class MRekanBankCrudAPI {
 
 	Future<ReturnDataAPI> mRekanBankCrudTambahAPI(MRekanBankCrudModel record) async {
 		String tambahEndpoint =
-			"${AppData.prefixEndPoint}/api/gen_profile/mrekanbankcrud/create";
+			"${AppData.prefixEndPoint}/api/profile/mrekanbankcrud/create";
 		Map<String, String> queryParams = {"modul_id": "mRekanBankCrudTambahAPI"};
 		var uri = AppData.uriHtpp(AppData.httpAuthority, tambahEndpoint, queryParams);
 
@@ -28,9 +28,10 @@ class MRekanBankCrudAPI {
 		}
 		return returnData;
 	}
+
 	Future<bool> mRekanBankCrudUbahAPI(MRekanBankCrudModel record) async {
 		String ubahEndpoint =
-			"${AppData.prefixEndPoint}/api/gen_profile/mrekanbankcrud/update";
+			"${AppData.prefixEndPoint}/api/profile/mrekanbankcrud/update";
 		Map<String, String> queryParams = {"modul_id": "mRekanBankCrudUbahAPI"};
 
 		var uri = AppData.uriHtpp(AppData.httpAuthority, ubahEndpoint, queryParams);
@@ -52,7 +53,7 @@ class MRekanBankCrudAPI {
 		return returnData.success;
 	}
 	Future<bool> mRekanBankCrudHapusAPI(String mrekanbankId) async {
-		String hapusEndpoint = "${AppData.prefixEndPoint}/api/gen_profile/mrekanbankcrud/delete";
+		String hapusEndpoint = "${AppData.prefixEndPoint}/api/profile/mrekanbankcrud/delete";
 		Map<String, String> queryParams = {
 			'mrekanbankId': mrekanbankId,
 			'modul_id': 'mRekanBankCrudHapusAPI'};
@@ -73,7 +74,7 @@ class MRekanBankCrudAPI {
 		return returnData.success;
 	}
 	Future<MRekanBankCrudModel> mRekanBankCrudLihatAPI(String mrekanbankId) async {
-		String lihatEndpoint = "${AppData.prefixEndPoint}/api/gen_profile/mrekanbankcrud/read";
+		String lihatEndpoint = "${AppData.prefixEndPoint}/api/profile/mrekanbankcrud/read";
 		Map<String, String> queryParams = {'mrekanbankId': mrekanbankId};
 		var uri = AppData.uriHtpp(AppData.httpAuthority, lihatEndpoint, queryParams);
 		final http.Response response =

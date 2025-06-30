@@ -6,18 +6,16 @@ class MRekanGeneralIdvCrudModel {
   String mrekan1Id;
   String rekanNama;
   String? mpekerjaanId;
-  bool? isKtpUploaded;
   ComboMPekerjaanModel? comboMPekerjaan;
   ComboMJnskelModel? comboMJnskel;
 
   MRekanGeneralIdvCrudModel(
       {required this.mjnskelId,
-      required this.mrekan1Id,
-      required this.rekanNama,
-      this.mpekerjaanId,
-      this.isKtpUploaded,
-      this.comboMPekerjaan,
-      this.comboMJnskel});
+        required this.mrekan1Id,
+        required this.rekanNama,
+        this.mpekerjaanId,
+        this.comboMPekerjaan,
+        this.comboMJnskel});
 
   factory MRekanGeneralIdvCrudModel.fromJson(Map<String, dynamic> data) {
     ComboMPekerjaanModel? comboMPekerjaan;
@@ -34,19 +32,17 @@ class MRekanGeneralIdvCrudModel {
         mjnskelId: data['mjnskelId'] ?? '',
         mrekan1Id: data['mrekan1Id'] ?? '',
         rekanNama: data['rekanNama'] ?? '',
-        mpekerjaanId: data['mpekerjaanId'] ?? '',        
-			  isKtpUploaded: data['isKtpUploaded']??false,
+        mpekerjaanId: data['mpekerjaanId'] ?? '',
         comboMPekerjaan: comboMPekerjaan,
         comboMJnskel: comboMJnskel);
   }
 
   Map<String, dynamic> toJson() => {
-        'mjnskelId': mjnskelId,
-        'mrekan1Id': mrekan1Id,
-        'rekanNama': rekanNama,
-        'mpekerjaanId': mpekerjaanId,
-        'isKtpUploaded': isKtpUploaded,
-        'comboMPekerjaan': comboMPekerjaan?.toJson(),
-        'comboMJnsKel': comboMJnskel?.toJson()
-      };
+    'mjnskelId': mjnskelId,
+    'mrekan1Id': mrekan1Id,
+    'rekanNama': rekanNama,
+    'mpekerjaanId': mpekerjaanId,
+    'comboMPekerjaan': comboMPekerjaan?.toJson(),
+    'comboMJnsKel': comboMJnskel?.toJson()
+  };
 }

@@ -236,6 +236,7 @@ class MRekanBankCrudFormPageFormState extends State<MRekanBankCrudFormPage> {
 	void onSaveForm() {
 		if (_formKey.currentState!.validate()) {
 			_formKey.currentState!.save();
+
 			MRekanBankCrudModel record = MRekanBankCrudModel(
 				mbankId: fieldComboMBank?.mbankId,
 				mrekan1Id: fieldMrekan1IdController.text,
@@ -243,13 +244,21 @@ class MRekanBankCrudFormPageFormState extends State<MRekanBankCrudFormPage> {
 				rekNama: fieldRekNamaController.text,
 				rekNo: fieldRekNoController.text,
 			);
+
+			print("📝 [onSaveForm] View Mode: ${widget.viewMode}");
+			print("📤 [onSaveForm] Data yang akan dikirim: ${record.toJson()}");
+
 			if (widget.viewMode == "tambah") {
 				mRekanBankCrudBloc.add(MRekanBankCrudTambahEvent(record: record));
 			} else if (widget.viewMode == "ubah") {
 				record.mrekanbankId = mRekanBankCrudBloc.state.record!.mrekanbankId;
+				print("✏️ [onSaveForm] ID untuk ubah: ${record.mrekanbankId}");
 				mRekanBankCrudBloc.add(MRekanBankCrudUbahEvent(record: record));
 			}
+
 			_dismissDialog();
+		} else {
+			print("❌ [onSaveForm] Validasi form gagal.");
 		}
 	}
 

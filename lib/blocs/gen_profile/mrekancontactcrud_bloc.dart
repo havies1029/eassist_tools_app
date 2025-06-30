@@ -25,12 +25,23 @@ class MRekanContactCrudBloc extends Bloc<MRekanContactCrudEvents, MRekanContactC
 		bool hasFailure = !await repository.mRekanContactCrudUbah(event.record);
 		emit(state.copyWith(isSaving: false, isSaved: true, hasFailure: hasFailure, record: event.record));
 	}
-	
+
 	Future<void> onLihatMRekanContactCrud(
-		MRekanContactCrudLihatEvent event, Emitter<MRekanContactCrudState> emit) async {
+			MRekanContactCrudLihatEvent event,
+			Emitter<MRekanContactCrudState> emit,
+			) async {
 		emit(state.copyWith(isLoading: true, isLoaded: false));
+
 		MRekanContactCrudModel record = await repository.mRekanContactCrudLihat();
-		emit(state.copyWith(isLoading: false, isLoaded: true, record: record));
+
+		emit(state.copyWith(
+			isLoading: false,
+			isLoaded: true,
+			record: record,
+			comboMPropinsi: record.comboMPropinsi,
+			comboMKota: record.comboMKota,
+			comboRKodepos: record.comboRKodepos,
+		));
 	}
 
 	Future<void> onComboMPropinsiChanged(

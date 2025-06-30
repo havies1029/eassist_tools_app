@@ -45,3 +45,4 @@ class ComboMBankChangedEvent extends MRekanBankCrudEvents{
 
 	@override	List<Object> get props => [comboMBank];}
 
+class MRekanBankCrudResetStatusEvent extends MRekanBankCrudEvents {}

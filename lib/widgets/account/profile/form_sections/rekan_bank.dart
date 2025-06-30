@@ -13,7 +13,9 @@ import 'package:eassist_tools_app/widgets/combobox/combombank_widget.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
 class RekanBank extends StatefulWidget {
-  const RekanBank({super.key});
+  final String? initialRecordId;
+
+  const RekanBank({super.key, this.initialRecordId});
 
   @override
   RekanBankState createState() => RekanBankState();
@@ -39,17 +41,31 @@ class RekanBankState extends State<RekanBank> {
 
     Future.delayed(Duration.zero, () {
       mRekanBankCrudBloc = context.read<MRekanBankCrudBloc>();
+      mRekanBankCrudBloc = context.read<MRekanBankCrudBloc>();
       final rekan1State = context.read<MRekan1CrudBloc>().state;
+
       final defaultRekanId = rekan1State.record?.mrekan1Id ?? '';
+      final rekanNama = rekan1State.record?.rekanNama ?? 'lenomind1@gmail.com';
+
       fieldMrekan1IdController.text = defaultRekanId;
 
-      if (mRekanBankCrudBloc.state.record?.mrekanbankId.isNotEmpty == true) {
-        mRekanBankCrudBloc.add(
-          MRekanBankCrudLihatEvent(recordId: mRekanBankCrudBloc.state.record!.mrekanbankId),
-        );
+      final idToLoad = widget.initialRecordId ?? rekanNama;
+
+      // Contoh log (opsional)
+      debugPrint('[initState] Rekan ID: $defaultRekanId');
+      debugPrint('[initState] Rekan Nama: $rekanNama');
+      debugPrint('[initState] idToLoad: $idToLoad');
+
+      if (idToLoad.isNotEmpty) {
+        debugPrint("📨 Kirim LihatEvent manual dengan ID: $idToLoad");
+        mRekanBankCrudBloc.add(MRekanBankCrudLihatEvent(recordId: idToLoad));
+      } else {
+        debugPrint("⚠️ Tidak kirim LihatEvent karena initialRecordId kosong");
       }
     });
+
   }
+
 
   @override
   void dispose() {
@@ -68,6 +84,20 @@ class RekanBankState extends State<RekanBank> {
           fieldRekNamaController.text = state.record!.rekNama;
           fieldRekNoController.text = state.record!.rekNo;
           fieldComboMBank = state.comboMBank;
+        }
+
+        // ⏱ REFRESH ulang data jika sudah disimpan
+        if (state.isSaved) {
+          final currentId = state.record?.mrekanbankId;
+          if (currentId != null && currentId.isNotEmpty) {
+            debugPrint("🔁 Refresh ulang setelah simpan, id: $currentId");
+            context.read<MRekanBankCrudBloc>().add(MRekanBankCrudLihatEvent(recordId: currentId));
+
+            // ⛔️ Cegah loop: reset status setelah trigger
+            Future.delayed(Duration(milliseconds: 100), () {
+              context.read<MRekanBankCrudBloc>().add(MRekanBankCrudResetStatusEvent());
+            });
+          }
         }
       },
       builder: (context, state) {
@@ -94,29 +124,6 @@ class RekanBankState extends State<RekanBank> {
                   ],
                 ),
                 const SizedBox(height: 12),
-
-                // Tetap disertakan dalam Form, tapi tidak tampil
-                Visibility(
-                  visible: false,
-                  maintainState: true,
-                  maintainAnimation: true,
-                  maintainSize: true,
-                  child: TextFormField(
-                    controller: fieldMrekan1IdController,
-                    readOnly: true,
-                    decoration: const InputDecoration(
-                      border: UnderlineInputBorder(), // tetap bergaris bawah
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        addError("ID rekan tidak boleh kosong.");
-                        return "";
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-
 
                 _buildLabel("Nama Rekening"),
                 _buildTextField(
@@ -255,13 +262,17 @@ class RekanBankState extends State<RekanBank> {
       final isNew = state.record == null || state.record!.mrekanbankId.isEmpty;
 
       final record = MRekanBankCrudModel(
-        mrekan1Id: fieldMrekan1IdController.text,
-        mrekanbankId: isNew ? "DUMMY-ID-${DateTime.now().millisecondsSinceEpoch}" : state.record!.mrekanbankId,
+        mrekan1Id: context.read<MRekan1CrudBloc>().state.record?.mrekan1Id ?? '',
+        mrekanbankId: isNew ? '' : state.record!.mrekanbankId,
         rekNama: fieldRekNamaController.text,
         rekNo: fieldRekNoController.text,
+        mbankId: fieldComboMBank?.mbankId ?? '',
         comboMBank: fieldComboMBank,
       );
 
+
+      print("✅ mrekan1Id yang dikirim: '${record.mrekan1Id}' (${record.mrekan1Id.runtimeType})");
+      print("📤 Full JSON: ${record.toJson()}");
 
       mRekanBankCrudBloc.add(MRekanBankCrudUbahEvent(record: record));
 

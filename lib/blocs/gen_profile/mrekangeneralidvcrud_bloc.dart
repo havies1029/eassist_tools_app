@@ -17,7 +17,6 @@ class MRekanGeneralIdvCrudBloc
     on<MRekanGeneralIdvCrudLihatEvent>(onLihatMRekanGeneralIdvCrud);
     on<ComboMPekerjaanChangedEvent>(onComboMPekerjaanChanged);
     on<ComboMJnskelChangedEvent>(onComboMJnskelChangedEvent);
-    on<UpdateIsKtpUploaded>(onUpdateIsKtpUploaded);
   }
 
   Future<void> onUbahMRekanGeneralIdvCrud(MRekanGeneralIdvCrudUbahEvent event,
@@ -35,12 +34,14 @@ class MRekanGeneralIdvCrudBloc
       Emitter<MRekanGeneralIdvCrudState> emit) async {
     emit(state.copyWith(isLoading: true, isLoaded: false));
     MRekanGeneralIdvCrudModel record =
-        await repository.mRekanGeneralIdvCrudLihat();
+    await repository.mRekanGeneralIdvCrudLihat();
+
     emit(state.copyWith(
-        isLoading: false,
-        isLoaded: true,
-        record: record,
-        isKtpUploaded: record.isKtpUploaded));
+      isLoading: false,
+      isLoaded: true,
+      comboMJnskel: record.comboMJnskel,
+      comboMPekerjaan: record.comboMPekerjaan,
+      record: record,));
   }
 
   Future<void> onComboMPekerjaanChanged(ComboMPekerjaanChangedEvent event,
@@ -53,12 +54,5 @@ class MRekanGeneralIdvCrudBloc
       Emitter<MRekanGeneralIdvCrudState> emit) async {
     ComboMJnskelModel comboMJnskel = event.comboMJnskel;
     emit(state.copyWith(comboMJnskel: comboMJnskel));
-  }
-
-  Future<void> onUpdateIsKtpUploaded(UpdateIsKtpUploaded event,
-      Emitter<MRekanGeneralIdvCrudState> emit) async {
-    emit(state.copyWith(isKtpUploaded: false));
-
-    emit(state.copyWith(isKtpUploaded: event.isUploaded));
   }
 }
