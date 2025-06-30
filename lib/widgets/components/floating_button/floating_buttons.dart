@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:eassist_tools_app/widgets/google_signin_button_stub.dart'
 if (dart.library.js_interop) 'package:eassist_tools_app/widgets/google_signin_button_web.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
 import '../../../blocs/authentication/authentication_bloc.dart';
 import '../../account/login/login_gmail/popup_dialog_login.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 
 import 'decorations/EnhancedHoverButton.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

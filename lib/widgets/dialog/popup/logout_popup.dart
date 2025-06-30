@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import '../../../blocs/authentication/authentication_bloc.dart';
-import '../../../pages/heropage/hero_main.dart';
 
 class LogoutPopup extends StatefulWidget {
   const LogoutPopup({Key? key}) : super(key: key);

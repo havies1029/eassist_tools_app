@@ -9,7 +9,7 @@ import '../../repositories/user/user_repository.dart';
 import '../../widgets/account/login/login_gmail/popup_dialog_login.dart';
 import '../../widgets/account/profile/profile_main_page.dart';
 import '../../widgets/components/hero/hero_section.dart';
-import '../../widgets/components/action/action_section.dart';
+import '../../widgets/components/action/menu_action_section.dart';
 import '../../widgets/components/carousel/carousel_section.dart';
 import '../../widgets/section/homeclientpage/client_section.dart';
 import '../../widgets/components/feature/feature_section.dart';
@@ -65,7 +65,7 @@ class _HeroPageState extends State<HeroPage> {
             // Trigger login popup once on build
             final authState = context.read<AuthenticationBloc>().state;
 
-            // ⛔️ Jangan munculkan kalau SUDAH login
+            // ⛔ Jangan munculkan kalau SUDAH login
             final sudahLogin = authState is AuthenticationAuthenticated;
 
             if (!_dialogShown && !sudahLogin) {
@@ -101,15 +101,32 @@ class _HeroPageState extends State<HeroPage> {
                     padding: EdgeInsets.only(top: isMobile ? 50 : 88),
                     child: Column(
                       children: [
-                        HeroSection(constraints: constraints, pageType: PageType.home),
-                        Transform.translate(
-                          offset: const Offset(0, -40),
-                          child: FloatingButtons(constraints: constraints),
+                        isMobile
+                            ? Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            HeroSection(constraints: constraints, pageType: PageType.home),
+                            Positioned(
+                              top: 0,
+                              bottom: -235,
+                              left: 0,
+                              right: 0,
+                              child: FloatingButtons(constraints: constraints),
+                            ),
+                          ],
+                        )
+                            : Column(
+                          children: [
+                            HeroSection(constraints: constraints, pageType: PageType.home),
+                            Transform.translate(
+                                offset: Offset(0, -40),
+                                child: FloatingButtons(constraints: constraints),
+                            ),
+                          ],
                         ),
-                        ActionSection(constraints: constraints, showCTAs: true),
+                        const SizedBox(height: 0),
+                        MenuActionSection(constraints: constraints),
                         CarouselSection(constraints: constraints),
-                        FeatureSection(constraints: constraints),
-                        TestimonialSection(constraints: constraints),
                         ClientSection(constraints: constraints),
                         FooterSection(constraints: constraints),
                       ],

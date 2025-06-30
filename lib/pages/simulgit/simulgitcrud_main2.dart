@@ -1,9 +1,7 @@
 import 'package:eassist_tools_app/blocs/simulgit/simulgitcrud_bloc.dart';
 import 'package:eassist_tools_app/widgets/my_text.dart';
 import 'package:flutter/material.dart';
-import 'package:eassist_tools_app/widgets/mobiledesign_widget.dart';
 import 'package:eassist_tools_app/pages/simulgit/simulgitcrud_form.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:accordion/accordion.dart';
 import 'package:accordion/controllers.dart';
 

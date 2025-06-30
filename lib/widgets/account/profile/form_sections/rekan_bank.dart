@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/services.dart';
 
-import 'package:eassist_tools_app/common/constants.dart';
-import 'package:eassist_tools_app/widgets/form_error.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekanbankcrud_bloc.dart';
 import 'package:eassist_tools_app/models/gen_profile/mrekanbankcrud_model.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekan1crud_bloc.dart';

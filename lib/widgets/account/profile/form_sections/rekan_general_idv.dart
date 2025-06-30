@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -8,13 +7,9 @@ import 'package:eassist_tools_app/widgets/form_error.dart';
 import 'package:eassist_tools_app/widgets/combobox/combompekerjaan_widget.dart';
 import 'package:eassist_tools_app/widgets/combobox/combomjnskel_widget.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekangeneralidvcrud_bloc.dart';
-// import 'package:eassist_tools_app/blocs/profile/profile_upload_ktp_bloc.dart';
 import 'package:eassist_tools_app/models/gen_profile/mrekangeneralidvcrud_model.dart';
 import 'package:eassist_tools_app/models/combobox/combompekerjaan_model.dart';
 import 'package:eassist_tools_app/models/combobox/combomjnskel_model.dart';
-
-import '../../../../blocs/gen_profile/mrekan1crud_bloc.dart';
-// import 'package:eassist_tools_app/pages/gen_profile/upload_ktp_dialog.dart';
 
 class RekanGeneralIdv extends StatefulWidget {
   final String viewMode;

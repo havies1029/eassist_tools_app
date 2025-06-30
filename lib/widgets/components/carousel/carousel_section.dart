@@ -19,7 +19,7 @@ class _CarouselSectionState extends State<CarouselSection>
     with TickerProviderStateMixin {
   final PageController _carouselController = PageController(
     initialPage: 1000,
-    viewportFraction: 0.7, // 🔥 Diperkecil agar gambar samping terlihat lebih blur
+    viewportFraction: 0.7,
   );
 
   int _currentCarouselPage = 0;
@@ -29,13 +29,7 @@ class _CarouselSectionState extends State<CarouselSection>
   late Animation<double> _hoverAnimation;
   double _currentPageValue = 1000.0;
 
-  /*
-  final List<String> _carouselImages = [
-    'assets/images/poster_1.png',
-    'assets/images/poster_2.png',
-    'assets/images/poster_3.png',
-  ];
-  */
+  static const double _imageAspectRatio = 508.0 / 364.0; // ≈ 1.396
 
   @override
   void initState() {
@@ -52,7 +46,6 @@ class _CarouselSectionState extends State<CarouselSection>
       curve: Curves.easeInOut,
     ));
 
-    // 🔥 Listener untuk mendapatkan posisi page yang tepat
     _carouselController.addListener(() {
       setState(() {
         _currentPageValue = _carouselController.page ?? 1000.0;
@@ -100,7 +93,6 @@ class _CarouselSectionState extends State<CarouselSection>
     _resumeTimer();
   }
 
-  // 🔥 Function untuk menghitung scale dan opacity berdasarkan posisi
   double _getScale(int index) {
     final distance = (_currentPageValue - index).abs();
     if (distance <= 1.0) {
@@ -112,30 +104,23 @@ class _CarouselSectionState extends State<CarouselSection>
   double _getOpacity(int index) {
     final distance = (_currentPageValue - index).abs();
     if (distance <= 1.0) {
-      return 1.0 - (distance * 0.4); // Opacity dari 1.0 ke 0.6
+      return 1.0 - (distance * 0.4);
     }
     return 0.6;
   }
 
-  // 🔥 Method untuk menghitung tinggi carousel yang optimal
-  double _getCarouselHeight() {
+  double _getCarouselWidth() {
     final isMobile = widget.constraints.maxWidth < 768;
     final isTablet = widget.constraints.maxWidth >= 768 && widget.constraints.maxWidth < 1024;
 
     if (isMobile) {
-      // 🔥 Tinggi mobile disesuaikan dengan screen height dan width ratio
-      final screenHeight = MediaQuery.of(context).size.height;
-      final screenWidth = widget.constraints.maxWidth;
-
-      // Menghitung tinggi berdasarkan rasio layar mobile yang umum (16:9 atau 18:9)
-      final optimalHeight = screenWidth * 0.45  ; // Rasio 1:0.6 untuk mobile
-
-      // Batasi tinggi minimum dan maksimum untuk mobile
-      return optimalHeight.clamp(200.0, screenHeight * 0.35);
+      return widget.constraints.maxWidth * 0.9 * 0.7;
     } else if (isTablet) {
-      return 380.0;
+      final maxContainerWidth = widget.constraints.maxWidth > 1200 ? 1000.0 : widget.constraints.maxWidth * 0.85;
+      return maxContainerWidth * 0.7; // viewport fraction 0.7
     } else {
-      return 450.0;
+      final maxContainerWidth = widget.constraints.maxWidth > 1200 ? 1200.0 : widget.constraints.maxWidth * 0.85;
+      return maxContainerWidth * 0.7; // viewport fraction 0.7
     }
   }
 
@@ -147,6 +132,9 @@ class _CarouselSectionState extends State<CarouselSection>
         ? 1200
         : widget.constraints.maxWidth * 0.9;
     final titleFontSize = isMobile ? 18.0 : (isTablet ? 22.0 : 25.0);
+
+    final carouselWidth = _getCarouselWidth();
+    final carouselHeight = carouselWidth / _imageAspectRatio;
 
     return Container(
       width: double.infinity,
@@ -165,7 +153,7 @@ class _CarouselSectionState extends State<CarouselSection>
               Padding(
                 padding: const EdgeInsets.only(bottom: 40.0),
                 child: RichText(
-                  textAlign: isMobile? TextAlign.left : TextAlign.center,
+                  textAlign: TextAlign.center,
                   text: TextSpan(
                     style: TextStyle(
                       fontFamily: 'Satoshi-Regular',
@@ -195,7 +183,6 @@ class _CarouselSectionState extends State<CarouselSection>
                 ),
               ),
 
-              // Carousel dengan efek blur dan scale - TINGGI DIOPTIMALKAN
               MouseRegion(
                 onEnter: (_) => _onHoverEnter(),
                 onExit: (_) => _onHoverExit(),
@@ -225,8 +212,7 @@ class _CarouselSectionState extends State<CarouselSection>
                       return Transform.scale(
                         scale: _hoverAnimation.value,
                         child: Container(
-                          // 🔥 MENGGUNAKAN METHOD UNTUK MENGHITUNG TINGGI OPTIMAL
-                          height: _getCarouselHeight(),
+                          height: carouselHeight,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(16.0),
                           ),
@@ -256,11 +242,9 @@ class _CarouselSectionState extends State<CarouselSection>
                                     controller: _carouselController,
                                     onPageChanged: (index) {
                                       setState(() {
-                                        //_currentCarouselPage = index % _carouselImages.length;
-                                        _currentCarouselPage = index %state.items.length;
+                                        _currentCarouselPage = index % state.items.length;
                                       });
                                     },
-                                    //itemCount: state.items.length,
                                     itemBuilder: (context, index) {
                                       final realIndex = index % state.items.length;
                                       final scale = _getScale(index);
@@ -274,50 +258,43 @@ class _CarouselSectionState extends State<CarouselSection>
                                           child: Container(
                                             decoration: BoxDecoration(
                                               borderRadius: BorderRadius.circular(16.0),
-                                              boxShadow: isCenter ? [
-                                                BoxShadow(
-                                                  color: Colors.black.withOpacity(0.15),
-                                                  spreadRadius: 3,
-                                                  blurRadius: 15,
-                                                  offset: const Offset(0, 6),
-                                                ),
-                                              ] : null,
                                             ),
                                             child: ClipRRect(
                                               borderRadius: BorderRadius.circular(16.0),
-                                              child: Stack(
-                                                fit: StackFit.expand,
-                                                children: [
-                                                  // Background image
-                                                  Image.network(
-                                                    state.items[realIndex].galleryUrl,
-                                                    //_carouselImages[realIndex],
-                                                    fit: BoxFit.cover,
-                                                    errorBuilder: (context, error, stackTrace) {
-                                                      return Container(
-                                                        color: const Color(0xFF79AB43).withOpacity(0.1),
-                                                        child: const Center(
-                                                          child: Icon(Icons.image_not_supported, size: 48),
-                                                        ),
-                                                      );
-                                                    },
-                                                  ),
-                                                  // 🔥 Blur effect untuk gambar yang tidak aktif
-                                                  if (!isCenter)
-                                                    BackdropFilter(
-                                                      filter: ImageFilter.blur(
-                                                        sigmaX: 3.0,
-                                                        sigmaY: 3.0,
-                                                      ),
-                                                      child: Container(
-                                                        color: Colors.black.withOpacity(0.1),
-                                                      ),
+                                              child: AspectRatio(
+                                                aspectRatio: _imageAspectRatio,
+                                                child: Stack(
+                                                  fit: StackFit.expand,
+                                                  children: [
+                                                    // Background image
+                                                    Image.network(
+                                                      state.items[realIndex].galleryUrl,
+                                                      fit: BoxFit.cover,
+                                                      errorBuilder: (context, error, stackTrace) {
+                                                        return Container(
+                                                          color: const Color(0xFF79AB43).withOpacity(0.1),
+                                                          child: const Center(
+                                                            child: Icon(Icons.image_not_supported, size: 48),
+                                                          ),
+                                                        );
+                                                      },
                                                     ),
-                                                  // 🔥 Opacity overlay
-                                                  Container(
-                                                    color: Colors.black.withOpacity(1.0 - opacity),
-                                                  ),
-                                                ],
+                                                    if (!isCenter)
+                                                      BackdropFilter(
+                                                        filter: ImageFilter.blur(
+                                                          sigmaX: 3.0,
+                                                          sigmaY: 3.0,
+                                                        ),
+                                                        child: Container(
+                                                          color: Colors.black.withOpacity(0.1),
+                                                        ),
+                                                      ),
+                                                    // 🔥 Opacity overlay
+                                                    Container(
+                                                      color: Colors.black.withOpacity(1.0 - opacity),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -337,7 +314,6 @@ class _CarouselSectionState extends State<CarouselSection>
 
               const SizedBox(height: 20.0),
 
-              // Page Indicator
               BlocBuilder<GalleryeventCariBloc, GalleryeventCariState>(
                   builder: (context, state) {
                     if (state.status == ListStatus.initial) {
@@ -357,7 +333,6 @@ class _CarouselSectionState extends State<CarouselSection>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: List.generate(
                         state.items.length,
-                        //_carouselImages.length,
                             (index) => AnimatedContainer(
                           duration: const Duration(milliseconds: 300),
                           curve: Curves.easeInOut,

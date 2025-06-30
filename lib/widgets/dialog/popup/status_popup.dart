@@ -1,8 +1,6 @@
 // ganti nama menjadi StatusPopup
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../../pages/user_jps/user_jps_main.dart';
-import '../../../pages/user_non_jps/user_non_jps_main.dart';
 
 class StatusPopup extends StatefulWidget {
   final VoidCallback? onCancel;

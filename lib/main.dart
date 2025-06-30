@@ -44,8 +44,6 @@ import 'package:eassist_tools_app/repositories/gen_profile/mrekanpiccrud_reposit
 import 'package:eassist_tools_app/repositories/gen_profile/mrekanpiclist_repository.dart';
 import 'package:eassist_tools_app/repositories/login/change_password_repository.dart';
 import 'package:eassist_tools_app/repositories/login/emailverification_repository.dart';
-import 'package:eassist_tools_app/repositories/profile/mrekangeneral_repository.dart';
-import 'package:eassist_tools_app/repositories/profile/profile_ktp_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/rekanbank_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/rekancontact_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/rekangeneral_repository.dart';
@@ -85,10 +83,6 @@ import 'router/app_router.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'dart:html' as html; // Untuk web
-import 'package:js/js.dart'; // Tambahkan ke pubspec.yaml
-import 'dart:js_util' as js_util;
-
 // NONAKTIFKAN DEBUG PRINT & ERROR MERAH
 
 Future<void> main() async {

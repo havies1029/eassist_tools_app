@@ -8,8 +8,6 @@ import 'package:eassist_tools_app/blocs/gen_profile/mrekanpiccrud_bloc.dart';
 import 'package:eassist_tools_app/models/gen_profile/mrekanpiccrud_model.dart';
 import 'package:eassist_tools_app/models/combobox/combomjabatan_model.dart';
 import 'package:eassist_tools_app/widgets/combobox/combomjabatan_widget.dart';
-import 'package:intl/intl.dart';
-import 'package:eassist_tools_app/common/thousand_separator_input_formatter.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
 

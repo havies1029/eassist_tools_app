@@ -14,14 +14,11 @@ import '../../../pages/gen_profile/profile_picture.dart';
 import '../../dialog/PopUp/confirmation_dialog.dart';
 import '../../dialog/PopUp/success_popup.dart';
 import '../../showdialoghapus_widget.dart';
-import '../login/login_client/login_client_dialog.dart';
-
 // Import semua form individu & perusahaan
 import 'form_sections/rekan_general_idv.dart';
 import 'form_sections/rekan_contact.dart';
 import 'form_sections/rekan_bank.dart';
 import 'form_sections/rekan_general_cmp.dart';
-import 'form_sections/rekan_pajak.dart';
 
 class ProfileFormSection extends StatefulWidget {
   final Map<String, bool> editSection;

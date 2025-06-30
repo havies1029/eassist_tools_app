@@ -1,4 +1,3 @@
-import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
 import 'package:eassist_tools_app/blocs/reguser/reguser_bloc.dart';
 import 'package:eassist_tools_app/widgets/account/login/login_gmail/Base_Dialog.dart';
 import 'package:flutter/material.dart';

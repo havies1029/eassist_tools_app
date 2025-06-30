@@ -86,7 +86,7 @@ class AboutPage extends StatelessWidget {
                       HeroSection(constraints: constraints,
                           pageType: PageType.about),
                       FloatingButtons(constraints: constraints),
-                      ActionSection(constraints: constraints, showCTAs: false, isAbout: true),
+                      ActionSection(constraints: constraints),
                       AboutJps(constraints: constraints),
                       VisiSection(constraints: constraints),
                       PeranJpsSection(constraints: constraints),

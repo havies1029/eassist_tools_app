@@ -4,7 +4,6 @@ import 'package:eassist_tools_app/common/constants.dart';
 import 'package:eassist_tools_app/widgets/showdialoghapus_widget.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekanpiclist_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekanpiccrud_bloc.dart';
-import 'package:eassist_tools_app/pages/gen_profile/mrekanpiclist_tile_widget.dart';
 
 class MRekanPicListListWidget extends StatefulWidget {
   final void Function(String recordId)? onEdit;

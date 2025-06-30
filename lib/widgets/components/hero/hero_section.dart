@@ -7,9 +7,8 @@ class AppTheme {
   static const Color white = Colors.white;
   static const Color primaryColor = Color(0xFF79AB43);
 
-  static double titleSize(bool isMobile) => isMobile ? 25 : 43;
-  static double bodySize(bool isMobile) => isMobile ? 15 : 18;
-  static double smallSize(bool isMobile) => isMobile ? 15 : 18;
+  static double titleSize(bool isMobile) => isMobile ? 20 : 43;
+  static double bodySize(bool isMobile) => isMobile ? 13 : 18;
 
   static EdgeInsets responsivePadding(BoxConstraints constraints) {
     final double width = constraints.maxWidth;
@@ -20,7 +19,7 @@ class AppTheme {
         : width > 768
         ? 48
         : 24;
-    final double vertical = width < 768 ? 24 : 40;
+    final double vertical = width < 768 ? 0 : 40;
     return EdgeInsets.symmetric(horizontal: horizontal, vertical: vertical);
   }
 
@@ -112,14 +111,15 @@ class HeroSection extends StatelessWidget {
           children: [
             Positioned(
               right: 0,
-              top: 170,
+              top: 100,
               child: _buildHumanImage(),
             ),
-            Positioned(
-              left: 16,
-              top: 50,
-              right: 80,
-              child: _buildTextContent(titleData, descData),
+            Positioned.fill(
+              top: 30,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: _buildTextContent(titleData, descData),
+              ),
             ),
           ],
         ),
@@ -219,7 +219,7 @@ class HeroSection extends StatelessWidget {
             text: descData[key],
             style: TextStyle(
               fontFamily: AppTheme.fontFamily,
-              fontSize: key.startsWith('bold') ? AppTheme.smallSize(isMobile) : AppTheme.bodySize(isMobile),
+              fontSize: key.startsWith('bold') ? AppTheme.bodySize(isMobile) : AppTheme.bodySize(isMobile),
               fontWeight: key.startsWith('bold') ? FontWeight.w600 : FontWeight.w400,
               color: key.startsWith('bold') ? AppTheme.white : AppTheme.white.withOpacity(0.9),
               height: 1.6,
@@ -235,8 +235,8 @@ class HeroSection extends StatelessWidget {
   Widget _buildHumanImage() {
     return Image.asset(
       'assets/images/human.png',
-      width: isMobile ? 250 : null,
-      height: isMobile ? 250 : null,
+      width: isMobile ? 182.37 : null,
+      height: isMobile ? 197 : null,
       fit: BoxFit.contain,
     );
   }
@@ -358,7 +358,7 @@ class HeroSection extends StatelessWidget {
       case PageType.home:
         return {
           'normal1':
-          'JPS adalah platform asuransi pintar yang memudahkan kamu mencari, memilih,\ndan klaim asuransi hanya dalam hitungan menit ',
+          'JPS adalah platform asuransi pintar yang memudahkan kamu mencari, memilih, dan klaim asuransi hanya dalam hitungan menit ',
           'bold': 'cepat, aman, dan terdaftar OJK',
           'normal2': '.',
         };

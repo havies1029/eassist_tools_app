@@ -3,8 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../blocs/authentication/authentication_bloc.dart';
-import '../../../../pages/hero_client_page/hero_user_main.dart';
-import '../../../../pages/heropage/hero_main.dart';
 
 class NavBar extends StatelessWidget {
   final BoxConstraints constraints;

@@ -1,17 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class FooterSection extends StatelessWidget {
   final BoxConstraints constraints;
+
   const FooterSection({super.key, required this.constraints});
 
+  // ─── Colors ─────────────────────────────────────────
   static const _primaryColor = Color(0xFF79AB43);
+
+  // ─── Button Styles ──────────────────────────────────
   static const _buttonBorderWidth = 1.5;
   static const _buttonBorderRadius = BorderRadius.all(Radius.circular(8.0));
 
+  // ─── Font Properties ────────────────────────────────
+  static const _fontFamily = 'Satoshi-Regular';
+  static const _primaryTextColor = Colors.black87;
+  static const _secondaryTextColor = Colors.black54;
+  static const _linkColor = Colors.blue;
+
+  // ─── Layout Properties ──────────────────────────────
   bool get isMobile => constraints.maxWidth < 768;
-  double get maxWidth => constraints.maxWidth > 1200
-      ? 1200
-      : constraints.maxWidth * 0.9;
+
+  double get maxWidth =>
+      constraints.maxWidth > 1200
+          ? 1200
+          : constraints.maxWidth * 0.9;
+
+  // ─── Responsive Font Sizes ──────────────────────────
+  double get logoFontSize => isMobile ? 24.0 : 30.0;
+  double get titleFontSize => isMobile ? 15.0 : 18.0;
+  double get linkFontSize => isMobile ? 15.0 : 16.0;
+  double get smallTextFontSize => 15.0;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +40,7 @@ class FooterSection extends StatelessWidget {
       color: Colors.white,
       child: Column(
         children: [
-          // ─── Konten Utama Footer ────────────────────────
+          // ─── Main Footer Content ───────────────────────
           Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 50.0),
@@ -28,31 +48,20 @@ class FooterSection extends StatelessWidget {
             child: Center(
               child: Container(
                 width: maxWidth,
-                padding: EdgeInsets.zero,
-                child: isMobile
-                    ? _buildMobileFooterContent()
-                    : _buildDesktopFooterContent(),
+                padding: isMobile ? const EdgeInsets.symmetric(horizontal: 16.0) : EdgeInsets.zero,
+                child: _buildFooterContent(),
               ),
             ),
           ),
-
-          // ─── Copyright Bar ───────────────────────────────
+          const SizedBox(height: 10),
           Container(
             width: double.infinity,
             color: Colors.white,
-            padding: const EdgeInsets.symmetric(vertical: 20.0),
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
             child: Center(
               child: Container(
                 width: maxWidth,
-                child: Text(
-                  'Protect your future with JPS. © ${DateTime.now().year} JPS Insurance Platform.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: 'Satoshi-Regular',
-                    fontSize: isMobile ? 10.0 : 18.0,
-                    color: _primaryColor,
-                  ),
-                ),
+                child: _buildCopyrightContent(),
               ),
             ),
           ),
@@ -61,249 +70,359 @@ class FooterSection extends StatelessWidget {
     );
   }
 
-  Widget _buildMobileFooterContent() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Column(
+  Widget _buildFooterContent() {
+    if (isMobile) {
+      return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Logo dan JPS text
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Image.asset('assets/images/jps_logo.png', height: 40.0),
-              const SizedBox(width: 8.0),
-              const Text(
-                'JPS',
-                style: TextStyle(
-                  fontFamily: 'Satoshi-Regular',
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.bold,
-                  color: _primaryColor,
-                ),
-              ),
-            ],
-          ),
+          _buildLogoSection(),
+          const SizedBox(height: 20.0),
+          _buildGoogleMapsButton(),
           const SizedBox(height: 16.0),
+          _buildCompanyInfo(),
+          const SizedBox(height: 10.0),
+          _buildSocialMediaSection(),
+          const SizedBox(height: 30.0),
 
-          // Nama perusahaan
-          const Text(
-            'PT. Jaya Proteksindo Sakti,',
-            style: TextStyle(
-              fontFamily: 'Satoshi-Regular',
-              fontSize: 14.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
-          ),
-          const SizedBox(height: 4.0),
-
-          // Alamat
-          const Text(
-            'No. 7 - 9, Jl. Kramat Raya, Kramat, Kec. Senen, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10450',
-            style: TextStyle(
-              fontFamily: 'Satoshi-Regular',
-              fontSize: 12.0,
-              color: Colors.black54,
-              height: 1.4,
-            ),
-          ),
+          _buildSignatureSection(),
           const SizedBox(height: 20.0),
-
-          // Google Maps Button
-          SizedBox(
-            height: 36.0,
-            child: _buildHoverButtonOutlined(
-              icon: Icons.location_on_outlined,
-              text: 'Google Maps',
-              onPressed: () {},
-              fontSize: 12.0,
-            ),
-          ),
-
+          _buildMenuSection(),
           const SizedBox(height: 20.0),
-
-          // Media Sosial
-          const Text(
-            'Media Sosial',
-            style: TextStyle(
-              fontFamily: 'Satoshi-Regular',
-              fontSize: 14.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
-          ),
-
-          const SizedBox(height: 20.0),
-
-          // Social Media Buttons
-          Wrap(
-            alignment: WrapAlignment.start,
-            spacing: 8.0,
-            runSpacing: 8.0,
-            children: [
-              SizedBox(
-                height: 36.0,
-                child: _buildSocialButton(Icons.facebook, 'Facebook', () {}, fontSize: 12.0),
-              ),
-              SizedBox(
-                height: 36.0,
-                child: _buildSocialButton(Icons.camera_alt_outlined, 'Instagram', () {}, fontSize: 12.0),
-              ),
-              SizedBox(
-                height: 36.0,
-                child: _buildSocialButton(Icons.business_center_outlined, 'LinkedIn', () {}, fontSize: 12.0),
-              ),
-            ],
-          ),
+          _buildSupportSection(),
         ],
-      ),
-    );
+      );
+    } else {
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 3,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildLogoSection(),
+                const SizedBox(height: 20.0),
+                _buildGoogleMapsButton(),
+                const SizedBox(height: 24.0),
+                _buildCompanyInfo(),
+                const SizedBox(height: 16.0),
+                _buildSocialMediaIcons(),
+              ],
+            ),
+          ),
+          const SizedBox(width: 40.0),
+          Expanded(flex: 2, child: _buildSignatureSection()),
+          const SizedBox(width: 40.0),
+          Expanded(flex: 2, child: _buildMenuSection()),
+          const SizedBox(width: 40.0),
+          Expanded(flex: 2, child: _buildSupportSection()),
+        ],
+      );
+    }
   }
 
-  Widget _buildDesktopFooterContent() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildLogoSection() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              flex: 3,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Logo + text
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Image.asset('assets/images/jps_logo.png', height: 60.0),
-                      const SizedBox(width: 12.0),
-                      const Text(
-                        'JPS',
-                        style: TextStyle(
-                          fontFamily: 'Satoshi-Regular',
-                          fontSize: 36.0,
-                          fontWeight: FontWeight.bold,
-                          color: _primaryColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24.0),
-                  const Text(
-                    'PT. Jaya Proteksindo Sakti',
-                    style: TextStyle(
-                      fontFamily: 'Satoshi-Regular',
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8.0),
-                  const Text(
-                    'No. 7 - 9, Jl. Kramat Raya, Kramat, Kec. Senen, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10450',
-                    style: TextStyle(
-                      fontFamily: 'Satoshi-Regular',
-                      fontSize: 18.0,
-                      color: Colors.black54,
-                    ),
-                  ),
-                  const SizedBox(height: 20.0),
-                  _buildHoverButtonOutlined(
-                    icon: Icons.location_on_outlined,
-                    text: 'Google Maps',
-                    onPressed: () {},
-                  ),
-                  const SizedBox(height: 40.0),
-                  const Text(
-                    'Media Sosial',
-                    style: TextStyle(
-                      fontFamily: 'Satoshi-Regular',
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 16.0),
-                  Wrap(
-                    spacing: 12.0,
-                    runSpacing: 12.0,
-                    children: [
-                      _buildSocialButton(Icons.facebook, 'Facebook', () {}),
-                      _buildSocialButton(Icons.camera_alt_outlined, 'Instagram', () {}),
-                      _buildSocialButton(Icons.business_center_outlined, 'LinkedIn', () {}),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            const Spacer(flex: 2),
-          ],
+        Image.asset('assets/images/jps_logo.png', height: isMobile ? 40.0 : 40.0),
+        SizedBox(width: isMobile ? 8.0 : 12.0),
+        Text(
+          'JPS',
+          style: TextStyle(
+            fontFamily: _fontFamily,
+            fontSize: logoFontSize,
+            fontWeight: FontWeight.bold,
+            color: _primaryColor,
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildHoverButtonOutlined({
-    required IconData icon,
-    required String text,
-    required VoidCallback onPressed,
-    double fontSize = 18.0,
-  }) {
+  Widget _buildCompanyInfo() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'PT. Jaya Proteksindo Sakti${isMobile ? ',' : ''}',
+          style: TextStyle(
+            fontFamily: _fontFamily,
+            fontSize: isMobile ? titleFontSize : titleFontSize,
+            fontWeight: FontWeight.bold,
+            color: _primaryTextColor,
+          ),
+        ),
+        const SizedBox(height: 8.0),
+        Text(
+          'No. 7 - 9, Jl. Kramat Raya, Kramat, Kec. Senen, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10450',
+          style: TextStyle(
+            fontFamily: _fontFamily,
+            fontSize: titleFontSize,
+            color: _secondaryTextColor,
+            height: 1.4,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSocialMediaSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 10.0),
+        _buildSocialMediaIcons(),
+      ],
+    );
+  }
+
+  Widget _buildSocialMediaIcons() {
+    return Wrap(
+      alignment: WrapAlignment.start,
+      spacing: isMobile ? 8.0 : 12.0,
+      runSpacing: isMobile ? 8.0 : 12.0,
+      children: [
+        _buildSvgSocialIconButton('instagram.svg', () {}),
+        _buildSvgSocialIconButton('linkedin.svg', () {}),
+        _buildSvgSocialIconButton('facebook.svg', () {}),
+      ],
+    );
+  }
+
+  Widget _buildCopyrightContent() {
+    if (isMobile) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Divider(
+            thickness: 0.5,
+            height: 24.0,
+            color: Colors.black12,
+          ),
+          Text(
+            'Protect your future with JPS.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: _fontFamily,
+              fontSize: titleFontSize,
+              color: _secondaryTextColor,
+            ),
+          ),
+          Text(
+            '© ${DateTime.now().year} JPS Insurance Platform.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: _fontFamily,
+              fontSize: titleFontSize,
+              color: _secondaryTextColor,
+            ),
+          ),
+          const SizedBox(height: 15.0),
+          Text(
+            'All Rights Reserved',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: _fontFamily,
+              fontSize: smallTextFontSize,
+              color: _secondaryTextColor,
+            ),
+          ),
+          const SizedBox(height: 8.0),
+          _buildLegalLinks(), // Berisi Terms and Privacy
+        ],
+      );
+    } else {
+      return SizedBox(
+        height: 120,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Protect your future with JPS. © ${DateTime.now().year} JPS Insurance Platform.',
+              style: TextStyle(
+                fontFamily: _fontFamily,
+                fontSize: titleFontSize,
+                color: _secondaryTextColor,
+              ),
+            ),
+            Row(
+              children: [
+                Text(
+                  'All Rights Reserved |',
+                  style: TextStyle(
+                    fontFamily: _fontFamily,
+                    fontSize: smallTextFontSize,
+                    color: _secondaryTextColor,
+                  ),
+                ),
+                _buildLegalLinks(),
+              ],
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  Widget _buildLegalLinks() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        GestureDetector(
+          onTap: () {},
+          child: Text(
+            'Terms and Conditions',
+            style: TextStyle(
+              fontFamily: _fontFamily,
+              fontSize: smallTextFontSize,
+              color: _linkColor,
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ),
+        Text(
+          ' | ',
+          style: TextStyle(
+            fontFamily: _fontFamily,
+            fontSize: smallTextFontSize,
+            color: _secondaryTextColor,
+          ),
+        ),
+        GestureDetector(
+          onTap: () {},
+          child: Text(
+            'Privacy Policy',
+            style: TextStyle(
+              fontFamily: _fontFamily,
+              fontSize: smallTextFontSize,
+              color: _linkColor,
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSignatureSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Signature',
+          style: TextStyle(
+            fontFamily: _fontFamily,
+            fontSize: titleFontSize,
+            fontWeight: FontWeight.bold,
+            color: _primaryColor,
+          ),
+        ),
+        SizedBox(height: isMobile ? 8.0 : 16.0),
+        _buildFooterLink('Cari Asuransi', () {}),
+        _buildFooterLink('Lapor Klaim', () {}),
+      ],
+    );
+  }
+
+  Widget _buildMenuSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Menu',
+          style: TextStyle(
+            fontFamily: _fontFamily,
+            fontSize: titleFontSize,
+            fontWeight: FontWeight.bold,
+            color: _primaryColor,
+          ),
+        ),
+        SizedBox(height: isMobile ? 8.0 : 16.0),
+        _buildFooterLink('Management Aset', () {}),
+        _buildFooterLink('Management Polis', () {}),
+        _buildFooterLink('Management Klaim', () {}),
+        _buildFooterLink('Tagihan dan Pembayaran', () {}),
+        _buildFooterLink('Literasi', () {}),
+      ],
+    );
+  }
+
+  Widget _buildSupportSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Support',
+          style: TextStyle(
+            fontFamily: _fontFamily,
+            fontSize: titleFontSize,
+            fontWeight: FontWeight.bold,
+            color: _primaryColor,
+          ),
+        ),
+        SizedBox(height: isMobile ? 8.0 : 16.0),
+        _buildFooterLink('Customer Services', () {}),
+      ],
+    );
+  }
+
+  Widget _buildFooterLink(String text, VoidCallback onPressed) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: isMobile ? 4.0 : 8.0),
+      child: GestureDetector(
+        onTap: onPressed,
+        child: Text(
+          text,
+          style: TextStyle(
+            fontFamily: _fontFamily,
+            fontSize: linkFontSize,
+            color: _secondaryTextColor,
+            height: 1.4,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGoogleMapsButton() {
     return OutlinedButton.icon(
-      onPressed: onPressed,
-      icon: Icon(icon, color: _primaryColor),
-      label: Text(text,
+      onPressed: () {},
+      icon: Icon(Icons.location_on_outlined, color: _primaryColor),
+      label: Text(
+        'Google Maps',
         style: TextStyle(
-          fontFamily: 'Satoshi-Regular',
-          fontSize: fontSize,
+          fontFamily: _fontFamily,
+          fontSize: titleFontSize,
           color: _primaryColor,
         ),
       ),
       style: OutlinedButton.styleFrom(
         side: const BorderSide(
           color: _primaryColor,
-          width: _buttonBorderWidth,  // 1.5
+          width: _buttonBorderWidth,
         ),
-        shape: RoundedRectangleBorder(      // ← Menggunakan RoundedRectangleBorder
-          borderRadius: _buttonBorderRadius, // ← Menggunakan radius yang sudah didefinisikan (16.13)
+        shape: const RoundedRectangleBorder(
+          borderRadius: _buttonBorderRadius,
         ),
         padding: EdgeInsets.symmetric(
-          horizontal: fontSize < 14.0 ? 16.0 : 24.0,
-          vertical: fontSize < 14.0 ? 8.0 : 12.0,
+          horizontal: titleFontSize < 14.0 ? 16.0 : 24.0,
+          vertical: titleFontSize < 14.0 ? 8.0 : 12.0,
         ),
       ),
     );
   }
 
-  Widget _buildSocialButton(
-      IconData icon,
-      String text,
-      VoidCallback onPressed, {
-        double fontSize = 18.0,
-      }) {
-    return OutlinedButton.icon(
+  Widget _buildSvgSocialIconButton(String assetName, VoidCallback onPressed) {
+    return IconButton(
       onPressed: onPressed,
-      icon: Icon(icon, size: 16.0, color: _primaryColor),
-      label: Text(text,
-        style: TextStyle(
-          fontFamily: 'Satoshi-Regular',
-          fontSize: fontSize,
-          color: _primaryColor,
-        ),
+      icon: SvgPicture.asset(
+        'assets/icons/$assetName',
+        width: 20,
+        height: 20,
+        colorFilter: const ColorFilter.mode(_primaryColor, BlendMode.srcIn),
       ),
-      style: OutlinedButton.styleFrom(
-        side: BorderSide(
-          color: _primaryColor,
-          width: _buttonBorderWidth,
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: _buttonBorderRadius,
-        ),
-        padding: EdgeInsets.symmetric(
-          horizontal: fontSize < 14.0 ? 12.0 : 16.0,
-          vertical: fontSize < 14.0 ? 8.0 : 12.0,
-        ),
-      ),
+      splashRadius: 20,
     );
   }
 }

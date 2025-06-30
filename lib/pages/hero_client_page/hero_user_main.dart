@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
-import 'dart:math' show pi;
 
-import '../../blocs/gen_profile/mrekanbankcrud_bloc.dart';
-import '../../repositories/user/user_repository.dart';
-import '../../widgets/components/action/action_section.dart';
+import '../../widgets/components/action/menu_action_section.dart';
 import '../../widgets/components/navbar/navbar_widget.dart';
 import '../../widgets/components/carousel/carousel_section.dart';
 import '../../widgets/section/homeclientpage/client_section.dart';
-import '../../widgets/components/feature/feature_section.dart';
+
 import '../../widgets/section/homeclientpage/floating_buttons_user.dart';
 import '../../widgets/components/footer/footer_section.dart';
 import '../../widgets/components/hero/hero_section.dart';
-import '../../widgets/section/testimoni/testimonial_section.dart';
-import 'package:eassist_tools_app/widgets/account/profile/profile_main_page.dart';
-import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
-import 'package:eassist_tools_app/blocs/login/emailverification_bloc.dart';
+
 import 'package:eassist_tools_app/blocs/gen_profile/mrekan1crud_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../gen_profile/test_profile_page.dart';
+
 
 class HeroUserMain extends StatelessWidget {
   const HeroUserMain({super.key});
@@ -195,15 +189,31 @@ class _HeroUserPageState extends State<HeroUserPage> {
                           //   ),
                           // ),
                           // Lanjut section bawahnya
-                          HeroSection(constraints: constraints, pageType: PageType.home_client),
-                          Transform.translate(
-                            offset: Offset(0, -40),
-                            child: FloatingButtons(constraints: constraints),
+                          isMobile
+                              ? Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              HeroSection(constraints: constraints, pageType: PageType.home_client),
+                              Positioned(
+                                top: 0,
+                                bottom: -200,
+                                left: 0,
+                                right: 0,
+                                child: FloatingButtons(constraints: constraints),
+                              ),
+                            ],
+                          )
+                              : Column(
+                            children: [
+                              HeroSection(constraints: constraints, pageType: PageType.home_client),
+                              Transform.translate(
+                                offset: Offset(0, -40),
+                                child: FloatingButtons(constraints: constraints),
+                              ),
+                            ],
                           ),
-                          ActionSection(constraints: constraints, showCTAs: true),
-                          FeatureSection(constraints: constraints),
+                          MenuActionSection(constraints: constraints),
                           CarouselSection(constraints: constraints),
-                          TestimonialSection(constraints: constraints),
                           ClientSection(constraints: constraints),
                           FooterSection(constraints: constraints),
                         ],

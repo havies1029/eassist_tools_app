@@ -2,7 +2,6 @@ import 'package:eassist_tools_app/pages/splash/loading_user_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:go_router/go_router.dart';
-// import 'package:go_router/src/refresh_stream.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:eassist_tools_app/pages/splash/splash_page.dart';
@@ -27,7 +26,6 @@ import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart'
 import '../helper/go_router_refresh_stream.dart';
 import '../pages/gen_profile/test_profile_main.dart';
 import '../pages/splash/loading_client_page.dart';
-import '../widgets/section/article/article_detail_page.dart';
 
 /// Dummy fallback (tidak digunakan langsung dalam router)
 class DummyUserRepository extends UserRepository {}

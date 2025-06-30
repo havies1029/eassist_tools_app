@@ -156,6 +156,15 @@ flutter:
     - assets/images/article4.png
     - assets/images/loading1.svg
     - assets/images/loading2.svg
+    - assets/images/management_klaim.png
+    - assets/images/management_aset.png
+    - assets/images/cari_asuransi.png
+    - assets/images/lapor_klaim.png
+    - assets/images/management_polis.png
+    - assets/images/tagihan_pembayaran.png
+    - assets/icons/instagram.svg
+    - assets/icons/linkedin.svg
+    - assets/icons/facebook.svg
 
 fonts:
     - family: HeeboBold

@@ -1,11 +1,9 @@
-import 'package:eassist_tools_app/widgets/section/article/article_detail_page.dart';
 import 'package:flutter/material.dart';
 import '../../repositories/user/user_repository.dart';
 import '../../widgets/components/navbar/navbar_widget.dart';
 import '../../widgets/section/about/floating_buttons_about.dart';
 import '../../widgets/components/footer/footer_section.dart';
 import '../../widgets/components/hero/hero_section.dart';
-import '../../widgets/section/article/action_article_section.dart';
 import '../../widgets/section/article/action_article_section2.dart';
 
 class DummyUserRepository extends UserRepository {

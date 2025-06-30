@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'article_detail_page.dart';
 import 'article_list_page.dart';
 
 class ActionSection extends StatelessWidget {

@@ -1,6 +1,4 @@
-import 'package:eassist_tools_app/pages/splash/splash_page.dart';
 import 'package:eassist_tools_app/widgets/account/login/login_gmail/popup_dialog_login.dart';
-import 'package:eassist_tools_app/widgets/dialog/PopUp/confirmation_dialog.dart';
 import 'package:eassist_tools_app/widgets/account/profile/profile_main_page.dart';
 import 'package:eassist_tools_app/widgets/account/register/register_gmail/Popup.dart';
 import 'package:eassist_tools_app/widgets/dialog/popup/logout_popup.dart';

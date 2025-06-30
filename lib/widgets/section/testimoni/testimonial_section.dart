@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'testimonial_page.dart';
-import '../../../pages/testimony_page/testimony_main.dart';
 
 class TestimonialSection extends StatefulWidget {
   final BoxConstraints constraints;
@@ -83,8 +82,6 @@ class TestimonialSectionState extends State<TestimonialSection> {
                       }
 
                       final crossAxisCount = isMobile ? 2 : 5;
-                      final childAspectRatio = isMobile ? 0.7 : 0.7;
-
                       return GridView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),

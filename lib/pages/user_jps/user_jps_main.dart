@@ -5,8 +5,6 @@ import '../../widgets/section/signature_joss_page/report_claim/jps_user/action_r
 import '../../widgets/components/navbar/navbar_widget.dart';
 import '../../widgets/section/about/floating_buttons_about.dart';
 import '../../widgets/components/footer/footer_section.dart';
-import '../../widgets/section/signature_joss_page/report_claim/jps_user/claim_stepper.dart';
-import '../../widgets/section/signature_joss_page/report_claim/jps_user/form_step_container.dart';
 
 class UserJpsMain extends StatelessWidget {
   const UserJpsMain({super.key});
