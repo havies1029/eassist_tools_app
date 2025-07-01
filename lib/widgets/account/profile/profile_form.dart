@@ -298,23 +298,46 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
                           children: [
                             // Nama tepat di samping kanan gambar profil
                             Expanded(child: nameFieldDesktop),
-                            // Tombol centang tetap di ujung kanan
+                            // Tombol Simpan dengan icon dan text
                             Align(
                               alignment: Alignment.center,
                               child: Padding(
                                 padding: const EdgeInsets.only(top: 4),
-                                child: IconButton(
-                                  icon: const Icon(
-                                    Icons.check,
-                                    size: 24,
-                                    color: Color(0xFF4A5568),
-                                  ),
+                                child: ElevatedButton(
                                   onPressed: _showSuccessPopup,
-                                  tooltip: 'Lanjutkan Seluruh Form',
-                                  padding: const EdgeInsets.all(12),
-                                  constraints: const BoxConstraints(
-                                    minWidth: 48,
-                                    minHeight: 48,
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Text(
+                                        'Simpan',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      const Icon(
+                                        Icons.check,
+                                        size: 20,
+                                        color: Colors.white,
+                                      ),
+                                    ],
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: widget.selectedChoice == 'Individual'
+                                        ? const Color(0xFF4A5568)
+                                        : const Color(0xFF79AB43),
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        vertical: 12
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    elevation: 2,
+                                    shadowColor: Colors.black26,
                                   ),
                                 ),
                               ),

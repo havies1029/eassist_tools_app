@@ -56,7 +56,7 @@ class NavBar extends StatelessWidget {
                   }
                 },
                 child: Image.asset(
-                  'assets/images/jps_logo.png',
+                  'assets/images/JPS.png',
                   height: 60.0,
                 ),
               ),

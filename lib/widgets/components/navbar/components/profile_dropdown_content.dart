@@ -104,16 +104,22 @@ class ProfileDropdownContent extends StatelessWidget {
                     children: [
                       BlocBuilder<MRekan1CrudBloc, MRekan1CrudState>(
                         builder: (context, state) {
-                          final name = state.record?.rekanNama ?? 'Nama Anda';
-                          return Text(
-                            name,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Satoshi-Regular',
-                            ),
-                          );
+                          if (state.isLoaded) {
+                            final rekanNama = state.record?.rekanNama;
+                            final displayName = (rekanNama != null && rekanNama.isNotEmpty)
+                                ? rekanNama
+                                : "(belum diupdate di profile)";
+                            return Text(
+                              displayName,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Satoshi-Regular',
+                              ),
+                            );
+                          }
+                          return Container();
                         },
                       ),
                       Text(

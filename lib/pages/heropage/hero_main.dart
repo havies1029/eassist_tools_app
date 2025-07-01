@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
 import 'package:eassist_tools_app/widgets/account/login/login_gmail/popup_dialog_login.dart';
 
+import '../../blocs/gen_profile/mrekan1crud_bloc.dart';
 import 'hero_page.dart';
 
 class HeroMain extends StatefulWidget {
@@ -78,19 +79,41 @@ class _HeroMainState extends State<HeroMain> {
       //   context.go('/hero_user');
       // }
 
+      if (state.user.custType == "C") {
+        debugPrint("User is a client, Load Mrekan state");
+        BlocProvider.of<MRekan1CrudBloc>(context).add(MRekan1CrudLihatEvent());
+      } else {
+        debugPrint("User is not a client, staying on HeroMain");
+      }
+
 
       Future.microtask(() {
-        if (state.authenticatedFrom == "login_user") {
-          context.go('/loading_hero');
-        } else if (state.authenticatedFrom == "login_client") {
-          context.go('/loading_hero_user');
-        } else if (state.authenticatedFrom == "login_token") {
-          context.go('/loading_hero_user');
-        }else {
-          // Fallback kalau tidak terdeteksi
+        final authState = context.read<AuthenticationBloc>().state;
+
+        if (authState is AuthenticationAuthenticated) {
+          final from = authState.authenticatedFrom;
+          final custType = authState.user.custType;
+
+          if (from == "login_user") {
+            context.go('/loading_hero');
+          } else if (from == "login_client") {
+            context.go('/loading_hero_user');
+          } else if (from == "login_token") {
+            if (custType == "C") {
+              context.go('/loading_hero_user');
+            } else {
+              context.go('/loading_hero');
+            }
+          } else {
+            // Fallback kalau tidak terdeteksi
+            context.go('/loading_hero');
+          }
+        } else {
+          // Jika belum authenticated atau state belum siap
           context.go('/loading_hero');
         }
       });
+
     }
   }
 }

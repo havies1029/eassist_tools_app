@@ -12,6 +12,7 @@ class MRekan1CrudBloc extends Bloc<MRekan1CrudEvents, MRekan1CrudState> {
 		on<MRekan1CrudLihatEvent>(onLihatMRekan1Crud);
     on<MRekan1CrudSetujuTCEvent>(onSetujuTC);
     on<SetDataGroup1>(onSetDataGroup1);
+		on<MRekan1CrudReloadEvent>(_onReloadMRekan1Crud);
 	}
 
 	Future<void> onLihatMRekan1Crud(
@@ -34,5 +35,20 @@ class MRekan1CrudBloc extends Bloc<MRekan1CrudEvents, MRekan1CrudState> {
     emit(state.copyWith(isDataGroup1Changed: false));
     emit(state.copyWith(isDataGroup1Changed: true, record: event.record));
   }
+
+
+	Future<void> _onReloadMRekan1Crud(
+			MRekan1CrudReloadEvent event,
+			Emitter<MRekan1CrudState> emit,
+			) async {
+		emit(state.copyWith(isLoading: true, isLoaded: false));
+		final record = await repository.mRekan1CrudLihat();
+		emit(state.copyWith(
+			isLoading: false,
+			isLoaded: true,
+			record: record,
+			isSetujuTC: record.isSetujuTC,
+		));
+	}
 
 }

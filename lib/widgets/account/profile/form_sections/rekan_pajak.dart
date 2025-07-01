@@ -111,27 +111,27 @@ class _MRekanPajakFormBodyState extends State<MRekanPajakFormBody> {
               const SizedBox(height: 12),
               if (errors.isNotEmpty) FormError(errors: errors, key: null,),
 
-              _buildLabelText("Alamat"),
+              _buildLabelText("Alamat", isRequired: true),
               const SizedBox(height: 6),
               _buildStyledTextField(controller: fieldAlamat1Controller, hintText: "Masukkan alamat lengkap", maxLines: 2),
 
               const SizedBox(height: 12),
-              _buildLabelText("Propinsi"),
+              _buildLabelText("Propinsi", isRequired: true),
               const SizedBox(height: 6),
               _buildStyledDropdown(child: _buildFieldMPropinsiDropdown()),
 
               const SizedBox(height: 12),
-              _buildLabelText("Kota"),
+              _buildLabelText("Kota", isRequired: true),
               const SizedBox(height: 6),
               _buildStyledDropdown(child: _buildFieldMKotaDropdown()),
 
               const SizedBox(height: 12),
-              _buildLabelText("Kode Pos"),
+              _buildLabelText("Kode Pos", isRequired: true),
               const SizedBox(height: 6),
               _buildStyledDropdown(child: _buildFieldRKodeposDropdown()),
 
               const SizedBox(height: 12),
-              _buildLabelText("NPWP No"),
+              _buildLabelText("NPWP No", isRequired: true),
               const SizedBox(height: 6),
               _buildStyledTextField(controller: fieldNpwpNoController, hintText: "Masukkan NPWP"),
             ],
@@ -140,20 +140,38 @@ class _MRekanPajakFormBodyState extends State<MRekanPajakFormBody> {
       ),
     );
   }
-
-  Widget _buildLabelText(String text) {
+  Widget _buildLabelText(String text, {bool isRequired = false}) {
     return Padding(
       padding: const EdgeInsets.only(top: 12, bottom: 6),
-      child: Text(
-        text,
-        style: const TextStyle(
-          fontFamily: 'Satoshi',
-          fontWeight: FontWeight.w400,
-          fontSize: 14,
-        ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            text,
+            style: const TextStyle(
+              fontFamily: 'Satoshi',
+              fontWeight: FontWeight.w400,
+              fontSize: 14,
+              color: Colors.black,
+            ),
+          ),
+          if (isRequired)
+            const Padding(
+              padding: EdgeInsets.only(left: 4),
+              child: Text(
+                '*',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
+
 
   Widget _buildStyledTextField({
     required TextEditingController controller,

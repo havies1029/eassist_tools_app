@@ -11,6 +11,8 @@ import 'package:eassist_tools_app/models/gen_profile/mrekangeneralidvcrud_model.
 import 'package:eassist_tools_app/models/combobox/combompekerjaan_model.dart';
 import 'package:eassist_tools_app/models/combobox/combomjnskel_model.dart';
 
+import '../../../../blocs/gen_profile/mrekan1crud_bloc.dart';
+
 class RekanGeneralIdv extends StatefulWidget {
   final String viewMode;
   final String recordId;
@@ -62,17 +64,9 @@ class _RekanGeneralIdvState extends State<RekanGeneralIdv> {
         }
 
         if (state.isSaved && !state.hasFailure) {
-          // ✅ Trigger reload ulang data
           bloc.add(MRekanGeneralIdvCrudLihatEvent());
+          context.read<MRekan1CrudBloc>().add(MRekan1CrudReloadEvent());
 
-          // ✅ Opsional: Update controller dari nilai terakhir yang dikirim
-          fieldRekanNamaController.text = state.record?.rekanNama ?? '';
-          fieldComboMPekerjaan = state.comboMPekerjaan;
-          fieldComboMJnskel = state.comboMJnskel;
-
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Data berhasil disimpan.")),
-          );
         }
       },
       builder: (context, state) {
@@ -106,7 +100,14 @@ class _RekanGeneralIdvState extends State<RekanGeneralIdv> {
                   ],
                 ),
                 const SizedBox(height: 12),
-                _buildLabelText("Jenis Kelamin"),
+                _buildLabelText("Nama Rekan", isRequired: true),
+                const SizedBox(height: 6),
+                _buildTextField(
+                  controller: fieldRekanNamaController,
+                  hintText: "Masukkan nama lengkap",
+                ),
+                const SizedBox(height: 12),
+                _buildLabelText("Jenis Kelamin", isRequired: true),
                 const SizedBox(height: 6),
                 _buildStyledDropdown(
                   child: isEditingSection
@@ -114,19 +115,12 @@ class _RekanGeneralIdvState extends State<RekanGeneralIdv> {
                       : _buildDisabledDropdown(text: fieldComboMJnskel?.jenisDesc ?? "Belum diisi"),
                 ),
                 const SizedBox(height: 12),
-                _buildLabelText("Pekerjaan"),
+                _buildLabelText("Pekerjaan", isRequired: true),
                 const SizedBox(height: 6),
                 _buildStyledDropdown(
                   child: isEditingSection
                       ? _buildComboMPekerjaan()
                       : _buildDisabledDropdown(text: fieldComboMPekerjaan?.kerjaNama ?? "Belum diisi"),
-                ),
-                const SizedBox(height: 12),
-                _buildLabelText("Nama Rekan"),
-                const SizedBox(height: 6),
-                _buildTextField(
-                  controller: fieldRekanNamaController,
-                  hintText: "Masukkan nama lengkap",
                 ),
                 const SizedBox(height: 12),
                 FormError(errors: errors, key: null),
@@ -139,10 +133,34 @@ class _RekanGeneralIdvState extends State<RekanGeneralIdv> {
   }
 
 
-  Widget _buildLabelText(String text) {
+  Widget _buildLabelText(String text, {bool isRequired = false}) {
     return Align(
       alignment: Alignment.centerLeft,
-      child: Text(text, style: const TextStyle(fontWeight: FontWeight.w200)),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            text,
+            style: const TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 14,
+              color: Colors.black,
+            ),
+          ),
+          if (isRequired)
+            const Padding(
+              padding: EdgeInsets.only(left: 4),
+              child: Text(
+                '*',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 

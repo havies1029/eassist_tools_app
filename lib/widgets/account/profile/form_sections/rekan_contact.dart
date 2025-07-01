@@ -91,15 +91,7 @@ class _RekanContactState extends State<RekanContact> {
               ),
               const SizedBox(height: 12),
 
-              _buildLabel("Alamat"),
-              _buildTextField(
-                controller: fieldAlamat1Controller,
-                hintText: "Masukkan alamat lengkap",
-                maxLines: 2,
-                errorKey: "Alamat tidak boleh kosong.",
-              ),
-
-              _buildLabel("Email"),
+              _buildLabel("Email", isRequired: true),
               _buildTextField(
                 controller: fieldEmailController,
                 hintText: "contoh@mail.com",
@@ -107,7 +99,24 @@ class _RekanContactState extends State<RekanContact> {
                 errorKey: "Email tidak boleh kosong.",
               ),
 
-              _buildLabel("Provinsi"),
+              _buildLabel("No. HP", isRequired: true),
+              _buildTextField(
+                controller: fieldTelpController,
+                hintText: "Contoh: 6283388774644",
+                keyboardType: TextInputType.phone,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                errorKey: "Nomor HP tidak boleh kosong.",
+              ),
+
+              _buildLabel("Alamat", isRequired: true),
+              _buildTextField(
+                controller: fieldAlamat1Controller,
+                hintText: "Masukkan alamat lengkap",
+                maxLines: 2,
+                errorKey: "Alamat tidak boleh kosong.",
+              ),
+
+              _buildLabel("Provinsi", isRequired: true),
               _buildStyledDropdown(
                 child: isEditingSection ? buildFieldComboMPropinsi(
                   comboKey: comboMPropinsiKey,
@@ -131,7 +140,7 @@ class _RekanContactState extends State<RekanContact> {
                 ) : _buildDisabledDropdown(fieldComboMPropinsi?.propinsiNama ?? 'Belum diisi'),
               ),
 
-              _buildLabel("Kota"),
+              _buildLabel("Kota", isRequired: true),
               _buildStyledDropdown(
                 child: isEditingSection ? buildFieldComboMKota(
                   initItem: fieldComboMKota,
@@ -154,7 +163,7 @@ class _RekanContactState extends State<RekanContact> {
                 ) : _buildDisabledDropdown(fieldComboMKota?.kotaDesc ?? 'Belum diisi'),
               ),
 
-              _buildLabel("Kode Pos"),
+              _buildLabel("Kode Pos", isRequired: true),
               _buildStyledDropdown(
                 child: isEditingSection ? buildFieldComboRKodepos(
                   initItem: fieldComboRKodepos,
@@ -173,16 +182,6 @@ class _RekanContactState extends State<RekanContact> {
                   labelText: 'Pilih',
                 ) : _buildDisabledDropdown(fieldComboRKodepos?.kodeposNo ?? 'Belum diisi'),
               ),
-
-              _buildLabel("No. HP"),
-              _buildTextField(
-                controller: fieldTelpController,
-                hintText: "Contoh: 6283388774644",
-                keyboardType: TextInputType.phone,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                errorKey: "Nomor HP tidak boleh kosong.",
-              ),
-
               if (errors.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.only(top: 12),
@@ -198,12 +197,37 @@ class _RekanContactState extends State<RekanContact> {
     );
   }
 
-  Widget _buildLabel(String text) {
+  Widget _buildLabel(String text, {bool isRequired = false}) {
     return Padding(
       padding: const EdgeInsets.only(top: 12, bottom: 6),
-      child: Text(text, style: const TextStyle(fontWeight: FontWeight.w400)),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            text,
+            style: const TextStyle(
+              fontWeight: FontWeight.w400,
+              fontSize: 14,
+              color: Colors.black,
+            ),
+          ),
+          if (isRequired)
+            const Padding(
+              padding: EdgeInsets.only(left: 4),
+              child: Text(
+                '*',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
+
 
   Widget _buildTextField({
     required TextEditingController controller,

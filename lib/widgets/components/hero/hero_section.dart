@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../blocs/authentication/authentication_bloc.dart';
+import '../../../blocs/gen_profile/mrekan1crud_bloc.dart';
 
 class AppTheme {
   static const String fontFamily = 'Satoshi-Regular';
@@ -247,16 +248,22 @@ class HeroSection extends StatelessWidget {
   Map<String, String> _getTitleData(BuildContext context) {
     switch (pageType) {
       case PageType.home_client:
-        final state = context.read<AuthenticationBloc>().state;
+        final state = context.read<MRekan1CrudBloc>().state;
         String name = "[Nama User]";
-        if (state is AuthenticationAuthenticated &&
-            state.user.custType == "C") {
-          name = state.user.nama ?? "[Nama User]";
+        if (state.isLoaded) {
+          final rekanNama = state.record?.rekanNama?.trim();
+          if (rekanNama != null && rekanNama.isNotEmpty) {
+            name = rekanNama;
+          } else {
+            name = "(belum diupdate di profile)";
+          }
         }
+
         return {
           'bold': 'Selamat Datang, $name !\n',
           'normal': 'Berikut ringkasan polis Anda Hari ini:',
         };
+
       case PageType.about:
         return {
           'bold': 'Mengenal JPS: ',

@@ -46,3 +46,5 @@ class ComboMJnskelChangedEvent extends MRekanGeneralIdvCrudEvents{
 
 	@override	List<Object> get props => [comboMJnskel];
 }
+
+class MRekanGeneralIdvCrudReloadEvent extends MRekanGeneralIdvCrudEvents {}

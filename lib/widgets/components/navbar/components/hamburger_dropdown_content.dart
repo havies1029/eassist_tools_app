@@ -200,21 +200,30 @@
       final state = BlocProvider.of<AuthenticationBloc>(context).state;
 
       if (state is AuthenticationAuthenticated) {
-        if (state.authenticatedFrom == "login_client" || state.authenticatedFrom == "login_token") {
-          return _allMenus; // tampilkan semua menu juga untuk login_token
-        } else if (state.authenticatedFrom == "login_user") {
+        final from = state.authenticatedFrom;
+        final custType = state.user.custType ?? '';
+
+        // Full menu untuk login_client atau login_token dengan custType C
+        if (from == 'login_client' || (from == 'login_token' && custType == 'C')) {
+          return _allMenus;
+        }
+
+        // Menu terbatas untuk login_token tanpa custType atau login_user
+        if (from == 'login_token' && custType != 'C' || from == 'login_user') {
           return _allMenus.where((menu) =>
           menu['title'] == 'Signature Joss' ||
-              menu['title'] == 'Tentang JPS').toList();
+              menu['title'] == 'Tentang JPS'
+          ).toList();
         }
       }
 
-
-      // default: hanya dua menu
+      // Default: hanya dua menu
       return _allMenus.where((menu) =>
       menu['title'] == 'Signature Joss' ||
-          menu['title'] == 'Tentang JPS').toList();
+          menu['title'] == 'Tentang JPS'
+      ).toList();
     }
+
 
     @override
     Widget build(BuildContext context) {

@@ -99,22 +99,32 @@ class _StatusPopupState extends State<StatusPopup>
     double dialogPadding;
     double fontSize;
     double buttonPadding;
+    double buttonSpacing;
 
     if (screenWidth < 400) {
+      dialogWidth = screenWidth * 0.9;
+      dialogPadding = 16.0;
+      fontSize = 18.0;
+      buttonPadding = 16.0;
+      buttonSpacing = 12.0;
+    } else if (screenWidth < 600) {
       dialogWidth = screenWidth * 0.85;
       dialogPadding = 20.0;
-      fontSize = 18.0;
-      buttonPadding = 12.0;
-    } else if (screenWidth < 600) {
-      dialogWidth = screenWidth * 0.8;
-      dialogPadding = 25.0;
       fontSize = 20.0;
-      buttonPadding = 14.0;
+      buttonPadding = 18.0;
+      buttonSpacing = 15.0;
+    } else if (screenWidth < 800) {
+      dialogWidth = screenWidth * 0.7;
+      dialogPadding = 25.0;
+      fontSize = 22.0;
+      buttonPadding = 20.0;
+      buttonSpacing = 18.0;
     } else {
-      dialogWidth = 420.0;
+      dialogWidth = 480.0;
       dialogPadding = 30.0;
       fontSize = 22.0;
-      buttonPadding = 15.0;
+      buttonPadding = 20.0;
+      buttonSpacing = 20.0;
     }
 
     return AnimatedBuilder(
@@ -141,12 +151,13 @@ class _StatusPopupState extends State<StatusPopup>
                             child: Container(
                               width: dialogWidth,
                               margin: EdgeInsets.symmetric(
-                                horizontal: 20,
+                                horizontal: 16,
                                 vertical: screenHeight * 0.1,
                               ),
                               constraints: BoxConstraints(
                                 maxHeight: screenHeight * 0.8,
-                                maxWidth: screenWidth * 0.9,
+                                maxWidth: screenWidth * 0.95,
+                                minWidth: 280,
                               ),
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -185,39 +196,19 @@ class _StatusPopupState extends State<StatusPopup>
                                       textAlign: TextAlign.center,
                                     ),
                                     SizedBox(height: screenWidth < 400 ? 20 : 30),
-                                    // Responsive button layout
-                                    screenWidth < 500
-                                        ? Column(
+                                    // Always use column layout for better responsiveness
+                                    Column(
                                       children: [
                                         _buildButton(
                                           isYes: false,
                                           buttonPadding: buttonPadding,
                                           screenWidth: screenWidth,
                                         ),
-                                        const SizedBox(height: 15),
+                                        SizedBox(height: buttonSpacing),
                                         _buildButton(
                                           isYes: true,
                                           buttonPadding: buttonPadding,
                                           screenWidth: screenWidth,
-                                        ),
-                                      ],
-                                    )
-                                        : Row(
-                                      children: [
-                                        Expanded(
-                                          child: _buildButton(
-                                            isYes: false,
-                                            buttonPadding: buttonPadding,
-                                            screenWidth: screenWidth,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 15),
-                                        Expanded(
-                                          child: _buildButton(
-                                            isYes: true,
-                                            buttonPadding: buttonPadding,
-                                            screenWidth: screenWidth,
-                                          ),
                                         ),
                                       ],
                                     ),
@@ -250,6 +241,21 @@ class _StatusPopupState extends State<StatusPopup>
     final icon = isYes ? Icons.check_circle : Icons.close;
     final text = isYes ? 'Ya, Pengguna JPS' : 'Tidak, saya bukan';
 
+    // Responsive font sizes
+    double buttonFontSize;
+    double iconSize;
+
+    if (screenWidth < 400) {
+      buttonFontSize = 14.0;
+      iconSize = 18.0;
+    } else if (screenWidth < 600) {
+      buttonFontSize = 15.0;
+      iconSize = 20.0;
+    } else {
+      buttonFontSize = 16.0;
+      iconSize = 22.0;
+    }
+
     return MouseRegion(
       onEnter: (_) => setState(() {
         if (isYes) {
@@ -268,29 +274,42 @@ class _StatusPopupState extends State<StatusPopup>
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         transform: Matrix4.identity()..scale(isHovering ? 1.02 : 1.0),
-        child: ElevatedButton.icon(
-          icon: Icon(icon, color: Colors.white),
+        width: double.infinity, // Make button full width
+        child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             backgroundColor: isHovering ? hoverColor : baseColor,
             foregroundColor: Colors.white,
-            padding: EdgeInsets.symmetric(vertical: buttonPadding),
+            padding: EdgeInsets.symmetric(
+              vertical: buttonPadding,
+              horizontal: 20,
+            ),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(12),
             ),
             elevation: isHovering ? 8 : 4,
             shadowColor: baseColor.withOpacity(0.3),
+            minimumSize: Size(double.infinity, 50), // Minimum height
           ),
           onPressed: () => _navigateTo(isYes),
-          label: FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(
-              text,
-              style: TextStyle(
-                fontFamily: 'Satoshi-Regular',
-                fontSize: screenWidth < 400 ? 13 : 14,
-                fontWeight: FontWeight.w500,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                text,
+                style: TextStyle(
+                  fontFamily: 'Satoshi-Regular',
+                  fontSize: buttonFontSize,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
+              SizedBox(width: 8),
+              Icon(
+                icon,
+                color: Colors.white,
+                size: iconSize,
+              ),
+            ],
           ),
         ),
       ),

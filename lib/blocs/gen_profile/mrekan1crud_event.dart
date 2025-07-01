@@ -26,3 +26,5 @@ class SetDataGroup1 extends MRekan1CrudEvents {
   @override
   List<Object> get props => [record];
 }
+
+class MRekan1CrudReloadEvent extends MRekan1CrudEvents {}

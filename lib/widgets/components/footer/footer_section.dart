@@ -125,17 +125,17 @@ class FooterSection extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Image.asset('assets/images/jps_logo.png', height: isMobile ? 40.0 : 40.0),
+        Image.asset('assets/images/JPS.png', height: isMobile ? 40.0 : 40.0),
         SizedBox(width: isMobile ? 8.0 : 12.0),
-        Text(
-          'JPS',
-          style: TextStyle(
-            fontFamily: _fontFamily,
-            fontSize: logoFontSize,
-            fontWeight: FontWeight.bold,
-            color: _primaryColor,
-          ),
-        ),
+        // Text(
+        //   'JPS',
+        //   style: TextStyle(
+        //     fontFamily: _fontFamily,
+        //     fontSize: logoFontSize,
+        //     fontWeight: FontWeight.bold,
+        //     color: _primaryColor,
+        //   ),
+        // ),
       ],
     );
   }

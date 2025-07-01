@@ -80,25 +80,38 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
                           ),
                           child: Row(
                             children: [
-                              GestureDetector(
-                                onTap: () => Navigator.of(context).pop(),
-                                child: Container(
-                                  width: 28,
-                                  height: 28,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.2),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: const Icon(
-                                    Icons.close,
-                                    size: 18,
-                                    color: Colors.white,
-                                  ),
-                                ),
+                              BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                                builder: (context, authState) {
+                                  if (authState is AuthenticationAuthenticated &&
+                                      authState.authenticatedFrom == 'login_user') {
+                                    return Row(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () => Navigator.of(context).pop(),
+                                          child: Container(
+                                            width: 28,
+                                            height: 28,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white.withOpacity(0.2),
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: const Icon(
+                                              Icons.close,
+                                              size: 18,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 16),
+                                      ],
+                                    );
+                                  } else {
+                                    return const SizedBox.shrink();
+                                  }
+                                },
                               ),
-                              const SizedBox(width: 16),
                               const Text(
-                                'Login Client',
+                                'Login',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 20,
@@ -108,7 +121,6 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
                             ],
                           ),
                         ),
-
                         // Body putih
                         Container(
                           decoration: const BoxDecoration(
@@ -461,7 +473,7 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
                 context.read<AuthenticationBloc>().add(RequireLoginUser());
               },
               child: Text(
-                'no akun?',
+                'Belum punya akun?',
                 style: TextStyle(
                   color: _isHoveringRegister ? const Color(0xFF7BA05B) : Colors.blue.shade600,
                   fontSize: 14,

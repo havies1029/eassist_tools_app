@@ -123,24 +123,7 @@ class RekanBankState extends State<RekanBank> {
                 ),
                 const SizedBox(height: 12),
 
-                _buildLabel("Nama Rekening"),
-                _buildTextField(
-                  controller: fieldRekNamaController,
-                  hintText: "Masukkan nama pemilik rekening",
-                  maxLines: 2,
-                  errorKey: "Nama rekening tidak boleh kosong.",
-                ),
-
-                _buildLabel("No. Rekening"),
-                _buildTextField(
-                  controller: fieldRekNoController,
-                  hintText: "Masukkan nomor rekening",
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  errorKey: "Nomor rekening tidak boleh kosong.",
-                ),
-
-                _buildLabel("Bank"),
+                _buildLabel("Rekening Bank", isRequired: true),
                 _buildStyledDropdown(
                   child: isEditingSection
                       ? buildFieldComboMBank(
@@ -162,6 +145,23 @@ class RekanBankState extends State<RekanBank> {
                       : _buildDisabledDropdown(fieldComboMBank?.bankNama ?? "Belum diisi"),
                 ),
 
+                _buildLabel("Nama Rekening", isRequired: true),
+                _buildTextField(
+                  controller: fieldRekNamaController,
+                  hintText: "Masukkan nama pemilik rekening",
+                  maxLines: 2,
+                  errorKey: "Nama rekening tidak boleh kosong.",
+                ),
+
+                _buildLabel("No. Rekening", isRequired: true),
+                _buildTextField(
+                  controller: fieldRekNoController,
+                  hintText: "Masukkan nomor rekening",
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  errorKey: "Nomor rekening tidak boleh kosong.",
+                ),
+
                 if (errors.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 12),
@@ -180,12 +180,37 @@ class RekanBankState extends State<RekanBank> {
     );
   }
 
-  Widget _buildLabel(String text) {
+  Widget _buildLabel(String text, {bool isRequired = false}) {
     return Padding(
       padding: const EdgeInsets.only(top: 12, bottom: 6),
-      child: Text(text, style: const TextStyle(fontWeight: FontWeight.w400)),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            text,
+            style: const TextStyle(
+              fontWeight: FontWeight.w400,
+              fontSize: 14,
+              color: Colors.black,
+            ),
+          ),
+          if (isRequired)
+            const Padding(
+              padding: EdgeInsets.only(left: 4),
+              child: Text(
+                '*',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
+
 
   Widget _buildTextField({
     required TextEditingController controller,

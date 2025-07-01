@@ -78,7 +78,7 @@ class _RekanGeneralCmpState extends State<RekanGeneralCmp> {
               ),
               const SizedBox(height: 12),
 
-              _buildLabelText("Nama Badan Usaha"),
+              _buildLabelText("Nama Badan Usaha", isRequired: true),
               const SizedBox(height: 6),
               _buildTextField(
                 controller: fieldRekanNamaController,
@@ -86,7 +86,7 @@ class _RekanGeneralCmpState extends State<RekanGeneralCmp> {
               ),
               const SizedBox(height: 12),
 
-              _buildLabelText("Bentuk Badan Usaha"),
+              _buildLabelText("Bentuk Badan Usaha", isRequired: true),
               const SizedBox(height: 6),
               _buildStyledDropdown(
                 child: isEditingSection
@@ -112,7 +112,7 @@ class _RekanGeneralCmpState extends State<RekanGeneralCmp> {
               ),
               const SizedBox(height: 12),
 
-              _buildLabelText("Bidang Usaha"),
+              _buildLabelText("Bidang Usaha", isRequired: true),
               const SizedBox(height: 6),
               _buildStyledDropdown(
                 child: isEditingSection
@@ -150,10 +150,34 @@ class _RekanGeneralCmpState extends State<RekanGeneralCmp> {
     );
   }
 
-  Widget _buildLabelText(String text) {
+  Widget _buildLabelText(String text, {bool isRequired = false}) {
     return Align(
       alignment: Alignment.centerLeft,
-      child: Text(text, style: const TextStyle(fontWeight: FontWeight.w400)),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            text,
+            style: const TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 14,
+              color: Colors.black,
+            ),
+          ),
+          if (isRequired)
+            const Padding(
+              padding: EdgeInsets.only(left: 4),
+              child: Text(
+                '*',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 

@@ -56,7 +56,7 @@ class _NavbarWidgetState extends State<NavbarWidget> {
   }
 
   void _toggleHamburgerMenu() {
-    if (_isMenuOpen) {
+    if (_menuOverlayEntry != null && _isMenuOpen) {
       _closeHamburgerMenu();
     } else {
       _openHamburgerMenu();
@@ -64,9 +64,11 @@ class _NavbarWidgetState extends State<NavbarWidget> {
   }
 
   void _toggleProfileMenu() {
-    if (_isProfileMenuOpen) {
+    if (_profileOverlayEntry != null && _isProfileMenuOpen) {
       _closeProfileMenu();
     } else {
+      // Tambahan: pastikan hamburger ditutup dulu
+      if (_isMenuOpen) _closeHamburgerMenu();
       _openProfileMenu();
     }
   }
@@ -201,7 +203,7 @@ class _NavbarWidgetState extends State<NavbarWidget> {
           : ProfileSection(
         profileButtonKey: _profileButtonKey,
         isProfileMenuOpen: _isProfileMenuOpen,
-        onToggleProfileMenu: _toggleProfileMenu,
+        onToggleProfileMenu: _toggleProfileMenu, // ini wajib toggle, bukan hanya open
       ),
     );
   }
