@@ -10,7 +10,7 @@ import '../../widgets/section/about/floating_buttons_about.dart';
 import '../../widgets/components/action/action_section.dart';
 import '../../widgets/section/about/jps_intro_description_section.dart';
 import '../../widgets/section/about/visi_section.dart';
-import '../../widgets/section/about/value_section.dart';
+import '../../widgets/section/about/company_profile_section.dart';
 import '../../widgets/section/about/peran_section.dart';
 import '../../widgets/section/about/management_profile_section.dart';
 import '../../widgets/section/about/artikel_card.dart';
@@ -88,12 +88,12 @@ class AboutPage extends StatelessWidget {
                       FloatingButtons(constraints: constraints),
                       ActionSection(constraints: constraints),
                       AboutJps(constraints: constraints),
-                      VisiSection(constraints: constraints),
+                      // VisiSection(constraints: constraints),
                       PeranJpsSection(constraints: constraints),
-                      ValueSection(constraints: constraints),
                       PencapaianSection(constraints: constraints),
                       ManagementProfileSection(constraints: constraints),
-                      ArtikelCard(constraints: constraints),
+                      CompanyProfileSection(constraints: constraints),
+                      // ArtikelCard(constraints: constraints),
                       TestimonialSection(constraints: constraints),
                       ClientSection(constraints: constraints),
                       FooterSection(constraints: constraints),

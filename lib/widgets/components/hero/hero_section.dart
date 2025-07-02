@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../blocs/authentication/authentication_bloc.dart';
-import '../../../blocs/gen_profile/mrekan1crud_bloc.dart';
 
 class AppTheme {
   static const String fontFamily = 'Satoshi-Regular';
@@ -13,6 +12,7 @@ class AppTheme {
 
   static EdgeInsets responsivePadding(BoxConstraints constraints) {
     final double width = constraints.maxWidth;
+
     final double horizontal = width > 1200
         ? 95
         : width > 992
@@ -20,14 +20,20 @@ class AppTheme {
         : width > 768
         ? 48
         : 24;
-    final double vertical = width < 768 ? 0 : 40;
-    return EdgeInsets.symmetric(horizontal: horizontal, vertical: vertical);
+
+    if (width < 768) {
+      return EdgeInsets.only(top: 20, left: horizontal, right: horizontal);
+    } else {
+      return EdgeInsets.symmetric(horizontal: horizontal, vertical: 40);
+    }
   }
 
-  static EdgeInsets responsiveMargin(BoxConstraints constraints) {
+  static EdgeInsets responsiveMargin(BoxConstraints constraints, {PageType? pageType}) {
     final double width = constraints.maxWidth;
     final double top = width < 768 ? 30 : 60;
-    return EdgeInsets.only(top: top, bottom: 30);
+    final double bottom = (pageType == PageType.home || pageType == PageType.home_client) ? 0 : 30;
+
+    return EdgeInsets.only(top: top, bottom: bottom);
   }
 }
 
@@ -79,7 +85,7 @@ class HeroSection extends StatelessWidget {
         padding: AppTheme.responsivePadding(constraints),
         child: Container(
           width: maxWidth,
-          margin: AppTheme.responsiveMargin(constraints),
+          margin: AppTheme.responsiveMargin(constraints, pageType: pageType),
           padding: EdgeInsets.all(isMobile ? 0 : 40),
           decoration: BoxDecoration(
             color: Color(0xFF79AB43),
@@ -95,7 +101,7 @@ class HeroSection extends StatelessWidget {
       padding: AppTheme.responsivePadding(constraints),
       child: Container(
         width: maxWidth,
-        margin: AppTheme.responsiveMargin(constraints),
+        margin: AppTheme.responsiveMargin(constraints, pageType: pageType),
         child: content,
       ),
     );
@@ -104,22 +110,21 @@ class HeroSection extends StatelessWidget {
   Widget _buildContentWithImage(Map<String, String> titleData, Map<String, String> descData) {
     final bool isTablet = constraints.maxWidth >= 768 && constraints.maxWidth < 1024;
 
-    if (isMobile) {
+    if (isMobile || isTablet) {
       return SizedBox(
-        height: 280,
+        height: 250,
         child: Stack(
           clipBehavior: Clip.none,
           children: [
             Positioned(
-              right: 0, //ini gimana cara keluar alt tab aja
-
-              top: 120,
+              right: 0,
+              top: isTablet? 200:60,
               child: _buildHumanImage(),
             ),
             Positioned.fill(
-              top: 30,
+              top: 10,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: _buildTextContent(titleData, descData),
               ),
             ),
@@ -249,27 +254,16 @@ class HeroSection extends StatelessWidget {
   Map<String, String> _getTitleData(BuildContext context) {
     switch (pageType) {
       case PageType.home_client:
-        final rekanState = context.read<MRekan1CrudBloc>().state;
-        final authState = context.read<AuthenticationBloc>().state;
-
-        String name = "(belum diupdate di profile)";
-
-        // Ambil nama dari AuthenticationBloc
-        if (authState is AuthenticationAuthenticated) {
-          name = authState.user.nama?.trim() ?? name;
+        final state = context.read<AuthenticationBloc>().state;
+        String name = "[Nama User]";
+        if (state is AuthenticationAuthenticated &&
+            state.user.custType == "C") {
+          name = state.user.nama ?? "[Nama User]";
         }
-
-        // Override jika MRekan1Crud sudah tersedia
-        final rekanNama = rekanState.record?.rekanNama?.trim();
-        if (rekanState.isLoaded && rekanNama != null && rekanNama.isNotEmpty) {
-          name = rekanNama;
-        }
-
         return {
           'bold': 'Selamat Datang, $name !\n',
           'normal': 'Berikut ringkasan polis Anda Hari ini:',
         };
-
       case PageType.about:
         return {
           'bold': 'Mengenal JPS: ',

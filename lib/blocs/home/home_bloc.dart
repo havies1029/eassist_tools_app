@@ -32,12 +32,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<Article1PageActiveEvent>((event, emit) => emit(Article1PageActive()));
     on<TestProfilePageActiveEvent>((event, emit) => emit(TestProfilePageActive()));
     on<AboutPageActiveEvent>((event, emit) {
-      // if (state is! AboutPageActive) {
-      //   debugPrint("[BLOC] AboutPageActiveEvent triggered");
-      //   emit(AboutPageActive());
-      // } else {
-      //   debugPrint("[BLOC] AboutPageActiveEvent skipped — already in AboutPageActive state");
-      // }
+      if (state is! AboutPageActive) {
+        debugPrint("[BLOC] AboutPageActiveEvent triggered");
+        emit(AboutPageActive());
+      } else {
+        debugPrint("[BLOC] AboutPageActiveEvent skipped — already in AboutPageActive state");
+      }
     });
     on<ActiveAssetsPageActiveEvent>((event, emit) => emit(ActiveAssetsPageActive()));
     on<ArticlePageActiveEvent>((event, emit) => emit(ArticlePageActive()));

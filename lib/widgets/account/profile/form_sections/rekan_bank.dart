@@ -81,7 +81,7 @@ class RekanBankState extends State<RekanBank> {
           fieldMrekan1IdController.text = state.record!.mrekan1Id;
           fieldRekNamaController.text = state.record!.rekNama;
           fieldRekNoController.text = state.record!.rekNo;
-          fieldComboMBank = state.comboMBank;
+          fieldComboMBank = state.record!.comboMBank;
         }
 
         // ⏱ REFRESH ulang data jika sudah disimpan

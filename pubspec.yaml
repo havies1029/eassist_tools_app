@@ -165,6 +165,7 @@ flutter:
     - assets/icons/instagram.svg
     - assets/icons/linkedin.svg
     - assets/icons/facebook.svg
+    - assets/images/check.svg
 
 fonts:
     - family: HeeboBold

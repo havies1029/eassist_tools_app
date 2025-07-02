@@ -96,6 +96,7 @@ class _HeroPageState extends State<HeroPage> {
                 ),
 
                 // Layer 2: Konten scrollable
+                // Layer 2: Konten scrollable
                 Positioned.fill(
                   child: SingleChildScrollView(
                     padding: EdgeInsets.only(top: isMobile ? 50 : 88),
@@ -118,10 +119,7 @@ class _HeroPageState extends State<HeroPage> {
                             : Column(
                           children: [
                             HeroSection(constraints: constraints, pageType: PageType.home),
-                            Transform.translate(
-                                offset: Offset(0, -40),
-                                child: FloatingButtons(constraints: constraints),
-                            ),
+                            FloatingButtons(constraints: constraints),
                           ],
                         ),
                         const SizedBox(height: 0),

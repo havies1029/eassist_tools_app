@@ -10,7 +10,7 @@ DropdownSearch<ComboRKodeposModel> buildFieldComboRKodepos({
   required String kotaId,
 	Function(ComboRKodeposModel?)? onChangedCallback,
 	required Function(ComboRKodeposModel?) onSaveCallback,
-	Function(ComboRKodeposModel?)? validatorCallback
+	Function(ComboRKodeposModel?)? validatorCallback, Key? key
 	}) {
 	return DropdownSearch<ComboRKodeposModel>(
 		key: comboKey,

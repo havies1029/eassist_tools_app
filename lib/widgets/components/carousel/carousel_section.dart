@@ -29,7 +29,10 @@ class _CarouselSectionState extends State<CarouselSection>
   late Animation<double> _hoverAnimation;
   double _currentPageValue = 1000.0;
 
-  static const double _imageAspectRatio = 508.0 / 364.0; // ≈ 1.396
+  static const double _imageAspectRatio = 400 / 286;
+
+  // Parameter untuk mengatur ukuran image
+  double _imageScaleFactor = 0.8; // Faktor skala untuk image (0.8 = 80% dari ukuran container)
 
   @override
   void initState() {
@@ -117,31 +120,54 @@ class _CarouselSectionState extends State<CarouselSection>
       return widget.constraints.maxWidth * 0.9 * 0.7;
     } else if (isTablet) {
       final maxContainerWidth = widget.constraints.maxWidth > 1200 ? 1000.0 : widget.constraints.maxWidth * 0.85;
-      return maxContainerWidth * 0.7; // viewport fraction 0.7
+      return maxContainerWidth * 0.7; // viewport fraction 0.85
     } else {
       final maxContainerWidth = widget.constraints.maxWidth > 1200 ? 1200.0 : widget.constraints.maxWidth * 0.85;
-      return maxContainerWidth * 0.7; // viewport fraction 0.7
+      return maxContainerWidth * 0.7; // viewport fraction 0.85
+    }
+  }
+
+  // Method untuk mendapatkan ukuran image yang dapat disesuaikan
+  double _getImageScaleFactor() {
+    final isMobile = widget.constraints.maxWidth < 768;
+    final isTablet = widget.constraints.maxWidth >= 768 && widget.constraints.maxWidth < 1024;
+
+    if (isMobile) {
+      return 0.85; // Image lebih besar di mobile untuk visibilitas yang baik
+    } else if (isTablet) {
+      return 0.8;  // Ukuran sedang untuk tablet
+    } else {
+      return _imageScaleFactor; // Gunakan nilai yang dapat disesuaikan untuk desktop
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = widget.constraints.maxWidth < 768;
-    final isTablet = widget.constraints.maxWidth >= 768 && widget.constraints.maxWidth < 1024;
-    final double maxWidth = widget.constraints.maxWidth > 1200
-        ? 1200
-        : widget.constraints.maxWidth * 0.9;
-    final titleFontSize = isMobile ? 18.0 : (isTablet ? 22.0 : 25.0);
+    final double width = widget.constraints.maxWidth;
+    final bool isMobile = width < 768;
+    final bool isTablet = width >= 768 && width < 1024;
+
+    final double maxWidth = width > 1200 ? 1200 : width * 0.9;
+    final double horizontalPadding = width > 1200
+        ? 95
+        : width > 992
+        ? 64
+        : width > 768
+        ? 48
+        : 24;
+
+    final double titleFontSize = isMobile ? 18.0 : (isTablet ? 22.0 : 25.0);
 
     final carouselWidth = _getCarouselWidth();
     final carouselHeight = carouselWidth / _imageAspectRatio;
+    final imageScaleFactor = _getImageScaleFactor();
 
     return Container(
       width: double.infinity,
       color: Colors.white,
       padding: EdgeInsets.symmetric(
-        vertical: isMobile ? 40.0 : 40.0,
-        horizontal: isMobile ? 4.0 : 40.0,
+        vertical: 40.0,
+        horizontal: horizontalPadding,
       ),
       child: Center(
         child: Container(
@@ -252,48 +278,54 @@ class _CarouselSectionState extends State<CarouselSection>
                                       final isCenter = (_currentPageValue - index).abs() < 0.5;
 
                                       return Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
                                         child: Transform.scale(
                                           scale: scale,
                                           child: Container(
                                             decoration: BoxDecoration(
                                               borderRadius: BorderRadius.circular(16.0),
                                             ),
-                                            child: ClipRRect(
-                                              borderRadius: BorderRadius.circular(16.0),
-                                              child: AspectRatio(
-                                                aspectRatio: _imageAspectRatio,
-                                                child: Stack(
-                                                  fit: StackFit.expand,
-                                                  children: [
-                                                    // Background image
-                                                    Image.network(
-                                                      state.items[realIndex].galleryUrl,
-                                                      fit: BoxFit.cover,
-                                                      errorBuilder: (context, error, stackTrace) {
-                                                        return Container(
-                                                          color: const Color(0xFF79AB43).withOpacity(0.1),
-                                                          child: const Center(
-                                                            child: Icon(Icons.image_not_supported, size: 48),
+                                            child: Center(
+                                              child: Container(
+                                                width: carouselWidth * imageScaleFactor,
+                                                height: (carouselWidth * imageScaleFactor) / _imageAspectRatio,
+                                                child: ClipRRect(
+                                                  borderRadius: BorderRadius.circular(16.0),
+                                                  child: AspectRatio(
+                                                    aspectRatio: _imageAspectRatio,
+                                                    child: Stack(
+                                                      fit: StackFit.expand,
+                                                      children: [
+                                                        // Background image
+                                                        Image.network(
+                                                          state.items[realIndex].galleryUrl,
+                                                          fit: BoxFit.cover,
+                                                          errorBuilder: (context, error, stackTrace) {
+                                                            return Container(
+                                                              color: const Color(0xFF79AB43).withOpacity(0.1),
+                                                              child: const Center(
+                                                                child: Icon(Icons.image_not_supported, size: 48),
+                                                              ),
+                                                            );
+                                                          },
+                                                        ),
+                                                        if (!isCenter)
+                                                          BackdropFilter(
+                                                            filter: ImageFilter.blur(
+                                                              sigmaX: 3.0,
+                                                              sigmaY: 3.0,
+                                                            ),
+                                                            child: Container(
+                                                              color: Colors.black.withOpacity(0.1),
+                                                            ),
                                                           ),
-                                                        );
-                                                      },
-                                                    ),
-                                                    if (!isCenter)
-                                                      BackdropFilter(
-                                                        filter: ImageFilter.blur(
-                                                          sigmaX: 3.0,
-                                                          sigmaY: 3.0,
+                                                        // 🔥 Opacity overlay
+                                                        Container(
+                                                          color: Colors.black.withOpacity(1.0 - opacity),
                                                         ),
-                                                        child: Container(
-                                                          color: Colors.black.withOpacity(0.1),
-                                                        ),
-                                                      ),
-                                                    // 🔥 Opacity overlay
-                                                    Container(
-                                                      color: Colors.black.withOpacity(1.0 - opacity),
+                                                      ],
                                                     ),
-                                                  ],
+                                                  ),
                                                 ),
                                               ),
                                             ),

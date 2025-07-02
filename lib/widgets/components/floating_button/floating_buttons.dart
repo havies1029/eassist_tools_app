@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:eassist_tools_app/widgets/google_signin_button_stub.dart'
 if (dart.library.js_interop) 'package:eassist_tools_app/widgets/google_signin_button_web.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
 import '../../../blocs/authentication/authentication_bloc.dart';
 import '../../account/login/login_gmail/popup_dialog_login.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 import 'decorations/EnhancedHoverButton.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,7 +29,7 @@ class _FloatingButtonsState extends State<FloatingButtons>
       widget.constraints.maxWidth > 1200 ? 1200 : widget.constraints.maxWidth * 0.9;
   double get sidePadding => isMobile ? 0.0 : (widget.constraints.maxWidth > 1200 ? 0.0 : 30.0);
   double get innerPadding => isMobile ? 10.0 : 40.0;
-  double get _buttonHeight => isMobile ? 35.0 : 50.0;
+  double get _buttonHeight => isMobile ? 30.0 : 50.0;
   double get _boxRadius => 16.13;
 
   GoogleSignInAccount? _user;
@@ -78,65 +80,65 @@ class _FloatingButtonsState extends State<FloatingButtons>
     final double bottomMargin = 30;
 
     return Transform.translate(
-        offset: isMobile ? Offset.zero : const Offset(0, -80),
-        child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-            child: Align(
-              alignment: isMobile ? Alignment.centerLeft : Alignment.center,
-              child: Container(
-                width: isMobile ? null : computedMaxWidth,
-                constraints: BoxConstraints(maxWidth: computedMaxWidth),
-                margin: isMobile
-                    ? const EdgeInsets.fromLTRB(10, 0, 25, 10)
-                    : EdgeInsets.only(bottom: bottomMargin),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(_boxRadius),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.08),
-                      blurRadius: 20,
-                      offset: const Offset(0, 8),
-                    ),
-                    BoxShadow(
-                      color: const Color(0xFF79AB43).withOpacity(0.1),
-                      blurRadius: 40,
-                      offset: const Offset(0, 16),
-                    ),
-                  ],
+      offset: isMobile ? Offset.zero : const Offset(0, -80),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+        child: Align(
+          alignment: isMobile ? Alignment.centerLeft : Alignment.center,
+          child: Container(
+            width: isMobile ? null : computedMaxWidth,
+            constraints: BoxConstraints(maxWidth: computedMaxWidth),
+            margin: isMobile
+                ? const EdgeInsets.fromLTRB(6, 2, 12, 10)
+                : EdgeInsets.only(bottom: bottomMargin),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(_boxRadius),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.08),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
                 ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: innerPadding,
-                    vertical: isMobile ? 10.0 : 20.0,
-                  ),
-                  child: LayoutBuilder(
-                    builder: (context, constraints) {
-                      final isMobileLocal = constraints.maxWidth < 768;
-                      return Wrap(
-                        spacing: isMobileLocal ? 10 : 16,
-                        runSpacing: isMobileLocal ? 10 : 0,
-                        alignment: WrapAlignment.start,
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: [
-                          _buildAnimatedButton(
-                            isLogin: true,
-                            delay: const Duration(milliseconds: 0),
-                            isMobile: isMobileLocal,
-                          ),
-                          _buildAnimatedButton(
-                            isLogin: false,
-                            delay: const Duration(milliseconds: 200),
-                            isMobile: isMobileLocal,
-                          ),
-                        ],
-                      );
-                    },
-                  ),
+                BoxShadow(
+                  color: const Color(0xFF79AB43).withOpacity(0.1),
+                  blurRadius: 40,
+                  offset: const Offset(0, 16),
                 ),
+              ],
+            ),
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: isMobile ? 8.0 : innerPadding,
+                vertical: isMobile ? 6.0 : 20.0,
+              ),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final isMobileLocal = constraints.maxWidth < 768;
+                  return Wrap(
+                    spacing: isMobileLocal ? 8 : 16,
+                    runSpacing: isMobileLocal ? 8 : 0,
+                    alignment: WrapAlignment.start,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      _buildAnimatedButton(
+                        isLogin: true,
+                        delay: const Duration(milliseconds: 0),
+                        isMobile: isMobileLocal,
+                      ),
+                      _buildAnimatedButton(
+                        isLogin: false,
+                        delay: const Duration(milliseconds: 200),
+                        isMobile: isMobileLocal,
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
+          ),
         ),
+      ),
     );
   }
 

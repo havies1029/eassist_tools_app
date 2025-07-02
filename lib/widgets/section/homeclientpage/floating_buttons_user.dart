@@ -37,7 +37,7 @@ class _FloatingButtonsState extends State<FloatingButtons> with TickerProviderSt
   bool get isMobile => widget.constraints.maxWidth < 768;
   double get maxWidth => widget.constraints.maxWidth > 1200 ? 1200 : widget.constraints.maxWidth * 0.9;
   double get sidePadding => isMobile ? 5 : (widget.constraints.maxWidth > 1200 ? 64.0 : 32.0);
-  double get innerPadding => isMobile ? 10.0 : 40.0;
+  double get innerPadding => isMobile ? 5.0 : 40.0;
 
   GoogleSignInAccount? _user;
 
@@ -67,15 +67,58 @@ class _FloatingButtonsState extends State<FloatingButtons> with TickerProviderSt
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-    final isExact1900x1200 = screenSize.width >= 1500.0;
-    final translateOffset = isMobile ? const Offset(0, 0) : const Offset(0, -80);
+    final double width = widget.constraints.maxWidth;
+    final double computedMaxWidth = width > 1200 ? 1200 : width * 0.95;
+    final double horizontalPadding = width > 1200
+        ? 95
+        : width > 992
+        ? 64
+        : width > 768
+        ? 48
+        : 16;
+
+    final double bottomMargin = 30;
 
     return Transform.translate(
-      offset: translateOffset,
+      offset: isMobile ? Offset(0, 20) : const Offset(0, -80),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: sidePadding),
-        child: _buildResponsiveBadgeWrap(isExact1900x1200),
+        padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+        child: Align(
+          alignment: isMobile ? Alignment.centerLeft : Alignment.center,
+          child: Container(
+            width: isMobile ? null : computedMaxWidth,
+            constraints: BoxConstraints(maxWidth: computedMaxWidth),
+            margin: isMobile
+                ? const EdgeInsets.fromLTRB(20, 0, 12, 0)
+                : EdgeInsets.only(bottom: bottomMargin),
+            decoration: _boxDecoration(),
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: isMobile ? 8.0 : innerPadding,
+                vertical: isMobile ? 8.0 : 20.0,
+              ),
+              child: Wrap(
+                alignment: WrapAlignment.start,
+                spacing: isMobile ? 6.0 : 16.0,
+                runSpacing: isMobile ? 6.0 : 0,
+                children: [
+                  _buildAnimatedBadge(
+                    Icons.policy,
+                    '$_polisAktif Polis Aktif',
+                    isMobile,
+                    const Duration(milliseconds: 0),
+                  ),
+                  _buildAnimatedBadge(
+                    Icons.attach_money,
+                    _formatCurrency(_totalPremi),
+                    isMobile,
+                    const Duration(milliseconds: 200),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -171,7 +214,7 @@ class _FloatingButtonsState extends State<FloatingButtons> with TickerProviderSt
   }
 
   Future<void> _loadDataFromAPI() async {
-    await Future.delayed(const Duration(seconds: 2)); // Simulasi fetch
+    await Future.delayed(const Duration(seconds: 1)); // Simulasi fetch
     setState(() {
       _polisAktif = 5;
       _totalPremi = 2750000;

@@ -264,7 +264,7 @@ class PageContainer extends StatelessWidget {
       case PageType.testprofile:
         return const TestProfileMain();
       case PageType.about:
-        // debugPrint("🟢 AboutMain dibuild");
+        debugPrint("🟢 AboutMain dibuild");
         return const AboutPage();
       case PageType.activeassets:
         return const ActiveAssetPage();

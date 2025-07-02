@@ -1,63 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class PencapaianSection extends StatelessWidget {
   final BoxConstraints constraints;
+
+  // Color Constants
+  static const Color _primaryGreen = Color(0xFF79AB43);
+  static const Color _primaryOrange = Color(0xFFFAA232);
+  static const Color _timelineGreen = Color(0xFF81C539);
+  static const Color _timelineBorder = Color(0xFFADD97E);
+  static const Color _timelineOuter = Color(0xFFD9EEC4);
+
+  // Font Constants
+  static const String _fontFamily = 'Satoshi-Regular';
+  double _headerFontSize(bool isMobile) => isMobile ? 20 : 27;
+  double _subHeaderFontSize(bool isMobile) => isMobile ? 18 : 18;
+  double _yearFontSize(bool isMobile) => isMobile ? 19.5 : 30;
+  double _itemFontSize(bool isMobile) => isMobile ? 13.5 : 20;
+  double _jpsFontSize(bool isMobile) => isMobile ? 13.5 : 20;
+
+  // Spacing Constants
+  double _horizontalPadding(bool isMobile) => isMobile ? 16 : 40;
+  double _verticalPadding(bool isMobile) => isMobile ? 32 : 80;
+  double _cardPadding(bool isMobile) => isMobile ? 16 : 20;
+  static const double _sectionSpacing = 48;
+  static const double _itemSpacing = 10;
 
   const PencapaianSection({Key? key, required this.constraints}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final isDesktop = constraints.maxWidth > 768;
     final bool isMobile = constraints.maxWidth < 768;
 
-    // Outer Container dengan warna background full-width
     return Container(
       width: double.infinity,
-      color: Colors.white, // background penuh
+      color: Colors.white,
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 1200),
           child: Padding(
-            // Jika ingin padding atas/bawah tetap, bisa gunakan Padding di sini
             padding: EdgeInsets.symmetric(
-              horizontal: isMobile ? 20 : 40,
-              vertical: isMobile ? 40 : 80,
+              horizontal: _horizontalPadding(isMobile),
+              vertical: _verticalPadding(isMobile),
             ),
             child: Column(
               children: [
-                // Header Section
-                Column(
-                  children: [
-                    Text(
-                      'Pencapaian JPS',
-                      style: TextStyle(
-                        fontSize: isDesktop ? 18 : 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 4),
-                    Container(
-                      constraints: const BoxConstraints(maxWidth: 600),
-                      child: Text(
-                        'Terpercaya sebagai broker asuransi unggulan dengan pertumbuhan dan kemitraan nasional yang konsisten.',
-                        style: TextStyle(
-                          fontSize: isDesktop ? 14 : 12,
-                          color: Colors.black87,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 40),
-
-                // Timeline Items
-                if (isDesktop)
-                  _buildDesktopTimeline()
-                else
-                  _buildMobileTimeline(),
+                _buildHeader(isMobile),
+                const SizedBox(height: _sectionSpacing),
+                _buildVerticalTimeline(isMobile),
               ],
             ),
           ),
@@ -66,391 +56,401 @@ class PencapaianSection extends StatelessWidget {
     );
   }
 
-  Widget _buildDesktopTimeline() {
+  Widget _buildHeader(bool isMobile) {
     return Column(
       children: [
-        // Row 1: 2001 (Left) - 2007 (Right)
-        _buildTimelineRow(
-          leftItem: _buildTimelineItem('2001', Colors.green.shade600, [
-            'JPS didirikan pada tahun 2001',
-            'Memulai operasional dengan hanya enam karyawan',
-            'Berhasil menyelesaikan klaim senilai 2 miliar IDR',
-            'Mulai mendapatkan kepercayaan dari klien',
-          ]),
-          rightItem: _buildTimelineItem('2007', Colors.green.shade600, [
-            'JPS mencatat pendapatan premi asuransi yang\nsignifikan selama periode ini',
-          ]),
-          connectHorizontal: true,
-          connectVertical: true,
-          lineColor: Colors.green.shade400,
-        ),
-
-        SizedBox(height: 56),
-
-        // Row 2: 2019 (Left) - 2010 (Right)
-        _buildTimelineRow(
-          leftItem: _buildTimelineItem('2019', Colors.orange.shade400, [
-            'Mengalami pertumbuhan yang pesat',
-            'Berhasil menyelesaikan klaim hingga 300 miliar IDR',
-            'Memulai proses digitalisasi sistem',
-          ]),
-          rightItem: _buildTimelineItem('2010', Colors.orange.shade400, [
-            'Mengalami permasalahan internal selama periode 2008—2011',
-          ]),
-          connectHorizontal: true,
-          connectVertical: true,
-          lineColor: Colors.orange.shade400,
-        ),
-
-        SizedBox(height: 56),
-
-        // Row 3: 2022 (Left) - 2023 (Right)
-        _buildTimelineRow(
-          leftItem: _buildTimelineItem('2022', Colors.green.shade600, [
-            'Penurunan bisnis akibat pandemi COVID-19',
-            'Memulai digitalisasi proses kerja secara menyeluruh',
-          ]),
-          rightItem: _buildTimelineItem('2023', Colors.green.shade600, [
-            'Mendapatkan proyek dari berbagai BUMN dan BUMD',
-            'Bisnis dan basis klien mulai tumbuh kembali',
-            'Menerima sertifikasi ISO 27001:2022',
-          ]),
-          connectHorizontal: true,
-          connectVertical: false,
-          lineColor: Colors.green.shade400,
-        ),
-
-        SizedBox(height: 56),
-
-        // Row 4: 2024 (Center)
-        Row(
-          children: [
-            Expanded(child: Container()),
-            Expanded(
-              child: _buildTimelineItem('2024', Colors.orange.shade400, [
-                'Bekerja sama dengan bank-bank besar seperti DBS, CTBC, Mandiri, dan Bank of China',
-                'Mulai menerapkan integrasi sistem antara bank dan perusahaan asuransi',
-              ]),
+        RichText(
+          text: TextSpan(
+            style: TextStyle(
+              fontFamily: _fontFamily,
+              fontSize: _headerFontSize(isMobile),
+              fontWeight: FontWeight.w600,
+              color: Colors.black,
             ),
-            Expanded(child: Container()),
-          ],
+            children: [
+              const TextSpan(text: 'Pencapaian '),
+              TextSpan(text: 'J', style: TextStyle(color: _primaryGreen, fontWeight: FontWeight.bold)),
+              TextSpan(text: 'P', style: TextStyle(color: _primaryOrange, fontWeight: FontWeight.bold)),
+              TextSpan(text: 'S', style: TextStyle(color: _primaryGreen, fontWeight: FontWeight.bold)),
+            ],
+          ),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 4),
+        Container(
+          constraints: const BoxConstraints(maxWidth: 1228),
+          child: Text(
+            'Terpercaya sebagai broker asuransi unggulan dengan pertumbuhan dan kemitraan nasional yang konsisten.',
+            style: TextStyle(
+              fontFamily: _fontFamily,
+              fontSize: _subHeaderFontSize(isMobile),
+              color: Colors.black87,
+            ),
+            textAlign: TextAlign.center,
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildMobileTimeline() {
-    return Column(
-      children: [
-        _buildMobileTimelineItem('2001', Colors.green.shade600, [
-          'JPS didirikan pada tahun 2001',
-          'Memulai operasional dengan hanya enam karyawan',
-          'Berhasil menyelesaikan klaim senilai 2 miliar IDR',
-          'Mulai mendapatkan kepercayaan dari klien',
-        ]),
-
-        SizedBox(height: 56),
-
-        _buildMobileTimelineItem('2007', Colors.green.shade600, [
-          'JPS mencatat pendapatan premi asuransi yang signifikan selama periode ini',
-        ]),
-
-        SizedBox(height: 56),
-
-        _buildMobileTimelineItem('2010', Colors.orange.shade400, [
-          'Mengalami permasalahan internal selama periode 2008—2011',
-        ]),
-
-        SizedBox(height: 56),
-
-        _buildMobileTimelineItem('2019', Colors.orange.shade400, [
-          'Mengalami pertumbuhan yang pesat',
-          'Berhasil menyelesaikan klaim hingga 300 miliar IDR',
-          'Memulai proses digitalisasi sistem',
-        ]),
-
-        SizedBox(height: 56),
-
-        _buildMobileTimelineItem('2022', Colors.green.shade600, [
-          'Penurunan bisnis akibat pandemi COVID-19',
-          'Memulai digitalisasi proses kerja secara menyeluruh',
-        ]),
-
-        SizedBox(height: 56),
-
-        _buildMobileTimelineItem('2023', Colors.green.shade600, [
-          'Mendapatkan proyek dari berbagai BUMN dan BUMD',
-          'Bisnis dan basis klien mulai tumbuh kembali',
-          'Menerima sertifikasi ISO 27001:2022',
-        ]),
-
-        SizedBox(height: 56),
-
-        _buildMobileTimelineItem('2024', Colors.orange.shade400, [
-          'Bekerja sama dengan bank-bank besar seperti DBS, CTBC, Mandiri, dan Bank of China',
-          'Mulai menerapkan integrasi sistem antara bank dan perusahaan asuransi',
-        ]),
-      ],
-    );
-  }
-
-  Widget _buildTimelineRow({
-    required Widget leftItem,
-    required Widget rightItem,
-    required bool connectHorizontal,
-    required bool connectVertical,
-    required Color lineColor,
-  }) {
-    return Stack(
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(child: leftItem),
-            SizedBox(width: 40),
-            Expanded(child: rightItem),
-          ],
-        ),
-
-        // Horizontal connecting line
-        if (connectHorizontal)
-          Positioned(
-            left: 0,
-            right: 0,
-            top: 20,
+  Widget _buildVerticalTimeline(bool isMobile) {
+    return Center(
+      child: Container(
+        constraints: BoxConstraints(maxWidth: isMobile ? constraints.maxWidth - 32 : 800),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: IntrinsicWidth(
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(child: Container()),
-                Container(
-                  width: 160,
-                  height: 2,
-                  child: CustomPaint(
-                    painter: DottedLinePainter(color: lineColor),
-                  ),
-                ),
-                Expanded(child: Container()),
+                _buildTimelineDots(),
+                SizedBox(width: isMobile ? 12 : 24),
+                _buildTimelineContent(isMobile),
               ],
             ),
           ),
-
-        // Vertical connecting line
-        if (connectVertical)
-          Positioned(
-            right: 0,
-            top: 40,
-            child: Container(
-              width: 2,
-              height: 120,
-              child: CustomPaint(
-                painter: DottedLinePainter(color: lineColor, isVertical: true),
-              ),
-            ),
-          ),
-      ],
+        ),
+      ),
     );
   }
 
-  Widget _buildTimelineItem(String year, Color dotColor, List<String> items) {
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        Positioned(
-          left: -24,
-          top: 16,
-          child: Container(
-            width: 20,
-            height: 20,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: dotColor, width: 2),
-              color: Colors.white,
-            ),
-          ),
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              year,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                fontStyle: FontStyle.italic,
-                color: Colors.black87,
-              ),
-            ),
-            SizedBox(height: 8),
-            Container(
-              padding: EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 8,
-                    offset: Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: items.map((item) => Padding(
-                  padding: EdgeInsets.only(bottom: items.last == item ? 0 : 8),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(top: 6, right: 8),
-                        width: 4,
-                        height: 4,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          item,
-                          style: TextStyle(
-                            fontSize: 12,
-                            height: 1.5,
-                            color: Colors.black87,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                )).toList(),
-              ),
-            ),
-          ],
-        ),
-      ],
+  Widget _buildTimelineDots() {
+    final bool isMobile = constraints.maxWidth < 768;
+
+    return Column(
+      children: timelineData.asMap().entries.expand((entry) {
+        final index = entry.key;
+        final isLast = index == timelineData.length - 1;
+        List<Widget> widgets = [];
+
+        // Add timeline dot
+        widgets.add(_buildTimelineDot());
+
+        // Add connecting line if not last item
+        if (!isLast) {
+          int itemCount = timelineData[index].items.length;
+          double estimatedHeight = 60 + (itemCount * (isMobile ? 40 : 55)) + _sectionSpacing;
+          widgets.add(_buildTimelineLine(estimatedHeight));
+        }
+        return widgets;
+      }).toList(),
     );
   }
 
-  Widget _buildMobileTimelineItem(String year, Color dotColor, List<String> items) {
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        Positioned(
-          left: -24,
-          top: 16,
-          child: Container(
-            width: 20,
-            height: 20,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: dotColor, width: 2),
-              color: Colors.white,
-            ),
+  Widget _buildTimelineDot() {
+    return Container(
+      width: 34,
+      height: 34,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: _timelineOuter, width: 5),
+      ),
+      child: Center(
+        child: Container(
+          width: 24,
+          height: 24,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: _timelineGreen,
+            border: Border.all(color: _timelineBorder, width: 5),
+            boxShadow: [
+              BoxShadow(
+                color: _timelineOuter,
+                blurRadius: 8,
+                spreadRadius: 5,
+              ),
+            ],
           ),
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              year,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                fontStyle: FontStyle.italic,
-                color: Colors.black87,
-              ),
-            ),
-            SizedBox(height: 8),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 8,
-                    offset: Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: items.map((item) => Padding(
-                  padding: EdgeInsets.only(bottom: items.last == item ? 0 : 8),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(top: 6, right: 8),
-                        width: 4,
-                        height: 4,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          item,
-                          style: TextStyle(
-                            fontSize: 12,
-                            height: 1.5,
-                            color: Colors.black87,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                )).toList(),
-              ),
-            ),
-          ],
-        ),
-      ],
+      ),
     );
   }
-}
 
-class DottedLinePainter extends CustomPainter {
-  final Color color;
-  final bool isVertical;
+  Widget _buildTimelineLine(double height) {
+    return Container(
+      width: 3,
+      height: height,
+      margin: const EdgeInsets.symmetric(vertical: 0),
+      decoration: BoxDecoration(
+        color: _primaryGreen.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(2),
+      ),
+    );
+  }
 
-  DottedLinePainter({required this.color, this.isVertical = false});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..strokeWidth = 2
-      ..style = PaintingStyle.stroke;
-
-    const dashWidth = 4.0;
-    const dashSpace = 4.0;
-
-    if (isVertical) {
-      double startY = 0;
-      while (startY < size.height) {
-        canvas.drawLine(
-          Offset(size.width / 2, startY),
-          Offset(size.width / 2, startY + dashWidth),
-          paint,
+  Widget _buildTimelineContent(bool isMobile) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: timelineData.asMap().entries.map((entry) {
+        final index = entry.key;
+        final data = entry.value;
+        return Padding(
+          padding: EdgeInsets.only(
+              bottom: index < timelineData.length - 1 ? _sectionSpacing : 0
+          ),
+          child: _buildContentCard(data, isMobile),
         );
-        startY += dashWidth + dashSpace;
+      }).toList(),
+    );
+  }
+
+  Widget _buildContentCard(TimelineData data, bool isMobile) {
+    return IntrinsicWidth(
+      child: Container(
+        width: double.infinity,
+        constraints: BoxConstraints(
+          maxWidth: isMobile ? constraints.maxWidth - 100 : double.infinity,
+        ),
+        padding: EdgeInsets.all(isMobile ? _cardPadding(isMobile) - 4 : _cardPadding(isMobile)),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.grey.shade100, width: 1),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
+              spreadRadius: 0,
+            ),
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 6,
+              offset: const Offset(0, 2),
+              spreadRadius: 0,
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildYear(data.year, isMobile),
+            SizedBox(height: isMobile ? 24 : 32),
+            _buildTimelineItems(data.items, isMobile),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildYear(String year, bool isMobile) {
+    return Stack(
+      children: [
+        Positioned(
+          bottom: 7,
+          left: 0,
+          right: 0,
+          child: Container(height: 8, color: _primaryOrange.withOpacity(0.6)),
+        ),
+        Text(
+          year,
+          style: TextStyle(
+            fontFamily: _fontFamily,
+            fontSize: _yearFontSize(isMobile),
+            fontWeight: FontWeight.w700,
+            color: Colors.black,
+            fontStyle: FontStyle.italic,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTimelineItems(List<TimelineItem> items, bool isMobile) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: items.map((item) => _buildTimelineItem(item, isMobile)).toList(),
+    );
+  }
+
+  Widget _buildTimelineItem(TimelineItem item, bool isMobile) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: isMobile ? _itemSpacing - 2 : _itemSpacing),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            margin: const EdgeInsets.only(top: 2),
+            child: SvgPicture.asset(
+              'assets/icons/check.svg',
+              width: isMobile ? 17 : 32,
+              height: isMobile ? 17 : 32,
+              color: _primaryGreen,
+            ),
+          ),
+          SizedBox(width: isMobile ? 8 : 12),
+          Expanded(
+            child: _buildRichItemText(item, isMobile),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRichItemText(TimelineItem item, bool isMobile) {
+    List<InlineSpan> spans = [];
+    String remaining = item.text;
+
+    // Process "JPS" with special styling first
+    while (remaining.contains('JPS')) {
+      int jpsIndex = remaining.indexOf('JPS');
+
+      if (jpsIndex > 0) {
+        String beforeJPS = remaining.substring(0, jpsIndex);
+        spans.addAll(_processRegularHighlights(beforeJPS, item.highlights, isMobile));
       }
-    } else {
-      double startX = 0;
-      while (startX < size.width) {
-        canvas.drawLine(
-          Offset(startX, size.height / 2),
-          Offset(startX + dashWidth, size.height / 2),
-          paint,
-        );
-        startX += dashWidth + dashSpace;
+
+      spans.add(TextSpan(
+        children: [
+          TextSpan(
+            text: 'J',
+            style: TextStyle(
+              color: _primaryGreen,
+              fontWeight: FontWeight.bold,
+              fontSize: _jpsFontSize(isMobile),
+              fontFamily: _fontFamily,
+            ),
+          ),
+          TextSpan(
+            text: 'P',
+            style: TextStyle(
+              color: _primaryOrange,
+              fontWeight: FontWeight.bold,
+              fontSize: _jpsFontSize(isMobile),
+              fontFamily: _fontFamily,
+            ),
+          ),
+          TextSpan(
+            text: 'S',
+            style: TextStyle(
+              color: _primaryGreen,
+              fontWeight: FontWeight.bold,
+              fontSize: _jpsFontSize(isMobile),
+              fontFamily: _fontFamily,
+            ),
+          ),
+        ],
+      ));
+
+      remaining = remaining.substring(jpsIndex + 3);
+    }
+
+    if (remaining.isNotEmpty) {
+      spans.addAll(_processRegularHighlights(remaining, item.highlights, isMobile));
+    }
+
+    return RichText(
+      text: TextSpan(
+        style: TextStyle(
+          fontFamily: _fontFamily,
+          fontSize: _itemFontSize(isMobile),
+          color: Colors.black87,
+        ),
+        children: spans,
+      ),
+    );
+  }
+
+  List<InlineSpan> _processRegularHighlights(String text, List<String> highlights, bool isMobile) {
+    List<InlineSpan> spans = [];
+    String remaining = text;
+
+    List<String> nonJPSHighlights = highlights.where((h) => h != 'JPS').toList();
+
+    for (var keyword in nonJPSHighlights) {
+      int index = remaining.indexOf(keyword);
+      if (index >= 0) {
+        if (index > 0) {
+          spans.add(TextSpan(
+            text: remaining.substring(0, index),
+            style: TextStyle(fontFamily: _fontFamily),
+          ));
+        }
+        spans.add(WidgetSpan(
+          alignment: PlaceholderAlignment.middle,
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+            decoration: BoxDecoration(
+              color: _primaryOrange,
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: Text(
+              keyword,
+              style: TextStyle(
+                fontFamily: _fontFamily,
+                color: Colors.white,
+                fontSize: _itemFontSize(isMobile),
+                height: 1.2,
+              ),
+            ),
+          ),
+        ));
+        remaining = remaining.substring(index + keyword.length);
       }
     }
-  }
 
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+    if (remaining.isNotEmpty) {
+      spans.add(TextSpan(
+        text: remaining,
+        style: TextStyle(fontFamily: _fontFamily),
+      ));
+    }
+
+    return spans;
+  }
 }
+
+// ====================================================================
+// DATA SECTION - TO BE CONNECTED WITH API
+// ====================================================================
+
+class TimelineData {
+  final String year;
+  final Color dotColor;
+  final List<TimelineItem> items;
+
+  TimelineData(this.year, this.dotColor, this.items);
+}
+
+class TimelineItem {
+  final String text;
+  final List<String> highlights;
+
+  TimelineItem(this.text, this.highlights);
+}
+
+// Timeline data that will be replaced with API data
+final List<TimelineData> timelineData = [
+  TimelineData('2001', PencapaianSection._primaryGreen, [
+    TimelineItem('JPS didirikan pada tahun 2021', ['JPS', '2021']),
+    TimelineItem('Memulai operasional dengan fokus utama karyawan', ['karyawan']),
+    TimelineItem('Berhasil menyelesaikan klaim awalnya 2 miliar', ['2 miliar']),
+    TimelineItem('Mulai membangun kepercayaan dari klien', []),
+  ]),
+  TimelineData('2007', PencapaianSection._primaryGreen, [
+    TimelineItem('JPS mencatat pendapatan premi asuransi yang signifikan \nselama periode ini', ['signifikan']),
+  ]),
+  TimelineData('2010', PencapaianSection._primaryGreen, [
+    TimelineItem('Mengalami permasalahan internal selama periode 2008–2011', ['2008–2011']),
+  ]),
+  TimelineData('2019', PencapaianSection._primaryGreen, [
+    TimelineItem('Mengalami pertumbuhan yang pesat', ['pesat']),
+    TimelineItem('Berhasil menyelesaikan klaim hingga 500 miliar', ['500 miliar']),
+    TimelineItem('Memulai proses digitalisasi sistem', []),
+  ]),
+  TimelineData('2022', PencapaianSection._primaryGreen, [
+    TimelineItem('Penurunan bisnis akibat pandemi COVID-19', ['COVID-19']),
+    TimelineItem('Memulai digitalisasi proses kerja secara menyeluruh', []),
+  ]),
+  TimelineData('2023', PencapaianSection._primaryGreen, [
+    TimelineItem('Mendapatkan proyek dari berbagai BUMN dan BUMD', ['BUMN dan BUMD']),
+    TimelineItem('Bisnis dan basis klien mulai tumbuh kembali 500 miliar', ['500 miliar']),
+    TimelineItem('Menerima sertifikasi ISO 27001:2022', ['ISO 27001:2022']),
+  ]),
+  TimelineData('2024', PencapaianSection._primaryGreen, [
+    TimelineItem('Bekerja sama dengan bank-bank besar seperti \nDBS, CIMB, Mandiri, dan Bank of China', ['DBS, CIMB, Mandiri, dan Bank of China']),
+    TimelineItem('Digital transformation menguat dalam sistem \nbank dan perusahaan asuransi', ['bank dan perusahaan asuransi']),
+  ]),
+];

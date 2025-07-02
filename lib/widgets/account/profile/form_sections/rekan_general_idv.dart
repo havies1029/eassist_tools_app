@@ -66,7 +66,6 @@ class _RekanGeneralIdvState extends State<RekanGeneralIdv> {
         if (state.isSaved && !state.hasFailure) {
           bloc.add(MRekanGeneralIdvCrudLihatEvent());
           context.read<MRekan1CrudBloc>().add(MRekan1CrudReloadEvent());
-
         }
       },
       builder: (context, state) {

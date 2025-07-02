@@ -6,10 +6,10 @@ class FooterSection extends StatelessWidget {
 
   const FooterSection({super.key, required this.constraints});
 
-  // ─── Colors ─────────────────────────────────────────
+  // ─── Colors ───────────────────────────────────────────────
   static const _primaryColor = Color(0xFF79AB43);
 
-  // ─── Button Styles ──────────────────────────────────
+  // ─── Button Styles ────────────────────────────────────
   static const _buttonBorderWidth = 1.5;
   static const _buttonBorderRadius = BorderRadius.all(Radius.circular(8.0));
 
@@ -19,15 +19,22 @@ class FooterSection extends StatelessWidget {
   static const _secondaryTextColor = Colors.black54;
   static const _linkColor = Colors.blue;
 
-  // ─── Layout Properties ──────────────────────────────
+  // ─── Layout Properties ────────────────────────────────────
   bool get isMobile => constraints.maxWidth < 768;
 
-  double get maxWidth =>
-      constraints.maxWidth > 1200
-          ? 1200
-          : constraints.maxWidth * 0.9;
+  double get maxWidth => constraints.maxWidth > 1200
+      ? 1200
+      : constraints.maxWidth * 0.9;
 
-  // ─── Responsive Font Sizes ──────────────────────────
+  double get horizontalPadding => constraints.maxWidth > 1200
+      ? 95
+      : constraints.maxWidth > 992
+      ? 64
+      : constraints.maxWidth > 768
+      ? 48
+      : 24;
+
+  // ─── Responsive Font Sizes ───────────────────────────────
   double get logoFontSize => isMobile ? 24.0 : 30.0;
   double get titleFontSize => isMobile ? 15.0 : 18.0;
   double get linkFontSize => isMobile ? 15.0 : 16.0;
@@ -38,34 +45,36 @@ class FooterSection extends StatelessWidget {
     return Container(
       width: double.infinity,
       color: Colors.white,
-      child: Column(
-        children: [
-          // ─── Main Footer Content ───────────────────────
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 50.0),
-            color: Colors.white,
-            child: Center(
-              child: Container(
-                width: maxWidth,
-                padding: isMobile ? const EdgeInsets.symmetric(horizontal: 16.0) : EdgeInsets.zero,
-                child: _buildFooterContent(),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+        child: Column(
+          children: [
+            // ─── Main Footer Content ────────────────────────────
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 50.0),
+              color: Colors.white,
+              child: Center(
+                child: Container(
+                  width: maxWidth,
+                  child: _buildFooterContent(),
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 10),
-          Container(
-            width: double.infinity,
-            color: Colors.white,
-            padding: const EdgeInsets.symmetric(vertical: 10.0),
-            child: Center(
-              child: Container(
-                width: maxWidth,
-                child: _buildCopyrightContent(),
+            const SizedBox(height: 10),
+            Container(
+              width: double.infinity,
+              color: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              child: Center(
+                child: Container(
+                  width: maxWidth,
+                  child: _buildCopyrightContent(),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -106,7 +115,7 @@ class FooterSection extends StatelessWidget {
                 const SizedBox(height: 24.0),
                 _buildCompanyInfo(),
                 const SizedBox(height: 16.0),
-                _buildSocialMediaIcons(),
+                _buildSocialMediaSection(),
               ],
             ),
           ),
@@ -126,16 +135,6 @@ class FooterSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Image.asset('assets/images/JPS.png', height: isMobile ? 40.0 : 40.0),
-        SizedBox(width: isMobile ? 8.0 : 12.0),
-        // Text(
-        //   'JPS',
-        //   style: TextStyle(
-        //     fontFamily: _fontFamily,
-        //     fontSize: logoFontSize,
-        //     fontWeight: FontWeight.bold,
-        //     color: _primaryColor,
-        //   ),
-        // ),
       ],
     );
   }

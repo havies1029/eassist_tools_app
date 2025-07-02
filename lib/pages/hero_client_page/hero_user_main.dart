@@ -19,23 +19,67 @@ class HeroUserMain extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'JPS Insurance',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primaryColor: const Color(0xFF79AB43),
-        scaffoldBackgroundColor: const Color(0xFFD5F4B4),
-        fontFamily: 'Satoshi-Regular',
-        textTheme: const TextTheme(
-          bodyMedium: TextStyle(fontSize: 16.0),
-          titleLarge: TextStyle(fontSize: 28.0, fontWeight: FontWeight.bold),
-        ),
-        buttonTheme: const ButtonThemeData(
-          buttonColor: Color(0xFF79AB43),
-          textTheme: ButtonTextTheme.primary,
-        ),
+    return Scaffold(
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final bool isMobile = constraints.maxWidth < 768;
+
+          return Stack(
+            children: [
+              // Layer 1: Background
+              Positioned.fill(
+                child: isMobile
+                    ? Container(color: const Color(0xFF79AB43))
+                    : Image.asset(
+                  'assets/images/home_3.jpg',
+                  fit: BoxFit.cover,
+                  alignment: const Alignment(0, 3),
+                  cacheWidth: 1440,
+                  cacheHeight: 800,
+                ),
+              ),
+
+              // Layer 2: Content Scroll
+              Positioned.fill(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.only(top: isMobile ? 50 : 88),
+                  child: Column(
+                    children: [
+                      isMobile
+                          ? Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          HeroSection(constraints: constraints, pageType: PageType.home_client),
+                          Positioned(
+                            top: 0,
+                            bottom: -200,
+                            left: 0,
+                            right: 0,
+                            child: FloatingButtons(constraints: constraints),
+                          ),
+                        ],
+                      )
+                          : Column(
+                        children: [
+                          HeroSection(constraints: constraints, pageType: PageType.home_client),
+                          FloatingButtons(constraints: constraints),
+                        ],
+                      ),
+                      MenuActionSection(constraints: constraints),
+                      CarouselSection(constraints: constraints),
+                      ClientSection(constraints: constraints),
+                      FooterSection(constraints: constraints),
+                    ],
+                  ),
+                ),
+              ),
+
+              // Layer 3: Navbar
+              const _FixedNavbarOverlay(),
+            ],
+          );
+        },
       ),
-      home: const HeroUserPage(),
     );
   }
 }

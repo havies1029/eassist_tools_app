@@ -79,11 +79,9 @@ class _NavbarWidgetState extends State<NavbarWidget> {
   }
 
   void _toggleProfileMenu() {
-    if (_profileOverlayEntry != null && _isProfileMenuOpen) {
+    if (_isProfileMenuOpen) {
       _closeProfileMenu();
     } else {
-      // Tambahan: pastikan hamburger ditutup dulu
-      if (_isMenuOpen) _closeHamburgerMenu();
       _openProfileMenu();
     }
   }

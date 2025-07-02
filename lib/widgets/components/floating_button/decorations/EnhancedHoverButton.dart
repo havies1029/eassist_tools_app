@@ -142,12 +142,12 @@ class _EnhancedHoverButtonState extends State<EnhancedHoverButton>
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
                 padding: EdgeInsets.symmetric(
-                  horizontal: isMobile ? 16.0 : 24.0,
+                  horizontal: isMobile ? 10.0 : 24.0,
                   vertical: isMobile ? 10.0 : 16.0,
                 ),
                 decoration: BoxDecoration(
                   color: _backgroundAnimation.value,
-                  borderRadius: BorderRadius.circular(16.13),
+                  borderRadius: BorderRadius.circular(isMobile ? 12.0 : 16.13),
                   border: Border.all(
                     color: _borderAnimation.value ?? Colors.transparent,
                     width: 1.5,
@@ -173,7 +173,7 @@ class _EnhancedHoverButtonState extends State<EnhancedHoverButton>
                           color: widget.isLogin
                               ? const Color(0xFF79AB43)
                               : Colors.white,
-                          size: isMobile ? 16.0 : 18.0,
+                          size: isMobile ? 13.0 : 18.0,
                         ),
                       ),
                     ),
@@ -189,7 +189,7 @@ class _EnhancedHoverButtonState extends State<EnhancedHoverButton>
                               : Colors.white,
                           fontWeight:
                           _isHovered ? FontWeight.w600 : FontWeight.w500,
-                          fontSize: isMobile ? 14.0 : 16.0,
+                          fontSize: isMobile ? 10.77 : 16.0,
                         ),
                       ),
                     ),
