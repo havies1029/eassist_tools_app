@@ -2,6 +2,8 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../hero_client_page/hero_user_main.dart';
+
 class LoadingClientPage extends StatefulWidget {
   const LoadingClientPage({super.key});
 
@@ -62,7 +64,10 @@ class _LoadingClientPageState extends State<LoadingClientPage>
     // Simulasi loading + render halaman hero_user di background
     Future.delayed(const Duration(seconds: 4), () async {
       if (mounted) {
-        context.go('/hero_user');
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const HeroUserMain()),
+        );
       }
     });
   }

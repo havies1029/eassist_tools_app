@@ -8,14 +8,29 @@ import 'package:eassist_tools_app/widgets/components/navbar/components/nav_bar.d
 import 'package:eassist_tools_app/widgets/components/navbar/components/profile_dropdown_content.dart';
 import 'package:eassist_tools_app/widgets/components/navbar/components/profile_section.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:go_router/go_router.dart';
+// import 'package:js/js_util.dart' as homeBloc;
 import '../../../blocs/gen_profile/mrekan1crud_bloc.dart';
+import '../../../blocs/home/home_bloc.dart';
+import '../../../pages/about_jps/about_main.dart';
+import '../../../pages/active_assets/active_assets_main.dart';
+import '../../../pages/article_page/article_main.dart';
+import '../../../pages/base/base_container.dart';
+import '../../../pages/base/base_page.dart';
+import '../../../pages/customer_service/cs_main.dart';
+import '../../../pages/find_insurance/find_insurance_main.dart';
 import '../../../pages/hero_client_page/hero_user_main.dart';
+import '../../../pages/heropage/hero_main.dart';
+import '../../../pages/summary_polis_assets/assets_management_main.dart';
+import '../../../pages/testimony_page/testimony_main.dart';
+import '../../../pages/user_jps/user_jps_main.dart';
+import '../../../pages/user_non_jps/user_non_jps_main.dart';
 import '../../dialog/PopUp/success_popup.dart';
 import '../../../repositories/user/user_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../dialog/popup/status_popup.dart';
-
+import 'package:flutter/src/widgets/navigator.dart';
 
 
 class DummyUserRepository extends UserRepository {
@@ -114,7 +129,7 @@ class _NavbarWidgetState extends State<NavbarWidget> {
                 ),
                 child: HamburgerDropdownContent(
                   onClose: _closeHamburgerMenu,
-                  onMenuTap: _handleMenuTap,
+                  onMenuTap: (title) => _handleMenuTap(context, title),
                 ),
               ),
             ),
@@ -278,246 +293,275 @@ class _NavbarWidgetState extends State<NavbarWidget> {
     _closeProfileMenu();
   }
 
-  Future<void> _handleMenuTap(String title) async {
+  Future<void> _handleMenuTap(BuildContext context, String title) async {
+    final homeBloc = BlocProvider.of<HomeBloc>(context);
     final dummyUserRepository = DummyUserRepository();
-    if (title == 'Splash Screen') {
-      context.go('/splash');
-      // context.push('/splash'); //pindah ke atas page lain
-    }else if (title == 'Tentang JPS') {
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => const AboutMain()),
-      // );
-      context.go('/about');
-    }else if (title == 'Home Page') {
-      context.go('/hero');
-    }else if (title == 'Hero User Page') {
-      context.go('/hero_user');
-    }else if (title == 'About JPS') {
-      context.go('/about');
-    }else if (title == 'Customer Service') {
-      context.go('/cs');
-    }else if (title == 'Article Page') {
-      context.go('/article');
-    }else if (title == 'Artikel Asuransi') {
-      context.go('/article');
-    }else if (title == 'Testimoni') {
-      context.go('/testimony');
-    }else if (title == 'Find Insurance') {
-      context.go('/find_insurance');
-    }else if (title == 'Rekan Contact') {
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) {
-      //       return BlocProvider.value(
-      //         value: BlocProvider.of<RekanContactBloc>(context),
-      //         child: const RekanContactFormPage(
-      //           viewMode: 'tambah',    // atau 'ubah'
-      //           recordId: '',          // kalau 'ubah', ganti dengan ID yang relevan
-      //         ),
-      //       );
-      //     },
-      //   ),
-      // );
-      context.go('/rekancontact');
-    }else if (title == 'Rekan General') {
-      context.go('/rekangeneral');
-    }else if (title == 'Rekan Pajak') {
-      context.go('/rekanpajak');
-    }else if (title == 'Rekan Bank') {
-      context.go('/rekanbank');
-    }else if (title == 'Rekan Pic Form') {
-      context.go('/rekanpic');
-    }
-    else if (title == 'Rekan Pic Crud Form') {
-      context.go('/rekanpiccrud');
-    }else if (title == 'Rekan Pic Crud Main') {
-      context.go('/rekanpiccrud_main');
-    }else if (title == 'Rekan Pic List List') {
-      context.go('/rekanpiclist');
-    }else if (title == 'Rekan Pic List List Widget') {
-     context.go('/rekanpiclist_widget');
-    }else if (title == 'Test Profile') {
-      context.go('/test_profile');
-    }
-    //
-    // else if (title == 'Rekan Pic List Main') {
-    //   Navigator.push(
-    //     context,
-    //     MaterialPageRoute(
-    //       builder: (context) {
-    //         return BlocProvider.value(
-    //           value: BlocProvider.of<RekanListBloc>(context),
-    //           child: const RekanPicListMainPage(
-    //             // kalau 'ubah', ganti dengan ID yang relevan
-    //           ),
-    //         );
-    //       },
-    //     ),
-    //   );
-    // }else if (title == 'Rekan Pic List Title Widget') {
-    //   Navigator.push(
-    //     context,
-    //     MaterialPageRoute(
-    //       builder: (context) {
-    //         return BlocProvider.value(
-    //           value: BlocProvider.of<RekanPajakBloc>(context),
-    //           child: const RekanPicListTileWidget(isDefault: 123, mrekanpicId: '', picEmail: '', picHp: '', picNama: '',// kalau 'ubah', ganti dengan ID yang relevan
-    //           ),
-    //         );
-    //       },
-    //     ),
-    //   );
-    // }
-    else if (title == 'Rekan General V2') {
-      context.go('/rekanpajak');
-    }else if (title == 'Management Asset') {
-      context.go('/assets_management');
-    }else if (title == 'Active Asset') {
-      context.go('/active_assets');
-    }else if (title == 'User JPS') {
-      context.go('/user_jps');
-    }else if (title == 'User Non JPS') {
-      context.go('/user_non_jps');
-    }else if (title == 'Cari Asuransi') {
-      context.go('/find_insurance');
-    }else if (title == 'Lapor Claim') {
-      StatusPopupHelper.show(context);
-    }else if (title == 'Login Client') {
-      await CustomPopupsLoginUser.showLoginClientDialog(context);
-    }else if (title == 'Register Client') {
-      await CustomPopupsLoginUser.showRegisterClientDialog(context);
-    }else if (title == 'Register Gmail') {
-      await CustomPopupsRegisterUser.showRegisterDialog(context);
-    }else if (title == 'Reset Password Page') {
-      // Jika ingin push ke halaman baru:
-      // Navigator.of(context).push(
-      //   MaterialPageRoute(builder: (_) => const ResetPasswordPage()),
-      // );
 
-      // Atau, jika kamu ingin menampilkannya sebagai dialog:
-      showDialog(
-        context: context,
-        barrierColor: Colors.black54,
-        builder: (_) => const ResetPasswordPage(),
-      );
-    }else if (title == 'Forget Password Page') {
-      await CustomPopupsLoginUser.showForgotPasswordDialog(context);
-    }else if (title == 'Popup Succeed') {
-      // Jika ingin push ke halaman baru:
-      // Navigator.of(context).push(
-      //   MaterialPageRoute(builder: (_) => const PopupSuceedPage()),
-      // );
+    void closeDrawerAndRun(VoidCallback action) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        Navigator.of(context).pop();
+        action();
+      });
+    }
 
-      // Atau, jika kamu ingin menampilkannya sebagai dialog:
-      showDialog(
-        context: context,
-        barrierColor: Colors.black54,
-        builder: (_) => PopupSuceedPage(
-          message: 'Tampilan isi popup sesuai parameter',
-          onOk: () {
-            // navigasi ke halaman X
-            Navigator.push(context, MaterialPageRoute(builder: (_) => const HeroUserPage()));
+    switch (title) {
+      case 'Splash Screen':
+        context.go('/splash');
+        // context.push('/splash'); //pindah ke atas page lain
+        break;
+
+      case 'Tentang JPS':
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(AboutPageActiveEvent());
+        });
+        break;
+
+      case 'Home Page':
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(HeroPageActiveEvent());
+        });
+        // context.go('/hero');
+        break;
+
+      case 'Hero User Page':
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(HeroUserPageActiveEvent());
+        });
+        // context.go('/hero_user');
+        break;
+
+      case 'About JPS':
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(AboutPageActiveEvent());
+        });
+        // context.go('/about');
+        break;
+
+      case 'Customer Service':
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(CsPageActiveEvent());
+        });
+        // context.go('/cs');
+        break;
+
+      case 'Article Page':
+      case 'Artikel Asuransi':
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(ArticlePageActiveEvent());
+        });
+        // context.go('/article');
+        break;
+
+      case 'Testimoni':
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(TestimonyPageActiveEvent());
+        });
+        // context.go('/testimony');
+        break;
+
+      case 'Find Insurance':
+      case 'Cari Asuransi':
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(FindInsurancePageActiveEvent());
+        });
+        // context.go('/find_insurance');
+        break;
+
+      case 'Rekan Contact':
+      // Navigator.push(...BlocProvider...)
+        context.go('/rekancontact');
+        break;
+
+      case 'Rekan General':
+        context.go('/rekangeneral');
+        break;
+
+      case 'Rekan Pajak':
+      case 'Rekan General V2':
+        context.go('/rekanpajak');
+        break;
+
+      case 'Rekan Bank':
+        context.go('/rekanbank');
+        break;
+
+      case 'Rekan Pic Form':
+        context.go('/rekanpic');
+        break;
+
+      case 'Rekan Pic Crud Form':
+        context.go('/rekanpiccrud');
+        break;
+
+      case 'Rekan Pic Crud Main':
+        context.go('/rekanpiccrud_main');
+        break;
+
+      case 'Rekan Pic List List':
+        context.go('/rekanpiclist');
+        break;
+
+      case 'Rekan Pic List List Widget':
+        context.go('/rekanpiclist_widget');
+        break;
+
+      case 'Test Profile':
+        context.go('/test_profile');
+        break;
+
+      case 'Management Asset':
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(AssetsManagementPageActiveEvent());
+        });
+        // context.go('/assets_management');
+        break;
+
+      case 'Active Asset':
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(ActiveAssetsPageActiveEvent());
+        });
+        // context.go('/active_assets');
+        break;
+
+      case 'User JPS':
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(UserJPSPageActiveEvent());
+        });
+        // context.go('/user_jps');
+        break;
+
+      case 'User Non JPS':
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(UserNonJPSPageActiveEvent());
+        });
+        // context.go('/user_non_jps');
+        break;
+
+      case 'Lapor Claim':
+        StatusPopupHelper.show(context);
+        break;
+
+      case 'Login Client':
+        await CustomPopupsLoginUser.showLoginClientDialog(context);
+        break;
+
+      case 'Register Client':
+        await CustomPopupsLoginUser.showRegisterClientDialog(context);
+        break;
+
+      case 'Register Gmail':
+        await CustomPopupsRegisterUser.showRegisterDialog(context);
+        break;
+
+      case 'Reset Password Page':
+      // Navigator.of(context).push(MaterialPageRoute(...))
+        showDialog(
+          context: context,
+          barrierColor: Colors.black54,
+          builder: (_) => const ResetPasswordPage(),
+        );
+        break;
+
+      case 'Forget Password Page':
+        await CustomPopupsLoginUser.showForgotPasswordDialog(context);
+        break;
+
+      case 'Popup Succeed':
+      // Navigator.of(context).push(...)
+        showDialog(
+          context: context,
+          barrierColor: Colors.black54,
+          builder: (_) => PopupSuceedPage(
+            message: 'Tampilan isi popup sesuai parameter',
+            onOk: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const HeroUserPage()),
+              );
+            },
+          ),
+        );
+        break;
+
+      case 'Profile Individu':
+        showDialog(
+          context: context,
+          builder: (context) {
+            final isMobile = MediaQuery.of(context).size.width < 600;
+            final screenSize = MediaQuery.of(context).size;
+
+            return Dialog(
+              insetPadding: isMobile ? EdgeInsets.zero : const EdgeInsets.all(32),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(isMobile ? 0 : 20.0),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(isMobile ? 0 : 20.0),
+                child: SizedBox(
+                  width: isMobile ? screenSize.width : 1200,
+                  height: isMobile ? screenSize.height : null,
+                  child: ProfileMainPage(
+                    userid: 123,
+                    selectedChoice: 'Individual',
+                  ),
+                ),
+              ),
+            );
           },
-        ),
-      );
+        );
+        break;
 
-    }else if (title == 'Profile Individu') {
-      showDialog(
-        context: context,
-        builder: (context) {
-          final isMobile = MediaQuery.of(context).size.width < 600;
-          final screenSize = MediaQuery.of(context).size;
+      case 'Profile Perusahaan':
+        showDialog(
+          context: context,
+          builder: (context) {
+            final isMobile = MediaQuery.of(context).size.width < 600;
+            final screenSize = MediaQuery.of(context).size;
 
-          return Dialog(
-            insetPadding: isMobile
-                ? EdgeInsets.zero
-                : const EdgeInsets.all(32),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(isMobile ? 0 : 20.0),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(isMobile ? 0 : 20.0),
-              child: SizedBox(
-                width: isMobile ? screenSize.width : 1200,
-                height: isMobile ? screenSize.height : null,
-                child: ProfileMainPage(
-                  userid: 123,
-                  selectedChoice: 'Individual',
+            return Dialog(
+              insetPadding: isMobile ? EdgeInsets.zero : const EdgeInsets.all(32),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(isMobile ? 0 : 20.0),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(isMobile ? 0 : 20.0),
+                child: SizedBox(
+                  width: isMobile ? screenSize.width : 1200,
+                  height: isMobile ? screenSize.height : null,
+                  child: ProfileMainPage(
+                    userid: 123,
+                    selectedChoice: 'Perusahaan',
+                  ),
                 ),
               ),
-            ),
-          );
-        },
-      );
-    } else if (title == 'Profile Perusahaan') {
-      showDialog(
-        context: context,
-        builder: (context) {
-          final isMobile = MediaQuery.of(context).size.width < 600;
-          final screenSize = MediaQuery.of(context).size;
+            );
+          },
+        );
+        break;
 
-          return Dialog(
-            insetPadding: isMobile
-                ? EdgeInsets.zero
-                : const EdgeInsets.all(32),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(isMobile ? 0 : 20.0),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(isMobile ? 0 : 20.0),
-              child: SizedBox(
-                width: isMobile ? screenSize.width : 1200,
-                height: isMobile ? screenSize.height : null,
-                child: ProfileMainPage(
-                  userid: 123,
-                  selectedChoice: 'Perusahaan',
-                ),
-              ),
-            ),
-          );
-        },
-      );
+      case 'Status Popup':
+        showDialog(
+          context: context,
+          barrierColor: Colors.black54,
+          builder: (_) => const StatusPopup(),
+        );
+        break;
 
-      // context.go('/rekanpajak1');
-    // } else if (title == 'Dialog Confirmation') {
-    //   showDialog(
-    //     context: context,
-    //     barrierColor: Colors.black54,
-    //     builder: (_) => ConfirmationDialog(
-    //       onConfirm: () { Navigator.push(context, MaterialPageRoute(builder: (_) => const HeroUserPage())); },
-    //     ),
+    // case 'Logout':
+    // case 'Popup Logout':
+    //   LogoutPopupHelper.show(
+    //     context,
+    //     onConfirm: () {
+    //       context.read<AuthenticationBloc>().add(LoggedOut());
+    //     },
+    //     onCancel: () {
+    //       // Opsional: lakukan sesuatu jika dibatalkan
+    //     },
     //   );
-    // }
-    }else if (title == 'Status Popup') {
-      showDialog(
-        context: context,
-        barrierColor: Colors.black54,
-        builder: (_) => const StatusPopup(),
-      );
+    //   break;
+
+      default:
+        debugPrint('[MenuTap] Unknown title: $title');
     }
-    // else if (title == 'Popup Logout') {
-    //   LogoutPopupHelper.show(
-    //     context,
-    //     onConfirm: () {
-    //       context.read<AuthenticationBloc>().add(LoggedOut());
-    //     },
-    //     onCancel: () {
-    //       // Opsional: lakukan sesuatu jika dibatalkan
-    //     },
-    //   );
-    // }else if (title == 'Logout') {
-    //   LogoutPopupHelper.show(
-    //     context,
-    //     onConfirm: () {
-    //       context.read<AuthenticationBloc>().add(LoggedOut());
-    //     },
-    //     onCancel: () {
-    //       // Opsional: lakukan sesuatu jika dibatalkan
-    //     },
-    //   );
-    // }
-
   }
 }

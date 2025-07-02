@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../blocs/authentication/authentication_bloc.dart';
 import '../../../../blocs/gen_profile/mrekan1crud_bloc.dart';
 import '../../../../blocs/profile/profile_download_foto_bloc.dart';
 import 'profile_menu_item.dart';
@@ -103,23 +104,31 @@ class ProfileDropdownContent extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       BlocBuilder<MRekan1CrudBloc, MRekan1CrudState>(
-                        builder: (context, state) {
-                          if (state.isLoaded) {
-                            final rekanNama = state.record?.rekanNama;
-                            final displayName = (rekanNama != null && rekanNama.isNotEmpty)
-                                ? rekanNama
-                                : "(belum diupdate di profile)";
-                            return Text(
-                              displayName,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Satoshi-Regular',
-                              ),
-                            );
+                        builder: (context, rekanState) {
+                          // Ambil nama awal dari AuthenticationBloc
+                          String displayName = "(belum diupdate di profile)";
+                          final authState = context.read<AuthenticationBloc>().state;
+
+                          if (authState is AuthenticationAuthenticated) {
+                            displayName = authState.user.nama ?? displayName;
                           }
-                          return Container();
+
+                          // Override dengan nama dari rekan jika tersedia
+                          if (rekanState.isLoaded &&
+                              rekanState.record?.rekanNama != null &&
+                              rekanState.record!.rekanNama!.isNotEmpty) {
+                            displayName = rekanState.record!.rekanNama!;
+                          }
+
+                          return Text(
+                            displayName,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Satoshi-Regular',
+                            ),
+                          );
                         },
                       ),
                       Text(
@@ -133,6 +142,7 @@ class ProfileDropdownContent extends StatelessWidget {
                     ],
                   ),
                 ),
+
 
                 // Tombol close
                 IconButton(

@@ -1,3 +1,5 @@
+import 'package:eassist_tools_app/pages/splash/loading_client_page.dart';
+import 'package:eassist_tools_app/pages/splash/loading_user_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -95,22 +97,40 @@ class _HeroMainState extends State<HeroMain> {
           final custType = authState.user.custType;
 
           if (from == "login_user") {
-            context.go('/loading_hero');
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const LoadingUserPage()),
+            );
           } else if (from == "login_client") {
-            context.go('/loading_hero_user');
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const LoadingClientPage()),
+            );
           } else if (from == "login_token") {
             if (custType == "C") {
-              context.go('/loading_hero_user');
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const LoadingClientPage()),
+              );
             } else {
-              context.go('/loading_hero');
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const LoadingUserPage()),
+              );
             }
           } else {
             // Fallback kalau tidak terdeteksi
-            context.go('/loading_hero');
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const LoadingUserPage()),
+            );
           }
         } else {
           // Jika belum authenticated atau state belum siap
-          context.go('/loading_hero');
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const LoadingUserPage()),
+          );
         }
       });
 

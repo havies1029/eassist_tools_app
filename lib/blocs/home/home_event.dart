@@ -33,3 +33,26 @@ class SimulMBPageActiveEvent extends HomeEvent {}
 class TrackKlaimPageActiveEvent extends HomeEvent {}
 
 class StartChatPageActiveEvent extends HomeEvent {}
+
+//Active Page
+class SplashPageActiveEvent extends HomeEvent {}
+class ProfileIndividuPageActiveEvent extends HomeEvent {}
+class ProfilePerusahaanPageActiveEvent extends HomeEvent {}
+class Article1PageActiveEvent extends HomeEvent {}
+class TestProfilePageActiveEvent extends HomeEvent {}
+class AboutPageActiveEvent extends HomeEvent {}
+class ActiveAssetsPageActiveEvent extends HomeEvent {}
+class ArticlePageActiveEvent extends HomeEvent {}
+class AssetsManagementPageActiveEvent extends HomeEvent {}
+class FindInsurancePageActiveEvent extends HomeEvent {}
+class HeroUserPageActiveEvent extends HomeEvent {}
+class HeroPageActiveEvent extends HomeEvent {}
+class TestimonyPageActiveEvent extends HomeEvent {}
+class CsPageActiveEvent extends HomeEvent {}
+class UserNonJPSPageActiveEvent extends HomeEvent {}
+class UserJPSPageActiveEvent extends HomeEvent {}
+
+//loading
+class LoadingHeroPageActiveEvent extends HomeEvent {}
+class LoadingHeroUserPageActiveEvent extends HomeEvent {}
+

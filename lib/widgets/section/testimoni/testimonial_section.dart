@@ -5,6 +5,7 @@ import 'dart:math' show pi;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../pages/testimony_page/testimony_main.dart';
 import 'testimonial_page.dart';
 
 class TestimonialSection extends StatefulWidget {
@@ -103,11 +104,10 @@ class TestimonialSectionState extends State<TestimonialSection> {
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => const TestimonyMain()),
-                      // );
-                      context.go('/testimony');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const TestimonyMain()),
+                      );
                     },
                     child: Text(
                       'Tampilkan semua',

@@ -14,13 +14,32 @@ import 'package:eassist_tools_app/pages/simulmv/simulmvcrud_main.dart';
 import 'package:eassist_tools_app/pages/simulpar/simulparcrud_main.dart';
 import 'package:eassist_tools_app/pages/simulwp/simulwpcrud_main.dart';
 import 'package:flutter/material.dart';
-import 'package:eassist_tools_app/pages/profile/profile_main_page.dart';
+// import 'package:eassist_tools_app/pages/profile/profile_main_page.dart';
 import 'package:eassist_tools_app/repositories/user/user_repository.dart';
+import '../../blocs/authentication/authentication_bloc.dart';
+import '../../widgets/account/profile/profile_main_page.dart';
+import '../about_jps/about_main.dart';
+import '../active_assets/active_assets_main.dart';
+import '../article_page/article_detail.dart';
+import '../article_page/article_main.dart';
+import '../customer_service/cs_main.dart';
+import '../find_insurance/find_insurance_main.dart';
+import '../gen_profile/test_profile_main.dart';
+import '../hero_client_page/hero_user_main.dart';
+import '../heropage/hero_main.dart';
 import '../home/home_redirector_page.dart';
 import '../simulcar/simulcarcrud_main.dart';
 import '../simulcargo/simulcargocrud_main.dart';
 import '../simulmb/simulmbcrud_main.dart';
 import '../simultree/simultreecrud_main.dart';
+import '../splash/loading_client_page.dart';
+import '../splash/loading_user_page.dart';
+import '../splash/splash_page.dart';
+import '../summary_polis_assets/assets_management_main.dart';
+import '../testimony_page/testimony_main.dart';
+import '../user_jps/user_jps_main.dart';
+import '../user_non_jps/user_non_jps_main.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PageContainerWithUserRepository extends PageContainerBase {
   final int userid;
@@ -61,12 +80,12 @@ class PageContainerWithUserRepository extends PageContainerBase {
           key: null,
         );
         break;
-      case PageType.profile:
-        page = ProfileMainPage(
-          userid: userid,
-          userRepository: userRepository,
-        );
-        break;
+      // case PageType.profile:
+      //   page = ProfileMainPage(
+      //     userid: userid,
+      //     userRepository: userRepository,
+      //   );
+      //   break;
       default:
         page = null;
     }
@@ -86,22 +105,31 @@ class PageContainerWithUserRepository extends PageContainerBase {
   PageType? get parentModal => null;
 }
 
-class PageContainer extends PageContainerBase {
+class PageContainer extends StatelessWidget {
   final PageType pageType;
   final String? recId;
 
   const PageContainer({super.key, required this.pageType, this.recId});
 
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Scaffold(
+  //     backgroundColor: AppColors.background,
+  //     drawer: const AppMenu(),
+  //     appBar: AppBar(title: Text(_pageTitle)),
+  //     body: Padding(
+  //       padding: EdgeInsets.all(Spacing.matGridUnit()),
+  //       child: _buildBody(context),
+  //     ),
+  //   );
+  // }
   @override
-  Widget get menuDrawer {
-    return const AppMenu();
+  Widget build(BuildContext context) {
+    return _buildBody(context);
   }
 
-  @override
-  String get pageTitle {
+  String get _pageTitle {
     switch (pageType) {
-      case PageType.home:
-        return "";
       case PageType.profile:
         return "Profile";
       case PageType.roomchat:
@@ -118,7 +146,7 @@ class PageContainer extends PageContainerBase {
         return "Calc. Premi EEI";
       case PageType.simulgit:
         return "Calc. Premi GIT";
-        case PageType.simulgis:
+      case PageType.simulgis:
         return "Calc. Premi GIS";
       case PageType.simulcargo:
         return "Calc. Premi CARGO";
@@ -136,75 +164,135 @@ class PageContainer extends PageContainerBase {
         return "Lacak Klaim";
       case PageType.startchat:
         return "Start Chat";
+      case PageType.splash:
+        return "Splash";
+      case PageType.profileindividu:
+        return "Profile Individu";
+      case PageType.profileperusahaan:
+        return "Profile Perusahaan";
+      case PageType.article1:
+        return "Artikel Detail";
+      case PageType.testprofile:
+        return "Test Profile";
+      case PageType.about:
+        return "Tentang Kami";
+      case PageType.activeassets:
+        return "Polis Aktif";
+      case PageType.article:
+        return "Artikel";
+      case PageType.assetsmanagement:
+        return "Manajemen Aset";
+      case PageType.findinsurance:
+        return "Cari Asuransi";
+      case PageType.herouser:
+        return "Halaman Utama User";
+      case PageType.hero:
+        return "Halaman Utama";
+      case PageType.testimony:
+        return "Testimoni";
+      case PageType.cs:
+        return "Customer Service";
+      case PageType.usernonjps:
+        return "User Non-JPS";
+      case PageType.userjps:
+        return "User JPS";
+      case PageType.loadinghero:
+        return "Memuat Hero";
+      case PageType.loadingherouser:
+        return "Memuat Hero User";
       default:
         return "Login Page";
     }
   }
 
-  @override
-  Widget get body {
-    Widget? page;
-
+  Widget _buildBody(BuildContext context) {
+    // debugPrint("🏗 Membangun body untuk: $pageType");
     switch (pageType) {
       case PageType.home:
-        // page = const HeroMain();
-        page = const HomeRedirectorPage();
-        break;
+        return const HeroMain();
       case PageType.groupchat:
-        page = const ChatPage(roomId: "support");
-        break;
+        return const ChatPage(roomId: "support");
       case PageType.roomchat:
-        page = const RoomCariPage();
-        break;
+        return const RoomCariPage();
       case PageType.changepswd:
-        page = const ChangePswdMainPage();
-        break;
+        return const ChangePswdMainPage();
       case PageType.simulmv:
-        page = const SimulmvCrudMainPage();
-        break;
+        return const SimulmvCrudMainPage();
       case PageType.simulpar:
-        page = const SimulparCrudMainPage(usage: 'PAREQ',);
-        break;
+        return const SimulparCrudMainPage(usage: 'PAREQ');
       case PageType.simulflexas:
-        page = const SimulparCrudMainPage(usage: 'FLEXAS',);
-        break;
+        return const SimulparCrudMainPage(usage: 'FLEXAS');
       case PageType.simuleei:
-        page = const SimuleeiCrudMainPage();
-        break;
+        return const SimuleeiCrudMainPage();
       case PageType.simulgit:
-        page = const SimulgitCrudMainPage();
-        break;
+        return const SimulgitCrudMainPage();
       case PageType.simulgis:
-        // page = const SimulgisCrudMainPage(viewMode: "", recordId: "",);
-        page = const SimulgisCrudMainPage();
-        break;
+        return const SimulgisCrudMainPage();
       case PageType.simulbon:
-        page = const SimulbonCrudMainPage();
-        break;
+        return const SimulbonCrudMainPage();
       case PageType.simulwp:
-        page = const SimulwpCrudMainPage();
+        return const SimulwpCrudMainPage();
       case PageType.simulcargo:
-        page = const SimulcargoCrudMainPage();
-        break;
+        return const SimulcargoCrudMainPage();
       case PageType.simulcar:
-        page = const SimulcarCrudMainPage();
-        break;
+        return const SimulcarCrudMainPage();
       case PageType.simulmb:
-        page = const SimulmbCrudMainPage();
-        break;
+        return const SimulmbCrudMainPage();
       case PageType.simultree:
-        page = const SimultreeCrudMainPage();
-        break;
+        return const SimultreeCrudMainPage();
       case PageType.klaimtrack:
-        page = const Klaim1ListMainPage();
-        break;
+        return const Klaim1ListMainPage();
+      case PageType.splash:
+        return const SplashPage();
+      case PageType.profileindividu:
+        final userId = int.tryParse(Uri.base.queryParameters['userid'] ?? '') ?? 0;
+
+        return ProfileMainPage(
+          userid: userId,
+          selectedChoice: 'Individu',
+        );
+
+      case PageType.profileperusahaan:
+        final userId = int.tryParse(Uri.base.queryParameters['userid'] ?? '') ?? 0;
+
+        return ProfileMainPage(
+          userid: userId,
+          selectedChoice: 'Perusahaan',
+        );
+      case PageType.article1:
+        return const ArticleDetailMain();
+      case PageType.testprofile:
+        return const TestProfileMain();
+      case PageType.about:
+        // debugPrint("🟢 AboutMain dibuild");
+        return const AboutPage();
+      case PageType.activeassets:
+        return const ActiveAssetPage();
+      case PageType.article:
+        return const ArticleMain();
+      case PageType.assetsmanagement:
+        return const AssetsManagementMain();
+      case PageType.findinsurance:
+        return const FindInsuranceMain();
+      case PageType.herouser:
+        return const HeroUserMain();
+      case PageType.hero:
+        return const HeroMain();
+      case PageType.testimony:
+        return const TestimonyMain();
+      case PageType.cs:
+        return const CSMain();
+      case PageType.usernonjps:
+        return const UserNonJpsMain();
+      case PageType.userjps:
+        return const UserJpsMain();
+      case PageType.loadinghero:
+        return const LoadingClientPage();
+      case PageType.loadingherouser:
+        return const LoadingUserPage();
       default:
-        page = null;
+        return const SizedBox();
     }
-    return Padding(
-      padding: EdgeInsets.all(Spacing.matGridUnit()),
-      child: page,
-    );
   }
 
   @override

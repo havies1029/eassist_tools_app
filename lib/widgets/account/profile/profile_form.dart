@@ -1,5 +1,7 @@
 // import 'dart:nativewrappers/_internal/vm/lib/typed_data_patch.dart';
 import 'dart:typed_data';
+import 'package:eassist_tools_app/blocs/home/home_bloc.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -8,6 +10,7 @@ import '../../../blocs/gen_profile/mrekanpiccrud_bloc.dart';
 import '../../../blocs/gen_profile/mrekanpiclist_bloc.dart';
 import '../../../blocs/profile/profile_download_foto_bloc.dart';
 import '../../../blocs/profile/profile_upload_foto_bloc.dart';
+import '../../../pages/hero_client_page/hero_user_main.dart';
 import 'form_sections/pic_form/rekan_pic_crud_body.dart';
 import '../../../widgets/account/profile/form_sections/pic_form//rekan_pic_list_body.dart';
 import '../../../pages/gen_profile/profile_picture.dart';
@@ -90,7 +93,9 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
             builder: (context) => PopupSuceedPage(
               message: 'Terimakasih telah menjadi bagian dari JPS',
               onOk: () async {
-                context.go('/hero_user');
+                SchedulerBinding.instance.addPostFrameCallback((_) {
+                  context.read<HomeBloc>().add(HeroUserPageActiveEvent());
+                });
               },
             ),
           );

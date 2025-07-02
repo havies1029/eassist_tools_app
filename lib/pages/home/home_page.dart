@@ -18,71 +18,94 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {  
+class _HomePageState extends State<HomePage> {
 
 
   @override
   Widget build(BuildContext context) {
-    
+
     return MultiBlocProvider(
       providers: [
-        BlocProvider<HomeBloc>(create: (context) => HomeBloc()),
+        // BlocProvider<HomeBloc>(create: (context) => HomeBloc()),
         BlocProvider<ProfileBloc>(
           create: (content) => ProfileBloc(
               userRepository: widget.userRepository, id: widget.userid),
         )
       ],
-      child: BlocBuilder<HomeBloc, HomeState>(
-        builder: (context, state) {
-          SizeConfig().init(context);
-          debugPrint("state : $state");
-          if (state is HomePageActive) {            
-            return const PageContainer(pageType: PageType.home);
-            // return const OnboardMainPage();
-          } else if (state is RoomCariPageActive) {            
-            return const PageContainer(pageType: PageType.roomchat);
-          } else if (state is ChangePasswordPageActive) {            
-            return const PageContainer(pageType: PageType.changepswd);  
-          } else if (state is SimulMVPageActive) {            
-            return const PageContainer(pageType: PageType.simulmv);  
-          } else if (state is SimulPARPageActive) {            
-            return const PageContainer(pageType: PageType.simulpar);  
-          } else if (state is SimulFlexasPageActive) {            
-            return const PageContainer(pageType: PageType.simulflexas);  
-          } else if (state is SimulEEIPageActive) {            
-            return const PageContainer(pageType: PageType.simuleei);  
-          } else if (state is SimulGITPageActive) {            
-            return const PageContainer(pageType: PageType.simulgit);  
-          } else if (state is SimulGISPageActive) {            
-            return const PageContainer(pageType: PageType.simulgis); 
-          } else if (state is SimulBONPageActive) {            
-            return const PageContainer(pageType: PageType.simulbon);  
-          } else if (state is SimulWPPageActive) {            
-            return const PageContainer(pageType: PageType.simulwp);
-          } else if (state is SimulCARGOPageActive) {
-            return const PageContainer(pageType: PageType.simulcargo);
-          } else if (state is SimulCARPageActive) {
-            return const PageContainer(pageType: PageType.simulcar);
-          } else if (state is SimulMBPageActive) {
-            return const PageContainer(pageType: PageType.simulmb);
-          } else if (state is SimulTREEPageActive) {
-            return const PageContainer(pageType: PageType.simultree);
-          } else if (state is TrackKlaimPageActive) {
-            return const PageContainer(pageType: PageType.klaimtrack);
-          } else if (state is StartChatPageActive) {
-            return const PageContainer(pageType: PageType.startchat);
-          } else if (state is ProfilePageActive) {
-            return PageContainerWithUserRepository(
+      child: BlocListener<HomeBloc, HomeState>(
+        listener: (context, state) {
+          // debugPrint("🧭 Listener menerima state: $state");
+
+          Widget targetPage;
+
+          if (state is ProfilePageActive) {
+            targetPage = PageContainerWithUserRepository(
               pageType: PageType.profile,
               userRepository: widget.userRepository,
-              userid: widget.userid,
-              key: null,
+              userid: widget.userid, key: null,
             );
+          } else {
+            final pageType = _getPageTypeFromState(state);
+            if (pageType != null) {
+              targetPage = PageContainer(pageType: pageType);
+            } else {
+              return;
+            }
           }
-          return Container();
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => targetPage),
+          );
         },
+        child: BlocBuilder<HomeBloc, HomeState>(
+          builder: (context, state) {
+            // Halaman pertama bisa default atau kosong
+            return const PageContainer(pageType: PageType.home);
+          },
+        ),
       ),
     );
   }
+
+  PageType? _getPageTypeFromState(HomeState state) {
+    if (state is HomePageActive) return PageType.home;
+    if (state is RoomCariPageActive) return PageType.roomchat;
+    if (state is ChangePasswordPageActive) return PageType.changepswd;
+    if (state is SimulMVPageActive) return PageType.simulmv;
+    if (state is SimulPARPageActive) return PageType.simulpar;
+    if (state is SimulFlexasPageActive) return PageType.simulflexas;
+    if (state is SimulEEIPageActive) return PageType.simuleei;
+    if (state is SimulGITPageActive) return PageType.simulgit;
+    if (state is SimulGISPageActive) return PageType.simulgis;
+    if (state is SimulBONPageActive) return PageType.simulbon;
+    if (state is SimulWPPageActive) return PageType.simulwp;
+    if (state is SimulCARGOPageActive) return PageType.simulcargo;
+    if (state is SimulCARPageActive) return PageType.simulcar;
+    if (state is SimulMBPageActive) return PageType.simulmb;
+    if (state is SimulTREEPageActive) return PageType.simultree;
+    if (state is TrackKlaimPageActive) return PageType.klaimtrack;
+    if (state is StartChatPageActive) return PageType.startchat;
+    if (state is SplashPageActive) return PageType.splash;
+    if (state is ProfileIndividuPageActive) return PageType.profileindividu;
+    if (state is ProfilePerusahaanPageActive) return PageType.profileperusahaan;
+    if (state is Article1PageActive) return PageType.article1;
+    if (state is TestProfilePageActive) return PageType.testprofile;
+    if (state is AboutPageActive) return PageType.about;
+    if (state is ActiveAssetsPageActive) return PageType.activeassets;
+    if (state is ArticlePageActive) return PageType.article;
+    if (state is AssetsManagementPageActive) return PageType.assetsmanagement;
+    if (state is FindInsurancePageActive) return PageType.findinsurance;
+    if (state is HeroUserPageActive) return PageType.herouser;
+    if (state is HeroPageActive) return PageType.hero;
+    if (state is TestimonyPageActive) return PageType.testimony;
+    if (state is CsPageActive) return PageType.cs;
+    if (state is UserNonJPSPageActive) return PageType.usernonjps;
+    if (state is UserJPSPageActive) return PageType.userjps;
+    if (state is LoadingHeroPageActive) return PageType.loadinghero;
+    if (state is LoadingHeroUserPageActive) return PageType.loadingherouser;
+    return null;
+  }
+
 
 }

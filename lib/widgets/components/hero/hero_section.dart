@@ -111,8 +111,9 @@ class HeroSection extends StatelessWidget {
           clipBehavior: Clip.none,
           children: [
             Positioned(
-              right: 0,
-              top: 100,
+              right: 0, //ini gimana cara keluar alt tab aja
+
+              top: 120,
               child: _buildHumanImage(),
             ),
             Positioned.fill(
@@ -248,15 +249,20 @@ class HeroSection extends StatelessWidget {
   Map<String, String> _getTitleData(BuildContext context) {
     switch (pageType) {
       case PageType.home_client:
-        final state = context.read<MRekan1CrudBloc>().state;
-        String name = "[Nama User]";
-        if (state.isLoaded) {
-          final rekanNama = state.record?.rekanNama?.trim();
-          if (rekanNama != null && rekanNama.isNotEmpty) {
-            name = rekanNama;
-          } else {
-            name = "(belum diupdate di profile)";
-          }
+        final rekanState = context.read<MRekan1CrudBloc>().state;
+        final authState = context.read<AuthenticationBloc>().state;
+
+        String name = "(belum diupdate di profile)";
+
+        // Ambil nama dari AuthenticationBloc
+        if (authState is AuthenticationAuthenticated) {
+          name = authState.user.nama?.trim() ?? name;
+        }
+
+        // Override jika MRekan1Crud sudah tersedia
+        final rekanNama = rekanState.record?.rekanNama?.trim();
+        if (rekanState.isLoaded && rekanNama != null && rekanNama.isNotEmpty) {
+          name = rekanNama;
         }
 
         return {

@@ -28,7 +28,25 @@ enum PageType {
   simulmb,
   simultree,
   klaimtrack,
-  startchat
+  startchat,
+  splash,
+  profileindividu,
+  profileperusahaan,
+  article1,
+  testprofile,
+  about,
+  activeassets,
+  article,
+  assetsmanagement,
+  findinsurance,
+  herouser,
+  hero,
+  testimony,
+  cs,
+  usernonjps,
+  userjps,
+  loadinghero,
+  loadingherouser,
 }
 
 abstract class PageContainerBase extends StatefulWidget {

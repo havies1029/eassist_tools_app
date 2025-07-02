@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../pages/article_page/article_detail.dart';
 import 'article_content.dart';
 
 class ArticleListPage extends StatefulWidget {
@@ -51,7 +52,10 @@ class _ArticleListPageState extends State<ArticleListPage> {
         onTap: () {
           debugPrint('Klik artikel utama: ${article['title']}');
           if (index == 0) {
-            context.go('/article_1'); // 👈 arahkan hanya untuk artikel pertama
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ArticleDetailMain()),
+            ); // 👈 arahkan hanya untuk artikel pertama
           }
         },
         child: AnimatedContainer(

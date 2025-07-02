@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
+import '../hero_client_page/hero_user_main.dart';
+import '../heropage/hero_main.dart';
+
 class LoadingUserPage extends StatefulWidget {
   const LoadingUserPage({super.key});
 
@@ -29,7 +32,10 @@ class _LoadingUserPageState extends State<LoadingUserPage> with SingleTickerProv
 
       // Pindah ke halaman utama user
       if (mounted) {
-        context.go('/hero');
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const HeroMain()),
+        );
       }
     });
   }

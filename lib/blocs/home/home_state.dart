@@ -34,3 +34,26 @@ class SimulFlexasPageActive extends HomeState {}
 class TrackKlaimPageActive extends HomeState {}
 
 class StartChatPageActive extends HomeState {}
+
+//Active Page
+class SplashPageActive extends HomeState {}
+class ProfileIndividuPageActive extends HomeState {}
+class ProfilePerusahaanPageActive extends HomeState {}
+class Article1PageActive extends HomeState {}
+class TestProfilePageActive extends HomeState {}
+class AboutPageActive extends HomeState {}
+class ActiveAssetsPageActive extends HomeState {}
+class ArticlePageActive extends HomeState {}
+class AssetsManagementPageActive extends HomeState {}
+class FindInsurancePageActive extends HomeState {}
+class HeroUserPageActive extends HomeState {}
+class HeroPageActive extends HomeState {}
+class TestimonyPageActive extends HomeState {}
+class CsPageActive extends HomeState {}
+class UserNonJPSPageActive extends HomeState {}
+class UserJPSPageActive extends HomeState {}
+
+//loading
+class LoadingHeroPageActive extends HomeState {}
+class LoadingHeroUserPageActive extends HomeState {}
+

@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../blocs/authentication/authentication_bloc.dart';
 import '../../../../blocs/profile/profile_download_foto_bloc.dart';
 import '../../../../blocs/gen_profile/mrekan1crud_bloc.dart';
 
@@ -20,12 +21,19 @@ class ProfileSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<MRekan1CrudBloc, MRekan1CrudState>(
       builder: (context, state) {
-        if (!state.isLoaded) return const SizedBox.shrink();
+        // Ambil nama awal dari AuthenticationBloc
+        String displayName = "(belum diupdate di profile)";
+        final authState = context.read<AuthenticationBloc>().state;
 
+        if (authState is AuthenticationAuthenticated) {
+          displayName = authState.user.nama?.trim() ?? displayName;
+        }
+
+        // Override jika rekan1 sudah ada dan tidak kosong
         final rekanNama = state.record?.rekanNama?.trim();
-        final displayName = (rekanNama != null && rekanNama.isNotEmpty)
-            ? rekanNama
-            : "(belum diupdate di profile)";
+        if (state.isLoaded && rekanNama != null && rekanNama.isNotEmpty) {
+          displayName = rekanNama;
+        }
 
         return Container(
           key: profileButtonKey,

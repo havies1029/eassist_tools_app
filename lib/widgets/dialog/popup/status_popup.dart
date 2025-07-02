@@ -2,6 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../pages/user_jps/user_jps_main.dart';
+import '../../../pages/user_non_jps/user_non_jps_main.dart';
+
 class StatusPopup extends StatefulWidget {
   final VoidCallback? onCancel;
 
@@ -78,9 +81,15 @@ class _StatusPopupState extends State<StatusPopup>
           Navigator.of(context).pop();
           Future.microtask(() {
             if (isJpsUser) {
-              context.go('/user_jps');
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const UserJpsMain()),
+              );
             } else {
-              context.go('/user_non_jps');
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const UserNonJpsMain()),
+              );
             }
           });
         }

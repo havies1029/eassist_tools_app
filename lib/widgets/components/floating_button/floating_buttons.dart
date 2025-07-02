@@ -66,71 +66,77 @@ class _FloatingButtonsState extends State<FloatingButtons>
 
   @override
   Widget build(BuildContext context) {
-    final Offset translateOffset = isMobile ? const Offset(0, 0) : const Offset(0, -80);
-    final bool isExact1900x1200 = MediaQuery.of(context).size.width >= 1500.0;
+    final double width = widget.constraints.maxWidth;
+    final double computedMaxWidth = width > 1200 ? 1200 : width * 0.95;
+    final double horizontalPadding = width > 1200
+        ? 95
+        : width > 992
+        ? 64
+        : width > 768
+        ? 48
+        : 24;
+    final double bottomMargin = 30;
 
     return Transform.translate(
-      offset: translateOffset,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: sidePadding),
-        child: Align(
-          alignment: isMobile ? Alignment.centerLeft : Alignment.center,
-          child: Container(
-            width: isMobile ? null : double.infinity,
-            constraints: BoxConstraints(maxWidth: maxWidth),
-            margin: isMobile
-                ? const EdgeInsets.fromLTRB(35, 0, 25, 10)
-                : const EdgeInsets.symmetric(vertical: 20.0),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(_boxRadius),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.08),
-                  blurRadius: 20,
-                  offset: const Offset(0, 8),
+        offset: isMobile ? Offset.zero : const Offset(0, -80),
+        child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+            child: Align(
+              alignment: isMobile ? Alignment.centerLeft : Alignment.center,
+              child: Container(
+                width: isMobile ? null : computedMaxWidth,
+                constraints: BoxConstraints(maxWidth: computedMaxWidth),
+                margin: isMobile
+                    ? const EdgeInsets.fromLTRB(10, 0, 25, 10)
+                    : EdgeInsets.only(bottom: bottomMargin),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(_boxRadius),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.08),
+                      blurRadius: 20,
+                      offset: const Offset(0, 8),
+                    ),
+                    BoxShadow(
+                      color: const Color(0xFF79AB43).withOpacity(0.1),
+                      blurRadius: 40,
+                      offset: const Offset(0, 16),
+                    ),
+                  ],
                 ),
-                BoxShadow(
-                  color: const Color(0xFF79AB43).withOpacity(0.1),
-                  blurRadius: 40,
-                  offset: const Offset(0, 16),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: innerPadding,
+                    vertical: isMobile ? 10.0 : 20.0,
+                  ),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      final isMobileLocal = constraints.maxWidth < 768;
+                      return Wrap(
+                        spacing: isMobileLocal ? 10 : 16,
+                        runSpacing: isMobileLocal ? 10 : 0,
+                        alignment: WrapAlignment.start,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [
+                          _buildAnimatedButton(
+                            isLogin: true,
+                            delay: const Duration(milliseconds: 0),
+                            isMobile: isMobileLocal,
+                          ),
+                          _buildAnimatedButton(
+                            isLogin: false,
+                            delay: const Duration(milliseconds: 200),
+                            isMobile: isMobileLocal,
+                          ),
+                        ],
+                      );
+                    },
+                  ),
                 ),
-              ],
-            ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: innerPadding,
-                vertical: isMobile ? 10.0 : 20.0,
-              ),
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  final isMobileLocal = constraints.maxWidth < 768;
-                  return Wrap(
-                    spacing: isMobileLocal ? 10 : (isExact1900x1200 ? -10 : 16),
-                    runSpacing: isMobileLocal ? 10 : 0,
-                    alignment: WrapAlignment.start,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      _buildAnimatedButton(
-                        isLogin: true,
-                        delay: const Duration(milliseconds: 0),
-                        isMobile: isMobileLocal,
-                        leftOffset: isExact1900x1200 ? 30.0 : 0.0,
-                      ),
-                      _buildAnimatedButton(
-                        isLogin: false,
-                        delay: const Duration(milliseconds: 200),
-                        isMobile: isMobileLocal,
-                        leftOffset: isExact1900x1200 ? 30.0 : 0.0,
-                      ),
-                    ],
-                  );
-                },
               ),
             ),
-          ),
         ),
-      ),
     );
   }
 

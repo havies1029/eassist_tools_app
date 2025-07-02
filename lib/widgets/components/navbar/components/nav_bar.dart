@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../blocs/authentication/authentication_bloc.dart';
+import '../../../../blocs/home/home_bloc.dart';
+import '../../../../pages/hero_client_page/hero_user_main.dart';
+import '../../../../pages/heropage/hero_main.dart';
 
 class NavBar extends StatelessWidget {
   final BoxConstraints constraints;
@@ -40,24 +44,27 @@ class NavBar extends StatelessWidget {
         child: Row(
           children: [
             // Logo
+            // Logo JPS (selalu tampil, tidak bergantung pada authState)
             MouseRegion(
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
                 onTap: () {
                   final authState = context.read<AuthenticationBloc>().state;
-
                   if (authState is AuthenticationAuthenticated ||
                       authState is AuthenticationGoogleUserAuthenticated) {
-                    // Sudah login → ke HeroUserMain
-                    context.go('/hero_user');
+                    SchedulerBinding.instance.addPostFrameCallback((_) {
+                      context.read<HomeBloc>().add(HeroPageActiveEvent());
+                    });
                   } else {
-                    // Belum login → ke HeroMain
-                    context.go('/hero');
+                    SchedulerBinding.instance.addPostFrameCallback((_) {
+                      context.read<HomeBloc>().add(HeroUserPageActiveEvent());
+                    });
                   }
                 },
                 child: Image.asset(
                   'assets/images/JPS.png',
                   height: 60.0,
+                  errorBuilder: (context, error, stackTrace) => const Icon(Icons.image_not_supported),
                 ),
               ),
             ),

@@ -1,7 +1,12 @@
+import 'package:eassist_tools_app/blocs/home/home_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:go_router/go_router.dart';
+import '../../../pages/find_insurance/find_insurance_main.dart';
+import '../../../pages/summary_polis_assets/assets_management_main.dart';
 import '../../dialog/popup/status_popup.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MenuActionSection extends StatelessWidget {
   final BoxConstraints constraints;
@@ -268,7 +273,9 @@ class MenuActionSection extends StatelessWidget {
   void _handleMenuTap(BuildContext context, String menuLabel) {
     switch (menuLabel) {
       case 'Cari\nAsuransi':
-        context.go('/find_insurance');
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(FindInsurancePageActiveEvent());
+        });
         break;
 
       case 'Lapor Klaim':
@@ -277,7 +284,10 @@ class MenuActionSection extends StatelessWidget {
         break;
 
       case 'Management\nAset':
-        context.go('/assets_management');
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const AssetsManagementMain()),
+        );
         break;
 
       case 'Management\nPolis':
