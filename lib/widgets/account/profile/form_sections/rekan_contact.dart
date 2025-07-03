@@ -60,16 +60,16 @@ class _RekanContactState extends State<RekanContact> {
       final email = rekan1State.record?.email ?? '';
       final telepon = rekan1State.record?.telepon ?? 'unknown';
 
-      debugPrint('[RekanContact] Rekan ID: $defaultRekanId');
-      debugPrint('[RekanContact] Rekan Nama: $rekanNama');
-      debugPrint('[RekanContact] Rekan Email: $email');
-      debugPrint('[RekanContact] Rekan Telepon: $telepon');
+      // debugPrint('[RekanContact] Rekan ID: $defaultRekanId');
+      // debugPrint('[RekanContact] Rekan Nama: $rekanNama');
+      // debugPrint('[RekanContact] Rekan Email: $email');
+      // debugPrint('[RekanContact] Rekan Telepon: $telepon');
 
       if (defaultRekanId.isNotEmpty) {
-        debugPrint("📨 Kirim MRekanContactCrudLihatEvent dengan ID: $defaultRekanId");
+        // debugPrint("📨 Kirim MRekanContactCrudLihatEvent dengan ID: $defaultRekanId");
         bloc.add(MRekanContactCrudLihatEvent());
       } else {
-        debugPrint("⚠️ Tidak kirim LihatEvent karena ID kosong");
+        // debugPrint("⚠️ Tidak kirim LihatEvent karena ID kosong");
       }
     });
   }
@@ -91,9 +91,9 @@ class _RekanContactState extends State<RekanContact> {
       listener: (context, state) {
         final rekan1 = context.read<MRekan1CrudBloc>().state.record;
 
-        print("🧩 DEBUG rekan1Bloc data:");
-        print("   - Email: ${rekan1?.email}");
-        print("   - Telepon: ${rekan1?.telepon}");
+        // print("🧩 DEBUG rekan1Bloc data:");
+        // print("   - Email: ${rekan1?.email}");
+        // print("   - Telepon: ${rekan1?.telepon}");
 
         final isStateKosong = state.record == null;
         final isSemuaKosong = state.record?.email.isEmpty != false &&

@@ -28,6 +28,7 @@ import '../gen_profile/test_profile_main.dart';
 import '../hero_client_page/hero_user_main.dart';
 import '../heropage/hero_main.dart';
 import '../home/home_redirector_page.dart';
+import '../qontak/floating_chat_wrapper.dart';
 import '../simulcar/simulcarcrud_main.dart';
 import '../simulcargo/simulcargocrud_main.dart';
 import '../simulmb/simulmbcrud_main.dart';
@@ -123,9 +124,17 @@ class PageContainer extends StatelessWidget {
   //     ),
   //   );
   // }
+  //
+  // @override
+  // Widget build(BuildContext context) {
+  //   return _buildBody(context);
+  // }
+
   @override
   Widget build(BuildContext context) {
-    return _buildBody(context);
+    return FloatingChatWrapper(
+      child: _buildBody(context),
+    );
   }
 
   String get _pageTitle {

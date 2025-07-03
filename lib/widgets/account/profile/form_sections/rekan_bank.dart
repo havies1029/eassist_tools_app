@@ -50,15 +50,15 @@ class RekanBankState extends State<RekanBank> {
       final idToLoad = widget.initialRecordId ?? rekanNama;
 
       // Contoh log (opsional)
-      debugPrint('[initState] Rekan ID: $defaultRekanId');
-      debugPrint('[initState] Rekan Nama: $rekanNama');
-      debugPrint('[initState] idToLoad: $idToLoad');
+      // debugPrint('[initState] Rekan ID: $defaultRekanId');
+      // debugPrint('[initState] Rekan Nama: $rekanNama');
+      // debugPrint('[initState] idToLoad: $idToLoad');
 
       if (idToLoad.isNotEmpty) {
-        debugPrint("📨 Kirim LihatEvent manual dengan ID: $idToLoad");
+        // debugPrint("📨 Kirim LihatEvent manual dengan ID: $idToLoad");
         mRekanBankCrudBloc.add(MRekanBankCrudLihatEvent(recordId: idToLoad));
       } else {
-        debugPrint("⚠️ Tidak kirim LihatEvent karena initialRecordId kosong");
+        // debugPrint("⚠️ Tidak kirim LihatEvent karena initialRecordId kosong");
       }
     });
 
@@ -88,7 +88,7 @@ class RekanBankState extends State<RekanBank> {
         if (state.isSaved) {
           final currentId = state.record?.mrekanbankId;
           if (currentId != null && currentId.isNotEmpty) {
-            debugPrint("🔁 Refresh ulang setelah simpan, id: $currentId");
+            // debugPrint("🔁 Refresh ulang setelah simpan, id: $currentId");
             context.read<MRekanBankCrudBloc>().add(MRekanBankCrudLihatEvent(recordId: currentId));
 
             // ⛔️ Cegah loop: reset status setelah trigger

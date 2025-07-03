@@ -38,7 +38,7 @@
   
     @override
     Widget build(BuildContext context) {
-      debugPrint('✅ Rendered CachedGoogleSigninButton sekali');
+      // debugPrint('✅ Rendered CachedGoogleSigninButton sekali');
       return googleSigninButton();
     }
   }
@@ -77,9 +77,9 @@
       _googleSignIn.onCurrentUserChanged
           .listen((GoogleSignInAccount? account) async {
   
-        debugPrint('User email: ${account?.email}');
-        debugPrint('User display name: ${account?.displayName}');
-  
+        // debugPrint('User email: ${account?.email}');
+        // debugPrint('User display name: ${account?.displayName}');
+        //
         if (! context.mounted) return;
         // ignore: use_build_context_synchronously
         context.read<EmailVerificationBloc>().add(
