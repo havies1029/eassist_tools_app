@@ -89,49 +89,29 @@ class _HeroMainState extends State<HeroMain> {
       }
 
 
-      Future.microtask(() {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         final authState = context.read<AuthenticationBloc>().state;
+        Widget targetPage = const LoadingUserPage(); // Default fallback
 
         if (authState is AuthenticationAuthenticated) {
           final from = authState.authenticatedFrom;
           final custType = authState.user.custType;
 
           if (from == "login_user") {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const LoadingUserPage()),
-            );
+            targetPage = const LoadingUserPage();
           } else if (from == "login_client") {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const LoadingClientPage()),
-            );
+            targetPage = const LoadingClientPage();
           } else if (from == "login_token") {
-            if (custType == "C") {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const LoadingClientPage()),
-              );
-            } else {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const LoadingUserPage()),
-              );
-            }
-          } else {
-            // Fallback kalau tidak terdeteksi
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const LoadingUserPage()),
-            );
+            targetPage = (custType == "C")
+                ? const LoadingClientPage()
+                : const LoadingUserPage();
           }
-        } else {
-          // Jika belum authenticated atau state belum siap
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const LoadingUserPage()),
-          );
         }
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => targetPage),
+        );
       });
 
     }

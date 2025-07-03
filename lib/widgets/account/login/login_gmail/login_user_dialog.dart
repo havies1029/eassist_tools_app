@@ -556,7 +556,7 @@
       }
   
       setState(() => _emailError = null); // Bersihkan error jika valid
-  
+      AppData.lastLoginEmail = email;
       final record = EmailVerificationModel(
         email: email,
         requestFrom: 'email',

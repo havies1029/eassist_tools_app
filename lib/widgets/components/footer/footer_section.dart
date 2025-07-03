@@ -21,24 +21,26 @@ class FooterSection extends StatelessWidget {
 
   // ─── Layout Properties ────────────────────────────────────
   bool get isMobile => constraints.maxWidth < 768;
-
-  double get maxWidth => constraints.maxWidth > 1200
-      ? 1200
-      : constraints.maxWidth * 0.9;
+  bool get isTablet => constraints.maxWidth >= 768 && constraints.maxWidth < 992;
 
   double get horizontalPadding => constraints.maxWidth > 1200
       ? 95
       : constraints.maxWidth > 992
       ? 64
-      : constraints.maxWidth > 768
-      ? 48
+      : isTablet
+      ? 40
       : 24;
 
+  double get maxWidth => constraints.maxWidth > 1200
+      ? 1200
+      : isTablet
+      ? constraints.maxWidth * 0.95
+      : constraints.maxWidth * 0.9;
+
   // ─── Responsive Font Sizes ───────────────────────────────
-  double get logoFontSize => isMobile ? 24.0 : 30.0;
-  double get titleFontSize => isMobile ? 15.0 : 18.0;
-  double get linkFontSize => isMobile ? 15.0 : 16.0;
-  double get smallTextFontSize => 15.0;
+  double get titleFontSize => 18.0;
+
+  double get linkFontSize => 16.0;
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +54,7 @@ class FooterSection extends StatelessWidget {
             // ─── Main Footer Content ────────────────────────────
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 50.0),
+              padding: const EdgeInsets.only(top: 30.0),
               color: Colors.white,
               child: Center(
                 child: Container(
@@ -80,61 +82,58 @@ class FooterSection extends StatelessWidget {
   }
 
   Widget _buildFooterContent() {
-    if (isMobile) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildLogoSection(),
-          const SizedBox(height: 20.0),
-          _buildGoogleMapsButton(),
-          const SizedBox(height: 16.0),
-          _buildCompanyInfo(),
-          const SizedBox(height: 10.0),
-          _buildSocialMediaSection(),
-          const SizedBox(height: 30.0),
-
-          _buildSignatureSection(),
-          const SizedBox(height: 20.0),
-          _buildMenuSection(),
-          const SizedBox(height: 20.0),
-          _buildSupportSection(),
-        ],
-      );
-    } else {
-      return Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            flex: 3,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildLogoSection(),
-                const SizedBox(height: 20.0),
-                _buildGoogleMapsButton(),
-                const SizedBox(height: 24.0),
-                _buildCompanyInfo(),
-                const SizedBox(height: 16.0),
-                _buildSocialMediaSection(),
-              ],
-            ),
+    return isMobile || isTablet
+        ? Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildLogoSection(),
+        const SizedBox(height: 20.0),
+        _buildGoogleMapsButton(),
+        const SizedBox(height: 16.0),
+        _buildCompanyInfo(),
+        const SizedBox(height: 10.0),
+        _buildSocialMediaSection(),
+        const SizedBox(height: 30.0),
+        _buildSignatureSection(),
+        const SizedBox(height: 20.0),
+        _buildMenuSection(),
+        const SizedBox(height: 20.0),
+        _buildSupportSection(),
+      ],
+    )
+        : Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          flex: 3,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildLogoSection(),
+              const SizedBox(height: 20.0),
+              _buildGoogleMapsButton(),
+              const SizedBox(height: 24.0),
+              _buildCompanyInfo(),
+              const SizedBox(height: 16.0),
+              _buildSocialMediaSection(),
+            ],
           ),
-          const SizedBox(width: 40.0),
-          Expanded(flex: 2, child: _buildSignatureSection()),
-          const SizedBox(width: 40.0),
-          Expanded(flex: 2, child: _buildMenuSection()),
-          const SizedBox(width: 40.0),
-          Expanded(flex: 2, child: _buildSupportSection()),
-        ],
-      );
-    }
+        ),
+        const SizedBox(width: 40.0),
+        Expanded(flex: 2, child: _buildSignatureSection()),
+        const SizedBox(width: 40.0),
+        Expanded(flex: 2, child: _buildMenuSection()),
+        const SizedBox(width: 40.0),
+        Expanded(flex: 2, child: _buildSupportSection()),
+      ],
+    );
   }
 
   Widget _buildLogoSection() {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Image.asset('assets/images/JPS.png', height: isMobile ? 40.0 : 40.0),
+        Image.asset('assets/images/JPS.png', height: 80.0),
       ],
     );
   }
@@ -190,7 +189,7 @@ class FooterSection extends StatelessWidget {
   }
 
   Widget _buildCopyrightContent() {
-    if (isMobile) {
+    if (isMobile || isTablet) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -204,7 +203,7 @@ class FooterSection extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontFamily: _fontFamily,
-              fontSize: titleFontSize,
+              fontSize: linkFontSize,
               color: _secondaryTextColor,
             ),
           ),
@@ -213,7 +212,7 @@ class FooterSection extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontFamily: _fontFamily,
-              fontSize: titleFontSize,
+              fontSize: linkFontSize,
               color: _secondaryTextColor,
             ),
           ),
@@ -223,12 +222,12 @@ class FooterSection extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontFamily: _fontFamily,
-              fontSize: smallTextFontSize,
+              fontSize: linkFontSize,
               color: _secondaryTextColor,
             ),
           ),
           const SizedBox(height: 8.0),
-          _buildLegalLinks(), // Berisi Terms and Privacy
+          _buildLegalLinks(),
         ],
       );
     } else {
@@ -236,13 +235,16 @@ class FooterSection extends StatelessWidget {
         height: 120,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              'Protect your future with JPS. © ${DateTime.now().year} JPS Insurance Platform.',
-              style: TextStyle(
-                fontFamily: _fontFamily,
-                fontSize: titleFontSize,
-                color: _secondaryTextColor,
+            Flexible(
+              child: Text(
+                'Protect your future with JPS. © ${DateTime.now().year} JPS Insurance Platform.',
+                style: TextStyle(
+                  fontFamily: _fontFamily,
+                  fontSize: linkFontSize,
+                  color: _secondaryTextColor,
+                ),
               ),
             ),
             Row(
@@ -251,7 +253,7 @@ class FooterSection extends StatelessWidget {
                   'All Rights Reserved |',
                   style: TextStyle(
                     fontFamily: _fontFamily,
-                    fontSize: smallTextFontSize,
+                    fontSize: linkFontSize,
                     color: _secondaryTextColor,
                   ),
                 ),
@@ -274,7 +276,7 @@ class FooterSection extends StatelessWidget {
             'Terms and Conditions',
             style: TextStyle(
               fontFamily: _fontFamily,
-              fontSize: smallTextFontSize,
+              fontSize: linkFontSize,
               color: _linkColor,
               decoration: TextDecoration.underline,
             ),
@@ -284,7 +286,7 @@ class FooterSection extends StatelessWidget {
           ' | ',
           style: TextStyle(
             fontFamily: _fontFamily,
-            fontSize: smallTextFontSize,
+            fontSize: linkFontSize,
             color: _secondaryTextColor,
           ),
         ),
@@ -294,7 +296,7 @@ class FooterSection extends StatelessWidget {
             'Privacy Policy',
             style: TextStyle(
               fontFamily: _fontFamily,
-              fontSize: smallTextFontSize,
+              fontSize: linkFontSize,
               color: _linkColor,
               decoration: TextDecoration.underline,
             ),
@@ -387,7 +389,7 @@ class FooterSection extends StatelessWidget {
   Widget _buildGoogleMapsButton() {
     return OutlinedButton.icon(
       onPressed: () {},
-      icon: Icon(Icons.location_on_outlined, color: _primaryColor),
+      icon: Icon(Icons.location_on_outlined, color: _primaryColor,size: 20),
       label: Text(
         'Google Maps',
         style: TextStyle(
@@ -417,8 +419,8 @@ class FooterSection extends StatelessWidget {
       onPressed: onPressed,
       icon: SvgPicture.asset(
         'assets/icons/$assetName',
-        width: 20,
-        height: 20,
+        width: 30,
+        height: 30,
         colorFilter: const ColorFilter.mode(_primaryColor, BlendMode.srcIn),
       ),
       splashRadius: 20,

@@ -1,8 +1,10 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../blocs/home/home_bloc.dart';
 import '../hero_client_page/hero_user_main.dart';
 import '../heropage/hero_main.dart';
 
@@ -32,10 +34,9 @@ class _LoadingUserPageState extends State<LoadingUserPage> with SingleTickerProv
 
       // Pindah ke halaman utama user
       if (mounted) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const HeroMain()),
-        );
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(HeroPageActiveEvent());
+        });
       }
     });
   }

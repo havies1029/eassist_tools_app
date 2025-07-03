@@ -1,7 +1,9 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../blocs/home/home_bloc.dart';
 import '../hero_client_page/hero_user_main.dart';
 
 class LoadingClientPage extends StatefulWidget {
@@ -64,10 +66,9 @@ class _LoadingClientPageState extends State<LoadingClientPage>
     // Simulasi loading + render halaman hero_user di background
     Future.delayed(const Duration(seconds: 4), () async {
       if (mounted) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const HeroUserMain()),
-        );
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(HeroUserPageActiveEvent());
+        });
       }
     });
   }

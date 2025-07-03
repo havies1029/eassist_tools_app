@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../blocs/authentication/authentication_bloc.dart';
+import '../../../blocs/gen_profile/mrekan1crud_bloc.dart';
 
 class AppTheme {
   static const String fontFamily = 'Satoshi-Regular';
@@ -110,7 +111,7 @@ class HeroSection extends StatelessWidget {
   Widget _buildContentWithImage(Map<String, String> titleData, Map<String, String> descData) {
     final bool isTablet = constraints.maxWidth >= 768 && constraints.maxWidth < 1024;
 
-    if (isMobile || isTablet) {
+    if (isMobile) {
       return SizedBox(
         height: 250,
         child: Stack(
@@ -118,7 +119,7 @@ class HeroSection extends StatelessWidget {
           children: [
             Positioned(
               right: 0,
-              top: isTablet? 200:60,
+              top: 60,
               child: _buildHumanImage(),
             ),
             Positioned.fill(
@@ -254,12 +255,22 @@ class HeroSection extends StatelessWidget {
   Map<String, String> _getTitleData(BuildContext context) {
     switch (pageType) {
       case PageType.home_client:
-        final state = context.read<AuthenticationBloc>().state;
+        final authState = context.watch<AuthenticationBloc>().state;
+        final rekanState = context.watch<MRekan1CrudBloc>().state;
         String name = "[Nama User]";
-        if (state is AuthenticationAuthenticated &&
-            state.user.custType == "C") {
-          name = state.user.nama ?? "[Nama User]";
+
+        // Ambil dari Authentication jika custType C
+        if (authState is AuthenticationAuthenticated && authState.user.custType == "C") {
+          name = authState.user.nama ?? name;
         }
+
+        // Override jika dari rekan 1 tersedia dan valid
+        if (rekanState.isLoaded &&
+            rekanState.record?.rekanNama != null &&
+            rekanState.record!.rekanNama!.isNotEmpty) {
+          name = rekanState.record!.rekanNama!;
+        }
+
         return {
           'bold': 'Selamat Datang, $name !\n',
           'normal': 'Berikut ringkasan polis Anda Hari ini:',

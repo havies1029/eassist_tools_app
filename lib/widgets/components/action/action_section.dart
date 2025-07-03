@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class ActionSection extends StatefulWidget {
   final BoxConstraints constraints;
@@ -188,12 +189,18 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
   }
 
   Widget _buildAnimatedImage() {
+    final maxImgWidth = isMobile ? 374.0 : 400.0;
+    final maxImgHeight = isMobile ? 271.0 : 400.0;
+
     return FadeTransition(
       opacity: _imageController,
       child: Transform.translate(
         offset: Offset(_imageSlideAnimation.value, 0),
         child: Container(
-          constraints: const BoxConstraints(maxWidth: 400, maxHeight: 400),
+          constraints: BoxConstraints(
+            maxWidth: maxImgWidth,
+            maxHeight: maxImgHeight,
+          ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(16.13),
             child: Image.asset(

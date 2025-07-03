@@ -31,6 +31,15 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
   String? _passwordError;
 
   @override
+  void initState() {
+    super.initState();
+
+    if (AppData.lastLoginEmail != null) {
+      _emailController.text = AppData.lastLoginEmail!;
+    }
+  }
+
+  @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
@@ -559,6 +568,7 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
   void _handleLogin() {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
+    AppData.lastLoginEmail = null;
 
     setState(() {
       _emailError = null;

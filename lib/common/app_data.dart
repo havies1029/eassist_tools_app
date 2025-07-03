@@ -13,7 +13,7 @@ class AppData {
   static User user = User();
   static var uriHtpp = useSSL ? Uri.https : Uri.http;
   static String version = "1.0.2";
-
+  static String? lastLoginEmail;
 /*
    static bool useSSL = false;
    static String apiDomain = "http://10.0.2.2/eAssistToolsAPI/";

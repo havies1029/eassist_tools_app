@@ -13,6 +13,8 @@ import 'package:eassist_tools_app/widgets/combobox/combomkota_widget.dart';
 import 'package:eassist_tools_app/widgets/combobox/combompropinsi_widget.dart';
 import 'package:eassist_tools_app/widgets/combobox/comborkodepos_widget.dart';
 
+import '../../../../blocs/gen_profile/mrekan1crud_bloc.dart';
+
 class RekanContact extends StatefulWidget {
   const RekanContact({super.key});
 
@@ -47,11 +49,31 @@ class _RekanContactState extends State<RekanContact> {
   @override
   void initState() {
     super.initState();
+
     Future.delayed(Duration.zero, () {
-      bloc = BlocProvider.of<MRekanContactCrudBloc>(context);
-      bloc.add(MRekanContactCrudLihatEvent());
+      bloc = context.read<MRekanContactCrudBloc>();
+
+      final rekan1State = context.read<MRekan1CrudBloc>().state;
+      final defaultRekanId = rekan1State.record?.mrekan1Id ?? '';
+      final rekanNama = rekan1State.record?.rekanNama ?? 'unknown';
+
+      final email = rekan1State.record?.email ?? '';
+      final telepon = rekan1State.record?.telepon ?? 'unknown';
+
+      debugPrint('[RekanContact] Rekan ID: $defaultRekanId');
+      debugPrint('[RekanContact] Rekan Nama: $rekanNama');
+      debugPrint('[RekanContact] Rekan Email: $email');
+      debugPrint('[RekanContact] Rekan Telepon: $telepon');
+
+      if (defaultRekanId.isNotEmpty) {
+        debugPrint("📨 Kirim MRekanContactCrudLihatEvent dengan ID: $defaultRekanId");
+        bloc.add(MRekanContactCrudLihatEvent());
+      } else {
+        debugPrint("⚠️ Tidak kirim LihatEvent karena ID kosong");
+      }
     });
   }
+
 
   @override
   void dispose() {
@@ -67,15 +89,33 @@ class _RekanContactState extends State<RekanContact> {
 
     return BlocConsumer<MRekanContactCrudBloc, MRekanContactCrudState>(
       listener: (context, state) {
-        if (state.isLoaded && state.record != null && !_hasInitializedFields) {
-          fieldAlamat1Controller.text = state.record!.alamat1;
-          fieldEmailController.text = state.record!.email;
-          fieldTelpController.text = state.record!.telp;
-          fieldComboMKota = state.record!.comboMKota;
-          fieldComboMPropinsi = state.record!.comboMPropinsi;
-          fieldComboRKodepos = state.record!.comboRKodepos;
+        final rekan1 = context.read<MRekan1CrudBloc>().state.record;
 
-          _hasInitializedFields = true; // ⬅️ mencegah overwrite setelah init
+        print("🧩 DEBUG rekan1Bloc data:");
+        print("   - Email: ${rekan1?.email}");
+        print("   - Telepon: ${rekan1?.telepon}");
+
+        final isStateKosong = state.record == null;
+        final isSemuaKosong = state.record?.email.isEmpty != false &&
+            state.record?.telp.isEmpty != false &&
+            state.record?.alamat1.isEmpty != false;
+
+        if (state.isLoaded && !_hasInitializedFields) {
+          if (!isStateKosong && !isSemuaKosong) {
+            // Normal: isi dari Contact
+            fieldAlamat1Controller.text = state.record!.alamat1;
+            fieldEmailController.text = state.record!.email;
+            fieldTelpController.text = state.record!.telp;
+            fieldComboMKota = state.record!.comboMKota;
+            fieldComboMPropinsi = state.record!.comboMPropinsi;
+            fieldComboRKodepos = state.record!.comboRKodepos;
+          } else if (rekan1 != null) {
+            // Fallback: isi dari Rekan1
+            fieldEmailController.text = rekan1.email ?? '';
+            fieldTelpController.text = rekan1.telepon ?? '';
+            // Alamat dan combobox tetap kosong
+          }
+          _hasInitializedFields = true;
         }
       },
       builder: (context, state) {

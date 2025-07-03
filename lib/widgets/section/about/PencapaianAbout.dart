@@ -273,7 +273,7 @@ class PencapaianSection extends StatelessWidget {
           Container(
             margin: const EdgeInsets.only(top: 2),
             child: SvgPicture.asset(
-              'assets/icons/check.svg',
+              'assets/images/check.svg',
               width: isMobile ? 17 : 32,
               height: isMobile ? 17 : 32,
               color: _primaryGreen,

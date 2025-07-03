@@ -50,16 +50,34 @@ class NavBar extends StatelessWidget {
               child: GestureDetector(
                 onTap: () {
                   final authState = context.read<AuthenticationBloc>().state;
-                  if (authState is AuthenticationAuthenticated ||
-                      authState is AuthenticationGoogleUserAuthenticated) {
-                    SchedulerBinding.instance.addPostFrameCallback((_) {
+
+                  SchedulerBinding.instance.addPostFrameCallback((_) {
+                    if (authState is AuthenticationAuthenticated) {
+                      final from = authState.authenticatedFrom;
+                      final custType = authState.user.custType;
+
+                      if (from == "login_user") {
+                        context.read<HomeBloc>().add(HeroPageActiveEvent());
+                      } else if (from == "login_client") {
+                        context.read<HomeBloc>().add(HeroUserPageActiveEvent());
+                      } else if (from == "login_token") {
+                        if (custType == "C") {
+                          context.read<HomeBloc>().add(HeroUserPageActiveEvent());
+                        } else {
+                          context.read<HomeBloc>().add(HeroPageActiveEvent());
+                        }
+                      } else {
+                        context.read<HomeBloc>().add(HeroPageActiveEvent()); // fallback
+                      }
+
+                    } else if (authState is AuthenticationGoogleUserAuthenticated) {
+                      // Untuk login google, bisa diasumsikan sebagai user biasa (atau sesuaikan logic kamu)
                       context.read<HomeBloc>().add(HeroPageActiveEvent());
-                    });
-                  } else {
-                    SchedulerBinding.instance.addPostFrameCallback((_) {
+                    } else {
+                      // Kalau belum login
                       context.read<HomeBloc>().add(HeroUserPageActiveEvent());
-                    });
-                  }
+                    }
+                  });
                 },
                 child: Image.asset(
                   'assets/images/JPS.png',
@@ -68,10 +86,7 @@ class NavBar extends StatelessWidget {
                 ),
               ),
             ),
-
-
             const Spacer(),
-
             // Profile Section (dari luar di-pass sebagai widget)
             profileSection,
 
