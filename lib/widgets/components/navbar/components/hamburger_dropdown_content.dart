@@ -211,7 +211,7 @@
         // Menu terbatas untuk login_token tanpa custType atau login_user
         if (from == 'login_token' && custType != 'C' || from == 'login_user') {
           return _allMenus.where((menu) =>
-          menu['title'] == 'Signature Joss' ||
+          // menu['title'] == 'Signature Joss' ||
               menu['title'] == 'Tentang JPS'
           ).toList();
         }
@@ -219,7 +219,7 @@
 
       // Default: hanya dua menu
       return _allMenus.where((menu) =>
-      menu['title'] == 'Signature Joss' ||
+      // menu['title'] == 'Signature Joss' ||
           menu['title'] == 'Tentang JPS'
       ).toList();
     }
