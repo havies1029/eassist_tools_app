@@ -59,23 +59,23 @@ class LupaSandiDialogState extends BaseDialogState<LupaSandiDialog> {
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                     child: Row(
                       children: [
-                        GestureDetector(
-                          onTap: () => Navigator.of(context).pop(),
-                          child: Container(
-                            width: 28,
-                            height: 28,
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.close,
-                              size: 18,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 16),
+                        // GestureDetector(
+                        //   onTap: () => Navigator.of(context).pop(),
+                        //   child: Container(
+                        //     width: 28,
+                        //     height: 28,
+                        //     decoration: BoxDecoration(
+                        //       color: Colors.white.withOpacity(0.2),
+                        //       shape: BoxShape.circle,
+                        //     ),
+                        //     // child: const Icon(
+                        //     //   Icons.close,
+                        //     //   size: 18,
+                        //     //   color: Colors.white,
+                        //     // ),
+                        //   ),
+                        // ),
+                        // const SizedBox(width: 16),
                         const Text(
                           'Reset Password',
                           style: TextStyle(
@@ -125,6 +125,7 @@ class LupaSandiDialogState extends BaseDialogState<LupaSandiDialog> {
                             color: Colors.grey.shade600,
                           ),
                           textAlign: TextAlign.center,
+
                         ),
                         const SizedBox(height: 32),
 
@@ -166,6 +167,13 @@ class LupaSandiDialogState extends BaseDialogState<LupaSandiDialog> {
                 color: Colors.grey.shade500,
               ),
               border: InputBorder.none,
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(
+                  color: Color(0xFF7BA05B), // hijau saat fokus
+                  width: 2,
+                ),
+              ),
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             ),
           ),
@@ -292,7 +300,7 @@ class LupaSandiDialogState extends BaseDialogState<LupaSandiDialog> {
                   context.read<AuthenticationBloc>().add(RequireLoginClient(requiredFrom: "lupa_sandi", errorMsg: ""));
                 },
                 child: Text(
-                  'Login Client',
+                  ' Masuk sebagai Client',
                   style: TextStyle(
                     color: _isHoveringRegister
                         ? const Color(0xFF7BA05B)
@@ -328,7 +336,7 @@ class LupaSandiDialogState extends BaseDialogState<LupaSandiDialog> {
                   context.read<AuthenticationBloc>().add(RequireLoginUser());
                 },
                 child: Text(
-                  'User',
+                  ' User',
                   style: TextStyle(
                     color: _isHovering
                         ? const Color(0xFF7BA05B)

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../blocs/authentication/authentication_bloc.dart';
+import '../../../../blocs/gen_profile/mrekan1crud_bloc.dart';
 import '../../../../blocs/home/home_bloc.dart';
 import '../../../../pages/hero_client_page/hero_user_main.dart';
 import '../../../../pages/heropage/hero_main.dart';
@@ -31,6 +32,9 @@ class NavBar extends StatelessWidget {
     final authState = context.watch<AuthenticationBloc>().state;
     final showHamburger = authState is AuthenticationAuthenticated &&
         (authState.authenticatedFrom == 'login_user' || authState.authenticatedFrom == 'login_client' || authState.authenticatedFrom == 'login_token');
+    final blocState = context.read<MRekan1CrudBloc>().state;
+    final mjnsclientId = blocState.record?.mjnsclientId;
+    final hasJenisClient = mjnsclientId != null;
 
     return Container(
       width: double.infinity,
@@ -72,7 +76,6 @@ class NavBar extends StatelessWidget {
 
                     }
                     else if (authState is AuthenticationGoogleUserAuthenticated) {
-                      // Untuk login google, bisa diasumsikan sebagai user biasa (atau sesuaikan logic kamu)
                       context.read<HomeBloc>().add(HeroPageActiveEvent());
                     }
                     else {
@@ -90,11 +93,13 @@ class NavBar extends StatelessWidget {
             ),
             const Spacer(),
             // Profile Section (dari luar di-pass sebagai widget)
-            profileSection,
+            if (_shouldShowProfileSection(authState)) profileSection,
+
+
 
             const SizedBox(width: 16),
 
-            // // Hamburger Menu Icon
+            // Hamburger Menu Icon
             if (showHamburger)
               Container(
                 key: menuButtonKey,
@@ -124,4 +129,16 @@ class NavBar extends StatelessWidget {
       ),
     );
   }
+
+  bool _shouldShowProfileSection(AuthenticationState state) {
+    if (state is AuthenticationAuthenticated) {
+      final from = state.authenticatedFrom;
+      final custType = state.user.custType;
+
+      if (from == 'login_client') return true;
+      if (from == 'login_token' && custType == 'C') return true;
+    }
+    return false;
+  }
+
 }

@@ -41,6 +41,7 @@ class _RekanGeneralIdvState extends State<RekanGeneralIdv> {
   final comboMJnskelKey = GlobalKey<DropdownSearchState<ComboMJnskelModel>>();
 
   bool isEditingSection = false;
+  bool showValidationErrors = false;
 
   @override
   void initState() {
@@ -88,7 +89,7 @@ class _RekanGeneralIdvState extends State<RekanGeneralIdv> {
                     IconButton(
                       icon: Icon(
                         isEditingSection ? Icons.check : Icons.edit,
-                        color: isEditingSection ? null : Colors.red, // Merah hanya saat edit mode = false
+                        color: isEditingSection ? null : Colors.red,
                       ),
                       tooltip: isEditingSection ? "Simpan" : "Ubah",
                       onPressed: () {
@@ -108,6 +109,9 @@ class _RekanGeneralIdvState extends State<RekanGeneralIdv> {
                   controller: fieldRekanNamaController,
                   hintText: "Masukkan nama lengkap",
                 ),
+                if (showValidationErrors && fieldRekanNamaController.text.trim().isEmpty)
+                  _buildFieldError("Nama lengkap wajib diisi"),
+
                 const SizedBox(height: 12),
                 _buildLabelText("Jenis Kelamin", isRequired: true),
                 const SizedBox(height: 6),
@@ -116,6 +120,9 @@ class _RekanGeneralIdvState extends State<RekanGeneralIdv> {
                       ? _buildComboMJnskel()
                       : _buildDisabledDropdown(text: fieldComboMJnskel?.jenisDesc ?? "Belum diisi"),
                 ),
+                if (showValidationErrors && fieldComboMJnskel == null)
+                  _buildFieldError("Jenis kelamin wajib dipilih"),
+
                 const SizedBox(height: 12),
                 _buildLabelText("Pekerjaan", isRequired: true),
                 const SizedBox(height: 6),
@@ -124,8 +131,9 @@ class _RekanGeneralIdvState extends State<RekanGeneralIdv> {
                       ? _buildComboMPekerjaan()
                       : _buildDisabledDropdown(text: fieldComboMPekerjaan?.kerjaNama ?? "Belum diisi"),
                 ),
+                if (showValidationErrors && fieldComboMPekerjaan == null)
+                  _buildFieldError("Pekerjaan wajib dipilih"),
                 const SizedBox(height: 12),
-                FormError(errors: errors, key: null),
               ],
             ),
           ),
@@ -173,61 +181,81 @@ class _RekanGeneralIdvState extends State<RekanGeneralIdv> {
     int? minLines,
     int? maxLines,
   }) {
-    return TextFormField(
-      controller: controller,
-      readOnly: !isEditingSection,
-      keyboardType: keyboardType,
-      minLines: minLines ?? 1,
-      maxLines: maxLines ?? 5, // Limit to maximum 5 lines
-      decoration: InputDecoration(
-        hintText: hintText,
-        hintStyle: const TextStyle(
-          fontFamily: 'Satoshi',
-          fontSize: 14,
-          color: Colors.grey,
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: Colors.grey.shade400, width: 1),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: Colors.grey.shade400, width: 1),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: Colors.blue.shade400, width: 1.5),
-        ),
-        disabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
-        ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-        filled: true,
-        fillColor: isEditingSection ? Colors.white : Colors.grey.shade50,
-        alignLabelWithHint: true,
-        isDense: true, // Makes the field more compact
-      ),
-      style: const TextStyle(
-        fontFamily: 'Satoshi',
-        fontSize: 14,
-        height: 1.3, // Slightly reduced line height
-      ),
-      textAlignVertical: TextAlignVertical.top,
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          addError("Field nama rekan harus diisi.");
-          return "Field nama rekan harus diisi.";
-        }
-        return null;
-      },
-      onChanged: (value) {
-        if (value.isNotEmpty) {
-          removeError(kStringNullError);
-        }
+    String? errorText;
+
+    return Builder(
+      builder: (context) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextFormField(
+              controller: controller,
+              readOnly: !isEditingSection,
+              keyboardType: keyboardType,
+              minLines: minLines ?? 1,
+              maxLines: maxLines ?? 5,
+              decoration: InputDecoration(
+                hintText: hintText,
+                hintStyle: const TextStyle(
+                  fontFamily: 'Satoshi',
+                  fontSize: 14,
+                  color: Colors.grey,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(color: Colors.grey.shade400, width: 1),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(color: Colors.grey.shade400, width: 1),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(color: Colors.blue.shade400, width: 1.5),
+                ),
+                disabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
+                ),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                filled: true,
+                fillColor: isEditingSection ? Colors.white : Colors.grey.shade50,
+                alignLabelWithHint: true,
+                isDense: true,
+              ),
+              style: const TextStyle(
+                fontFamily: 'Satoshi',
+                fontSize: 14,
+                height: 1.3,
+              ),
+              textAlignVertical: TextAlignVertical.top,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  errorText = "Wajib diisi";
+                  addError("Field nama rekan harus diisi.");
+                  return errorText;
+                }
+                return null;
+              },
+              onChanged: (value) {
+                if (value.isNotEmpty) {
+                  removeError(kStringNullError);
+                }
+              },
+            ),
+            if (errorText != null)
+              const SizedBox(height: 4),
+            if (errorText != null)
+              Text(
+                errorText!,
+                style: const TextStyle(color: Colors.red, fontSize: 12),
+              ),
+          ],
+        );
       },
     );
   }
+
 
   Widget _buildStyledDropdown({required Widget child}) {
     return Container(
@@ -261,95 +289,114 @@ class _RekanGeneralIdvState extends State<RekanGeneralIdv> {
   }
 
   Widget _buildComboMPekerjaan() {
-    return buildFieldComboMPekerjaan(
-      labelText: 'Pilih',
-      initItem: fieldComboMPekerjaan,
-      onChangedCallback: (value) {
-        if (value != null) {
-          fieldComboMPekerjaan = value;
-          bloc.add(ComboMPekerjaanChangedEvent(comboMPekerjaan: value));
-          removeError("Field pekerjaan tidak boleh kosong.");
-        }
-      },
-      onSaveCallback: (value) {
-        if (value != null) fieldComboMPekerjaan = value;
-      },
-      validatorCallback: (value) {
-        if (value == null) {
-          addError("Field pekerjaan tidak boleh kosong.");
-          return "Field pekerjaan harus diisi";
-        }
-        return null;
-      },
-      comboKey: comboMPekerjaanKey,
+    String? errorText;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        buildFieldComboMPekerjaan(
+          labelText: 'Pilih',
+          initItem: fieldComboMPekerjaan,
+          onChangedCallback: (value) {
+            if (value != null) {
+              fieldComboMPekerjaan = value;
+              bloc.add(ComboMPekerjaanChangedEvent(comboMPekerjaan: value));
+              removeError("Field pekerjaan tidak boleh kosong.");
+            }
+          },
+          onSaveCallback: (value) {
+            if (value != null) fieldComboMPekerjaan = value;
+          },
+          validatorCallback: (value) {
+            if (value == null) {
+              errorText = "Field pekerjaan harus diisi";
+              addError("Field pekerjaan tidak boleh kosong.");
+              return errorText;
+            }
+            return null;
+          },
+          comboKey: comboMPekerjaanKey,
+        ),
+        if (errorText != null)
+          const SizedBox(height: 4),
+        if (errorText != null)
+          Text(
+            errorText!,
+            style: const TextStyle(color: Colors.red, fontSize: 12),
+          ),
+      ],
     );
   }
+
 
   Widget _buildComboMJnskel() {
-    return buildFieldComboMJnskel(
-      labelText: 'Pilih',
-      initItem: fieldComboMJnskel,
-      onChangedCallback: (value) {
-        if (value != null) {
-          fieldComboMJnskel = value;
-          bloc.add(ComboMJnskelChangedEvent(comboMJnskel: value));
-          removeError("Field jenis kelamin tidak boleh kosong.");
-        }
-      },
-      onSaveCallback: (value) {
-        if (value != null) fieldComboMJnskel = value;
-      },
-      validatorCallback: (value) {
-        if (value == null) {
-          addError("Field jenis kelamin tidak boleh kosong.");
-          return "Field jenis kelamin harus diisi";
-        }
-        return null;
-      },
-      comboKey: comboMJnskelKey,
+    String? errorText;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        buildFieldComboMJnskel(
+          labelText: 'Pilih',
+          initItem: fieldComboMJnskel,
+          onChangedCallback: (value) {
+            if (value != null) {
+              fieldComboMJnskel = value;
+              bloc.add(ComboMJnskelChangedEvent(comboMJnskel: value));
+              removeError("Field jenis kelamin tidak boleh kosong.");
+            }
+          },
+          onSaveCallback: (value) {
+            if (value != null) fieldComboMJnskel = value;
+          },
+          validatorCallback: (value) {
+            if (value == null) {
+              errorText = "Field jenis kelamin harus diisi";
+              addError("Field jenis kelamin tidak boleh kosong.");
+              return errorText;
+            }
+            return null;
+          },
+          comboKey: comboMJnskelKey,
+        ),
+        if (errorText != null)
+          const SizedBox(height: 4),
+        if (errorText != null)
+          Text(
+            errorText!,
+            style: const TextStyle(color: Colors.red, fontSize: 12),
+          ),
+      ],
     );
   }
 
+  Widget _buildFieldError(String message) => Padding(
+    padding: const EdgeInsets.only(top: 4),
+    child: Text(
+      message,
+      style: const TextStyle(color: Colors.red, fontSize: 12),
+    ),
+  );
 
   void onSaveForm() {
     setState(() {
+      showValidationErrors = true;
       errors.clear();
     });
 
     final isFormValid = _formKey.currentState!.validate();
-    print("🔍 Form validasi result: $isFormValid");
 
-    // Validasi manual untuk dropdown dan text
-    if (fieldComboMJnskel == null) {
-      addError("Field jenis kelamin tidak boleh kosong.");
-      print("⚠️ Jenis kelamin belum dipilih");
-    }
-    if (fieldComboMPekerjaan == null) {
-      addError("Field pekerjaan tidak boleh kosong.");
-      print("⚠️ Pekerjaan belum dipilih");
-    }
-    if (fieldRekanNamaController.text.trim().isEmpty) {
-      addError("Field nama rekan harus diisi.");
-      print("⚠️ Nama rekan kosong");
-    }
+    if (fieldComboMJnskel == null) addError("Field jenis kelamin tidak boleh kosong.");
+    if (fieldComboMPekerjaan == null) addError("Field pekerjaan tidak boleh kosong.");
+    if (fieldRekanNamaController.text.trim().isEmpty) addError("Field nama rekan harus diisi.");
 
-    // Jika ada error, hentikan proses
-    if (!isFormValid || errors.isNotEmpty) {
-      print("🛑 Gagal simpan, terdapat error: ${errors.join(', ')}");
-      return;
-    }
+    if (!isFormValid || errors.isNotEmpty) return;
 
-    // Ambil ID dari state bloc (pastikan record sudah dimuat)
     final currentId = bloc.state.record?.mrekan1Id;
-    print("📦 Mengambil mrekan1Id dari bloc: $currentId");
-
     if (currentId == null || currentId.isEmpty) {
       addError("Data belum dimuat, tidak dapat menyimpan.");
-      print("🛑 ID tidak tersedia, tidak bisa menyimpan.");
       return;
     }
 
-    // Buat model baru
     final record = MRekanGeneralIdvCrudModel(
       mjnskelId: fieldComboMJnskel!.mjnskelId,
       mpekerjaanId: fieldComboMPekerjaan!.mpekerjaanId,
@@ -357,20 +404,13 @@ class _RekanGeneralIdvState extends State<RekanGeneralIdv> {
       mrekan1Id: currentId,
     );
 
-    print("📤 [MRekanGeneralIdvUbah] Mengirim data:");
-    print("   - mjnskelId: ${record.mjnskelId}");
-    print("   - mpekerjaanId: ${record.mpekerjaanId}");
-    print("   - rekanNama: ${record.rekanNama}");
-    print("   - mrekan1Id: ${record.mrekan1Id}");
-
-    // Kirim ke Bloc untuk disimpan
     bloc.add(MRekanGeneralIdvCrudUbahEvent(record: record));
 
-    // Matikan mode edit jika ada
     setState(() {
       isEditingSection = false;
     });
   }
+
 
   void addError(String error) {
     if (!errors.contains(error)) {

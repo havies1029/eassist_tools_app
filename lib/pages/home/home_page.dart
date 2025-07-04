@@ -103,6 +103,7 @@ class _HomePageState extends State<HomePage> {
     if (state is UserNonJPSPageActive) return PageType.usernonjps;
     if (state is UserJPSPageActive) return PageType.userjps;
     if (state is LoadingHeroPageActive) return PageType.loadinghero;
+    if (state is LoadingHero2PageActive) return PageType.loadinghero2;
     if (state is LoadingHeroUserPageActive) return PageType.loadingherouser;
     return null;
   }

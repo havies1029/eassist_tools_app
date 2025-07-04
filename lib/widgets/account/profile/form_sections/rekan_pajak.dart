@@ -116,27 +116,75 @@ class _MRekanPajakFormBodyState extends State<MRekanPajakFormBody> {
 
               _buildLabelText("Alamat", isRequired: true),
               const SizedBox(height: 6),
-              _buildStyledTextField(controller: fieldAlamat1Controller, hintText: "Masukkan alamat lengkap", maxLines: 2),
+              _buildStyledTextField(
+                controller: fieldAlamat1Controller,
+                hintText: "Masukkan alamat lengkap",
+                maxLines: 2,
+              ),
+              if (fieldAlamat1Controller.text.trim().isEmpty && isEditingSection)
+                const Padding(
+                  padding: EdgeInsets.only(top: 4),
+                  child: Text(
+                    "Alamat wajib dpilih",
+                    style: TextStyle(color: Colors.red, fontSize: 12),
+                  ),
+                ),
 
               const SizedBox(height: 12),
               _buildLabelText("Propinsi", isRequired: true),
               const SizedBox(height: 6),
               _buildStyledDropdown(child: _buildFieldMPropinsiDropdown()),
+              if (fieldComboMPropinsi == null && isEditingSection)
+                const Padding(
+                  padding: EdgeInsets.only(top: 4),
+                  child: Text(
+                    "Propinsi wajib dpilih",
+                    style: TextStyle(color: Colors.red, fontSize: 12),
+                  ),
+                ),
 
               const SizedBox(height: 12),
               _buildLabelText("Kota", isRequired: true),
               const SizedBox(height: 6),
               _buildStyledDropdown(child: _buildFieldMKotaDropdown()),
+              if (fieldComboMKota == null && isEditingSection)
+                const Padding(
+                  padding: EdgeInsets.only(top: 4),
+                  child: Text(
+                    "Kota wajib dpilih",
+                    style: TextStyle(color: Colors.red, fontSize: 12),
+                  ),
+                ),
 
               const SizedBox(height: 12),
               _buildLabelText("Kode Pos", isRequired: true),
               const SizedBox(height: 6),
               _buildStyledDropdown(child: _buildFieldRKodeposDropdown()),
+              if (fieldComboRKodepos == null && isEditingSection)
+                const Padding(
+                  padding: EdgeInsets.only(top: 4),
+                  child: Text(
+                    "Kode Pos wajib dpilih",
+                    style: TextStyle(color: Colors.red, fontSize: 12),
+                  ),
+                ),
 
               const SizedBox(height: 12),
               _buildLabelText("NPWP No", isRequired: true),
               const SizedBox(height: 6),
-              _buildStyledTextField(controller: fieldNpwpNoController, hintText: "Masukkan NPWP"),
+              _buildStyledTextField(
+                controller: fieldNpwpNoController,
+                hintText: "Masukkan NPWP",
+              ),
+              if (fieldNpwpNoController.text.trim().isEmpty && isEditingSection)
+                const Padding(
+                  padding: EdgeInsets.only(top: 4),
+                  child: Text(
+                    "NPWP wajib dpilih",
+                    style: TextStyle(color: Colors.red, fontSize: 12),
+                  ),
+                ),
+
             ],
           ),
         ),

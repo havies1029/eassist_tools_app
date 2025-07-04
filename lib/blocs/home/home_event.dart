@@ -54,5 +54,6 @@ class UserJPSPageActiveEvent extends HomeEvent {}
 
 //loading
 class LoadingHeroPageActiveEvent extends HomeEvent {}
+class LoadingHero2PageActiveEvent extends HomeEvent {}
 class LoadingHeroUserPageActiveEvent extends HomeEvent {}
 

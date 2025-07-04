@@ -46,6 +46,7 @@ enum PageType {
   usernonjps,
   userjps,
   loadinghero,
+  loadinghero2,
   loadingherouser,
 }
 

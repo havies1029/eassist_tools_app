@@ -130,6 +130,7 @@ class RekanBankState extends State<RekanBank> {
                     ),
                   ],
                 ),
+
                 const SizedBox(height: 12),
 
                 _buildLabel("Rekening Bank", isRequired: true),
@@ -141,26 +142,42 @@ class RekanBankState extends State<RekanBank> {
                     initItem: fieldComboMBank,
                     onChangedCallback: (value) {
                       if (value != null) {
-                        setState(() => fieldComboMBank = value); // ⬅ penting
+                        setState(() => fieldComboMBank = value);
                         context.read<MRekanBankCrudBloc>().add(ComboMBankChangedEvent(comboMBank: value));
-                        removeError("Bank tidak boleh kosong.");
+                        removeError("Bank wajib dipilih");
                       }
                     },
                     onSaveCallback: (value) => fieldComboMBank = value,
                     validatorCallback: (value) {
-                      if (value == null) addError("Bank tidak boleh kosong.");
+                      if (value == null) addError("Bank wajib dipilih");
                     },
                   )
                       : _buildDisabledDropdown(fieldComboMBank?.bankNama ?? "Belum diisi"),
                 ),
+                if (fieldComboMBank == null && isEditingSection)
+                  const Padding(
+                    padding: EdgeInsets.only(top: 4),
+                    child: Text(
+                      "Bank wajib dipilih.",
+                      style: TextStyle(color: Colors.red, fontSize: 12),
+                    ),
+                  ),
 
                 _buildLabel("Nama Rekening", isRequired: true),
                 _buildTextField(
                   controller: fieldRekNamaController,
                   hintText: "Masukkan nama pemilik rekening",
                   maxLines: 2,
-                  errorKey: "Nama rekening tidak boleh kosong.",
+                  errorKey: "Nama rekening wajib dpilih",
                 ),
+                if (fieldRekNamaController.text.trim().isEmpty && isEditingSection)
+                  const Padding(
+                    padding: EdgeInsets.only(top: 4),
+                    child: Text(
+                      "Nama rekening wajib dpilih",
+                      style: TextStyle(color: Colors.red, fontSize: 12),
+                    ),
+                  ),
 
                 _buildLabel("No. Rekening", isRequired: true),
                 _buildTextField(
@@ -168,19 +185,28 @@ class RekanBankState extends State<RekanBank> {
                   hintText: "Masukkan nomor rekening",
                   keyboardType: TextInputType.number,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  errorKey: "Nomor rekening tidak boleh kosong.",
+                  errorKey: "Nomor rekening wajib dipilih",
                 ),
-
-                if (errors.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: errors
-                          .map((e) => Text(e, style: const TextStyle(color: Colors.red, fontSize: 12)))
-                          .toList(),
+                if (fieldRekNoController.text.trim().isEmpty && isEditingSection)
+                  const Padding(
+                    padding: EdgeInsets.only(top: 4),
+                    child: Text(
+                      "Nomor rekening wajib dipilih",
+                      style: TextStyle(color: Colors.red, fontSize: 12),
                     ),
                   ),
+
+
+                // if (errors.isNotEmpty)
+                //   Padding(
+                //     padding: const EdgeInsets.only(top: 12),
+                //     child: Column(
+                //       crossAxisAlignment: CrossAxisAlignment.start,
+                //       children: errors
+                //           .map((e) => Text(e, style: const TextStyle(color: Colors.red, fontSize: 12)))
+                //           .toList(),
+                //     ),
+                //   ),
               ],
             ),
           ),

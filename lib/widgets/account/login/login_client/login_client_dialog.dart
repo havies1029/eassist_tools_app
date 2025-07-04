@@ -43,6 +43,8 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    AppData.lastLoginEmail = null;
+
     super.dispose();
   }
 
@@ -120,7 +122,7 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
                                 },
                               ),
                               const Text(
-                                'Login',
+                                'Masuk',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 20,

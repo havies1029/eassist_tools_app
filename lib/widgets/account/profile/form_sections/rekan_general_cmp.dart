@@ -91,8 +91,16 @@ class _RekanGeneralCmpState extends State<RekanGeneralCmp> {
                 controller: fieldRekanNamaController,
                 hintText: "Masukkan nama perusahaan",
               ),
-              const SizedBox(height: 12),
+              if (fieldRekanNamaController.text.trim().isEmpty && isEditingSection)
+                const Padding(
+                  padding: EdgeInsets.only(top: 4),
+                  child: Text(
+                    "Nama perusahaan wajib dipilih",
+                    style: TextStyle(color: Colors.red, fontSize: 12),
+                  ),
+                ),
 
+              const SizedBox(height: 12),
               _buildLabelText("Bentuk Badan Usaha", isRequired: true),
               const SizedBox(height: 6),
               _buildStyledDropdown(
@@ -115,10 +123,20 @@ class _RekanGeneralCmpState extends State<RekanGeneralCmp> {
                   },
                   comboKey: null,
                 )
-                    : _buildDisabledDropdown(text: fieldComboMBentukCst?.bentukNama ?? 'Belum diisi'),
+                    : _buildDisabledDropdown(
+                  text: fieldComboMBentukCst?.bentukNama ?? 'Belum diisi',
+                ),
               ),
-              const SizedBox(height: 12),
+              if (fieldComboMBentukCst == null && isEditingSection)
+                const Padding(
+                  padding: EdgeInsets.only(top: 4),
+                  child: Text(
+                    "Badan usaha wajib dipilih",
+                    style: TextStyle(color: Colors.red, fontSize: 12),
+                  ),
+                ),
 
+              const SizedBox(height: 12),
               _buildLabelText("Bidang Usaha", isRequired: true),
               const SizedBox(height: 6),
               _buildStyledDropdown(
@@ -141,15 +159,26 @@ class _RekanGeneralCmpState extends State<RekanGeneralCmp> {
                   },
                   comboKey: null,
                 )
-                    : _buildDisabledDropdown(text: fieldComboMBidang?.bidangNama ?? 'Belum diisi'),
+                    : _buildDisabledDropdown(
+                  text: fieldComboMBidang?.bidangNama ?? 'Belum diisi',
+                ),
               ),
+              if (fieldComboMBidang == null && isEditingSection)
+                const Padding(
+                  padding: EdgeInsets.only(top: 4),
+                  child: Text(
+                    "Bidang usaha wajib dipilih",
+                    style: TextStyle(color: Colors.red, fontSize: 12),
+                  ),
+                ),
+
               const SizedBox(height: 16),
 
-              if (errors.isNotEmpty)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: errors.map((e) => Text(e, style: const TextStyle(color: Colors.red, fontSize: 12))).toList(),
-                ),
+              // if (errors.isNotEmpty)
+              //   Column(
+              //     crossAxisAlignment: CrossAxisAlignment.start,
+              //     children: errors.map((e) => Text(e, style: const TextStyle(color: Colors.red, fontSize: 12))).toList(),
+              //   ),
             ],
           ),
         ),

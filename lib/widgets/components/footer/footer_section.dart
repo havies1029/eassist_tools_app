@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../blocs/home/home_bloc.dart';
+import '../../dialog/popup/status_popup.dart';
 
 class FooterSection extends StatelessWidget {
   final BoxConstraints constraints;
@@ -59,7 +64,7 @@ class FooterSection extends StatelessWidget {
               child: Center(
                 child: Container(
                   width: maxWidth,
-                  child: _buildFooterContent(),
+                  child: _buildFooterContent(context),
                 ),
               ),
             ),
@@ -81,7 +86,18 @@ class FooterSection extends StatelessWidget {
     );
   }
 
-  Widget _buildFooterContent() {
+  void _launchMaps() async {
+    final url = 'https://www.bing.com/maps?where=Jl.%20Kramat%20Raya%20No.%207-9%20Kramat%20-%20Senen%2C%20Jakarta%2C%2010430%2C%20ID';
+    final uri = Uri.parse(url);
+
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      debugPrint('❌ Tidak bisa membuka Maps URL');
+    }
+  }
+
+  Widget _buildFooterContent(BuildContext context) {
     return isMobile || isTablet
         ? Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,7 +110,7 @@ class FooterSection extends StatelessWidget {
         const SizedBox(height: 10.0),
         _buildSocialMediaSection(),
         const SizedBox(height: 30.0),
-        _buildSignatureSection(),
+        _buildSignatureSection(context), // ✅ context dikirim
         const SizedBox(height: 20.0),
         _buildMenuSection(),
         const SizedBox(height: 20.0),
@@ -120,7 +136,7 @@ class FooterSection extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 40.0),
-        Expanded(flex: 2, child: _buildSignatureSection()),
+        Expanded(flex: 2, child: _buildSignatureSection(context)), // ✅ context dikirim
         const SizedBox(width: 40.0),
         Expanded(flex: 2, child: _buildMenuSection()),
         const SizedBox(width: 40.0),
@@ -128,6 +144,7 @@ class FooterSection extends StatelessWidget {
       ],
     );
   }
+
 
   Widget _buildLogoSection() {
     return Row(
@@ -181,12 +198,26 @@ class FooterSection extends StatelessWidget {
       spacing: isMobile ? 8.0 : 12.0,
       runSpacing: isMobile ? 8.0 : 12.0,
       children: [
-        _buildSvgSocialIconButton('instagram.svg', () {}),
-        _buildSvgSocialIconButton('linkedin.svg', () {}),
+        _buildSvgSocialIconButton('instagram.svg', () {
+          _launchUrl('https://www.instagram.com/jayaproteksindosakti/');
+        }),
+        _buildSvgSocialIconButton('linkedin.svg', () {
+          _launchUrl('https://id.linkedin.com/company/jayaproteksindo');
+        }),
         _buildSvgSocialIconButton('facebook.svg', () {}),
       ],
     );
   }
+
+  void _launchUrl(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      debugPrint('❌ Tidak bisa membuka URL: $url');
+    }
+  }
+
 
   Widget _buildCopyrightContent() {
     if (isMobile || isTablet) {
@@ -270,18 +301,7 @@ class FooterSection extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        GestureDetector(
-          onTap: () {},
-          child: Text(
-            'Terms and Conditions',
-            style: TextStyle(
-              fontFamily: _fontFamily,
-              fontSize: linkFontSize,
-              color: _linkColor,
-              decoration: TextDecoration.underline,
-            ),
-          ),
-        ),
+        _buildHoverableLink('Terms and Conditions', () {}),
         Text(
           ' | ',
           style: TextStyle(
@@ -290,23 +310,28 @@ class FooterSection extends StatelessWidget {
             color: _secondaryTextColor,
           ),
         ),
-        GestureDetector(
-          onTap: () {},
-          child: Text(
-            'Privacy Policy',
-            style: TextStyle(
-              fontFamily: _fontFamily,
-              fontSize: linkFontSize,
-              color: _linkColor,
-              decoration: TextDecoration.underline,
-            ),
-          ),
-        ),
+        _buildHoverableLink('Privacy Policy', () {}),
       ],
     );
   }
 
-  Widget _buildSignatureSection() {
+  Widget _buildHoverableLink(String text, VoidCallback onPressed) {
+    return _AnimatedButton(
+      onPressed: onPressed,
+      isTextButton: true,
+      child: Text(
+        text,
+        style: TextStyle(
+          fontFamily: _fontFamily,
+          fontSize: linkFontSize,
+          color: _linkColor,
+          decoration: TextDecoration.underline,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSignatureSection(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -320,11 +345,19 @@ class FooterSection extends StatelessWidget {
           ),
         ),
         SizedBox(height: isMobile ? 8.0 : 16.0),
-        _buildFooterLink('Cari Asuransi', () {}),
-        _buildFooterLink('Lapor Klaim', () {}),
+        _buildFooterLink('Cari Asuransi', () {
+          // SchedulerBinding.instance.addPostFrameCallback((_) {
+          //   context.read<HomeBloc>().add(FindInsurancePageActiveEvent());
+          // });
+          context.read<HomeBloc>().add(FindInsurancePageActiveEvent());
+        }),
+        _buildFooterLink('Lapor Klaim', () {
+          StatusPopupHelper.show(context);
+        }),
       ],
     );
   }
+
 
   Widget _buildMenuSection() {
     return Column(
@@ -371,8 +404,9 @@ class FooterSection extends StatelessWidget {
   Widget _buildFooterLink(String text, VoidCallback onPressed) {
     return Padding(
       padding: EdgeInsets.only(bottom: isMobile ? 4.0 : 8.0),
-      child: GestureDetector(
-        onTap: onPressed,
+      child: _AnimatedButton(
+        onPressed: onPressed,
+        isTextButton: true,
         child: Text(
           text,
           style: TextStyle(
@@ -387,43 +421,178 @@ class FooterSection extends StatelessWidget {
   }
 
   Widget _buildGoogleMapsButton() {
-    return OutlinedButton.icon(
-      onPressed: () {},
-      icon: Icon(Icons.location_on_outlined, color: _primaryColor,size: 20),
-      label: Text(
-        'Google Maps',
-        style: TextStyle(
-          fontFamily: _fontFamily,
-          fontSize: titleFontSize,
-          color: _primaryColor,
+    return _AnimatedButton(
+      onPressed: _launchMaps,
+      child: OutlinedButton.icon(
+        onPressed: null, // Disabled karena sudah dihandle oleh AnimatedButton
+        icon: Icon(Icons.location_on_outlined, color: _primaryColor, size: 20),
+        label: Text(
+          'Google Maps',
+          style: TextStyle(
+            fontFamily: _fontFamily,
+            fontSize: titleFontSize,
+            color: _primaryColor,
+          ),
         ),
-      ),
-      style: OutlinedButton.styleFrom(
-        side: const BorderSide(
-          color: _primaryColor,
-          width: _buttonBorderWidth,
-        ),
-        shape: const RoundedRectangleBorder(
-          borderRadius: _buttonBorderRadius,
-        ),
-        padding: EdgeInsets.symmetric(
-          horizontal: titleFontSize < 14.0 ? 16.0 : 24.0,
-          vertical: titleFontSize < 14.0 ? 8.0 : 12.0,
+        style: OutlinedButton.styleFrom(
+          side: const BorderSide(
+            color: _primaryColor,
+            width: _buttonBorderWidth,
+          ),
+          shape: const RoundedRectangleBorder(
+            borderRadius: _buttonBorderRadius,
+          ),
+          padding: EdgeInsets.symmetric(
+            horizontal: titleFontSize < 14.0 ? 16.0 : 24.0,
+            vertical: titleFontSize < 14.0 ? 8.0 : 12.0,
+          ),
         ),
       ),
     );
   }
 
   Widget _buildSvgSocialIconButton(String assetName, VoidCallback onPressed) {
-    return IconButton(
+    return _AnimatedButton(
       onPressed: onPressed,
-      icon: SvgPicture.asset(
-        'assets/icons/$assetName',
-        width: 30,
-        height: 30,
-        colorFilter: const ColorFilter.mode(_primaryColor, BlendMode.srcIn),
+      child: Container(
+        width: 48,
+        height: 48,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(24),
+        ),
+        child: Center(
+          child: SvgPicture.asset(
+            'assets/icons/$assetName',
+            width: 30,
+            height: 30,
+            colorFilter: const ColorFilter.mode(_primaryColor, BlendMode.srcIn),
+          ),
+        ),
       ),
-      splashRadius: 20,
+    );
+  }
+}
+
+// ─── Animated Button Widget ────────────────────────────────
+class _AnimatedButton extends StatefulWidget {
+  final Widget child;
+  final VoidCallback onPressed;
+  final bool isTextButton;
+
+  const _AnimatedButton({
+    required this.child,
+    required this.onPressed,
+    this.isTextButton = false,
+  });
+
+  @override
+  State<_AnimatedButton> createState() => _AnimatedButtonState();
+}
+
+class _AnimatedButtonState extends State<_AnimatedButton>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+  late Animation<double> _opacityAnimation;
+
+  bool _isHovered = false;
+  bool _isPressed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 150),
+      vsync: this,
+    );
+
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.95,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    ));
+
+    _opacityAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.8,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    ));
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _handleTapDown(TapDownDetails details) {
+    setState(() {
+      _isPressed = true;
+    });
+    _controller.forward();
+  }
+
+  void _handleTapUp(TapUpDetails details) {
+    setState(() {
+      _isPressed = false;
+    });
+    _controller.reverse();
+    widget.onPressed();
+  }
+
+  void _handleTapCancel() {
+    setState(() {
+      _isPressed = false;
+    });
+    _controller.reverse();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: GestureDetector(
+        onTapDown: _handleTapDown,
+        onTapUp: _handleTapUp,
+        onTapCancel: _handleTapCancel,
+        child: AnimatedBuilder(
+          animation: _controller,
+          builder: (context, child) {
+            Widget content = widget.child;
+
+            // Jika ini adalah text button dan sedang hover, ubah warna teks
+            if (widget.isTextButton && _isHovered) {
+              content = DefaultTextStyle.merge(
+                style: const TextStyle(color: Colors.blue),
+                child: content,
+              );
+            }
+
+            return Transform.scale(
+              scale: _scaleAnimation.value,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                decoration: BoxDecoration(
+                  color: _isHovered
+                      ? Colors.grey.withOpacity(0.1)
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                padding: const EdgeInsets.all(4),
+                child: Opacity(
+                  opacity: _opacityAnimation.value,
+                  child: content,
+                ),
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 }

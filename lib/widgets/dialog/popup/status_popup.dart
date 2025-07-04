@@ -1,7 +1,9 @@
 // ganti nama menjadi StatusPopup
+import 'package:eassist_tools_app/blocs/home/home_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../pages/user_jps/user_jps_main.dart';
 import '../../../pages/user_non_jps/user_non_jps_main.dart';
 
@@ -81,15 +83,25 @@ class _StatusPopupState extends State<StatusPopup>
           Navigator.of(context).pop();
           Future.microtask(() {
             if (isJpsUser) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const UserJpsMain()),
-              );
+              // SchedulerBinding.instance.addPostFrameCallback((_) {
+              //   context.read<HomeBloc>().add(UserJPSPageActiveEvent());
+              // });
+              Future.microtask(() {
+                SchedulerBinding.instance.addPostFrameCallback((_) {
+                  if (!mounted) return;
+                  context.read<HomeBloc>().add(UserJPSPageActiveEvent());
+                });
+              });
             } else {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const UserNonJpsMain()),
-              );
+              Future.microtask(() {
+                SchedulerBinding.instance.addPostFrameCallback((_) {
+                  if (!mounted) return;
+                  context.read<HomeBloc>().add(UserNonJPSPageActiveEvent());
+                });
+              });
+              // SchedulerBinding.instance.addPostFrameCallback((_) {
+              //   context.read<HomeBloc>().add(UserNonJPSPageActiveEvent());
+              // });
             }
           });
         }

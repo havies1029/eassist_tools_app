@@ -29,13 +29,14 @@ import '../gen_profile/test_profile_main.dart';
 import '../hero_client_page/hero_user_main.dart';
 import '../heropage/hero_main.dart';
 import '../home/home_redirector_page.dart';
+import '../loading/loading_user2_page.dart';
 import '../qontak/floating_chat_wrapper.dart';
 import '../simulcar/simulcarcrud_main.dart';
 import '../simulcargo/simulcargocrud_main.dart';
 import '../simulmb/simulmbcrud_main.dart';
 import '../simultree/simultreecrud_main.dart';
-import '../splash/loading_client_page.dart';
-import '../splash/loading_user_page.dart';
+import '../loading/loading_client_page.dart';
+import '../loading/loading_user_page.dart';
 import '../splash/splash_page.dart';
 import '../summary_polis_assets/assets_management_main.dart';
 import '../testimony_page/testimony_main.dart';
@@ -212,6 +213,8 @@ class PageContainer extends StatelessWidget {
         return "User JPS";
       case PageType.loadinghero:
         return "Memuat Hero";
+      case PageType.loadinghero2:
+        return "Memuat Hero2";
       case PageType.loadingherouser:
         return "Memuat Hero User";
       default:
@@ -301,9 +304,11 @@ class PageContainer extends StatelessWidget {
       case PageType.userjps:
         return const UserJpsMain();
       case PageType.loadinghero:
-        return const LoadingClientPage();
-      case PageType.loadingherouser:
         return const LoadingUserPage();
+      case PageType.loadinghero2:
+        return const LoadingUser2Page();
+      case PageType.loadingherouser:
+        return const LoadingClientPage();
       default:
         return const SizedBox();
     }

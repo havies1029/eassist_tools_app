@@ -65,7 +65,10 @@ class HeroUserMain extends StatelessWidget {
                           FloatingButtons(constraints: constraints),
                         ],
                       ),
-                      MenuActionSection(constraints: constraints),
+                      Transform.translate(
+                        offset: const Offset(0, -1),
+                        child: MenuActionSection(constraints: constraints),
+                      ),
                       // OFFSET 1 inci ke atas
                       Transform.translate(
                         offset: const Offset(0, -2),
@@ -79,6 +82,10 @@ class HeroUserMain extends StatelessWidget {
                         offset: const Offset(0, -4),
                         child: FooterSection(constraints: constraints),
                       ),
+                      // MenuActionSection(constraints: constraints),
+                      // CarouselSection(constraints: constraints),
+                      // ClientSection(constraints: constraints),
+                      // FooterSection(constraints: constraints),
                     ],
                   ),
                 ),

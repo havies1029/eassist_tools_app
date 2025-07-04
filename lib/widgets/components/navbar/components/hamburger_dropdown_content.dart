@@ -102,98 +102,98 @@
           SubMenuItem(icon: Icons.reviews, title: 'Testimoni', onTap: () {}),
         ],
       },
-      // {
-      //   'icon': Icons.layers,
-      //   'title': 'Semua Desain yang telah dibuat',
-      //   'subs': [
-      //     {
-      //       'icon': Icons.dashboard,
-      //       'title': 'Halaman Homepage',
-      //       'subs': [
-      //         SubMenuItem(icon: Icons.business_outlined, title: 'Splash Screen', onTap: () {}),
-      //         SubMenuItem(icon: Icons.home_outlined, title: 'Home Page', onTap: () {}),
-      //         SubMenuItem(icon: Icons.supervised_user_circle_outlined, title: 'Hero User Page', onTap: () {}),
-      //       ],
-      //     },
-      //     {
-      //       'icon': Icons.dashboard,
-      //       'title': 'Halaman About, CS dan Article',
-      //       'subs': [
-      //         SubMenuItem(icon: Icons.info_outline, title: 'Pencapaian', onTap: () {}),
-      //         SubMenuItem(icon: Icons.info_outline, title: 'About JPS', onTap: () {}),
-      //         SubMenuItem(icon: Icons.support_agent, title: 'Customer Service', onTap: () {}),
-      //         SubMenuItem(icon: Icons.article, title: 'Article Page', onTap: () {}),
-      //         SubMenuItem(icon: Icons.record_voice_over, title: 'Testimoni', onTap: () {}),
-      //       ],
-      //     },
-      //     {
-      //       'icon': Icons.lock_outline,
-      //       'title': 'Authentication',
-      //       'subs': [
-      //         SubMenuItem(icon: Icons.login_outlined, title: 'Login Gmail', onTap: () {}),
-      //         SubMenuItem(icon: Icons.login_outlined, title: 'Login Client', onTap: () {}),
-      //         SubMenuItem(icon: Icons.person_outline, title: 'Register Gmail', onTap: () {}),
-      //         SubMenuItem(icon: Icons.person_outline, title: 'Register Client', onTap: () {}),
-      //         SubMenuItem(icon: Icons.lock_reset, title: 'Reset Password Page', onTap: () {}),
-      //         SubMenuItem(icon: Icons.person_outline, title: 'Forget Password Page', onTap: () {}),
-      //       ],
-      //     },
-      //     {
-      //       'icon': Icons.account_circle_outlined,
-      //       'title': 'Profil',
-      //       'subs': [
-      //         SubMenuItem(icon: Icons.person_pin_circle_outlined, title: 'Profile Individu', onTap: () {}),
-      //         SubMenuItem(icon: Icons.business_outlined, title: 'Profile Perusahaan', onTap: () {}),
-      //         SubMenuItem(icon: Icons.business_outlined, title: 'Test Profile', onTap: () {}),
-      //       ],
-      //     },
-      //     {
-      //       'icon': Icons.chat_bubble_outline,
-      //       'title': 'Dialog/Popup',
-      //       'subs': [
-      //         SubMenuItem(icon: Icons.person_outline, title: 'Popup Succeed', onTap: () {}),
-      //         SubMenuItem(icon: Icons.person_outline, title: 'Popup Logout', onTap: () {}),
-      //         SubMenuItem(icon: Icons.business_outlined, title: 'Dialog Confirmation', onTap: () {}),
-      //         SubMenuItem(icon: Icons.business_outlined, title: 'Status Popup', onTap: () {}),
-      //       ],
-      //     },
-      //     {
-      //       'icon': Icons.group,
-      //       'title': 'Rekan',
-      //       'subs': [
-      //         SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Contact', onTap: () {}),
-      //         SubMenuItem(icon: Icons.business_outlined, title: 'Rekan General', onTap: () {}),
-      //         SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pajak', onTap: () {}),
-      //         SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Bank', onTap: () {}),
-      //         SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic Form', onTap: () {}),
-      //         SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic Crud Form', onTap: () {}),
-      //         SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic Crud Main', onTap: () {}),
-      //         SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic List List', onTap: () {}),
-      //         SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic List List Widget', onTap: () {}),
-      //         SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic List Main', onTap: () {}),
-      //         SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic List Title Widget', onTap: () {}),
-      //         SubMenuItem(icon: Icons.business_outlined, title: 'Rekan General V2', onTap: () {}),
-      //       ],
-      //     },
-      //     {
-      //       'icon': Icons.inventory_2,
-      //       'title': 'Assets',
-      //       'subs': [
-      //         SubMenuItem(icon: Icons.business_outlined, title: 'Find Insurance', onTap: () {}),
-      //         SubMenuItem(icon: Icons.business_outlined, title: 'Active Asset', onTap: () {}),
-      //         SubMenuItem(icon: Icons.business_outlined, title: 'Management Asset', onTap: () {}),
-      //       ],
-      //     },
-      //     {
-      //       'icon': Icons.report,
-      //       'title': 'Report Claim',
-      //       'subs': [
-      //         SubMenuItem(icon: Icons.business_outlined, title: 'User JPS', onTap: () {}),
-      //         SubMenuItem(icon: Icons.business_outlined, title: 'User Non JPS', onTap: () {}),
-      //       ],
-      //     },
-      //   ],
-      // },
+      {
+        'icon': Icons.layers,
+        'title': 'Semua Desain yang telah dibuat',
+        'subs': [
+          {
+            'icon': Icons.dashboard,
+            'title': 'Halaman Homepage',
+            'subs': [
+              SubMenuItem(icon: Icons.business_outlined, title: 'Splash Screen', onTap: () {}),
+              SubMenuItem(icon: Icons.home_outlined, title: 'Home Page', onTap: () {}),
+              SubMenuItem(icon: Icons.supervised_user_circle_outlined, title: 'Hero User Page', onTap: () {}),
+            ],
+          },
+          {
+            'icon': Icons.dashboard,
+            'title': 'Halaman About, CS dan Article',
+            'subs': [
+              SubMenuItem(icon: Icons.info_outline, title: 'Pencapaian', onTap: () {}),
+              SubMenuItem(icon: Icons.info_outline, title: 'About JPS', onTap: () {}),
+              SubMenuItem(icon: Icons.support_agent, title: 'Customer Service', onTap: () {}),
+              SubMenuItem(icon: Icons.article, title: 'Article Page', onTap: () {}),
+              SubMenuItem(icon: Icons.record_voice_over, title: 'Testimoni', onTap: () {}),
+            ],
+          },
+          {
+            'icon': Icons.lock_outline,
+            'title': 'Authentication',
+            'subs': [
+              SubMenuItem(icon: Icons.login_outlined, title: 'Login Gmail', onTap: () {}),
+              SubMenuItem(icon: Icons.login_outlined, title: 'Login Client', onTap: () {}),
+              SubMenuItem(icon: Icons.person_outline, title: 'Register Gmail', onTap: () {}),
+              SubMenuItem(icon: Icons.person_outline, title: 'Register Client', onTap: () {}),
+              SubMenuItem(icon: Icons.lock_reset, title: 'Reset Password Page', onTap: () {}),
+              SubMenuItem(icon: Icons.person_outline, title: 'Forget Password Page', onTap: () {}),
+            ],
+          },
+          {
+            'icon': Icons.account_circle_outlined,
+            'title': 'Profil',
+            'subs': [
+              SubMenuItem(icon: Icons.person_pin_circle_outlined, title: 'Profile Individu', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'Profile Perusahaan', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'Test Profile', onTap: () {}),
+            ],
+          },
+          {
+            'icon': Icons.chat_bubble_outline,
+            'title': 'Dialog/Popup',
+            'subs': [
+              SubMenuItem(icon: Icons.person_outline, title: 'Popup Succeed', onTap: () {}),
+              SubMenuItem(icon: Icons.person_outline, title: 'Popup Logout', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'Dialog Confirmation', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'Status Popup', onTap: () {}),
+            ],
+          },
+          {
+            'icon': Icons.group,
+            'title': 'Rekan',
+            'subs': [
+              SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Contact', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'Rekan General', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pajak', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Bank', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic Form', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic Crud Form', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic Crud Main', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic List List', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic List List Widget', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic List Main', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic List Title Widget', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'Rekan General V2', onTap: () {}),
+            ],
+          },
+          {
+            'icon': Icons.inventory_2,
+            'title': 'Assets',
+            'subs': [
+              SubMenuItem(icon: Icons.business_outlined, title: 'Find Insurance', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'Active Asset', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'Management Asset', onTap: () {}),
+            ],
+          },
+          {
+            'icon': Icons.report,
+            'title': 'Report Claim',
+            'subs': [
+              SubMenuItem(icon: Icons.business_outlined, title: 'User JPS', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'User Non JPS', onTap: () {}),
+            ],
+          },
+        ],
+      },
     ];
 
     List<Map<String, dynamic>> _filterMenusBasedOnLogin() {

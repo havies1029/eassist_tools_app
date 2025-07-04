@@ -55,5 +55,6 @@ class UserJPSPageActive extends HomeState {}
 
 //loading
 class LoadingHeroPageActive extends HomeState {}
+class LoadingHero2PageActive extends HomeState {}
 class LoadingHeroUserPageActive extends HomeState {}
 

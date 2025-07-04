@@ -157,8 +157,16 @@ class _RekanContactState extends State<RekanContact> {
               controller: fieldEmailController,
               hintText: "contoh@mail.com",
               keyboardType: TextInputType.emailAddress,
-              errorKey: "Email tidak boleh kosong.",
+              errorKey: "Email wajib dipilih",
             ),
+            if (fieldEmailController.text.trim().isEmpty && isEditingSection)
+              const Padding(
+                padding: EdgeInsets.only(top: 4),
+                child: Text(
+                  "Email wajib dipilih",
+                  style: TextStyle(color: Colors.red, fontSize: 12),
+                ),
+              ),
 
             _buildLabel("No. HP", isRequired: true),
             _buildTextField(
@@ -166,16 +174,32 @@ class _RekanContactState extends State<RekanContact> {
               hintText: "Contoh: 6283388774644",
               keyboardType: TextInputType.phone,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              errorKey: "Nomor HP tidak boleh kosong.",
+              errorKey: "Nomor HP wajib dipilih",
             ),
+            if (fieldTelpController.text.trim().isEmpty && isEditingSection)
+              const Padding(
+                padding: EdgeInsets.only(top: 4),
+                child: Text(
+                  "Nomor HP wajib dipilih",
+                  style: TextStyle(color: Colors.red, fontSize: 12),
+                ),
+              ),
 
             _buildLabel("Alamat", isRequired: true),
             _buildTextField(
               controller: fieldAlamat1Controller,
               hintText: "Masukkan alamat lengkap",
               maxLines: 2,
-              errorKey: "Alamat tidak boleh kosong.",
+              errorKey: "Alamat wajib dipilih",
             ),
+            if (fieldAlamat1Controller.text.trim().isEmpty && isEditingSection)
+              const Padding(
+                padding: EdgeInsets.only(top: 4),
+                child: Text(
+                  "Alamat wajib dipilih",
+                  style: TextStyle(color: Colors.red, fontSize: 12),
+                ),
+              ),
 
             _buildLabel("Provinsi", isRequired: true),
             _buildStyledDropdown(
@@ -194,22 +218,28 @@ class _RekanContactState extends State<RekanContact> {
                       comboRKodeposKey = UniqueKey();
                     });
 
-                    // ⬇️ Clear visual DropdownSearch input
                     comboMKotaDropdownKey.currentState?.clear();
                     comboRKodeposDropdownKey.currentState?.clear();
 
                     bloc.add(ComboMPropinsiChangedEvent(comboMPropinsi: value));
-                    removeError("Provinsi tidak boleh kosong.");
+                    removeError("Provinsi wajib dipilih");
                   }
                 },
-
                 onSaveCallback: (value) => fieldComboMPropinsi = value,
                 validatorCallback: (value) {
-                  if (value == null) addError("Provinsi tidak boleh kosong.");
+                  if (value == null) addError("Provinsi wajib dipilih");
                 },
               )
                   : _buildDisabledDropdown(fieldComboMPropinsi?.propinsiNama ?? 'Belum diisi'),
             ),
+            if (fieldComboMPropinsi == null && isEditingSection)
+              const Padding(
+                padding: EdgeInsets.only(top: 4),
+                child: Text(
+                  "Provinsi wajib dipilih",
+                  style: TextStyle(color: Colors.red, fontSize: 12),
+                ),
+              ),
 
             _buildLabel("Kota", isRequired: true),
             _buildStyledDropdown(
@@ -224,29 +254,36 @@ class _RekanContactState extends State<RekanContact> {
                     setState(() {
                       fieldComboMKota = value;
                       fieldComboRKodepos = null;
-                      comboRKodeposKey = UniqueKey(); // ⬅️ reset widget key (opsional tapi bagus)
+                      comboRKodeposKey = UniqueKey();
                     });
 
-                    comboRKodeposDropdownKey.currentState?.clear(); // ⬅️ ini yang kamu lupa
-
+                    comboRKodeposDropdownKey.currentState?.clear();
                     bloc.add(ComboMKotaChangedEvent(comboMKota: value));
-                    removeError("Kota tidak boleh kosong.");
+                    removeError("Kota wajib dipilih");
                   }
                 },
                 onSaveCallback: (value) => fieldComboMKota = value,
                 validatorCallback: (value) {
-                  if (value == null) addError("Kota tidak boleh kosong.");
+                  if (value == null) addError("Kota wajib dipilih");
                 },
                 labelText: 'Pilih',
               )
                   : _buildDisabledDropdown(fieldComboMKota?.kotaDesc ?? 'Belum diisi'),
             ),
+            if (fieldComboMKota == null && isEditingSection)
+              const Padding(
+                padding: EdgeInsets.only(top: 4),
+                child: Text(
+                  "Kota wajib dipilih",
+                  style: TextStyle(color: Colors.red, fontSize: 12),
+                ),
+              ),
 
             _buildLabel("Kode Pos", isRequired: true),
             _buildStyledDropdown(
               child: isEditingSection
                   ? buildFieldComboRKodepos(
-                key: comboRKodeposKey, // 🔑 ini penting untuk trigger rebuild
+                key: comboRKodeposKey,
                 comboKey: comboRKodeposDropdownKey,
                 initItem: fieldComboRKodepos,
                 kotaId: fieldComboMKota?.mkotaId ?? "",
@@ -254,26 +291,34 @@ class _RekanContactState extends State<RekanContact> {
                   if (value != null) {
                     fieldComboRKodepos = value;
                     bloc.add(ComboRKodeposChangedEvent(comboRKodepos: value));
-                    removeError("Kode pos tidak boleh kosong.");
+                    removeError("Kode pos wajib dpilih");
                   }
                 },
                 onSaveCallback: (value) => fieldComboRKodepos = value,
                 validatorCallback: (value) {
-                  if (value == null) addError("Kode pos tidak boleh kosong.");
+                  if (value == null) addError("Kode pos wajib dpilih");
                 },
                 labelText: 'Pilih',
               )
                   : _buildDisabledDropdown(fieldComboRKodepos?.kodeposNo ?? 'Belum diisi'),
             ),
-
-            if (errors.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(top: 12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: errors.map((e) => Text(e, style: const TextStyle(color: Colors.red, fontSize: 12))).toList(),
+            if (fieldComboRKodepos == null && isEditingSection)
+              const Padding(
+                padding: EdgeInsets.only(top: 4),
+                child: Text(
+                  "Kode pos wajib dpilih",
+                  style: TextStyle(color: Colors.red, fontSize: 12),
                 ),
               ),
+
+            // if (errors.isNotEmpty)
+            //   Padding(
+            //     padding: const EdgeInsets.only(top: 12),
+            //     child: Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: errors.map((e) => Text(e, style: const TextStyle(color: Colors.red, fontSize: 12))).toList(),
+            //     ),
+            //   ),
           ],
         ),
       ),

@@ -1,5 +1,8 @@
+import 'package:eassist_tools_app/blocs/home/home_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../dialog/popup/status_popup.dart';
 
@@ -96,53 +99,23 @@ class MenuActionSection extends StatelessWidget {
   }
 
   Widget _buildMenuItem(BuildContext context, Map<String, String> item) {
-    return GestureDetector(
+    return AnimatedMenuItemWidget(
+      item: item,
+      itemWidth: itemWidth,
+      itemHeight: itemHeight,
+      iconSize: iconSize,
+      fontSize: fontSize,
+      scaleFactor: scaleFactor,
       onTap: () => _handleMenuTap(context, item['label']!),
-      child: SizedBox(
-        width: itemWidth,
-        height: itemHeight,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: iconSize,
-              height: iconSize,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16.13 * scaleFactor),
-              ),
-              clipBehavior: Clip.antiAlias,
-              child: Image.asset(
-                item['icon']!,
-                fit: BoxFit.cover,
-              ),
-            ),
-            SizedBox(height: 8 * scaleFactor),
-            Flexible(
-              child: Text(
-                item['label']!,
-                style: TextStyle(
-                  fontFamily: 'Satoshi-Regular',
-                  fontSize: fontSize,
-                  fontWeight: FontWeight.w500,
-                  color: const Color(0xFF2D3748),
-                  height: 1.2,
-                ),
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                softWrap: true,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 
   void _handleMenuTap(BuildContext context, String menuLabel) {
     switch (menuLabel) {
       case 'Cari Asuransi':
-        context.go('/find_insurance');
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(FindInsurancePageActiveEvent());
+        });
         break;
 
       case 'Lapor Klaim':
@@ -150,7 +123,9 @@ class MenuActionSection extends StatelessWidget {
         break;
 
       case 'Management Aset':
-        context.go('/assets_management');
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(AssetsManagementPageActiveEvent());
+        });
         break;
 
       case 'Management Polis':
@@ -173,6 +148,185 @@ class MenuActionSection extends StatelessWidget {
         );
         break;
     }
+  }
+}
+
+class AnimatedMenuItemWidget extends StatefulWidget {
+  final Map<String, String> item;
+  final double itemWidth;
+  final double itemHeight;
+  final double iconSize;
+  final double fontSize;
+  final double scaleFactor;
+  final VoidCallback onTap;
+
+  const AnimatedMenuItemWidget({
+    super.key,
+    required this.item,
+    required this.itemWidth,
+    required this.itemHeight,
+    required this.iconSize,
+    required this.fontSize,
+    required this.scaleFactor,
+    required this.onTap,
+  });
+
+  @override
+  State<AnimatedMenuItemWidget> createState() => _AnimatedMenuItemWidgetState();
+}
+
+class _AnimatedMenuItemWidgetState extends State<AnimatedMenuItemWidget>
+    with TickerProviderStateMixin {
+  late AnimationController _hoverController;
+  late AnimationController _tapController;
+
+  late Animation<Color?> _backgroundColorAnimation;
+  late Animation<double> _opacityAnimation;
+
+  bool _isHovered = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Hover animation controller
+    _hoverController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+
+    // Tap animation controller
+    _tapController = AnimationController(
+      duration: const Duration(milliseconds: 100),
+      vsync: this,
+    );
+
+    // Background color animation
+    _backgroundColorAnimation = ColorTween(
+      begin: Colors.transparent,
+      end: Colors.grey.withOpacity(0.05),
+    ).animate(CurvedAnimation(
+      parent: _hoverController,
+      curve: Curves.easeOut,
+    ));
+
+    // Opacity animation for tap feedback
+    _opacityAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.7,
+    ).animate(CurvedAnimation(
+      parent: _tapController,
+      curve: Curves.easeInOut,
+    ));
+  }
+
+  @override
+  void dispose() {
+    _hoverController.dispose();
+    _tapController.dispose();
+    super.dispose();
+  }
+
+  void _onHover(bool isHovered) {
+    setState(() {
+      _isHovered = isHovered;
+    });
+
+    if (isHovered) {
+      _hoverController.forward();
+    } else {
+      _hoverController.reverse();
+    }
+  }
+
+  void _onTapDown() {
+    _tapController.forward();
+  }
+
+  void _onTapUp() {
+    _tapController.reverse();
+    widget.onTap();
+  }
+
+  void _onTapCancel() {
+    _tapController.reverse();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => _onHover(true),
+      onExit: (_) => _onHover(false),
+      child: GestureDetector(
+        onTapDown: (_) => _onTapDown(),
+        onTapUp: (_) => _onTapUp(),
+        onTapCancel: _onTapCancel,
+        child: AnimatedBuilder(
+          animation: Listenable.merge([_hoverController, _tapController]),
+          builder: (context, child) {
+            return AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              width: widget.itemWidth,
+              height: widget.itemHeight,
+              decoration: BoxDecoration(
+                color: _backgroundColorAnimation.value,
+                borderRadius: BorderRadius.circular(16.13 * widget.scaleFactor),
+              ),
+              child: Opacity(
+                opacity: _opacityAnimation.value,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Icon container
+                    Container(
+                      width: widget.iconSize,
+                      height: widget.iconSize,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16.13 * widget.scaleFactor),
+                      ),
+                      clipBehavior: Clip.antiAlias,
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16.13 * widget.scaleFactor),
+                        ),
+                        child: Image.asset(
+                          widget.item['icon']!,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 8 * widget.scaleFactor),
+                    // Text
+                    Flexible(
+                      child: AnimatedDefaultTextStyle(
+                        duration: const Duration(milliseconds: 200),
+                        style: TextStyle(
+                          fontFamily: 'Satoshi-Regular',
+                          fontSize: widget.fontSize,
+                          fontWeight: _isHovered ? FontWeight.w600 : FontWeight.w500,
+                          color: _isHovered
+                              ? const Color(0xFF1E40AF)
+                              : const Color(0xFF2D3748),
+                          height: 1.2,
+                        ),
+                        child: Text(
+                          widget.item['label']!,
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: true,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
   }
 }
 

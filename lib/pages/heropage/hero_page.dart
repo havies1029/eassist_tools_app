@@ -70,10 +70,10 @@ class _HeroPageState extends State<HeroPage> {
 
             if (!_dialogShown && !sudahLogin) {
               _dialogShown = true;
-
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                CustomPopupsLoginUser.showLoginUserDialog(context);
-              });
+              //
+              // WidgetsBinding.instance.addPostFrameCallback((_) {
+              //   CustomPopupsLoginUser.showLoginUserDialog(context);
+              // });
             }
             return Stack(
               children: [

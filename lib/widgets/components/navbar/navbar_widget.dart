@@ -231,7 +231,7 @@ class _NavbarWidgetState extends State<NavbarWidget> {
         final mjnsclientId = blocState.record?.mjnsclientId.toString();
         debugPrint('Nilai mjnsclientId: $mjnsclientId');
         // final mrekan1Id = blocState.record?.mrekan1Id ?? 0; // ganti kalau field user ID kamu berbeda
-
+        _closeProfileMenu();
         if (mjnsclientId == "10" || mjnsclientId == "20") {
           await showDialog(
             context: context,

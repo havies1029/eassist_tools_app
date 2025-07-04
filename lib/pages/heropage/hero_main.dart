@@ -1,12 +1,14 @@
-import 'package:eassist_tools_app/pages/splash/loading_client_page.dart';
-import 'package:eassist_tools_app/pages/splash/loading_user_page.dart';
+import 'package:eassist_tools_app/pages/loading/loading_client_page.dart';
+import 'package:eassist_tools_app/pages/loading/loading_user_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
 import 'package:eassist_tools_app/widgets/account/login/login_gmail/popup_dialog_login.dart';
 
 import '../../blocs/gen_profile/mrekan1crud_bloc.dart';
+import '../../blocs/home/home_bloc.dart';
 import 'hero_page.dart';
 
 class HeroMain extends StatefulWidget {
@@ -88,32 +90,44 @@ class _HeroMainState extends State<HeroMain> {
         debugPrint("User is not a client, staying on HeroMain");
       }
 
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
 
-      WidgetsBinding.instance.addPostFrameCallback((_) {
         final authState = context.read<AuthenticationBloc>().state;
-        Widget targetPage = const LoadingUserPage(); // Default fallback
 
         if (authState is AuthenticationAuthenticated) {
           final from = authState.authenticatedFrom;
           final custType = authState.user.custType;
 
+          // debugPrint('[AUTH] Authenticated from: $from, CustType: $custType');
+
           if (from == "login_user") {
-            targetPage = const LoadingUserPage();
+            context.read<HomeBloc>().add(HeroPageActiveEvent());
+            // debugPrint('[HOME] HeroPageActiveEvent dispatched (login_user)');
           } else if (from == "login_client") {
-            targetPage = const LoadingClientPage();
+            context.read<HomeBloc>().add(LoadingHeroUserPageActiveEvent());
+            // debugPrint('[HOME] HeroUserPageActiveEvent dispatched (login_client)');
           } else if (from == "login_token") {
-            targetPage = (custType == "C")
-                ? const LoadingClientPage()
-                : const LoadingUserPage();
+            if (custType == "C") {
+              context.read<HomeBloc>().add(LoadingHeroUserPageActiveEvent());
+              // debugPrint('[HOME] HeroUserPageActiveEvent dispatched (token, C)');
+            } else {
+              context.read<HomeBloc>().add(HeroPageActiveEvent());
+              // debugPrint('[HOME] HeroPageActiveEvent dispatched (token, non-C)');
+            }
+          } else {
+            context.read<HomeBloc>().add(HeroPageActiveEvent()); // fallback
+            // debugPrint('[HOME] HeroPageActiveEvent dispatched (fallback)');
           }
+        } else if (authState is AuthenticationGoogleUserAuthenticated) {
+          // debugPrint('[AUTH] Google user authenticated: ${authState.user.email}');
+          context.read<HomeBloc>().add(HeroPageActiveEvent());
+          // debugPrint('[HOME] HeroPageActiveEvent dispatched (Google)');
+        } else {
+          // debugPrint('[AUTH] Not authenticated, dispatching fallback');
+          context.read<HomeBloc>().add(LoadingHeroUserPageActiveEvent());
         }
-
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => targetPage),
-        );
       });
-
     }
   }
 }

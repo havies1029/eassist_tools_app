@@ -50,6 +50,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<UserNonJPSPageActiveEvent>((event, emit) => emit(UserNonJPSPageActive()));
     on<UserJPSPageActiveEvent>((event, emit) => emit(UserJPSPageActive()));
     on<LoadingHeroPageActiveEvent>((event, emit) => emit(LoadingHeroPageActive()));
+    on<LoadingHero2PageActiveEvent>((event, emit) => emit(LoadingHero2PageActive()));
     on<LoadingHeroUserPageActiveEvent>((event, emit) => emit(LoadingHeroUserPageActive()));
   }
 }

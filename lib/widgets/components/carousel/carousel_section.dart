@@ -203,7 +203,7 @@ class _CarouselSectionState extends State<CarouselSection>
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      TextSpan(text: '?'),
+                      TextSpan(text: ' ?'),
                     ],
                   ),
                 ),

@@ -90,7 +90,7 @@
   
       });
   
-      _googleSignIn.signInSilently();
+      // _googleSignIn.signInSilently();
   
     }
   
@@ -157,7 +157,7 @@
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: const [
                                       Text(
-                                        'Login',
+                                        'Masuk',
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 20,
@@ -523,7 +523,7 @@
                   context.read<AuthenticationBloc>().add(RequireLoginClient(requiredFrom: "login_user", errorMsg: ""));
                 },
                 child: Text(
-                  'Login Client',
+                  'Masuk sebagai Client',
                   style: TextStyle(
                     color: _isHoveringRegister
                         ? const Color(0xFF7BA05B)

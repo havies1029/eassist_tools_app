@@ -1,12 +1,14 @@
 // claim_stepper.dart (Revisi dengan step base lengkap dan file form modular)
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import '../../../../../blocs/home/home_bloc.dart';
 import '../../../../../pages/hero_client_page/hero_user_main.dart';
 import 'form_claim/instruction_form.dart';
 import 'form_claim/insured_data_form.dart';
 import 'form_claim/incident_detail_form.dart';
 import 'form_claim/claim_payment_form.dart';
 import 'form_claim/supporting_documents_form.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
 const _primaryColor = Color(0xFF79AB43);
 
 class ClaimStepper extends StatefulWidget {
@@ -130,11 +132,8 @@ class _ClaimStepperState extends State<ClaimStepper> {
                       ElevatedButton(
                         onPressed: () {
                           // Navigasi ke HeroUserMain setelah selesai
-                          Future.delayed(const Duration(milliseconds: 500), () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (_) => const HeroUserMain()),
-                            );
+                          SchedulerBinding.instance.addPostFrameCallback((_) {
+                            context.read<HomeBloc>().add(LoadingHeroPageActiveEvent());
                           });
                         },
                         style: ElevatedButton.styleFrom(

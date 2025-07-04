@@ -34,6 +34,7 @@ import 'package:eassist_tools_app/blocs/simulbon/simulboncrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/simulwp/simulwpcrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/takeimage/takeimage_cubit.dart';
 import 'package:eassist_tools_app/common/app_data.dart';
+import 'package:eassist_tools_app/pages/hero_client_page/hero_user_main.dart';
 import 'package:eassist_tools_app/pages/heropage/hero_main.dart';
 import 'package:eassist_tools_app/pages/home/home_page.dart';
 import 'package:eassist_tools_app/repositories/chatting/guestscrud_repository.dart';
@@ -307,6 +308,7 @@ class App extends StatelessWidget {
                   key: null,
                 ),
               );
+
           }
         },
       ),
