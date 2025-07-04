@@ -116,8 +116,17 @@ class RekanBankState extends State<RekanBank> {
                       ),
                     ),
                     IconButton(
-                      icon: Icon(isEditingSection ? Icons.check : Icons.edit),
-                      onPressed: () => isEditingSection ? onSaveForm(state) : setState(() => isEditingSection = true),
+                      icon: Icon(
+                        isEditingSection ? Icons.check : Icons.edit,
+                        color: isEditingSection ? null : Colors.red, // merah hanya saat edit mode = false
+                      ),
+                      onPressed: () {
+                        if (isEditingSection) {
+                          onSaveForm(state);
+                        } else {
+                          setState(() => isEditingSection = true);
+                        }
+                      },
                     ),
                   ],
                 ),

@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'dart:ui' as html;
+// import 'dart:ui' as html;
 
 import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
 import 'package:eassist_tools_app/blocs/chatting/guestscrud_bloc.dart';
@@ -70,7 +70,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
-import 'package:js/js_util.dart' as js_util;
+// import 'package:js/js_util.dart' as js_util;
 import 'blocs/gen_profile/mrekan1crud_bloc.dart';
 import 'blocs/gen_profile/mrekancontactcrud_bloc.dart';
 import 'blocs/gen_profile/mrekangeneralidvcrud_bloc.dart';
@@ -93,7 +93,7 @@ import 'package:mobile_chat_flutter/mobile_chat_flutter.dart';
 // NONAKTIFKAN DEBUG PRINT & ERROR MERAH
 
 Future<void> main() async {
-  disableAllLogs();
+  // disableAllLogs();
 
   final userRepository = UserRepository();
   AppData.kIsWeb = kIsWeb;
@@ -323,31 +323,31 @@ class App extends StatelessWidget {
 }
 
 
-
-void disableAllLogs() {
-  // 1. Matikan semua print/debugPrint
-  debugPrint = (String? message, {int? wrapWidth}) {};
-
-  // 2. Matikan error dari Flutter framework
-  FlutterError.onError = (FlutterErrorDetails details) {};
-
-  // 3. Tangani semua error global (termasuk Web & Mobile)
-  PlatformDispatcher.instance.onError = (error, stack) => true;
-
-  // 4. Matikan console log di Web
-  if (kIsWeb) {
-    try {
-      final console = js_util.getProperty(html.window, 'console');
-      js_util.setProperty(console, 'log', js_util.allowInterop((_) {}));
-      js_util.setProperty(console, 'warn', js_util.allowInterop((_) {}));
-      js_util.setProperty(console, 'error', js_util.allowInterop((_) {}));
-    } catch (_) {
-      // jika browser tidak support
-    }
-  }
-
-  // 5. Hilangkan widget error merah dari UI
-  ErrorWidget.builder = (FlutterErrorDetails details) {
-    return const SizedBox();
-  };
-}
+//
+// void disableAllLogs() {
+//   // 1. Matikan semua print/debugPrint
+//   debugPrint = (String? message, {int? wrapWidth}) {};
+//
+//   // 2. Matikan error dari Flutter framework
+//   FlutterError.onError = (FlutterErrorDetails details) {};
+//
+//   // 3. Tangani semua error global (termasuk Web & Mobile)
+//   PlatformDispatcher.instance.onError = (error, stack) => true;
+//
+//   // 4. Matikan console log di Web
+//   if (kIsWeb) {
+//     try {
+//       final console = js_util.getProperty(html.window, 'console');
+//       js_util.setProperty(console, 'log', js_util.allowInterop((_) {}));
+//       js_util.setProperty(console, 'warn', js_util.allowInterop((_) {}));
+//       js_util.setProperty(console, 'error', js_util.allowInterop((_) {}));
+//     } catch (_) {
+//       // jika browser tidak support
+//     }
+//   }
+//
+//   // 5. Hilangkan widget error merah dari UI
+//   ErrorWidget.builder = (FlutterErrorDetails details) {
+//     return const SizedBox();
+//   };
+// }

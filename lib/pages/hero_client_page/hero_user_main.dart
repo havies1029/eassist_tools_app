@@ -66,9 +66,19 @@ class HeroUserMain extends StatelessWidget {
                         ],
                       ),
                       MenuActionSection(constraints: constraints),
-                      CarouselSection(constraints: constraints),
-                      ClientSection(constraints: constraints),
-                      FooterSection(constraints: constraints),
+                      // OFFSET 1 inci ke atas
+                      Transform.translate(
+                        offset: const Offset(0, -2),
+                        child: CarouselSection(constraints: constraints),
+                      ),
+                      Transform.translate(
+                        offset: const Offset(0, -3),
+                        child: ClientSection(constraints: constraints),
+                      ),
+                      Transform.translate(
+                        offset: const Offset(0, -4),
+                        child: FooterSection(constraints: constraints),
+                      ),
                     ],
                   ),
                 ),

@@ -16,7 +16,6 @@
         android:label="eassist_tools_app"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
-        android:name="com.pichillilorenzo.flutter_inappwebview_android.InAppWebViewFileProvider"
         android:authorities="${applicationId}.flutter_inappwebview_android.fileprovider"
         android:exported="false"
         android:grantUriPermissions="true">

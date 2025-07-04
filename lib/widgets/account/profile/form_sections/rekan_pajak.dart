@@ -97,7 +97,10 @@ class _MRekanPajakFormBodyState extends State<MRekanPajakFormBody> {
                     child: Text("Informasi Pajak", style: TextStyle(fontSize: 17.5, fontWeight: FontWeight.bold)),
                   ),
                   IconButton(
-                    icon: Icon(isEditingSection ? Icons.check : Icons.edit),
+                    icon: Icon(
+                      isEditingSection ? Icons.check : Icons.edit,
+                      color: isEditingSection ? null : Colors.red, // Merah saat belum edit
+                    ),
                     onPressed: () {
                       if (isEditingSection) {
                         _onSaveForm();

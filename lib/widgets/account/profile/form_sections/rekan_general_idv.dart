@@ -86,7 +86,10 @@ class _RekanGeneralIdvState extends State<RekanGeneralIdv> {
                       ),
                     ),
                     IconButton(
-                      icon: Icon(isEditingSection ? Icons.check : Icons.edit),
+                      icon: Icon(
+                        isEditingSection ? Icons.check : Icons.edit,
+                        color: isEditingSection ? null : Colors.red, // Merah hanya saat edit mode = false
+                      ),
                       tooltip: isEditingSection ? "Simpan" : "Ubah",
                       onPressed: () {
                         if (isEditingSection) {

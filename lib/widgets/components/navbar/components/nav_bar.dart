@@ -70,10 +70,12 @@ class NavBar extends StatelessWidget {
                         context.read<HomeBloc>().add(HeroPageActiveEvent()); // fallback
                       }
 
-                    } else if (authState is AuthenticationGoogleUserAuthenticated) {
+                    }
+                    else if (authState is AuthenticationGoogleUserAuthenticated) {
                       // Untuk login google, bisa diasumsikan sebagai user biasa (atau sesuaikan logic kamu)
                       context.read<HomeBloc>().add(HeroPageActiveEvent());
-                    } else {
+                    }
+                    else {
                       // Kalau belum login
                       context.read<HomeBloc>().add(HeroUserPageActiveEvent());
                     }

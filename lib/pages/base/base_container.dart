@@ -13,6 +13,7 @@ import 'package:eassist_tools_app/pages/simulgit/simulgitcrud_main.dart';
 import 'package:eassist_tools_app/pages/simulmv/simulmvcrud_main.dart';
 import 'package:eassist_tools_app/pages/simulpar/simulparcrud_main.dart';
 import 'package:eassist_tools_app/pages/simulwp/simulwpcrud_main.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 // import 'package:eassist_tools_app/pages/profile/profile_main_page.dart';
 import 'package:eassist_tools_app/repositories/user/user_repository.dart';
@@ -132,9 +133,13 @@ class PageContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FloatingChatWrapper(
-      child: _buildBody(context),
-    );
+    final body = _buildBody(context);
+
+    if (kIsWeb) {
+      return body; // Jangan bungkus dengan FloatingChatWrapper
+    } else {
+      return FloatingChatWrapper(child: body);
+    }
   }
 
   String get _pageTitle {

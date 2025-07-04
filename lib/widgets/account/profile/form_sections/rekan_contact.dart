@@ -140,8 +140,13 @@ class _RekanContactState extends State<RekanContact> {
                   child: Text("Kontak Klien :", style: TextStyle(fontSize: 17.5, fontWeight: FontWeight.bold)),
                 ),
                 IconButton(
-                  icon: Icon(isEditingSection ? Icons.check : Icons.edit),
-                  onPressed: () => isEditingSection ? onSaveForm() : setState(() => isEditingSection = true),
+                  icon: Icon(
+                    isEditingSection ? Icons.check : Icons.edit,
+                    color: isEditingSection ? null : Colors.red,
+                  ),
+                  onPressed: () => isEditingSection
+                      ? onSaveForm()
+                      : setState(() => isEditingSection = true),
                 ),
               ],
             ),

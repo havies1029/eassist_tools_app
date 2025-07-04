@@ -68,10 +68,17 @@ class _RekanGeneralCmpState extends State<RekanGeneralCmp> {
                     ),
                   ),
                   IconButton(
-                    icon: Icon(isEditingSection ? Icons.check : Icons.edit),
+                    icon: Icon(
+                      isEditingSection ? Icons.check : Icons.edit,
+                      color: isEditingSection ? null : Colors.red,
+                    ),
                     tooltip: isEditingSection ? "Simpan" : "Ubah",
                     onPressed: () {
-                      isEditingSection ? onSaveForm() : setState(() => isEditingSection = true);
+                      if (isEditingSection) {
+                        onSaveForm();
+                      } else {
+                        setState(() => isEditingSection = true);
+                      }
                     },
                   ),
                 ],
