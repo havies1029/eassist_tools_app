@@ -29,16 +29,16 @@ class AppTheme {
     }
   }
 
-  static EdgeInsets responsiveMargin(BoxConstraints constraints, {PageType? pageType}) {
+  static EdgeInsets responsiveMargin(BoxConstraints constraints, {SectionType? sectionType}) {
     final double width = constraints.maxWidth;
     final double top = width < 768 ? 30 : 60;
-    final double bottom = (pageType == PageType.home || pageType == PageType.home_client) ? 0 : 30;
+    final double bottom = (sectionType == SectionType.home || sectionType == SectionType.home_client) ? 0 : 30;
 
     return EdgeInsets.only(top: top, bottom: bottom);
   }
 }
 
-enum PageType {
+enum SectionType {
   home,
   about,
   article,
@@ -54,12 +54,12 @@ enum PageType {
 
 class HeroSection extends StatelessWidget {
   final BoxConstraints constraints;
-  final PageType? pageType;
+  final SectionType? sectionType;
 
   const HeroSection({
     super.key,
     required this.constraints,
-    this.pageType,
+    this.sectionType,
   });
 
   bool get isMobile => constraints.maxWidth < 768;
@@ -67,10 +67,10 @@ class HeroSection extends StatelessWidget {
       constraints.maxWidth > 1200 ? 1200 : constraints.maxWidth * 0.95;
 
   bool get hasBackgroundColor =>
-      pageType == PageType.home || pageType == PageType.home_client;
+      sectionType == SectionType.home || sectionType == SectionType.home_client;
 
   bool get hasHumanImage =>
-      pageType == PageType.home || pageType == PageType.home_client;
+      sectionType == SectionType.home || sectionType == SectionType.home_client;
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +86,7 @@ class HeroSection extends StatelessWidget {
         padding: AppTheme.responsivePadding(constraints),
         child: Container(
           width: maxWidth,
-          margin: AppTheme.responsiveMargin(constraints, pageType: pageType),
+          margin: AppTheme.responsiveMargin(constraints, sectionType: sectionType),
           padding: EdgeInsets.all(isMobile ? 0 : 40),
           decoration: BoxDecoration(
             color: Color(0xFF79AB43),
@@ -102,7 +102,7 @@ class HeroSection extends StatelessWidget {
       padding: AppTheme.responsivePadding(constraints),
       child: Container(
         width: maxWidth,
-        margin: AppTheme.responsiveMargin(constraints, pageType: pageType),
+        margin: AppTheme.responsiveMargin(constraints, sectionType: sectionType),
         child: content,
       ),
     );
@@ -253,8 +253,8 @@ class HeroSection extends StatelessWidget {
   // TITLE DATA WITH BLOC INTEGRATION
   // ============================================
   Map<String, String> _getTitleData(BuildContext context) {
-    switch (pageType) {
-      case PageType.home_client:
+    switch (sectionType) {
+      case SectionType.home_client:
         final authState = context.watch<AuthenticationBloc>().state;
         final rekanState = context.watch<MRekan1CrudBloc>().state;
         String name = "[Nama User]";
@@ -275,33 +275,33 @@ class HeroSection extends StatelessWidget {
           'bold': 'Selamat Datang, $name !\n',
           'normal': 'Berikut ringkasan polis Anda Hari ini:',
         };
-      case PageType.about:
+      case SectionType.about:
         return {
           'bold': 'Mengenal JPS: ',
           'normal': 'Klaim mudah, perlindungan \naman',
         };
-      case PageType.article:
+      case SectionType.article:
         return {
           'bold': 'Selamat datang ',
           'normal': 'di pusat informasi literasi JPS!',
         };
-      case PageType.testimony:
+      case SectionType.testimony:
         return {
           'bold': 'Bukti Nyata ',
           'normal': 'Pelayanan dan Kepercayaan',
         };
-      case PageType.active_asset:
+      case SectionType.active_asset:
         return {
           'bold': 'Aset Terlindungi\n',
           'normal': 'Hidup Lebih ',
           'bold1': 'Tenang.',
         };
-      case PageType.find_insurance:
+      case SectionType.find_insurance:
         return {
           'bold': 'Jenis asuransi ',
           'normal': 'apa yang\nkamu butuhkan?',
         };
-      case PageType.report_claim:
+      case SectionType.report_claim:
         return {
           'bold': 'Proses Klaim Mudah ',
           'normal': 'dan ',
@@ -309,7 +309,7 @@ class HeroSection extends StatelessWidget {
           'normal3': 'di ',
           'bold3': 'JPS'
         };
-      case PageType.home:
+      case SectionType.home:
       default:
         return {
           'bold': 'Klien Kami, Prioritas Kami: \nMemberikan Solusi Terbaik untuk Anda!',
@@ -318,41 +318,41 @@ class HeroSection extends StatelessWidget {
   }
 
   Map<String, String> _getDescriptionData() {
-    switch (pageType) {
-      case PageType.about:
+    switch (sectionType) {
+      case SectionType.about:
         return {
           'normal1':
           'JPS hadir memberikan informasi yang jelas, layanan yang praktis, dan solusi yang tepat untuk membantu Anda memilih terbaik dengan cara paling mudah.',
         };
-      case PageType.article:
+      case SectionType.article:
         return {
           'normal1':
           'Temukan panduan praktis, istilah-istilah penting, tips memilih produk asuransi, hingga kisah nyata manfaat asuransi mikro di tengah masyarakat.',
         };
-      case PageType.testimony:
+      case SectionType.testimony:
         return {
           'normal1': 'JPS mendapatkan kepercayaan dari puluhan nasabah dan mitra melalui layanan yang ',
           'bold': 'jelas, praktis, dan solutif',
           'normal2': '. Berikut adalah pengalaman nyata dari mereka yang telah merasakan manfaatnya.',
         };
-      case PageType.active_asset:
+      case SectionType.active_asset:
         return {
           'bold': 'Asuransi aktif',
           'normal1': 'menjamin perlindungan saat kamu membutuhkannya.',
         };
-      case PageType.find_insurance:
+      case SectionType.find_insurance:
         return {
           'bold': 'Pilih kategori asuransi ',
           'normal2': 'yang sesuai dengan kebutuhan Anda.',
         };
-      case PageType.home_client:
+      case SectionType.home_client:
         return {
           'normal1':
           'JPS adalah platform asuransi pintar yang memudahkan kamu mencari, memilih,\ndan klaim asuransi hanya dalam hitungan menit ',
           'bold': 'cepat, aman, dan terdaftar OJK',
           'normal2': '.',
         };
-      case PageType.report_claim:
+      case SectionType.report_claim:
         return {
           'normal1': 'Ajukan ',
           'bold': 'klaim asuransi ',
@@ -363,17 +363,17 @@ class HeroSection extends StatelessWidget {
           'normal4': 'dan ',
           'bold4': 'transparan.'
         };
-      case PageType.user_jps:
-      case PageType.user_non_jps:
+      case SectionType.user_jps:
+      case SectionType.user_non_jps:
         return {
           'bold': 'Asuransi aktif ',
           'normal1': 'menjamin perlindungan saat kamu membutuhkannya.',
         };
-      case PageType.management_polis:
+      case SectionType.management_polis:
         return {
           'normal1': 'Solusi lengkap pengelolaan polis aset Anda, hadir dengan informasi yang akurat, ringkas, dan selalu terpantau.',
         };
-      case PageType.home:
+      case SectionType.home:
         return {
           'normal1':
           'JPS adalah platform asuransi pintar yang memudahkan kamu mencari, memilih, dan klaim asuransi hanya dalam hitungan menit ',

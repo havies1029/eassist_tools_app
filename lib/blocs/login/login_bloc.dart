@@ -23,29 +23,36 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   Future<void> _onLoginButtonPressed(
       LoginButtonPressed event, Emitter<LoginState> emit) async {
+    print("🔵 LoginBloc: Event LoginButtonPressed diterima");
     emit(LoginInitial());
     emit(LoginLoading());
 
     try {
+      print("🔄 LoginBloc: Memanggil userRepository.authenticate()...");
       final user = await userRepository.authenticate(
         email: event.email,
         password: event.password,
       );
 
+      print("✅ LoginBloc: Autentikasi sukses. User: ${user.email}");
       AppData.user = user;
       AppData.userToken = user.token!;
+      print("🗝️ Token disimpan ke AppData.userToken = ${user.token}");
 
       emit(LoginPreAuthenticate());
 
-      // Simpan password jika rememberMe true
       if (event.rememberMe) {
+        print("💾 Remember me aktif. Menyimpan token ke SharedPreferences...");
         userRepository.persistToken(userToken: user.token ?? "");
       }
 
+      print("🚀 Mengirim event LoggedIn ke AuthenticationBloc...");
       authenticationBloc.add(LoggedIn(user: user));
 
       emit(LoginPostAuthenticate());
+      print("🎉 LoginBloc: Emit LoginPostAuthenticate()");
     } catch (error) {
+      print("❌ LoginBloc: Login gagal. Error: $error");
       emit(LoginFailure(error: "username atau password salah"));
     }
   }

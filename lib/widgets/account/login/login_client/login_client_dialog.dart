@@ -371,15 +371,52 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
         const SizedBox(height: 20),
 
         // Hyperlink: Lupa sandi dan Belum punya user
-        Row(
-          children: [
-            Expanded(child: buildLinkLupaSandi(context)),
-            Text(
-              '/',
-              style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
-            ),
-            Expanded(child: buildLinkBelumPunyaUser(context)),
-          ],
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final isMobile = constraints.maxWidth < 600;
+
+            if (isMobile) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  buildLinkLupaSandi(context),
+                  const SizedBox(height: 8),
+                  Container(
+                    height: 1,
+                    width: 60,
+                    color: Colors.grey.shade400,
+                  ),
+                  const SizedBox(height: 8),
+                  buildLinkBelumPunyaUser(context),
+                ],
+              );
+            } else {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Flexible(
+                    fit: FlexFit.loose,
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: buildLinkLupaSandi(context),
+                    ),
+                  ),
+                  Container(
+                    width: 1,
+                    height: 36,
+                    color: Colors.grey.shade400,
+                  ),
+                  Flexible(
+                    fit: FlexFit.loose,
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: buildLinkBelumPunyaUser(context),
+                    ),
+                  ),
+                ],
+              );
+            }
+          },
         ),
       ],
     );
@@ -495,75 +532,6 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildFooterLinks(BuildContext context) {
-    return Column(
-      children: [
-        // Link Lupa Password
-        MouseRegion(
-          onEnter: (_) => setState(() => _isHoveringForgotPassword = true),
-          onExit: (_) => setState(() => _isHoveringForgotPassword = false),
-          child: GestureDetector(
-            onTap: () async {
-              Navigator.of(context).pop();
-              context
-                  .read<AuthenticationBloc>()
-                  .add(ForgotPasword(email: _emailController.text.trim()));
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Text(
-                'Lupa Kata Sandi?',
-                style: TextStyle(
-                  color: _isHoveringForgotPassword
-                      ? const Color(0xFF7BA05B)
-                      : Colors.blue.shade600,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ),
-        ),
-
-        const SizedBox(height: 16),
-
-        // Link ke Login User
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Belum punya akun? ',
-              style: TextStyle(
-                color: Colors.grey.shade600,
-                fontSize: 14,
-              ),
-            ),
-            MouseRegion(
-              onEnter: (_) => setState(() => _isHoveringRegister = true),
-              onExit: (_) => setState(() => _isHoveringRegister = false),
-              child: GestureDetector(
-                onTap: () async {
-                  Navigator.of(context).pop();
-                  context.read<AuthenticationBloc>().add(RequireLoginUser());
-                },
-                child: Text(
-                  'Daftar di sini',
-                  style: TextStyle(
-                    color: _isHoveringRegister
-                        ? const Color(0xFF7BA05B)
-                        : Colors.blue.shade600,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
     );
   }
 

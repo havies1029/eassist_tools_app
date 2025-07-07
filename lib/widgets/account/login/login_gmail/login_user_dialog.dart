@@ -99,135 +99,135 @@
       _emailController.dispose();
       super.dispose();
     }
-  
+
     @override
     Widget build(BuildContext context) {
       return LayoutBuilder(
-        builder: (context, constraints) {
-          final isMobile = constraints.maxWidth < 768;
+          builder: (context, constraints) {
+            final isMobile = constraints.maxWidth < 768;
 
-          return BlocConsumer<EmailVerificationBloc, EmailVerificationState>(
-            builder: (context, state) {
-              return Scaffold(
-                backgroundColor: Colors.black.withOpacity(0.2), // semi-transparent overlay
-                body: GestureDetector(
-                  // Tidak menutup dialog saat klik luar
-                  onTap: () {}, // tetap dibutuhkan untuk memblokir klik tembus
-                  child: Center(
-                    child: SingleChildScrollView(
-                      child: Container(
-                        margin: EdgeInsets.symmetric(
-                          horizontal: isMobile ? 20 : 40,
-                          vertical: 40,
-                        ),
-                        child: Material(
-                          color: Colors.transparent,
-                          child: Container(
-                            width: isMobile ? double.infinity : null,
-                            constraints: BoxConstraints(
-                              maxWidth: isMobile
-                                  ? MediaQuery.of(context).size.width - 40
-                                  : 450,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(20),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
-                                  blurRadius: 10,
-                                  spreadRadius: 2,
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                // Header hijau TANPA tombol X
-                                Container(
-                                  decoration: const BoxDecoration(
-                                    color: Color(0xFF7BA05B),
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(20),
-                                      topRight: Radius.circular(20),
+            return BlocConsumer<EmailVerificationBloc, EmailVerificationState>(
+              builder: (context, state) {
+                return Scaffold(
+                  backgroundColor: Colors.black.withOpacity(0.2), // semi-transparent overlay
+                  body: GestureDetector(
+                    // Tidak menutup dialog saat klik luar
+                    onTap: () {}, // tetap dibutuhkan untuk memblokir klik tembus
+                    child: Center(
+                      child: SingleChildScrollView(
+                        child: Container(
+                          margin: EdgeInsets.symmetric(
+                            horizontal: isMobile ? 20 : 40,
+                            vertical: 40,
+                          ),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: Container(
+                              width: isMobile ? double.infinity : null,
+                              constraints: BoxConstraints(
+                                maxWidth: isMobile
+                                    ? MediaQuery.of(context).size.width - 40
+                                    : 450,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    blurRadius: 10,
+                                    spreadRadius: 2,
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  // Header hijau TANPA tombol X
+                                  Container(
+                                    decoration: const BoxDecoration(
+                                      color: Color(0xFF7BA05B),
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(20),
+                                        topRight: Radius.circular(20),
+                                      ),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: const [
+                                        Text(
+                                          'Login',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: const [
-                                      Text(
-                                        'Masuk',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
 
-                                // Body putih
-                                Container(
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(20),
-                                      bottomRight: Radius.circular(20),
+                                  // Body putih
+                                  Container(
+                                    decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(20),
+                                        bottomRight: Radius.circular(20),
+                                      ),
+                                    ),
+                                    padding: const EdgeInsets.all(32),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const CircleAvatar(
+                                          radius: 40,
+                                          backgroundColor: Colors.white,
+                                          backgroundImage: AssetImage('assets/images/jps_logo.png'),
+                                        ),
+                                        const SizedBox(height: 24),
+                                        const Text(
+                                          'Masukkan Email',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.black87,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          'Yuk, login dulu biar bisa akses semuanya!',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey.shade600,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        const SizedBox(height: 32),
+
+                                        // FORM login
+                                        _buildLoginForm(context, isMobile),
+                                      ],
                                     ),
                                   ),
-                                  padding: const EdgeInsets.all(32),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const CircleAvatar(
-                                        radius: 40,
-                                        backgroundColor: Colors.white,
-                                        backgroundImage: AssetImage('assets/images/jps_logo.png'),
-                                      ),
-                                      const SizedBox(height: 24),
-                                      const Text(
-                                        'Masukkan Email',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.black87,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        'Yuk, login dulu biar bisa akses semuanya!',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey.shade600,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      const SizedBox(height: 32),
-
-                                      // FORM login
-                                      _buildLoginForm(context, isMobile),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              );
-            },
-            listener: (context, state) {
-              if (state.isLoaded) {
-                // tambahkan aksi jika perlu ketika sukses verifikasi
-              }
-            },
-          );
-        },
+                );
+              },
+              listener: (context, state) {
+                if (state.isLoaded) {
+                  // tambahkan aksi jika perlu ketika sukses verifikasi
+                }
+              },
+            );
+          },
       );
     }
   
@@ -503,39 +503,53 @@
         width: double.infinity,
         height: 55,
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Apabila sudah menjadi client : ',
-              style: TextStyle(
-                color: Colors.grey.shade600,
-                fontSize: 14,
-              ),
-            ),
-            MouseRegion(
-              onEnter: (_) => setState(() => _isHoveringRegister = true),
-              onExit: (_) => setState(() => _isHoveringRegister = false),
-              child: GestureDetector(
-                onTap: () async {
-                  Navigator.of(context).pop();
-                  //await CustomPopupsLoginUser.showRegisterUserDialog(context);
-                  context.read<AuthenticationBloc>().add(RequireLoginClient(requiredFrom: "login_user", errorMsg: ""));
-                },
-                child: Text(
-                  'Masuk sebagai Client',
-                  style: TextStyle(
-                    color: _isHoveringRegister
-                        ? const Color(0xFF7BA05B)
-                        : Colors.blue.shade600,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
+        child:
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final isMobile = constraints.maxWidth < 600;
+
+            return Align(
+              alignment: isMobile ? Alignment.center : Alignment.centerLeft,
+              child: Wrap(
+                alignment: isMobile ? WrapAlignment.center : WrapAlignment.start,
+                spacing: 4,
+                runSpacing: 8,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  Text(
+                    'Apabila sudah menjadi client : ',
+                    style: TextStyle(
+                      color: Colors.grey.shade600,
+                      fontSize: 14,
+                    ),
                   ),
-                ),
+                  MouseRegion(
+                    onEnter: (_) => setState(() => _isHoveringRegister = true),
+                    onExit: (_) => setState(() => _isHoveringRegister = false),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        context.read<AuthenticationBloc>().add(
+                          RequireLoginClient(requiredFrom: "login_user", errorMsg: ""),
+                        );
+                      },
+                      child: Text(
+                        'Masuk sebagai Client',
+                        style: TextStyle(
+                          color: _isHoveringRegister
+                              ? const Color(0xFF7BA05B)
+                              : Colors.blue.shade600,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
+            );
+          },
+        )
       );
     }
   

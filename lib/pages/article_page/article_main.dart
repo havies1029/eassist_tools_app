@@ -5,6 +5,7 @@ import '../../widgets/section/about/floating_buttons_about.dart';
 import '../../widgets/components/footer/footer_section.dart';
 import '../../widgets/components/hero/hero_section.dart';
 import '../../widgets/section/article/action_article_section.dart';
+import '../base/base_page.dart';
 
 class DummyUserRepository extends UserRepository {
   // Override semua method yang dibutuhkan dengan return dummy data atau kosong
@@ -95,7 +96,7 @@ class ArticlePage extends StatelessWidget {
                   padding: EdgeInsets.only(top: isMobile? 65 : 88),
                   child: Column(
                     children: [
-                      HeroSection(constraints: constraints, pageType: PageType.article)  ,
+                      HeroSection(constraints: constraints, sectionType: SectionType.article)  ,
                       FloatingButtons(constraints: constraints),
                       ActionSection(constraints: constraints),
                       FooterSection(constraints: constraints),
@@ -133,6 +134,7 @@ class _FixedNavbarOverlay extends StatelessWidget {
               constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width,
               ),
+              pageType: PageType.article,
             ),
           ),
         ],

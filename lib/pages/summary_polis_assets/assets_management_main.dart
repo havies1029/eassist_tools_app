@@ -5,6 +5,7 @@ import '../../widgets/section/management_polis_page/assets_management/action_ass
 import '../../widgets/components/navbar/navbar_widget.dart';
 import '../../widgets/section/about/floating_buttons_about.dart';
 import '../../widgets/components/footer/footer_section.dart';
+import '../base/base_page.dart';
 
 class AssetsManagementMain extends StatelessWidget {
   const AssetsManagementMain({super.key});
@@ -84,7 +85,7 @@ class _AssetsManagementPageState extends State<AssetsManagementPage> {
                   child: Column(
                     children: [
                       HeroSection(constraints: constraints,
-                          pageType: PageType.management_polis),
+                          sectionType: SectionType.management_polis),
                       FloatingButtons(constraints: constraints),
                       ActionSection(constraints: constraints),
                       FooterSection(constraints: constraints),
@@ -123,6 +124,7 @@ class _FixedNavbarOverlay extends StatelessWidget {
               constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width,
               ),
+              pageType: PageType.assetsmanagement,
             ),
           ),
         ],

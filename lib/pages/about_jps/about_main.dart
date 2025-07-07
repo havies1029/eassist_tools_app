@@ -16,6 +16,7 @@ import '../../widgets/section/about/management_profile_section.dart';
 import '../../widgets/section/about/artikel_card.dart';
 import '../../widgets/section/testimoni/testimonial_section.dart';
 import '../../widgets/section/homeclientpage/client_section.dart';
+import '../base/base_page.dart';
 
 // ========================
 // Dummy Repository (API placeholder)
@@ -84,7 +85,7 @@ class AboutPage extends StatelessWidget {
                   child: Column(
                     children: [
                       HeroSection(constraints: constraints,
-                          pageType: PageType.about),
+                          sectionType: SectionType.about),
                       FloatingButtons(constraints: constraints),
                       ActionSection(constraints: constraints),
                       AboutJps(constraints: constraints),
@@ -131,6 +132,7 @@ class _FixedNavbarOverlay extends StatelessWidget {
               constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width,
               ),
+              pageType: PageType.about,
             ),
           ),
         ],

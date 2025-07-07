@@ -105,11 +105,11 @@ class _HeroMainState extends State<HeroMain> {
             context.read<HomeBloc>().add(HeroPageActiveEvent());
             // debugPrint('[HOME] HeroPageActiveEvent dispatched (login_user)');
           } else if (from == "login_client") {
-            context.read<HomeBloc>().add(LoadingHeroUserPageActiveEvent());
+            context.read<HomeBloc>().add(HeroUserPageActiveEvent());
             // debugPrint('[HOME] HeroUserPageActiveEvent dispatched (login_client)');
           } else if (from == "login_token") {
             if (custType == "C") {
-              context.read<HomeBloc>().add(LoadingHeroUserPageActiveEvent());
+              context.read<HomeBloc>().add(HeroUserPageActiveEvent());
               // debugPrint('[HOME] HeroUserPageActiveEvent dispatched (token, C)');
             } else {
               context.read<HomeBloc>().add(HeroPageActiveEvent());
@@ -125,7 +125,7 @@ class _HeroMainState extends State<HeroMain> {
           // debugPrint('[HOME] HeroPageActiveEvent dispatched (Google)');
         } else {
           // debugPrint('[AUTH] Not authenticated, dispatching fallback');
-          context.read<HomeBloc>().add(LoadingHeroUserPageActiveEvent());
+          context.read<HomeBloc>().add(HeroUserPageActiveEvent());
         }
       });
     }

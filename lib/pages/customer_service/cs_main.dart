@@ -8,6 +8,7 @@ import '../../widgets/section/customer_service/action_section_cs.dart';
 import '../../widgets/section/testimoni/testimonial_section.dart';
 import '../../widgets/section/homeclientpage/client_section.dart';
 import '../../widgets/components/footer/footer_section.dart';
+import '../base/base_page.dart';
 
 class CSMain extends StatelessWidget {
   const CSMain({super.key});
@@ -119,6 +120,7 @@ class _FixedNavbarOverlay extends StatelessWidget {
               constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width,
               ),
+              pageType: PageType.cs,
             ),
           ),
         ],

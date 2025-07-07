@@ -12,6 +12,8 @@ import '../../widgets/components/hero/hero_section.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekan1crud_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../base/base_page.dart';
+
 
 
 class HeroUserMain extends StatelessWidget {
@@ -49,7 +51,7 @@ class HeroUserMain extends StatelessWidget {
                           ? Stack(
                         clipBehavior: Clip.none,
                         children: [
-                          HeroSection(constraints: constraints, pageType: PageType.home_client),
+                          HeroSection(constraints: constraints, sectionType: SectionType.home_client),
                           Positioned(
                             top: 0,
                             bottom: -200,
@@ -61,7 +63,7 @@ class HeroUserMain extends StatelessWidget {
                       )
                           : Column(
                         children: [
-                          HeroSection(constraints: constraints, pageType: PageType.home_client),
+                          HeroSection(constraints: constraints, sectionType: SectionType.home_client),
                           FloatingButtons(constraints: constraints),
                         ],
                       ),
@@ -254,7 +256,7 @@ class _HeroUserPageState extends State<HeroUserPage> {
                               ? Stack(
                             clipBehavior: Clip.none,
                             children: [
-                              HeroSection(constraints: constraints, pageType: PageType.home_client),
+                              HeroSection(constraints: constraints, sectionType: SectionType.home_client),
                               Positioned(
                                 top: 0,
                                 bottom: -200,
@@ -266,7 +268,7 @@ class _HeroUserPageState extends State<HeroUserPage> {
                           )
                               : Column(
                             children: [
-                              HeroSection(constraints: constraints, pageType: PageType.home_client),
+                              HeroSection(constraints: constraints, sectionType: SectionType.home_client),
                               Transform.translate(
                                 offset: Offset(0, -40),
                                 child: FloatingButtons(constraints: constraints),
@@ -314,6 +316,7 @@ class _FixedNavbarOverlay extends StatelessWidget {
               constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width,
               ),
+              pageType: PageType.herouser,
             ),
           ),
         ],

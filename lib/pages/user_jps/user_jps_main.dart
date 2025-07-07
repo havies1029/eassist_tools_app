@@ -5,6 +5,7 @@ import '../../widgets/section/signature_joss_page/report_claim/jps_user/action_r
 import '../../widgets/components/navbar/navbar_widget.dart';
 import '../../widgets/section/about/floating_buttons_about.dart';
 import '../../widgets/components/footer/footer_section.dart';
+import '../base/base_page.dart';
 
 class UserJpsMain extends StatelessWidget {
   const UserJpsMain({super.key});
@@ -84,7 +85,7 @@ class _UserJpsPageState extends State<UserJpsPage> {
                   child: Column(
                     children: [
                       HeroSection(constraints: constraints,
-                          pageType: PageType.report_claim),
+                          sectionType: SectionType.report_claim),
                       FloatingButtons(constraints: constraints),
                       ActionSection(constraints: constraints),
                       FooterSection(constraints: constraints),
@@ -123,6 +124,7 @@ class _FixedNavbarOverlay extends StatelessWidget {
               constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width,
               ),
+              pageType: PageType.userjps,
             ),
           ),
         ],

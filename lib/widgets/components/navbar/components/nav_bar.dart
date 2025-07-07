@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../blocs/authentication/authentication_bloc.dart';
 import '../../../../blocs/gen_profile/mrekan1crud_bloc.dart';
 import '../../../../blocs/home/home_bloc.dart';
+import '../../../../pages/base/base_page.dart';
 import '../../../../pages/hero_client_page/hero_user_main.dart';
 import '../../../../pages/heropage/hero_main.dart';
 
@@ -15,6 +16,7 @@ class NavBar extends StatelessWidget {
   final GlobalKey menuButtonKey;
   final VoidCallback onHamburgerToggle;
   final Widget profileSection;
+  final PageType pageType;
 
   const NavBar({
     Key? key,
@@ -23,6 +25,7 @@ class NavBar extends StatelessWidget {
     required this.menuButtonKey,
     required this.onHamburgerToggle,
     required this.profileSection,
+    required this.pageType,
   }) : super(key: key);
 
   @override
@@ -84,11 +87,25 @@ class NavBar extends StatelessWidget {
                     }
                   });
                 },
-                child: Image.asset(
+                child: isMobile &&
+                    (pageType == PageType.home ||
+                        pageType == PageType.hero ||
+                        pageType == PageType.herouser)
+                    ? Image.asset(
                   'assets/images/JPS.png',
                   height: 60.0,
-                  errorBuilder: (context, error, stackTrace) => const Icon(Icons.image_not_supported),
+                  errorBuilder: (context, error, stackTrace) =>
+                  const Icon(Icons.image_not_supported),
+                )
+                    : isMobile
+                    ? const Icon(Icons.home, size: 46, color: Color(0xFF79AB43))
+                    : Image.asset(
+                  'assets/images/JPS.png',
+                  height: 60.0,
+                  errorBuilder: (context, error, stackTrace) =>
+                  const Icon(Icons.image_not_supported),
                 ),
+
               ),
             ),
             const Spacer(),
@@ -140,5 +157,8 @@ class NavBar extends StatelessWidget {
     }
     return false;
   }
+
+  bool get isMobile => constraints.maxWidth < 768;
+
 
 }

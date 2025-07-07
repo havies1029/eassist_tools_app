@@ -1,6 +1,8 @@
 import 'package:eassist_tools_app/widgets/components/navbar/navbar_widget.dart';
 import 'package:flutter/material.dart';
 
+import '../base/base_page.dart';
+
 class FixedNavbarOverlay extends StatelessWidget {
   const FixedNavbarOverlay({super.key});
 
@@ -21,6 +23,7 @@ class FixedNavbarOverlay extends StatelessWidget {
               constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width,
               ),
+              pageType: PageType.hero,
             ),
           ),
         ],

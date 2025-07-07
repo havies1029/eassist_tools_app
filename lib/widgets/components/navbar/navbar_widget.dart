@@ -40,7 +40,10 @@ class DummyUserRepository extends UserRepository {
 class NavbarWidget extends StatefulWidget {
   final BoxConstraints constraints;
   final bool hideProfile;
-  const NavbarWidget({super.key, required this.constraints, this.hideProfile = false,});
+  final PageType pageType;
+  const NavbarWidget({super.key, required this.constraints, this.hideProfile = false, required this.pageType});
+
+
 
   @override
   State<NavbarWidget> createState() => _NavbarWidgetState();
@@ -209,17 +212,17 @@ class _NavbarWidgetState extends State<NavbarWidget> {
       isMenuOpen: _isMenuOpen,
       menuButtonKey: _menuButtonKey,
       onHamburgerToggle: _toggleHamburgerMenu,
-      // Jika hideProfile true, kirim SizedBox.shrink() (widget kosong),
-      // bukan null, karena NavBar mengharapkan Widget non-null
+      pageType: widget.pageType, // ✅ tambahkan ini
       profileSection: widget.hideProfile
           ? const SizedBox.shrink()
           : ProfileSection(
         profileButtonKey: _profileButtonKey,
         isProfileMenuOpen: _isProfileMenuOpen,
-        onToggleProfileMenu: _toggleProfileMenu, // ini wajib toggle, bukan hanya open
+        onToggleProfileMenu: _toggleProfileMenu,
       ),
     );
   }
+
 
 
   void _handleProfileMenuTap(String menu) async {

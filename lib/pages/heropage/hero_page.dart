@@ -106,7 +106,7 @@ class _HeroPageState extends State<HeroPage> {
                             ? Stack(
                           clipBehavior: Clip.none,
                           children: [
-                            HeroSection(constraints: constraints, pageType: PageType.home),
+                            HeroSection(constraints: constraints, sectionType: SectionType.home),
                             Positioned(
                               top: 0,
                               bottom: -235,
@@ -118,7 +118,7 @@ class _HeroPageState extends State<HeroPage> {
                         )
                             : Column(
                           children: [
-                            HeroSection(constraints: constraints, pageType: PageType.home),
+                            HeroSection(constraints: constraints, sectionType: SectionType.home),
                             FloatingButtons(constraints: constraints),
                           ],
                         ),

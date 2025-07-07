@@ -23,7 +23,8 @@ class ProfileSection extends StatelessWidget {
       builder: (context, state) {
         // Ambil nama awal dari AuthenticationBloc
         String displayName = "(belum diupdate di profile)";
-        final authState = context.read<AuthenticationBloc>().state;
+        final authState = context.select<AuthenticationBloc, AuthenticationState>((bloc) => bloc.state);
+        final isMobile = MediaQuery.of(context).size.width < 768;
 
         if (authState is AuthenticationAuthenticated) {
           displayName = authState.user.nama?.trim() ?? displayName;
@@ -105,16 +106,20 @@ class ProfileSection extends StatelessWidget {
                   ),
                   const SizedBox(width: 12),
                   // Nama dari MRekan1CrudBloc
-                  Text(
-                    displayName,
-                    style: const TextStyle(
-                      color: Color(0xFF2D5016),
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Satoshi-Regular',
+                  if (!isMobile)
+                    Text(
+                      displayName,
+                      style: const TextStyle(
+                        color: Color(0xFF2D5016),
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Satoshi-Regular',
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 8),
+                  if (!isMobile)
+                    const SizedBox(width: 8),
+
+
                   // Panah dropdown
                   AnimatedRotation(
                     turns: isProfileMenuOpen ? 0.5 : 0,

@@ -6,6 +6,7 @@ import '../../widgets/section/signature_joss_page/find_insurance/action_find_sec
 import '../../widgets/components/navbar/navbar_widget.dart';
 import '../../widgets/section/about/floating_buttons_about.dart';
 import '../../widgets/components/footer/footer_section.dart';
+import '../base/base_page.dart';
 
 class FindInsuranceMain extends StatelessWidget {
   const FindInsuranceMain({super.key});
@@ -108,7 +109,7 @@ class _FindInsurancePageState extends State<FindInsurancePage> {
                   child: Column(
                     children: [
                       HeroSection(constraints: constraints,
-                          pageType: PageType.find_insurance),
+                          sectionType: SectionType.find_insurance),
                       FloatingButtons(constraints: constraints),
                       ActionSection(constraints: constraints),
                       JPSInsuranceSection(constraints: constraints),
@@ -148,6 +149,7 @@ class _FixedNavbarOverlay extends StatelessWidget {
               constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width,
               ),
+              pageType: PageType.findinsurance,
             ),
           ),
         ],

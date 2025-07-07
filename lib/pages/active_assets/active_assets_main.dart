@@ -1,3 +1,4 @@
+import 'package:eassist_tools_app/pages/base/base_page.dart';
 import 'package:flutter/material.dart';
 
 import '../../widgets/components/hero/hero_section.dart';
@@ -107,7 +108,7 @@ class _ActiveAssetPageState extends State<ActiveAssetPage> {
                   child: Column(
                     children: [
                       HeroSection(constraints: constraints,
-                          pageType: PageType.active_asset),
+                          sectionType: SectionType.active_asset),
                       FloatingButtons(constraints: constraints),
                       ActionSection(constraints: constraints),
                       FooterSection(constraints: constraints),
@@ -145,7 +146,7 @@ class _FixedNavbarOverlay extends StatelessWidget {
             child: NavbarWidget(
               constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width,
-              ),
+              ), pageType: PageType.activeassets,
             ),
           ),
         ],
