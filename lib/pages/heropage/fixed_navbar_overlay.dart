@@ -19,7 +19,7 @@ class FixedNavbarOverlay extends StatelessWidget {
             color: Colors.transparent,
             elevation: 20,
             child: NavbarWidget(
-              hideProfile: true,
+              hideProfile: false,
               constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width,
               ),

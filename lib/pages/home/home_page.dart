@@ -107,6 +107,4 @@ class _HomePageState extends State<HomePage> {
     if (state is LoadingHeroUserPageActive) return PageType.loadingherouser;
     return null;
   }
-
-
 }

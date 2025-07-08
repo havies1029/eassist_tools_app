@@ -19,9 +19,12 @@ class ProfileSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _refreshRekanIfNeeded(context);
+    });
+
     return BlocBuilder<MRekan1CrudBloc, MRekan1CrudState>(
       builder: (context, state) {
-        // Ambil nama awal dari AuthenticationBloc
         String displayName = "(belum diupdate di profile)";
         final authState = context.select<AuthenticationBloc, AuthenticationState>((bloc) => bloc.state);
         final isMobile = MediaQuery.of(context).size.width < 768;
@@ -30,7 +33,6 @@ class ProfileSection extends StatelessWidget {
           displayName = authState.user.nama?.trim() ?? displayName;
         }
 
-        // Override jika rekan1 sudah ada dan tidak kosong
         final rekanNama = state.record?.rekanNama?.trim();
         if (state.isLoaded && rekanNama != null && rekanNama.isNotEmpty) {
           displayName = rekanNama;
@@ -52,7 +54,6 @@ class ProfileSection extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Avatar + status
                   BlocBuilder<ProfileDownloadFotoBloc, ProfileDownloadFotoState>(
                     builder: (context, imageState) {
                       Uint8List? imageBytes;
@@ -105,7 +106,6 @@ class ProfileSection extends StatelessWidget {
                     },
                   ),
                   const SizedBox(width: 12),
-                  // Nama dari MRekan1CrudBloc
                   if (!isMobile)
                     Text(
                       displayName,
@@ -116,11 +116,7 @@ class ProfileSection extends StatelessWidget {
                         fontFamily: 'Satoshi-Regular',
                       ),
                     ),
-                  if (!isMobile)
-                    const SizedBox(width: 8),
-
-
-                  // Panah dropdown
+                  if (!isMobile) const SizedBox(width: 8),
                   AnimatedRotation(
                     turns: isProfileMenuOpen ? 0.5 : 0,
                     duration: const Duration(milliseconds: 200),
@@ -138,6 +134,20 @@ class ProfileSection extends StatelessWidget {
       },
     );
   }
+
+  void _refreshRekanIfNeeded(BuildContext context) {
+    final rekanState = context.read<MRekan1CrudBloc>().state;
+    final authState = context.read<AuthenticationBloc>().state;
+
+    final isClient = authState is AuthenticationAuthenticated &&
+        authState.user.custType == 'C';
+
+    if (isClient && !rekanState.isLoaded) {
+      debugPrint("🔁 Refreshing MRekan1CrudBloc (profile header)");
+      context.read<MRekan1CrudBloc>().add(MRekan1CrudLihatEvent());
+    }
+  }
+
 
   Widget _defaultIcon() => Container(
     color: const Color(0xFF79AB43).withOpacity(0.2),

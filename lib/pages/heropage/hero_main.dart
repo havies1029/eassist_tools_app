@@ -54,8 +54,14 @@ class _HeroMainState extends State<HeroMain> {
     debugPrint("AuthenticationBloc state: $state");
 
     if (state is AuthenticationUnauthenticated) {
-       await CustomPopupsLoginUser.showLoginUserDialog(context);
-    } else if (state is AuthenticationRequireLoginClient) {
+      // ✅ Pindahan dari BlocListener ke sini
+      while (Navigator.of(context, rootNavigator: true).canPop()) {
+        Navigator.of(context, rootNavigator: true).pop();
+      }
+      await Future.delayed(const Duration(milliseconds: 100));
+      await CustomPopupsLoginUser.showLoginUserDialog(context);
+    }
+    else if (state is AuthenticationRequireLoginClient) {
       if (Navigator.of(context, rootNavigator: true).canPop()) {
         Navigator.of(context, rootNavigator: true).pop();
         await Future.delayed(const Duration(milliseconds: 100));
@@ -67,22 +73,23 @@ class _HeroMainState extends State<HeroMain> {
       }
 
       CustomPopupsLoginUser.showLoginClientDialog(context);
-    } else if (state is AuthenticationForgotPassword) {
+    }
+    else if (state is AuthenticationForgotPassword) {
       CustomPopupsLoginUser.showForgotPasswordDialog(context);
-    } else if (state is AuthenticationRequireRegisterClient) {
+    }
+    else if (state is AuthenticationRequireRegisterClient) {
       CustomPopupsLoginUser.showRegisterClientDialog(context);
-    } else if (state is AuthenticationRequirePinHPVerification) {
+    }
+    else if (state is AuthenticationRequirePinHPVerification) {
       CustomPopupsLoginUser.showRequestOTPHPDialog(context, state.hpno);
-    } else if (state is AuthenticationRequirePinEmailVerification) {
+    }
+    else if (state is AuthenticationRequirePinEmailVerification) {
       CustomPopupsLoginUser.showRequestOTPEmailDialog(context, state.email);
-    } else if (state is AuthenticationPhonePinVerified) {
+    }
+    else if (state is AuthenticationPhonePinVerified) {
       BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
-    } else if (state is AuthenticationAuthenticated) {
-      // if (Navigator.of(context).canPop()) {
-      //   // Navigator.of(context).pop();
-      //   context.go('/hero_user');
-      // }
-
+    }
+    else if (state is AuthenticationAuthenticated) {
       if (state.user.custType == "C") {
         debugPrint("User is a client, Load Mrekan state");
         BlocProvider.of<MRekan1CrudBloc>(context).add(MRekan1CrudLihatEvent());
@@ -99,32 +106,22 @@ class _HeroMainState extends State<HeroMain> {
           final from = authState.authenticatedFrom;
           final custType = authState.user.custType;
 
-          // debugPrint('[AUTH] Authenticated from: $from, CustType: $custType');
-
           if (from == "login_user") {
             context.read<HomeBloc>().add(HeroPageActiveEvent());
-            // debugPrint('[HOME] HeroPageActiveEvent dispatched (login_user)');
           } else if (from == "login_client") {
             context.read<HomeBloc>().add(HeroUserPageActiveEvent());
-            // debugPrint('[HOME] HeroUserPageActiveEvent dispatched (login_client)');
           } else if (from == "login_token") {
             if (custType == "C") {
               context.read<HomeBloc>().add(HeroUserPageActiveEvent());
-              // debugPrint('[HOME] HeroUserPageActiveEvent dispatched (token, C)');
             } else {
               context.read<HomeBloc>().add(HeroPageActiveEvent());
-              // debugPrint('[HOME] HeroPageActiveEvent dispatched (token, non-C)');
             }
           } else {
             context.read<HomeBloc>().add(HeroPageActiveEvent()); // fallback
-            // debugPrint('[HOME] HeroPageActiveEvent dispatched (fallback)');
           }
         } else if (authState is AuthenticationGoogleUserAuthenticated) {
-          // debugPrint('[AUTH] Google user authenticated: ${authState.user.email}');
           context.read<HomeBloc>().add(HeroPageActiveEvent());
-          // debugPrint('[HOME] HeroPageActiveEvent dispatched (Google)');
         } else {
-          // debugPrint('[AUTH] Not authenticated, dispatching fallback');
           context.read<HomeBloc>().add(HeroUserPageActiveEvent());
         }
       });

@@ -18,6 +18,9 @@ class ProfileDropdownContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _refreshRekanIfNeeded(context);
+    });
     return Container(
       width: 280,
       decoration: BoxDecoration(
@@ -158,36 +161,66 @@ class ProfileDropdownContent extends StatelessWidget {
           // Daftar menu
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8),
-            child: Column(
-              children: [
-                ProfileMenuItem(
-                  icon: Icons.person_outline,
-                  title: 'Profil',
-                  onTap: () => onMenuTap('Profil'),
-                ),
-                ProfileMenuItem(
-                  icon: Icons.lock_reset,
-                  title: 'Reset Password',
-                  onTap: () => onMenuTap('Reset Password'),
-                ),
-                Divider(
-                  height: 1,
-                  thickness: 1,
-                  color: Color(0xFFE5E5E5),
-                  indent: 16,
-                  endIndent: 16,
-                ),
-                ProfileMenuItem(
-                  icon: Icons.logout,
-                  title: 'Logout',
-                  onTap: () => onMenuTap('Logout'),
-                ),
-              ],
+            child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+              builder: (context, state) {
+                bool isClientLogin = false;
+
+                if (state is AuthenticationAuthenticated) {
+                  // Ganti salah satu dari dua cara berikut:
+                  // Jika pakai authenticatedFrom:
+                  isClientLogin = state.authenticatedFrom == 'login_client';
+
+                  // Atau jika lebih yakin dari custType:
+                  // isClientLogin = state.user.custType == 'C';
+                }
+
+                return Column(
+                  children: [
+                    if (isClientLogin)
+                      ProfileMenuItem(
+                        icon: Icons.person_outline,
+                        title: 'Profil',
+                        onTap: () => onMenuTap('Profil'),
+                      ),
+                    if (isClientLogin)
+                      ProfileMenuItem(
+                        icon: Icons.lock_reset,
+                        title: 'Reset Password',
+                        onTap: () => onMenuTap('Reset Password'),
+                      ),
+                    Divider(
+                      height: 1,
+                      thickness: 1,
+                      color: Color(0xFFE5E5E5),
+                      indent: 16,
+                      endIndent: 16,
+                    ),
+                    ProfileMenuItem(
+                      icon: Icons.logout,
+                      title: 'Logout',
+                      onTap: () => onMenuTap('Logout'),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
         ],
       ),
     );
+  }
+
+  void _refreshRekanIfNeeded(BuildContext context) {
+    final rekanState = context.read<MRekan1CrudBloc>().state;
+    final authState = context.read<AuthenticationBloc>().state;
+
+    final isClient = authState is AuthenticationAuthenticated &&
+        authState.user.custType == 'C';
+
+    if (isClient && !rekanState.isLoaded) {
+      debugPrint("🔁 Refreshing data rekan dari _refreshRekanIfNeeded()");
+      context.read<MRekan1CrudBloc>().add(MRekan1CrudLihatEvent());
+    }
   }
 
   Widget _defaultIcon() => Container(

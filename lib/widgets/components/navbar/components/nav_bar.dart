@@ -110,8 +110,9 @@ class NavBar extends StatelessWidget {
             ),
             const Spacer(),
             // Profile Section (dari luar di-pass sebagai widget)
-            if (_shouldShowProfileSection(authState)) profileSection,
-
+            // if (_shouldShowProfileSection(authState)) profileSection,
+           if (showHamburger)
+             profileSection,
 
 
             const SizedBox(width: 16),

@@ -16,6 +16,7 @@ part 'authentication_state.dart';
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   final UserRepository userRepository;
+  bool isSwitchingToClient = false;
 
   AuthenticationBloc({required this.userRepository})
       : super(AuthenticationUnauthenticated()) {
