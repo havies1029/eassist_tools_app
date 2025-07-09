@@ -3,6 +3,9 @@ import 'package:eassist_tools_app/pages/about_jps/action_about_section.dart';
 import 'package:eassist_tools_app/pages/find_insurance/find_section_insurance.dart';
 import 'package:eassist_tools_app/pages/find_insurance/floating_buttons_insurance.dart';
 import 'package:eassist_tools_app/pages/gen_aset_dashboard/asetdashboardcari_main.dart';
+import 'package:eassist_tools_app/pages/gen_aset_mv/asetmvcari_main.dart';
+import 'package:eassist_tools_app/pages/gen_aset_par/asetparcari_main.dart';
+import 'package:eassist_tools_app/pages/gen_aset_ringkasan/asetringkasancari_main.dart';
 import 'package:eassist_tools_app/pages/gen_cob_app/cobcari_main.dart';
 import 'package:eassist_tools_app/pages/gen_profile/mrekanpiclist_main.dart';
 import 'package:eassist_tools_app/pages/gen_profile/test_profile_page.dart';
@@ -155,6 +158,39 @@ class _HeroPageState extends State<HeroPage> {
                                     );
                                   },
                                   child: Text("List Aset Dashboard"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const AsetRingkasanCariMainPage()),
+                                    );
+                                  },
+                                  child: Text("List Ringkasan Aset"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const AsetParCariMainPage()),
+                                    );
+                                  },
+                                  child: Text("List Aset Properti"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const AsetMVCariMainPage()),
+                                    );
+                                  },
+                                  child: Text("List Aset MV"),
                                 ),
                               ],
                             );

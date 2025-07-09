@@ -3,18 +3,19 @@ class AsetParCariModel {
 	String alamat;
 	String asetParId;
 	String curr;
-	String jenisAset;
-	double klausulaBank;
-	int noUrut;
+	String klausulaBank;
+	String mrekanId;
 	int nomor;
 	String polisNo;
+	double premi;
 	String status;
 	double sumInsured;
 
 	AsetParCariModel({required this.alamat, required this.asetParId, 
-		required this.curr, required this.jenisAset, 
-		required this.klausulaBank, required this.noUrut, 
-		required this.nomor, required this.polisNo, 
+		required this.curr, 
+		required this.klausulaBank, required this.mrekanId, 
+		required this.nomor, 
+		required this.polisNo, required this.premi, 
 		required this.status, required this.sumInsured});
 
 	factory AsetParCariModel.fromJson(Map<String, dynamic> data) {
@@ -22,11 +23,11 @@ class AsetParCariModel {
 			alamat: data['alamat']??'',
 			asetParId: data['asetParId']??'',
 			curr: data['curr']??'',
-			jenisAset: data['jenisAset']??'',
-			klausulaBank: double.tryParse(data['klausulaBank'].toString())??0,
-			noUrut: int.tryParse(data['noUrut'].toString())??0,
+			klausulaBank: data['klausulaBank']??'',
+			mrekanId: data['mrekanId']??'',
 			nomor: int.tryParse(data['nomor'].toString())??0,
 			polisNo: data['polisNo']??'',
+			premi: double.tryParse(data['premi'].toString())??0,
 			status: data['status']??'',
 			sumInsured: double.tryParse(data['sumInsured'].toString())??0
 		);
@@ -37,12 +38,12 @@ class AsetParCariModel {
 		{'alamat': alamat,
 		'asetParId': asetParId,
 		'curr': curr,
-		'jenisAset': jenisAset,
-		'klausulaBank': klausulaBank.toString(),
-		'noUrut': noUrut.toString(),
-		'nomor': nomor.toString(),
+		'klausulaBank': klausulaBank,
+		'mrekanId': mrekanId,
+		'nomor': nomor,
 		'polisNo': polisNo,
+		'premi': premi,
 		'status': status,
-		'sumInsured': sumInsured.toString()};
+		'sumInsured': sumInsured};
 
 }

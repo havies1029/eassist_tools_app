@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/widgets/listpage_filter_bar_ui.dart';
-import 'package:eassist_tools_app/blocs/gen_aset_par/asetparcari_bloc.dart';
-import 'package:eassist_tools_app/pages/gen_aset_par/asetparcari_list_widget.dart';
+import 'package:eassist_tools_app/blocs/gen_aset_mv/asetmvcari_bloc.dart';
+import 'package:eassist_tools_app/pages/gen_aset_mv/asetmvcari_list_widget.dart';
 
-class AsetParCariPage extends StatefulWidget {
-	const AsetParCariPage({super.key});
+class AsetMvCariPage extends StatefulWidget {
+	const AsetMvCariPage({super.key});
 
 	@override
-	AsetParCariPageState createState() => AsetParCariPageState();
+	AsetMvCariPageState createState() => AsetMvCariPageState();
 }
 
-class AsetParCariPageState extends State<AsetParCariPage> {
-	late AsetParCariBloc asetParCariBloc;
+class AsetMvCariPageState extends State<AsetMvCariPage> {
+	late AsetMvCariBloc asetMvCariBloc;
 	final TextEditingController _searchController = TextEditingController();
 	@override
 	void initState() {
@@ -24,7 +24,7 @@ class AsetParCariPageState extends State<AsetParCariPage> {
 
 	@override
 	Widget build(BuildContext context) {
-		asetParCariBloc = BlocProvider.of<AsetParCariBloc>(context);
+		asetMvCariBloc = BlocProvider.of<AsetMvCariBloc>(context);
 		return Center(
 			child: Column(
 				mainAxisAlignment: MainAxisAlignment.start,
@@ -39,8 +39,8 @@ class AsetParCariPageState extends State<AsetParCariPage> {
 		);
 	}
 	void refreshData() {
-		asetParCariBloc.add(
-			RefreshAsetParCariEvent(searchText: _searchController.text));
+		asetMvCariBloc.add(
+			RefreshAsetMvCariEvent(searchText: _searchController.text));
 	}
 
 	IconButton buildSearchButton() {
@@ -50,7 +50,7 @@ class AsetParCariPageState extends State<AsetParCariPage> {
 				size: 35.0,
 			),
 			onPressed: () {
-			asetParCariBloc.add(RefreshAsetParCariEvent(
+			asetMvCariBloc.add(RefreshAsetMvCariEvent(
 				searchText: _searchController.text));
 			});
 	}
@@ -59,7 +59,7 @@ class AsetParCariPageState extends State<AsetParCariPage> {
 		return Expanded(
 			child: Column(
 				mainAxisAlignment: MainAxisAlignment.start,
-				children: <Widget>[AsetParCariListWidget(searchText: _searchController.text)],
+				children: <Widget>[AsetMvCariListWidget(searchText: _searchController.text)],
 		));
 	}
 

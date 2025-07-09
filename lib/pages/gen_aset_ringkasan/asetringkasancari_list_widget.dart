@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/common/constants.dart';
-import 'package:eassist_tools_app/blocs/gen_aset_par/asetparcari_bloc.dart';
-import 'package:eassist_tools_app/pages/gen_aset_par/asetparcari_tile_widget.dart';
-import 'package:eassist_tools_app/models/gen_aset_par/asetparcari_model.dart';
+import 'package:eassist_tools_app/blocs/gen_aset_ringkasan/asetringkasancari_bloc.dart';
+import 'package:eassist_tools_app/pages/gen_aset_ringkasan/asetringkasancari_tile_widget.dart';
+import 'package:eassist_tools_app/models/gen_aset_ringkasan/asetringkasancari_model.dart';
 
-class AsetParCariListWidget extends StatefulWidget {
+class AsetRingkasanCariListWidget extends StatefulWidget {
 	final String searchText;
-	const AsetParCariListWidget({super.key, required this.searchText});
+	const AsetRingkasanCariListWidget({super.key, required this.searchText});
 
 	@override
-	AsetParCariListWidgetState createState() => AsetParCariListWidgetState();
+	AsetRingkasanCariListWidgetState createState() => AsetRingkasanCariListWidgetState();
 }
 
-class AsetParCariListWidgetState extends State<AsetParCariListWidget> {
-	late AsetParCariBloc asetParCariBloc;
-	List<AsetParCariModel> asetParCari = [];
+class AsetRingkasanCariListWidgetState extends State<AsetRingkasanCariListWidget> {
+	late AsetRingkasanCariBloc asetRingkasanCariBloc;
+	List<AsetRingkasanCariModel> asetRingkasanCari = [];
 	final ScrollController _scrollController = ScrollController();
 
 	@override
@@ -34,12 +34,12 @@ class AsetParCariListWidgetState extends State<AsetParCariListWidget> {
 
 	@override
 	Widget build(BuildContext context) {
-		asetParCariBloc = BlocProvider.of<AsetParCariBloc>(context);
-		return BlocConsumer<AsetParCariBloc, AsetParCariState>(
+		asetRingkasanCariBloc = BlocProvider.of<AsetRingkasanCariBloc>(context);
+		return BlocConsumer<AsetRingkasanCariBloc, AsetRingkasanCariState>(
 			builder: (context, state) {
 		if (state.status == ListStatus.success) {
 			if (!state.hasReachedMax) {
-				asetParCari.addAll(state.items);
+				asetRingkasanCari.addAll(state.items);
 			}
 
 		return state.items.isNotEmpty
@@ -55,17 +55,14 @@ class AsetParCariListWidgetState extends State<AsetParCariListWidget> {
 							borderRadius: BorderRadius.circular(15.0)),
 						child: Column(
 							children: <Widget>[
-								AsetParCariTileWidget(
-									alamat: state.items[index].alamat,
-									asetParId: state.items[index].asetParId,
+								AsetRingkasanCariTileWidget(
+									asetNama: state.items[index].asetNama,
+									asetRingkasanId: state.items[index].asetRingkasanId,
 									curr: state.items[index].curr,
-									klausulaBank: state.items[index].klausulaBank,
-									mrekanId: state.items[index].mrekanId,
-									nomor: state.items[index].nomor,
-									polisNo: state.items[index].polisNo,
-									premi: state.items[index].premi,
-									status: state.items[index].status,
-									sumInsured: state.items[index].sumInsured,
+									jmlAset: state.items[index].jmlAset,
+									nilaiAset: state.items[index].nilaiAset,
+									noUrut: state.items[index].noUrut,
+									satuan: state.items[index].satuan,
 								)
 							],
 						),
@@ -103,7 +100,7 @@ class AsetParCariListWidgetState extends State<AsetParCariListWidget> {
 		if (!_scrollController.hasClients) return;
 		if (_scrollController.position.pixels ==
 				_scrollController.position.maxScrollExtent) {
-			asetParCariBloc.add(FetchAsetParCariEvent());
+			asetRingkasanCariBloc.add(FetchAsetRingkasanCariEvent());
 		}
 	}
 

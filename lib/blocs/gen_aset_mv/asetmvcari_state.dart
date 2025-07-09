@@ -1,39 +1,37 @@
-part of 'asetparcari_bloc.dart';
+part of 'asetmvcari_bloc.dart';
 
-class AsetParCariState extends Equatable {
+class AsetMvCariState extends Equatable {
 
 	final ListStatus status;
-	final List<AsetParCariModel> items;
+	final List<AsetMvCariModel> items;
 	final bool hasReachedMax;
 	final int hal;
   final String searchText;
 
-	const AsetParCariState(
+	const AsetMvCariState(
 		{this.status = ListStatus.initial,
-		this.items = const <AsetParCariModel>[],
+		this.items = const <AsetMvCariModel>[],
 		this.hasReachedMax = false,
 		this.hal = 0,
-		this.searchText = ""});
+		this.searchText = ''});
 
-	const AsetParCariState.success(List<AsetParCariModel> items)
+	const AsetMvCariState.success(List<AsetMvCariModel> items)
 			: this(status: ListStatus.success, items: items);
 
-	const AsetParCariState.failure() : this(status: ListStatus.failure);
+	const AsetMvCariState.failure() : this(status: ListStatus.failure);
 
-	AsetParCariState copyWith(
-		{List<AsetParCariModel>? items,
+	AsetMvCariState copyWith(
+		{List<AsetMvCariModel>? items,
 		bool? hasReachedMax,
 		ListStatus? status,
 		int? hal,
-		String? searchText
-		}) {
-		return AsetParCariState(
+		String? searchText}) {
+		return AsetMvCariState(
 			items: items ?? this.items,
 			hasReachedMax: hasReachedMax ?? this.hasReachedMax,
 			status: status ?? this.status,
 			hal: hal ?? this.hal,
-			searchText: searchText ?? this.searchText
-		);
+			searchText: searchText ?? this.searchText);
 	}
 
 	@override

@@ -10,11 +10,11 @@ class AppData {
   static String version = "1.0.2";
 
 
+
   static bool useSSL = false;
   static String apiDomain = "http://10.0.2.2/eAssistToolsAPI/";
   static String prefixEndPoint = "/eAssistToolsAPI";
   static String httpAuthority = "10.0.2.2";
-
 
 
 /*

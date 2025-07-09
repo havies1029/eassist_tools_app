@@ -3,30 +3,32 @@ import 'package:flutter/material.dart';
 import 'package:eassist_tools_app/widgets/my_colors.dart';
 import 'package:eassist_tools_app/widgets/my_text.dart';
 
-class AsetParCariTileWidget extends StatelessWidget {
-	final String alamat;
-	final String asetParId;
+class AsetMvCariTileWidget extends StatelessWidget {
+	final String asetMvId;
 	final String curr;
-	final String klausulaBank;
-	final String mrekanId;
+	final String jenisMv;
+	final String merk;
+	final String noPolisi;
 	final int nomor;
 	final String polisNo;
 	final double premi;
-	final String status;
 	final double sumInsured;
+	final int tahun;
+	final String tipe;
 
-	const AsetParCariTileWidget(
+	const AsetMvCariTileWidget(
 		{super.key,
-		required this.alamat, 
-		required this.asetParId, 
+		required this.asetMvId, 
 		required this.curr, 
-		required this.klausulaBank, 
-		required this.mrekanId, 
+		required this.jenisMv, 
+		required this.merk, 
+		required this.noPolisi, 
 		required this.nomor, 
 		required this.polisNo, 
 		required this.premi, 
-		required this.status, 
-		required this.sumInsured});
+		required this.sumInsured, 
+		required this.tahun, 
+		required this.tipe});
 
 	@override
 	Widget build(BuildContext context) {
@@ -44,21 +46,12 @@ class AsetParCariTileWidget extends StatelessWidget {
 				child: Column(
 					crossAxisAlignment: CrossAxisAlignment.start,
 					children: [
-						Text("alamat",
+						Text("asetMvId",
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_40)),
 						Container(height: 5),
 						Text(
-							alamat,
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_80)),
-						Container(height: 10),
-						Text("asetParId",
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_40)),
-						Container(height: 5),
-						Text(
-							asetParId,
+							asetMvId,
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
@@ -71,25 +64,33 @@ class AsetParCariTileWidget extends StatelessWidget {
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
-						
-						Text("klausulaBank",
+						Text("jenisMv",
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_40)),
 						Container(height: 5),
 						Text(
-							klausulaBank,
+							jenisMv,
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
-						Text("mrekanId",
+						Text("merk",
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_40)),
 						Container(height: 5),
 						Text(
-							mrekanId,
+							merk,
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
-						Container(height: 10),						
+						Container(height: 10),
+						Text("noPolisi",
+							style: MyText.bodyLarge(context)!
+								.copyWith(color: MyColors.grey_40)),
+						Container(height: 5),
+						Text(
+							noPolisi,
+							style: MyText.bodyLarge(context)!
+								.copyWith(color: MyColors.grey_80)),
+						Container(height: 10),
 						Text("nomor",
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_40)),
@@ -117,21 +118,30 @@ class AsetParCariTileWidget extends StatelessWidget {
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
-						Text("status",
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_40)),
-						Container(height: 5),
-						Text(
-							status,
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_80)),
-						Container(height: 10),
 						Text("sumInsured",
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_40)),
 						Container(height: 5),
 						Text(
 							NumberFormat("#,###").format(sumInsured),
+							style: MyText.bodyLarge(context)!
+								.copyWith(color: MyColors.grey_80)),
+						Container(height: 10),
+						Text("tahun",
+							style: MyText.bodyLarge(context)!
+								.copyWith(color: MyColors.grey_40)),
+						Container(height: 5),
+						Text(
+							NumberFormat("#,###").format(tahun),
+							style: MyText.bodyLarge(context)!
+								.copyWith(color: MyColors.grey_80)),
+						Container(height: 10),
+						Text("tipe",
+							style: MyText.bodyLarge(context)!
+								.copyWith(color: MyColors.grey_40)),
+						Container(height: 5),
+						Text(
+							tipe,
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),

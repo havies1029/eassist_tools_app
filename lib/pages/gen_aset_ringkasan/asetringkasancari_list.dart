@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/widgets/listpage_filter_bar_ui.dart';
-import 'package:eassist_tools_app/blocs/gen_aset_par/asetparcari_bloc.dart';
-import 'package:eassist_tools_app/pages/gen_aset_par/asetparcari_list_widget.dart';
+import 'package:eassist_tools_app/blocs/gen_aset_ringkasan/asetringkasancari_bloc.dart';
+import 'package:eassist_tools_app/pages/gen_aset_ringkasan/asetringkasancari_list_widget.dart';
 
-class AsetParCariPage extends StatefulWidget {
-	const AsetParCariPage({super.key});
+class AsetRingkasanCariPage extends StatefulWidget {
+	const AsetRingkasanCariPage({super.key});
 
 	@override
-	AsetParCariPageState createState() => AsetParCariPageState();
+	AsetRingkasanCariPageState createState() => AsetRingkasanCariPageState();
 }
 
-class AsetParCariPageState extends State<AsetParCariPage> {
-	late AsetParCariBloc asetParCariBloc;
+class AsetRingkasanCariPageState extends State<AsetRingkasanCariPage> {
+	late AsetRingkasanCariBloc asetRingkasanCariBloc;  
 	final TextEditingController _searchController = TextEditingController();
 	@override
 	void initState() {
@@ -24,11 +24,11 @@ class AsetParCariPageState extends State<AsetParCariPage> {
 
 	@override
 	Widget build(BuildContext context) {
-		asetParCariBloc = BlocProvider.of<AsetParCariBloc>(context);
+		asetRingkasanCariBloc = BlocProvider.of<AsetRingkasanCariBloc>(context);
 		return Center(
 			child: Column(
 				mainAxisAlignment: MainAxisAlignment.start,
-				children: [
+				children: [          
 					ListPageFilterBarUIWidget(
 						searchController: _searchController,
 						searchButton: buildSearchButton()),
@@ -39,8 +39,8 @@ class AsetParCariPageState extends State<AsetParCariPage> {
 		);
 	}
 	void refreshData() {
-		asetParCariBloc.add(
-			RefreshAsetParCariEvent(searchText: _searchController.text));
+		asetRingkasanCariBloc.add(
+			RefreshAsetRingkasanCariEvent(searchText: _searchController.text));
 	}
 
 	IconButton buildSearchButton() {
@@ -50,7 +50,7 @@ class AsetParCariPageState extends State<AsetParCariPage> {
 				size: 35.0,
 			),
 			onPressed: () {
-			asetParCariBloc.add(RefreshAsetParCariEvent(
+			asetRingkasanCariBloc.add(RefreshAsetRingkasanCariEvent(
 				searchText: _searchController.text));
 			});
 	}
@@ -59,7 +59,7 @@ class AsetParCariPageState extends State<AsetParCariPage> {
 		return Expanded(
 			child: Column(
 				mainAxisAlignment: MainAxisAlignment.start,
-				children: <Widget>[AsetParCariListWidget(searchText: _searchController.text)],
+				children: <Widget>[AsetRingkasanCariListWidget(searchText: _searchController.text)],
 		));
 	}
 
