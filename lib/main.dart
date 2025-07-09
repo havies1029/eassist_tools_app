@@ -3,6 +3,8 @@ import 'package:eassist_tools_app/blocs/chatting/guestscrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/gallery/galleryeventcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gallery/gallerymembercari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gallery/gallerytestimonycari_bloc.dart';
+import 'package:eassist_tools_app/blocs/gen_aset_dashboard/asetdashboardcari_bloc.dart';
+import 'package:eassist_tools_app/blocs/gen_cob_app/cobcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekan1crud_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekancontactcrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekangeneralcmpcrud_bloc.dart';
@@ -204,7 +206,11 @@ class App extends StatelessWidget {
               ProfileDownloadFotoBloc(repository: UserFotoRepository())), 
         BlocProvider<ProfileUploadKtpBloc>(
           create: (context) =>
-              ProfileUploadKtpBloc(repository: ProfileKtpRepository())),       
+              ProfileUploadKtpBloc(repository: ProfileKtpRepository())),    
+        BlocProvider<CobCariBloc>(
+          create: (context) => CobCariBloc()),   
+        BlocProvider<AsetDashboardCariBloc>(
+          create: (context) => AsetDashboardCariBloc()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

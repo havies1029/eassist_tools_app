@@ -2,6 +2,8 @@ import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart'
 import 'package:eassist_tools_app/pages/about_jps/action_about_section.dart';
 import 'package:eassist_tools_app/pages/find_insurance/find_section_insurance.dart';
 import 'package:eassist_tools_app/pages/find_insurance/floating_buttons_insurance.dart';
+import 'package:eassist_tools_app/pages/gen_aset_dashboard/asetdashboardcari_main.dart';
+import 'package:eassist_tools_app/pages/gen_cob_app/cobcari_main.dart';
 import 'package:eassist_tools_app/pages/gen_profile/mrekanpiclist_main.dart';
 import 'package:eassist_tools_app/pages/gen_profile/test_profile_page.dart';
 import 'package:eassist_tools_app/pages/heropage/fixed_nambar_overlay.dart';
@@ -12,6 +14,7 @@ import 'package:eassist_tools_app/widgets/section/footer_section.dart';
 import 'package:eassist_tools_app/widgets/section/testimonial_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class HeroPage extends StatefulWidget {
   const HeroPage({super.key});
@@ -63,7 +66,16 @@ class _HeroPageState extends State<HeroPage> {
                   child: Column(
                     children: [
                       TextButton(
-                          onPressed: () {
+                          onPressed: () async {
+                            const List<String> scopes = <String>[
+                              'email',
+                            ];
+                            GoogleSignIn googleSignIn = GoogleSignIn(
+                              // Optional clientId
+                              serverClientId: '217496566954-tiqmna993j1a943i9d86chpas0ipktle.apps.googleusercontent.com',
+                              scopes: scopes,
+                            );
+                            await googleSignIn.signOut();
                             context.read<AuthenticationBloc>().add(LoggedOut());
                           },
                           child: Text("Logout",
@@ -109,21 +121,48 @@ class _HeroPageState extends State<HeroPage> {
                           builder: (context, state) {
                         if (state is AuthenticationAuthenticated) {
                           if (state.user.custType == "C") {
-                            return TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          MRekanPicListMainPage()),
-                                );
-                              },
-                              child: Text("Form Profile PIC"),
+                            return Column(
+                              children: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              MRekanPicListMainPage()),
+                                    );
+                                  },
+                                  child: Text("Form Profile PIC"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              CobCariMainPage()),
+                                    );
+                                  },
+                                  child: Text("List COB"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const AsetDashboardCariMainPage()),
+                                    );
+                                  },
+                                  child: Text("List Aset Dashboard"),
+                                ),
+                              ],
                             );
                           }
                         }
                         return Container();
                       }),
+                      
                       HeroSection(constraints: constraints),
                       FloatingButtons(constraints: constraints),
                       ActionSection(constraints: constraints),

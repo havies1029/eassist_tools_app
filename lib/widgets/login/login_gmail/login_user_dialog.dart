@@ -17,6 +17,7 @@ const List<String> scopes = <String>[
   'email',
 ];
 // Pastikan ini adalah Web Client ID
+
 /*
 final GoogleSignIn _googleSignIn = GoogleSignIn(
   scopes: scopes,
@@ -29,9 +30,10 @@ final GoogleSignIn _googleSignIn = GoogleSignIn(
 
 GoogleSignIn _googleSignIn = GoogleSignIn(
   // Optional clientId
-   clientId: '217496566954-tiqmna993j1a943i9d86chpas0ipktle.apps.googleusercontent.com',
+   serverClientId: '217496566954-tiqmna993j1a943i9d86chpas0ipktle.apps.googleusercontent.com',
   scopes: scopes,
 );
+
 
 class LoginUserDialog extends BaseDialog {
   const LoginUserDialog({super.key});
@@ -372,8 +374,22 @@ class LoginUserDialogState extends BaseDialogState<LoginUserDialog> {
   }
 
   void _handleGmailRegisterForMobile(BuildContext context) async {
-    GoogleSignInAccount? user = await _googleSignIn.signInSilently();
+
+    /*
+    try {
+      final account = await _googleSignIn.signIn();
+      debugPrint("User: ${account?.email}");
+    } catch (e) {
+      debugPrint("Google Sign-In error: $e");
+    }
+    */
+    
+    
+    GoogleSignInAccount? user = await _googleSignIn.signInSilently();    
     user ??= await _googleSignIn.signIn();
+    
+    
+    //await _googleSignIn.signIn();
 
 /*
     if (user != null) {
