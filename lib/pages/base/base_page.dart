@@ -38,6 +38,7 @@ enum PageType {
   activeassets,
   article,
   assetsmanagement,
+  polismanagement,
   findinsurance,
   herouser,
   hero,
@@ -48,6 +49,8 @@ enum PageType {
   loadinghero,
   loadinghero2,
   loadingherouser,
+  cobcari,
+  asetdashboard,
 }
 
 abstract class PageContainerBase extends StatefulWidget {

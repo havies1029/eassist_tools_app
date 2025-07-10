@@ -1,6 +1,21 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../blocs/authentication/authentication_bloc.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:eassist_tools_app/widgets/google_signin_button_stub.dart'
+if (dart.library.js_interop) 'package:eassist_tools_app/widgets/google_signin_button_web.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
+const List<String> scopes = <String>[
+  'email',
+];
+
+GoogleSignIn _googleSignIn = GoogleSignIn(
+  scopes: scopes,
+  clientId: kIsWeb ? '217496566954-tiqmna993j1a943i9d86chpas0ipktle.apps.googleusercontent.com' : null,
+  serverClientId: kIsWeb ? null : '217496566954-tiqmna993j1a943i9d86chpas0ipktle.apps.googleusercontent.com',
+);
 
 class LogoutPopup extends StatefulWidget {
   const LogoutPopup({Key? key}) : super(key: key);
@@ -75,14 +90,22 @@ class _LogoutPopupState extends State<LogoutPopup>
       await _overlayController.reverse();
     } catch (_) {}
 
-    if (mounted) {
-      Navigator.of(context).pop();
+    if (!mounted) return;
 
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.read<AuthenticationBloc>().add(LoggedOut());
-        // context.go('/hero');
-      });
-    }
+    // 1. Logout app & Google dulu
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      try {
+        await _googleSignIn.signOut(); // signOut saja cukup
+      } catch (e) {
+        debugPrint("Google SignOut error: $e");
+      }
+
+      // 2. Emit logout ke AuthenticationBloc
+      context.read<AuthenticationBloc>().add(LoggedOut());
+    });
+
+    // 3. Baru tutup popup
+    Navigator.of(context).pop();
   }
 
   @override

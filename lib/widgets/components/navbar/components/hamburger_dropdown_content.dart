@@ -173,6 +173,8 @@
               SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic List Main', onTap: () {}),
               SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic List Title Widget', onTap: () {}),
               SubMenuItem(icon: Icons.business_outlined, title: 'Rekan General V2', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'Cob Cari', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'Aset Dashboard', onTap: () {}),
             ],
           },
           {
@@ -182,6 +184,7 @@
               SubMenuItem(icon: Icons.business_outlined, title: 'Find Insurance', onTap: () {}),
               SubMenuItem(icon: Icons.business_outlined, title: 'Active Asset', onTap: () {}),
               SubMenuItem(icon: Icons.business_outlined, title: 'Management Asset', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'Management Polis', onTap: () {}),
             ],
           },
           {
@@ -190,6 +193,13 @@
             'subs': [
               SubMenuItem(icon: Icons.business_outlined, title: 'User JPS', onTap: () {}),
               SubMenuItem(icon: Icons.business_outlined, title: 'User Non JPS', onTap: () {}),
+            ],
+          },
+          {
+            'icon': Icons.password,
+            'title': 'Password',
+            'subs': [
+              SubMenuItem(icon: Icons.business_outlined, title: 'Change Password', onTap: () {}),
             ],
           },
         ],

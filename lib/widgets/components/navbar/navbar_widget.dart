@@ -22,7 +22,8 @@ import '../../../pages/customer_service/cs_main.dart';
 import '../../../pages/find_insurance/find_insurance_main.dart';
 import '../../../pages/hero_client_page/hero_user_main.dart';
 import '../../../pages/heropage/hero_main.dart';
-import '../../../pages/summary_polis_assets/assets_management_main.dart';
+import '../../../pages/management_asset/management_asset_main.dart';
+import '../../../pages/management_polis/management_polis_main.dart';
 import '../../../pages/testimony_page/testimony_main.dart';
 import '../../../pages/user_jps/user_jps_main.dart';
 import '../../../pages/user_non_jps/user_non_jps_main.dart';
@@ -42,8 +43,6 @@ class NavbarWidget extends StatefulWidget {
   final bool hideProfile;
   final PageType pageType;
   const NavbarWidget({super.key, required this.constraints, this.hideProfile = false, required this.pageType});
-
-
 
   @override
   State<NavbarWidget> createState() => _NavbarWidgetState();
@@ -370,40 +369,54 @@ class _NavbarWidgetState extends State<NavbarWidget> {
 
       case 'Rekan Contact':
       // Navigator.push(...BlocProvider...)
-        context.go('/rekancontact');
+      //   context.go('/rekancontact');
         break;
 
       case 'Rekan General':
-        context.go('/rekangeneral');
+        // context.go('/rekangeneral');
         break;
 
       case 'Rekan Pajak':
       case 'Rekan General V2':
-        context.go('/rekanpajak');
+        // context.go('/rekanpajak');
         break;
 
       case 'Rekan Bank':
-        context.go('/rekanbank');
+        // context.go('/rekanbank');
         break;
 
       case 'Rekan Pic Form':
-        context.go('/rekanpic');
+        // context.go('/rekanpic');
         break;
 
       case 'Rekan Pic Crud Form':
-        context.go('/rekanpiccrud');
+        // context.go('/rekanpiccrud');
         break;
 
       case 'Rekan Pic Crud Main':
-        context.go('/rekanpiccrud_main');
+        // context.go('/rekanpiccrud_main');
         break;
 
       case 'Rekan Pic List List':
-        context.go('/rekanpiclist');
+        // context.go('/rekanpiclist');
         break;
 
       case 'Rekan Pic List List Widget':
-        context.go('/rekanpiclist_widget');
+        // context.go('/rekanpiclist_widget');
+        break;
+
+      case 'Cob Cari':
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(CobCariPageActiveEvent());
+        });
+        // context.go('/assets_management');
+        break;
+
+      case 'Aset Dashboard':
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(AsetDashboardPageActiveEvent());
+        });
+        // context.go('/assets_management');
         break;
 
       case 'Test Profile':
@@ -413,6 +426,13 @@ class _NavbarWidgetState extends State<NavbarWidget> {
       case 'Management Asset':
         SchedulerBinding.instance.addPostFrameCallback((_) {
           context.read<HomeBloc>().add(AssetsManagementPageActiveEvent());
+        });
+        // context.go('/assets_management');
+        break;
+
+      case 'Management Polis':
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(PolisManagementPageActiveEvent());
         });
         // context.go('/assets_management');
         break;
@@ -462,11 +482,14 @@ class _NavbarWidgetState extends State<NavbarWidget> {
           builder: (_) => const ResetPasswordPage(),
         );
         break;
-
       case 'Forget Password Page':
         await CustomPopupsLoginUser.showForgotPasswordDialog(context);
         break;
-
+      case 'Change Password':
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(ChangePasswordPageActiveEvent());
+        });
+        break;
       case 'Popup Succeed':
       // Navigator.of(context).push(...)
         showDialog(

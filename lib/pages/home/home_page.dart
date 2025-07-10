@@ -95,6 +95,7 @@ class _HomePageState extends State<HomePage> {
     if (state is ActiveAssetsPageActive) return PageType.activeassets;
     if (state is ArticlePageActive) return PageType.article;
     if (state is AssetsManagementPageActive) return PageType.assetsmanagement;
+    if (state is PolisManagementPageActive) return PageType.polismanagement;
     if (state is FindInsurancePageActive) return PageType.findinsurance;
     if (state is HeroUserPageActive) return PageType.herouser;
     if (state is HeroPageActive) return PageType.hero;
@@ -105,6 +106,9 @@ class _HomePageState extends State<HomePage> {
     if (state is LoadingHeroPageActive) return PageType.loadinghero;
     if (state is LoadingHero2PageActive) return PageType.loadinghero2;
     if (state is LoadingHeroUserPageActive) return PageType.loadingherouser;
+    if (state is CobCariPageActive) return PageType.cobcari;
+    if (state is AsetDashboardPageActive) return PageType.asetdashboard;
+
     return null;
   }
 }

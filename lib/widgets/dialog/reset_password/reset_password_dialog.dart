@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:eassist_tools_app/blocs/login/change_password_bloc.dart';
+import 'package:eassist_tools_app/models/authentication/change_password_model.dart';
 
 class ResetPasswordPage extends StatefulWidget {
   const ResetPasswordPage({Key? key}) : super(key: key);
@@ -27,6 +30,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage>
   String? _oldPasswordError;
   String? _newPasswordError;
   String? _confirmPasswordError;
+  late ChangePasswordBloc _changePasswordBloc;
 
   // Animasi
   late final AnimationController _animationController;
@@ -35,6 +39,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage>
   @override
   void initState() {
     super.initState();
+    _changePasswordBloc = context.read<ChangePasswordBloc>();
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
@@ -56,7 +61,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage>
 
   void _submitReset() {
     setState(() {
-      // Reset semua error message
       _oldPasswordError = null;
       _newPasswordError = null;
       _confirmPasswordError = null;
@@ -68,47 +72,26 @@ class _ResetPasswordPageState extends State<ResetPasswordPage>
 
     bool hasError = false;
 
-    // Validasi: Password Lama tidak boleh kosong
     if (oldPwd.isEmpty) {
-      setState(() {
-        _oldPasswordError = 'Password lama tidak boleh kosong';
-      });
+      setState(() => _oldPasswordError = 'Password lama tidak boleh kosong');
       hasError = true;
     }
-
-    // Validasi: Password Baru tidak boleh kosong
     if (newPwd.isEmpty) {
-      setState(() {
-        _newPasswordError = 'Password baru tidak boleh kosong';
-      });
+      setState(() => _newPasswordError = 'Password baru tidak boleh kosong');
       hasError = true;
     }
-
-    // Validasi: Konfirmasi Password tidak boleh kosong
     if (confirmPwd.isEmpty) {
-      setState(() {
-        _confirmPasswordError = 'Ketik ulang password baru tidak boleh kosong';
-      });
+      setState(() => _confirmPasswordError = 'Ketik ulang password baru tidak boleh kosong');
+      hasError = true;
+    } else if (!hasError && newPwd != confirmPwd) {
+      setState(() => _confirmPasswordError = 'Password baru dan konfirmasi tidak sama');
       hasError = true;
     }
 
-    // Jika tidak ada error kosong dan password baru tidak sama
-    if (!hasError && newPwd != confirmPwd) {
-      setState(() {
-        _confirmPasswordError = 'Password baru dan konfirmasi tidak sama';
-      });
-      hasError = true;
-    }
+    if (hasError) return;
 
-    if (hasError) {
-      // Kalau ada error, jangan lanjut ke API
-      return;
-    }
-
-    // TODO: Panggil fungsi untuk memperbarui password di sini, misalnya:
-    // AuthService.updatePassword(oldPwd, newPwd);
-
-    Navigator.of(context).pop(); // Tutup halaman setelah submit berhasil
+    final model = ChangePasswordModel(oldPassword: oldPwd, newPassword: newPwd);
+    _changePasswordBloc.add(UserChangePasswordEvent(pswd: model));
   }
 
   @override
@@ -116,47 +99,74 @@ class _ResetPasswordPageState extends State<ResetPasswordPage>
     final screenWidth = MediaQuery.of(context).size.width;
     final dialogWidth = screenWidth < 450 ? screenWidth * 0.9 : 400.0;
 
-    return Scaffold(
-      backgroundColor: Colors.black54,
-      body: GestureDetector(
-        onTap: () => Navigator.of(context).pop(),
-        behavior: HitTestBehavior.opaque,
-        child: Center(
-          child: GestureDetector(
-            onTap: () {
-              // Mencegah propagasi tap ke background
-            },
-            child: AnimatedBuilder(
-              animation: _scaleAnimation,
-              builder: (context, child) {
-                return Transform.scale(
-                  scale: _scaleAnimation.value,
-                  child: Container(
-                    width: dialogWidth,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.3),
-                          blurRadius: 20,
-                          offset: const Offset(0, 10),
+    return BlocConsumer<ChangePasswordBloc, ChangePasswordState>(
+      listener: (context, state) {
+        if (state.isSaved) {
+          if (state.hasFailure) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("Password lama salah."),
+                backgroundColor: Colors.red,
+              ),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("Password berhasil diubah."),
+                backgroundColor: Colors.green,
+              ),
+            );
+            Navigator.of(context).pop();
+          }
+
+          // Bersihkan semua field
+          _oldPasswordController.clear();
+          _newPasswordController.clear();
+          _confirmPasswordController.clear();
+        }
+      },
+      builder: (context, state) {
+        return Scaffold(
+          backgroundColor: Colors.black54,
+          body: GestureDetector(
+            onTap: () => Navigator.of(context).pop(),
+            behavior: HitTestBehavior.opaque,
+            child: Center(
+              child: GestureDetector(
+                onTap: () {}, // Mencegah propagasi ke luar dialog
+                child: AnimatedBuilder(
+                  animation: _scaleAnimation,
+                  builder: (context, child) {
+                    return Transform.scale(
+                      scale: _scaleAnimation.value,
+                      child: Container(
+                        width: dialogWidth,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.3),
+                              blurRadius: 20,
+                              offset: const Offset(0, 10),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        _buildHeader(context),
-                        _buildBody(),
-                      ],
-                    ),
-                  ),
-                );
-              },
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            _buildHeader(context),
+                            _buildBody(),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 

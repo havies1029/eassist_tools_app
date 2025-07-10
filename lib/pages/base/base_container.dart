@@ -6,13 +6,6 @@ import 'package:eassist_tools_app/pages/base/base_page.dart';
 import 'package:eassist_tools_app/common/styles.dart';
 import 'package:eassist_tools_app/pages/klaim/klaim1list_main.dart';
 import 'package:eassist_tools_app/pages/login/change_pswd_main.dart';
-import 'package:eassist_tools_app/pages/simulbon/simulboncrud_main.dart';
-import 'package:eassist_tools_app/pages/simuleei/simuleeicrud_main.dart';
-import 'package:eassist_tools_app/pages/simulgis/simulgiscrud_main.dart';
-import 'package:eassist_tools_app/pages/simulgit/simulgitcrud_main.dart';
-import 'package:eassist_tools_app/pages/simulmv/simulmvcrud_main.dart';
-import 'package:eassist_tools_app/pages/simulpar/simulparcrud_main.dart';
-import 'package:eassist_tools_app/pages/simulwp/simulwpcrud_main.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 // import 'package:eassist_tools_app/pages/profile/profile_main_page.dart';
@@ -25,20 +18,21 @@ import '../article_page/article_detail.dart';
 import '../article_page/article_main.dart';
 import '../customer_service/cs_main.dart';
 import '../find_insurance/find_insurance_main.dart';
+import '../gen_aset_dashboard/asetdashboardcari_list.dart';
+import '../gen_aset_dashboard/asetdashboardcari_main.dart';
+import '../gen_aset_par/asetparcari_list.dart';
+import '../gen_cob_app/cobcari_main.dart';
 import '../gen_profile/test_profile_main.dart';
 import '../hero_client_page/hero_user_main.dart';
 import '../heropage/hero_main.dart';
 import '../home/home_redirector_page.dart';
 import '../loading/loading_user2_page.dart';
 import '../qontak/floating_chat_wrapper.dart';
-import '../simulcar/simulcarcrud_main.dart';
-import '../simulcargo/simulcargocrud_main.dart';
-import '../simulmb/simulmbcrud_main.dart';
-import '../simultree/simultreecrud_main.dart';
 import '../loading/loading_client_page.dart';
 import '../loading/loading_user_page.dart';
 import '../splash/splash_page.dart';
-import '../summary_polis_assets/assets_management_main.dart';
+import '../management_asset/management_asset_main.dart';
+import '../management_polis/management_polis_main.dart';
 import '../testimony_page/testimony_main.dart';
 import '../user_jps/user_jps_main.dart';
 import '../user_non_jps/user_non_jps_main.dart';
@@ -197,6 +191,8 @@ class PageContainer extends StatelessWidget {
         return "Artikel";
       case PageType.assetsmanagement:
         return "Manajemen Aset";
+      case PageType.polismanagement:
+        return "Manajemen Polis";
       case PageType.findinsurance:
         return "Cari Asuransi";
       case PageType.herouser:
@@ -217,6 +213,10 @@ class PageContainer extends StatelessWidget {
         return "Memuat Hero2";
       case PageType.loadingherouser:
         return "Memuat Hero User";
+      case PageType.cobcari:
+        return "Memuat Cob Cari";
+      case PageType.asetdashboard:
+        return "Memuat Aset Dashboard";
       default:
         return "Login Page";
     }
@@ -233,30 +233,6 @@ class PageContainer extends StatelessWidget {
         return const RoomCariPage();
       case PageType.changepswd:
         return const ChangePswdMainPage();
-      case PageType.simulmv:
-        return const SimulmvCrudMainPage();
-      case PageType.simulpar:
-        return const SimulparCrudMainPage(usage: 'PAREQ');
-      case PageType.simulflexas:
-        return const SimulparCrudMainPage(usage: 'FLEXAS');
-      case PageType.simuleei:
-        return const SimuleeiCrudMainPage();
-      case PageType.simulgit:
-        return const SimulgitCrudMainPage();
-      case PageType.simulgis:
-        return const SimulgisCrudMainPage();
-      case PageType.simulbon:
-        return const SimulbonCrudMainPage();
-      case PageType.simulwp:
-        return const SimulwpCrudMainPage();
-      case PageType.simulcargo:
-        return const SimulcargoCrudMainPage();
-      case PageType.simulcar:
-        return const SimulcarCrudMainPage();
-      case PageType.simulmb:
-        return const SimulmbCrudMainPage();
-      case PageType.simultree:
-        return const SimultreeCrudMainPage();
       case PageType.klaimtrack:
         return const Klaim1ListMainPage();
       case PageType.splash:
@@ -283,12 +259,12 @@ class PageContainer extends StatelessWidget {
       case PageType.about:
         debugPrint("🟢 AboutMain dibuild");
         return const AboutPage();
-      case PageType.activeassets:
-        return const ActiveAssetPage();
       case PageType.article:
         return const ArticleMain();
       case PageType.assetsmanagement:
-        return const AssetsManagementMain();
+        return const AssetManagementMain();
+      case PageType.polismanagement:
+        return const PolisManagementMain();
       case PageType.findinsurance:
         return const FindInsuranceMain();
       case PageType.herouser:
@@ -309,6 +285,10 @@ class PageContainer extends StatelessWidget {
         return const LoadingUser2Page();
       case PageType.loadingherouser:
         return const LoadingClientPage();
+      case PageType.cobcari:
+        return const CobCariMainPage();
+      case PageType.asetdashboard:
+        return const AsetDashboardCariMainPage();
       default:
         return const SizedBox();
     }

@@ -20,7 +20,7 @@ class MenuActionSection extends StatelessWidget {
   }
 
   EdgeInsets get horizontalPadding => EdgeInsets.symmetric(
-    horizontal: isMobile ? 8.0 : (isTablet ? 32.0 : 40.0),
+    horizontal: isMobile ? 16.0 : (isTablet ? 32.0 : 40.0),
   );
 
   EdgeInsets get verticalPadding => isMobile
@@ -29,28 +29,31 @@ class MenuActionSection extends StatelessWidget {
       ? const EdgeInsets.only(top: 48.0, bottom: 0.0)
       : const EdgeInsets.only(top: 60.0, bottom: 0.0);
 
-  // Responsive sizing with auto-scaling
-  double get baseItemWidth => isMobile ? 63.98 : 99.04;
-  double get baseItemHeight => isMobile ? 104.18 : 182.95;
-  double get baseIconSize => isMobile ? 63.98 : 99.04;
-  double get baseFontSize => isMobile ? 10 : 16;
-  double get baseSpacing => isMobile ? 8 : 25;
+  // Base dimensions untuk formasi 3-3 - diperbesar untuk mobile
+  double get baseItemWidth => isMobile ? 100.0 : 120.0;
+  double get baseItemHeight => isMobile ? 130.0 : 200.0;
+  double get baseIconSize => isMobile ? 75.0 : 120.0;
+  double get baseFontSize => isMobile ? 13.0 : 18.0;
+  double get baseSpacing => isMobile ? 12.0 : 28.0;
 
-// Calculate scale factor based on available width
+  // Scale calculation untuk 3 items per row
   double get scaleFactor {
-    if (!isMobile) return 1.0;
-
     final availableWidth = constraints.maxWidth - horizontalPadding.horizontal;
-    final secondRowNeededWidth = (baseItemWidth * 4) + (baseSpacing * 3);
-    final scale = availableWidth / secondRowNeededWidth;
-    return scale.clamp(0.4, 1.0); // ← Lebih kecil
+
+    // Hitung kebutuhan width untuk 3 items dalam satu row
+    final threeItemsNeededWidth = (baseItemWidth * 3) + (baseSpacing * 2);
+    final threeItemsScale = availableWidth / threeItemsNeededWidth;
+
+    // Clamp untuk mencegah terlalu kecil atau terlalu besar
+    return threeItemsScale.clamp(0.5, 1.0);
   }
 
-  double get itemWidth => baseItemWidth * scaleFactor;
-  double get itemHeight => baseItemHeight * scaleFactor;
-  double get iconSize => baseIconSize * scaleFactor;
-  double get fontSize => (baseFontSize * scaleFactor).clamp(10.0, 16.0);
-  double get spacing => baseSpacing * scaleFactor;
+  // Calculated dimensions dengan overflow protection - diperbesar minimum untuk mobile
+  double get itemWidth => (baseItemWidth * scaleFactor).clamp(isMobile ? 85.0 : 40.0, 120.0);
+  double get itemHeight => (baseItemHeight * scaleFactor).clamp(isMobile ? 110.0 : 65.0, 180.0);
+  double get iconSize => (baseIconSize * scaleFactor).clamp(isMobile ? 60.0 : 30.0, 90.0);
+  double get fontSize => (baseFontSize * scaleFactor).clamp(isMobile ? 12.0 : 7.0, 16.0);
+  double get spacing => (baseSpacing * scaleFactor).clamp(8.0, 25.0);
 
   @override
   Widget build(BuildContext context) {
@@ -69,28 +72,11 @@ class MenuActionSection extends StatelessWidget {
           constraints: BoxConstraints(maxWidth: maxWidth),
           child: Column(
             children: [
-              // Row 1: Cari Asuransi dan Lapor Klaim
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _buildMenuItem(context, menuList[0]),
-                  SizedBox(width: spacing), // Tambah spacing antar item
-                  _buildMenuItem(context, menuList[1]),
-                ],
-              ),
+              // Row 1: 3 items pertama
+              _buildMenuRow(context, [0, 1, 2]),
               SizedBox(height: spacing),
-              // Row 2: Sisanya (4 items)
-              Wrap(
-                alignment: WrapAlignment.center,
-                spacing: spacing,
-                runSpacing: spacing * 0.5,
-                children: [
-                  _buildMenuItem(context, menuList[2]),
-                  _buildMenuItem(context, menuList[3]),
-                  _buildMenuItem(context, menuList[4]),
-                  _buildMenuItem(context, menuList[5]),
-                ],
-              ),
+              // Row 2: 3 items terakhir
+              _buildMenuRow(context, [3, 4, 5]),
             ],
           ),
         ),
@@ -98,15 +84,35 @@ class MenuActionSection extends StatelessWidget {
     );
   }
 
+  Widget _buildMenuRow(BuildContext context, List<int> indices) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        for (int i = 0; i < indices.length; i++) ...[
+          Flexible(
+            child: _buildMenuItem(context, menuList[indices[i]]),
+          ),
+          if (i < indices.length - 1) SizedBox(width: spacing),
+        ],
+      ],
+    );
+  }
+
   Widget _buildMenuItem(BuildContext context, Map<String, String> item) {
-    return AnimatedMenuItemWidget(
-      item: item,
-      itemWidth: itemWidth,
-      itemHeight: itemHeight,
-      iconSize: iconSize,
-      fontSize: fontSize,
-      scaleFactor: scaleFactor,
-      onTap: () => _handleMenuTap(context, item['label']!),
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxWidth: itemWidth,
+        maxHeight: itemHeight,
+      ),
+      child: MenuItemWidget(
+        item: item,
+        itemWidth: itemWidth,
+        itemHeight: itemHeight,
+        iconSize: iconSize,
+        fontSize: fontSize,
+        scaleFactor: scaleFactor,
+        onTap: () => _handleMenuTap(context, item['label']!),
+      ),
     );
   }
 
@@ -151,7 +157,7 @@ class MenuActionSection extends StatelessWidget {
   }
 }
 
-class AnimatedMenuItemWidget extends StatefulWidget {
+class MenuItemWidget extends StatefulWidget {
   final Map<String, String> item;
   final double itemWidth;
   final double itemHeight;
@@ -160,7 +166,7 @@ class AnimatedMenuItemWidget extends StatefulWidget {
   final double scaleFactor;
   final VoidCallback onTap;
 
-  const AnimatedMenuItemWidget({
+  const MenuItemWidget({
     super.key,
     required this.item,
     required this.itemWidth,
@@ -172,48 +178,26 @@ class AnimatedMenuItemWidget extends StatefulWidget {
   });
 
   @override
-  State<AnimatedMenuItemWidget> createState() => _AnimatedMenuItemWidgetState();
+  State<MenuItemWidget> createState() => _MenuItemWidgetState();
 }
 
-class _AnimatedMenuItemWidgetState extends State<AnimatedMenuItemWidget>
+class _MenuItemWidgetState extends State<MenuItemWidget>
     with TickerProviderStateMixin {
-  late AnimationController _hoverController;
   late AnimationController _tapController;
-
-  late Animation<Color?> _backgroundColorAnimation;
-  late Animation<double> _opacityAnimation;
-
-  bool _isHovered = false;
+  late Animation<double> _scaleAnimation;
 
   @override
   void initState() {
     super.initState();
 
-    // Hover animation controller
-    _hoverController = AnimationController(
-      duration: const Duration(milliseconds: 200),
-      vsync: this,
-    );
-
-    // Tap animation controller
     _tapController = AnimationController(
-      duration: const Duration(milliseconds: 100),
+      duration: const Duration(milliseconds: 150),
       vsync: this,
     );
 
-    // Background color animation
-    _backgroundColorAnimation = ColorTween(
-      begin: Colors.transparent,
-      end: Colors.grey.withOpacity(0.05),
-    ).animate(CurvedAnimation(
-      parent: _hoverController,
-      curve: Curves.easeOut,
-    ));
-
-    // Opacity animation for tap feedback
-    _opacityAnimation = Tween<double>(
+    _scaleAnimation = Tween<double>(
       begin: 1.0,
-      end: 0.7,
+      end: 0.95,
     ).animate(CurvedAnimation(
       parent: _tapController,
       curve: Curves.easeInOut,
@@ -222,21 +206,8 @@ class _AnimatedMenuItemWidgetState extends State<AnimatedMenuItemWidget>
 
   @override
   void dispose() {
-    _hoverController.dispose();
     _tapController.dispose();
     super.dispose();
-  }
-
-  void _onHover(bool isHovered) {
-    setState(() {
-      _isHovered = isHovered;
-    });
-
-    if (isHovered) {
-      _hoverController.forward();
-    } else {
-      _hoverController.reverse();
-    }
   }
 
   void _onTapDown() {
@@ -244,8 +215,9 @@ class _AnimatedMenuItemWidgetState extends State<AnimatedMenuItemWidget>
   }
 
   void _onTapUp() {
-    _tapController.reverse();
-    widget.onTap();
+    _tapController.reverse().then((_) {
+      widget.onTap();
+    });
   }
 
   void _onTapCancel() {
@@ -254,77 +226,72 @@ class _AnimatedMenuItemWidgetState extends State<AnimatedMenuItemWidget>
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => _onHover(true),
-      onExit: (_) => _onHover(false),
-      child: GestureDetector(
-        onTapDown: (_) => _onTapDown(),
-        onTapUp: (_) => _onTapUp(),
-        onTapCancel: _onTapCancel,
-        child: AnimatedBuilder(
-          animation: Listenable.merge([_hoverController, _tapController]),
-          builder: (context, child) {
-            return AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
+    return GestureDetector(
+      onTapDown: (_) => _onTapDown(),
+      onTapUp: (_) => _onTapUp(),
+      onTapCancel: _onTapCancel,
+      child: AnimatedBuilder(
+        animation: _tapController,
+        builder: (context, child) {
+          return Transform.scale(
+            scale: _scaleAnimation.value,
+            child: Container(
               width: widget.itemWidth,
               height: widget.itemHeight,
               decoration: BoxDecoration(
-                color: _backgroundColorAnimation.value,
+                color: Colors.transparent,
                 borderRadius: BorderRadius.circular(16.13 * widget.scaleFactor),
               ),
-              child: Opacity(
-                opacity: _opacityAnimation.value,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Icon container
-                    Container(
-                      width: widget.iconSize,
-                      height: widget.iconSize,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16.13 * widget.scaleFactor),
-                      ),
-                      clipBehavior: Clip.antiAlias,
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16.13 * widget.scaleFactor),
-                        ),
-                        child: Image.asset(
-                          widget.item['icon']!,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Icon container dengan size yang fleksibel
+                  Container(
+                    width: widget.iconSize,
+                    height: widget.iconSize,
+                    constraints: BoxConstraints(
+                      maxWidth: widget.itemWidth * 0.8,
+                      maxHeight: widget.itemHeight * 0.6,
                     ),
-                    SizedBox(height: 8 * widget.scaleFactor),
-                    // Text
-                    Flexible(
-                      child: AnimatedDefaultTextStyle(
-                        duration: const Duration(milliseconds: 200),
-                        style: TextStyle(
-                          fontFamily: 'Satoshi-Regular',
-                          fontSize: widget.fontSize,
-                          fontWeight: _isHovered ? FontWeight.w600 : FontWeight.w500,
-                          color: _isHovered
-                              ? const Color(0xFF1E40AF)
-                              : const Color(0xFF2D3748),
-                          height: 1.2,
-                        ),
-                        child: Text(
-                          widget.item['label']!,
-                          textAlign: TextAlign.center,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          softWrap: true,
-                        ),
-                      ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16.13 * widget.scaleFactor),
                     ),
-                  ],
-                ),
+                    clipBehavior: Clip.antiAlias,
+                    child: Image.asset(
+                      widget.item['icon']!,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                  SizedBox(height: (6 * widget.scaleFactor).clamp(4.0, 10.0)),
+                  // Text container dengan overflow protection
+                  Container(
+                    width: widget.itemWidth,
+                    height: widget.itemHeight * 0.3,
+                    padding: EdgeInsets.symmetric(
+                        horizontal: (2 * widget.scaleFactor).clamp(1.0, 4.0)
+                    ),
+                    alignment: Alignment.topCenter,
+                    child: Text(
+                      widget.item['label']!,
+                      style: TextStyle(
+                        fontFamily: 'Satoshi-Regular',
+                        fontSize: widget.fontSize,
+                        fontWeight: FontWeight.w500,
+                        color: const Color(0xFF2D3748),
+                        height: 1.1,
+                      ),
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      textScaleFactor: 1.0,
+                    ),
+                  ),
+                ],
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }

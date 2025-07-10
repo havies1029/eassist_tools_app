@@ -4,8 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../blocs/authentication/authentication_bloc.dart';
 import '../../../../blocs/profile/profile_download_foto_bloc.dart';
 import '../../../../blocs/gen_profile/mrekan1crud_bloc.dart';
+import '../../../../common/app_data.dart';
 
-class ProfileSection extends StatelessWidget {
+class ProfileSection extends StatefulWidget {
   final GlobalKey profileButtonKey;
   final bool isProfileMenuOpen;
   final VoidCallback onToggleProfileMenu;
@@ -18,36 +19,60 @@ class ProfileSection extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  State<ProfileSection> createState() => _ProfileSectionState();
+}
+
+class _ProfileSectionState extends State<ProfileSection> {
+  @override
+  void initState() {
+    super.initState();
+
+    // Pastikan refresh dipanggil sekali setelah build pertama selesai
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _refreshRekanIfNeeded(context);
     });
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return BlocBuilder<MRekan1CrudBloc, MRekan1CrudState>(
+      buildWhen: (prev, curr) => prev.record?.rekanNama != curr.record?.rekanNama,
       builder: (context, state) {
         String displayName = "(belum diupdate di profile)";
-        final authState = context.select<AuthenticationBloc, AuthenticationState>((bloc) => bloc.state);
+        final authState = context.select<AuthenticationBloc, AuthenticationState>(
+              (bloc) => bloc.state,
+        );
         final isMobile = MediaQuery.of(context).size.width < 768;
 
         if (authState is AuthenticationAuthenticated) {
           displayName = authState.user.nama?.trim() ?? displayName;
+          debugPrint('[DEBUG] Display name from authState: $displayName');
         }
+
 
         final rekanNama = state.record?.rekanNama?.trim();
         if (state.isLoaded && rekanNama != null && rekanNama.isNotEmpty) {
           displayName = rekanNama;
+          debugPrint('[DEBUG] Display name from MRekan1CrudBloc: $displayName');
+        } else if (AppData.googleDisplayName != null && AppData.googleDisplayName!.isNotEmpty) {
+          displayName = AppData.googleDisplayName!;
+          debugPrint('[DEBUG] Display name from Google Account: $displayName');
+        } else if (AppData.lastLoginEmail != null && AppData.lastLoginEmail!.isNotEmpty) {
+          displayName = AppData.lastLoginEmail!;
+          debugPrint('[DEBUG] Display name from Last Login Email: $displayName');
         }
-
+        // debugPrint('[DEBUG] FULL RECORD: ${state.record}');
+        // debugPrint('[DEBUG] rekanNama value: $rekanNama');
         return Container(
-          key: profileButtonKey,
+          key: widget.profileButtonKey,
           decoration: BoxDecoration(
-            color: isProfileMenuOpen
+            color: widget.isProfileMenuOpen
                 ? const Color(0xFF79AB43).withOpacity(0.1)
                 : Colors.transparent,
             borderRadius: BorderRadius.circular(8),
           ),
           child: InkWell(
-            onTap: onToggleProfileMenu,
+            onTap: widget.onToggleProfileMenu,
             borderRadius: BorderRadius.circular(8),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -118,7 +143,7 @@ class ProfileSection extends StatelessWidget {
                     ),
                   if (!isMobile) const SizedBox(width: 8),
                   AnimatedRotation(
-                    turns: isProfileMenuOpen ? 0.5 : 0,
+                    turns: widget.isProfileMenuOpen ? 0.5 : 0,
                     duration: const Duration(milliseconds: 200),
                     child: const Icon(
                       Icons.keyboard_arrow_down,
@@ -135,14 +160,26 @@ class ProfileSection extends StatelessWidget {
     );
   }
 
+  // void _refreshRekanIfNeeded(BuildContext context) {
+  //   final rekanState = context.read<MRekan1CrudBloc>().state;
+  //   final authState = context.read<AuthenticationBloc>().state;
+  //
+  //   final isClient = authState is AuthenticationAuthenticated &&
+  //       authState.user.custType == 'C';
+  //
+  //   if (isClient && !rekanState.isLoaded) {
+  //     debugPrint("🔁 Refreshing MRekan1CrudBloc (profile header)");
+  //     context.read<MRekan1CrudBloc>().add(MRekan1CrudLihatEvent());
+  //   }
+  // }
+
   void _refreshRekanIfNeeded(BuildContext context) {
     final rekanState = context.read<MRekan1CrudBloc>().state;
     final authState = context.read<AuthenticationBloc>().state;
 
-    final isClient = authState is AuthenticationAuthenticated &&
-        authState.user.custType == 'C';
+    final isAuthenticated = authState is AuthenticationAuthenticated;
 
-    if (isClient && !rekanState.isLoaded) {
+    if (isAuthenticated && !rekanState.isLoaded) {
       debugPrint("🔁 Refreshing MRekan1CrudBloc (profile header)");
       context.read<MRekan1CrudBloc>().add(MRekan1CrudLihatEvent());
     }

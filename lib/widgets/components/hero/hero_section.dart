@@ -47,6 +47,7 @@ enum SectionType {
   find_insurance,
   home_client,
   management_polis,
+  management_asset,
   report_claim,
   user_jps,
   user_non_jps,
@@ -273,7 +274,7 @@ class HeroSection extends StatelessWidget {
 
         return {
           'bold': 'Selamat Datang, $name !\n',
-          'normal': 'Berikut ringkasan polis Anda Hari ini:',
+          'normal': 'Berikut ringkasan polis Anda',
         };
       case SectionType.about:
         return {
@@ -289,6 +290,14 @@ class HeroSection extends StatelessWidget {
         return {
           'bold': 'Bukti Nyata ',
           'normal': 'Pelayanan dan Kepercayaan',
+        };
+      case SectionType.management_asset:
+        return {
+          'bold': 'Kelola Aset Aktif dan Non-Aktif \necara Efisien',
+        };
+      case SectionType.management_polis:
+        return {
+          'bold': 'Kelola Polis Aktif dan Non-Aktif \nSecara Efisien',
         };
       case SectionType.active_asset:
         return {
@@ -312,7 +321,7 @@ class HeroSection extends StatelessWidget {
       case SectionType.home:
       default:
         return {
-          'bold': 'Klien Kami, Prioritas Kami: \nMemberikan Solusi Terbaik untuk Anda!',
+          'bold': 'Klien Kami, Prioritas Kami \nMemberikan Solusi Terbaik untuk Anda!',
         };
     }
   }
@@ -345,10 +354,28 @@ class HeroSection extends StatelessWidget {
           'bold': 'Pilih kategori asuransi ',
           'normal2': 'yang sesuai dengan kebutuhan Anda.',
         };
-      case SectionType.home_client:
+      case SectionType.management_asset:
         return {
-          'normal1':
-          'JPS adalah platform asuransi pintar yang memudahkan kamu mencari, memilih,\ndan klaim asuransi hanya dalam hitungan menit ',
+          'normal1': 'Temukan semua informasi penting terkait perlindungan Anda dalam satu \ntampilan ringkas.',
+        };
+      case SectionType.management_polis:
+        return {
+          'normal1': 'Temukan semua informasi penting terkait perlindungan Anda dalam satu \ntampilan ringkas.',
+        };
+      case SectionType.home_client:
+        final isMobile = constraints.maxWidth < 768;
+        final isTablet = constraints.maxWidth >= 768 && constraints.maxWidth < 992;
+
+        return {
+          'normal1': isMobile
+              ? 'JPS adalah platform asuransi pintar\n'
+              'yang memudahkan kamu mencari, memilih,\n'
+              'klaim asuransi hanya dalam hitungan menit\n'
+              : isTablet
+              ? 'JPS adalah platform asuransi pintar yang memudahkan kamu mencari, memilih, '
+              'dan klaim asuransi hanya dalam hitungan menit '
+              : 'JPS adalah platform asuransi pintar yang memudahkan kamu mencari, memilih,\n'
+              'dan klaim asuransi hanya dalam hitungan menit ',
           'bold': 'cepat, aman, dan terdaftar OJK',
           'normal2': '.',
         };
@@ -369,16 +396,10 @@ class HeroSection extends StatelessWidget {
           'bold': 'Asuransi aktif ',
           'normal1': 'menjamin perlindungan saat kamu membutuhkannya.',
         };
-      case SectionType.management_polis:
-        return {
-          'normal1': 'Solusi lengkap pengelolaan polis aset Anda, hadir dengan informasi yang akurat, ringkas, dan selalu terpantau.',
-        };
       case SectionType.home:
         return {
-          'normal1':
-          'JPS adalah platform asuransi pintar yang memudahkan kamu mencari, memilih, dan klaim asuransi hanya dalam hitungan menit ',
-          'bold': 'cepat, aman, dan terdaftar OJK',
-          'normal2': '.',
+          'bold':
+          'JPS adalah platform asuransi pintar yang memudahkan kamu mencari, memilih, dan klaim asuransi.',
         };
       default:
         return {};

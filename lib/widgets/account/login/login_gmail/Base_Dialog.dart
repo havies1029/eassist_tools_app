@@ -122,6 +122,9 @@ abstract class BaseDialogState<T extends BaseDialog> extends State<T> with Ticke
     required TextEditingController controller,
     required String hintText,
     TextInputType? keyboardType,
+    bool isPassword = false,
+    bool obscureText = false,
+    VoidCallback? onToggleVisibility,
   }) {
     return Container(
       decoration: BoxDecoration(
@@ -137,6 +140,7 @@ abstract class BaseDialogState<T extends BaseDialog> extends State<T> with Ticke
       child: TextField(
         controller: controller,
         keyboardType: keyboardType,
+        obscureText: isPassword ? obscureText : false,
         decoration: InputDecoration(
           hintText: hintText,
           hintStyle: TextStyle(color: Colors.grey.shade400),
@@ -150,11 +154,25 @@ abstract class BaseDialogState<T extends BaseDialog> extends State<T> with Ticke
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: CustomPopupsLoginUser.primaryGreen, width: 2),
+            borderSide: const BorderSide(
+              color: CustomPopupsLoginUser.primaryGreen,
+              width: 2,
+            ),
           ),
           filled: true,
           fillColor: Colors.grey.shade50,
           contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+
+          // ✅ Toggle icon hanya untuk password field
+          suffixIcon: isPassword
+              ? IconButton(
+            icon: Icon(
+              obscureText ? Icons.visibility_off : Icons.visibility,
+              color: Colors.grey,
+            ),
+            onPressed: onToggleVisibility,
+          )
+              : null,
         ),
       ),
     );

@@ -35,6 +35,10 @@ class TrackKlaimPageActive extends HomeState {}
 
 class StartChatPageActive extends HomeState {}
 
+class CobCariPageActive extends HomeState {}
+
+class AsetDashboardPageActive extends HomeState {}
+
 //Active Page
 class SplashPageActive extends HomeState {}
 class ProfileIndividuPageActive extends HomeState {}
@@ -45,6 +49,7 @@ class AboutPageActive extends HomeState {}
 class ActiveAssetsPageActive extends HomeState {}
 class ArticlePageActive extends HomeState {}
 class AssetsManagementPageActive extends HomeState {}
+class PolisManagementPageActive extends HomeState {}
 class FindInsurancePageActive extends HomeState {}
 class HeroUserPageActive extends HomeState {}
 class HeroPageActive extends HomeState {}

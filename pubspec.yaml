@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.8 #baru
+  pluto_grid: ^8.0.0 #baru
   flutter_svg: ^2.0.17 #baru
   flutter_animate: ^3.0.0 #baru
   google_fonts: ^6.1.0 #baru
@@ -168,6 +169,15 @@ flutter:
     - assets/icons/linkedin.svg
     - assets/icons/facebook.svg
     - assets/images/check.svg
+    - assets/images/home_4.png
+    - assets/images/google_maps_location.png
+    - assets/icons/endorse.svg
+    - assets/icons/hapus.svg
+    - assets/icons/perpanjang_polis.svg
+    - assets/icons/share.svg
+    - assets/icons/tambah_polis.svg
+    - assets/icons/unduh.svg
+    - assets/images/management_polis_bg.png
 
 fonts:
     - family: HeeboBold

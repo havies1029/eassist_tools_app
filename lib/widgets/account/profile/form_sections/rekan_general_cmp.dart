@@ -44,7 +44,7 @@ class _RekanGeneralCmpState extends State<RekanGeneralCmp> {
   Widget build(BuildContext context) {
     bloc = BlocProvider.of<MRekanGeneralCmpCrudBloc>(context);
 
-    return BlocListener<MRekanGeneralCmpCrudBloc, MRekanGeneralCmpCrudState>(
+    return BlocConsumer<MRekanGeneralCmpCrudBloc, MRekanGeneralCmpCrudState>(
       listener: (context, state) {
         if (state.isLoaded && state.record != null) {
           fieldRekanNamaController.text = state.record?.rekanNama ?? '';
@@ -52,136 +52,135 @@ class _RekanGeneralCmpState extends State<RekanGeneralCmp> {
           fieldComboMBidang = state.comboMBidang;
         }
       },
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: _buildFormUI(),
+        );
+      },
+    );
+  }
+  Widget _buildFormUI() {
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
             children: [
-              Row(
-                children: [
-                  const Expanded(
-                    child: Text(
-                      "Informasi Perusahaan :",
-                      style: TextStyle(fontSize: 17.5, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      isEditingSection ? Icons.check : Icons.edit,
-                      color: isEditingSection ? null : Colors.red,
-                    ),
-                    tooltip: isEditingSection ? "Simpan" : "Ubah",
-                    onPressed: () {
-                      if (isEditingSection) {
-                        onSaveForm();
-                      } else {
-                        setState(() => isEditingSection = true);
-                      }
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-
-              _buildLabelText("Nama Badan Usaha", isRequired: true),
-              const SizedBox(height: 6),
-              _buildTextField(
-                controller: fieldRekanNamaController,
-                hintText: "Masukkan nama perusahaan",
-              ),
-              if (fieldRekanNamaController.text.trim().isEmpty && isEditingSection)
-                const Padding(
-                  padding: EdgeInsets.only(top: 4),
-                  child: Text(
-                    "Nama perusahaan wajib dipilih",
-                    style: TextStyle(color: Colors.red, fontSize: 12),
-                  ),
-                ),
-
-              const SizedBox(height: 12),
-              _buildLabelText("Bentuk Badan Usaha", isRequired: true),
-              const SizedBox(height: 6),
-              _buildStyledDropdown(
-                child: isEditingSection
-                    ? buildFieldComboMBentukCst(
-                  labelText: 'Pilih',
-                  initItem: fieldComboMBentukCst,
-                  onChangedCallback: (value) {
-                    if (value != null) {
-                      fieldComboMBentukCst = value;
-                      bloc.add(ComboMBentukCstChangedEvent(comboMBentukCst: value));
-                      removeError("Field bentuk usaha tidak boleh kosong.");
-                    }
-                  },
-                  onSaveCallback: (value) {
-                    if (value != null) fieldComboMBentukCst = value;
-                  },
-                  validatorCallback: (value) {
-                    if (value == null) addError("Field bentuk usaha tidak boleh kosong.");
-                  },
-                  comboKey: null,
-                )
-                    : _buildDisabledDropdown(
-                  text: fieldComboMBentukCst?.bentukNama ?? 'Belum diisi',
+              const Expanded(
+                child: Text(
+                  "Informasi Perusahaan :",
+                  style: TextStyle(fontSize: 17.5, fontWeight: FontWeight.bold),
                 ),
               ),
-              if (fieldComboMBentukCst == null && isEditingSection)
-                const Padding(
-                  padding: EdgeInsets.only(top: 4),
-                  child: Text(
-                    "Badan usaha wajib dipilih",
-                    style: TextStyle(color: Colors.red, fontSize: 12),
-                  ),
+              IconButton(
+                icon: Icon(
+                  isEditingSection ? Icons.check : Icons.edit,
+                  color: isEditingSection ? null : Colors.red,
                 ),
-
-              const SizedBox(height: 12),
-              _buildLabelText("Bidang Usaha", isRequired: true),
-              const SizedBox(height: 6),
-              _buildStyledDropdown(
-                child: isEditingSection
-                    ? buildFieldComboMBidang(
-                  labelText: 'Pilih',
-                  initItem: fieldComboMBidang,
-                  onChangedCallback: (value) {
-                    if (value != null) {
-                      fieldComboMBidang = value;
-                      bloc.add(ComboMBidangChangedEvent(comboMBidang: value));
-                      removeError("Field bidang usaha tidak boleh kosong.");
-                    }
-                  },
-                  onSaveCallback: (value) {
-                    if (value != null) fieldComboMBidang = value;
-                  },
-                  validatorCallback: (value) {
-                    if (value == null) addError("Field bidang usaha tidak boleh kosong.");
-                  },
-                  comboKey: null,
-                )
-                    : _buildDisabledDropdown(
-                  text: fieldComboMBidang?.bidangNama ?? 'Belum diisi',
-                ),
+                tooltip: isEditingSection ? "Simpan" : "Ubah",
+                onPressed: () {
+                  if (isEditingSection) {
+                    onSaveForm();
+                  } else {
+                    setState(() => isEditingSection = true);
+                  }
+                },
               ),
-              if (fieldComboMBidang == null && isEditingSection)
-                const Padding(
-                  padding: EdgeInsets.only(top: 4),
-                  child: Text(
-                    "Bidang usaha wajib dipilih",
-                    style: TextStyle(color: Colors.red, fontSize: 12),
-                  ),
-                ),
-
-              const SizedBox(height: 16),
-
-              // if (errors.isNotEmpty)
-              //   Column(
-              //     crossAxisAlignment: CrossAxisAlignment.start,
-              //     children: errors.map((e) => Text(e, style: const TextStyle(color: Colors.red, fontSize: 12))).toList(),
-              //   ),
             ],
           ),
-        ),
+          const SizedBox(height: 12),
+
+          _buildLabelText("Nama Badan Usaha", isRequired: true),
+          const SizedBox(height: 6),
+          _buildTextField(
+            controller: fieldRekanNamaController,
+            hintText: "Masukkan nama perusahaan",
+          ),
+          if (fieldRekanNamaController.text.trim().isEmpty && isEditingSection)
+            const Padding(
+              padding: EdgeInsets.only(top: 4),
+              child: Text(
+                "Nama perusahaan wajib dipilih",
+                style: TextStyle(color: Colors.red, fontSize: 12),
+              ),
+            ),
+
+          const SizedBox(height: 12),
+          _buildLabelText("Bentuk Badan Usaha", isRequired: true),
+          const SizedBox(height: 6),
+          _buildStyledDropdown(
+            child: isEditingSection
+                ? buildFieldComboMBentukCst(
+              labelText: 'Pilih',
+              initItem: fieldComboMBentukCst,
+              onChangedCallback: (value) {
+                if (value != null) {
+                  fieldComboMBentukCst = value;
+                  bloc.add(ComboMBentukCstChangedEvent(comboMBentukCst: value));
+                  removeError("Field bentuk usaha tidak boleh kosong.");
+                }
+              },
+              onSaveCallback: (value) {
+                if (value != null) fieldComboMBentukCst = value;
+              },
+              validatorCallback: (value) {
+                if (value == null) addError("Field bentuk usaha tidak boleh kosong.");
+              },
+              comboKey: null,
+            )
+                : _buildDisabledDropdown(
+              text: fieldComboMBentukCst?.bentukNama ?? 'Belum diisi',
+            ),
+          ),
+          if (fieldComboMBentukCst == null && isEditingSection)
+            const Padding(
+              padding: EdgeInsets.only(top: 4),
+              child: Text(
+                "Badan usaha wajib dipilih",
+                style: TextStyle(color: Colors.red, fontSize: 12),
+              ),
+            ),
+
+          const SizedBox(height: 12),
+          _buildLabelText("Bidang Usaha", isRequired: true),
+          const SizedBox(height: 6),
+          _buildStyledDropdown(
+            child: isEditingSection
+                ? buildFieldComboMBidang(
+              labelText: 'Pilih',
+              initItem: fieldComboMBidang,
+              onChangedCallback: (value) {
+                if (value != null) {
+                  fieldComboMBidang = value;
+                  bloc.add(ComboMBidangChangedEvent(comboMBidang: value));
+                  removeError("Field bidang usaha tidak boleh kosong.");
+                }
+              },
+              onSaveCallback: (value) {
+                if (value != null) fieldComboMBidang = value;
+              },
+              validatorCallback: (value) {
+                if (value == null) addError("Field bidang usaha tidak boleh kosong.");
+              },
+              comboKey: null,
+            )
+                : _buildDisabledDropdown(
+              text: fieldComboMBidang?.bidangNama ?? 'Belum diisi',
+            ),
+          ),
+          if (fieldComboMBidang == null && isEditingSection)
+            const Padding(
+              padding: EdgeInsets.only(top: 4),
+              child: Text(
+                "Bidang usaha wajib dipilih",
+                style: TextStyle(color: Colors.red, fontSize: 12),
+              ),
+            ),
+
+          const SizedBox(height: 16),
+        ],
       ),
     );
   }

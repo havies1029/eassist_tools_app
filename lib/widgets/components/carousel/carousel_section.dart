@@ -133,7 +133,7 @@ class _CarouselSectionState extends State<CarouselSection>
     final isTablet = widget.constraints.maxWidth >= 768 && widget.constraints.maxWidth < 1024;
 
     if (isMobile) {
-      return 0.85; // Image lebih besar di mobile untuk visibilitas yang baik
+      return 1.6; // Image lebih besar di mobile untuk visibilitas yang baik
     } else if (isTablet) {
       return 0.8;  // Ukuran sedang untuk tablet
     } else {
@@ -156,7 +156,7 @@ class _CarouselSectionState extends State<CarouselSection>
         ? 48
         : 24;
 
-    final double titleFontSize = isMobile ? 18.0 : (isTablet ? 22.0 : 25.0);
+    final double titleFontSize = isMobile ? 15.0 : (isTablet ? 22.0 : 25.0);
 
     final carouselWidth = _getCarouselWidth();
     final carouselHeight = carouselWidth / _imageAspectRatio;

@@ -9,6 +9,7 @@ import 'package:eassist_tools_app/widgets/account/login/login_gmail/popup_dialog
 
 import '../../blocs/gen_profile/mrekan1crud_bloc.dart';
 import '../../blocs/home/home_bloc.dart';
+import '../../common/app_data.dart';
 import 'hero_page.dart';
 
 class HeroMain extends StatefulWidget {
@@ -20,6 +21,7 @@ class HeroMain extends StatefulWidget {
 
 class _HeroMainState extends State<HeroMain> {
   bool _sudahTerdaftarSebagaiClient = false;
+  AuthenticationState? _lastAuthState;
   @override
   Widget build(BuildContext context) {
     return MultiBlocListener(
@@ -54,14 +56,26 @@ class _HeroMainState extends State<HeroMain> {
     debugPrint("AuthenticationBloc state: $state");
 
     if (state is AuthenticationUnauthenticated) {
-      // ✅ Pindahan dari BlocListener ke sini
+      if (_lastAuthState is AuthenticationRequirePinEmailVerification ||
+          _lastAuthState is AuthenticationRequirePinHPVerification ||
+          _lastAuthState is AuthenticationRequireRegisterClient) {
+        debugPrint("❌ [SKIP] Jangan tutup popup! Masih dalam proses verifikasi OTP/email.");
+        return;
+      }
+
+      if (AppData.isInOtpProcess) {
+        debugPrint("❌ [SKIP] Jangan tampilkan Login User karena OTP sedang aktif");
+        return;
+      }
+
+      // Lanjutkan kalau bukan dari proses verifikasi
       while (Navigator.of(context, rootNavigator: true).canPop()) {
         Navigator.of(context, rootNavigator: true).pop();
       }
+
       await Future.delayed(const Duration(milliseconds: 100));
       await CustomPopupsLoginUser.showLoginUserDialog(context);
-    }
-    else if (state is AuthenticationRequireLoginClient) {
+    }else if (state is AuthenticationRequireLoginClient) {
       if (Navigator.of(context, rootNavigator: true).canPop()) {
         Navigator.of(context, rootNavigator: true).pop();
         await Future.delayed(const Duration(milliseconds: 100));
@@ -74,21 +88,27 @@ class _HeroMainState extends State<HeroMain> {
 
       CustomPopupsLoginUser.showLoginClientDialog(context);
     }
+
     else if (state is AuthenticationForgotPassword) {
       CustomPopupsLoginUser.showForgotPasswordDialog(context);
     }
+
     else if (state is AuthenticationRequireRegisterClient) {
       CustomPopupsLoginUser.showRegisterClientDialog(context);
     }
+
     else if (state is AuthenticationRequirePinHPVerification) {
       CustomPopupsLoginUser.showRequestOTPHPDialog(context, state.hpno);
     }
+
     else if (state is AuthenticationRequirePinEmailVerification) {
       CustomPopupsLoginUser.showRequestOTPEmailDialog(context, state.email);
     }
+
     else if (state is AuthenticationPhonePinVerified) {
       BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
     }
+
     else if (state is AuthenticationAuthenticated) {
       if (state.user.custType == "C") {
         debugPrint("User is a client, Load Mrekan state");
@@ -117,7 +137,7 @@ class _HeroMainState extends State<HeroMain> {
               context.read<HomeBloc>().add(HeroPageActiveEvent());
             }
           } else {
-            context.read<HomeBloc>().add(HeroPageActiveEvent()); // fallback
+            context.read<HomeBloc>().add(HeroPageActiveEvent());
           }
         } else if (authState is AuthenticationGoogleUserAuthenticated) {
           context.read<HomeBloc>().add(HeroPageActiveEvent());
@@ -126,5 +146,8 @@ class _HeroMainState extends State<HeroMain> {
         }
       });
     }
+
+    // ✅ Simpan state terakhir untuk digunakan saat Unauthenticated
+    _lastAuthState = state;
   }
 }

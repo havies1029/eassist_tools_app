@@ -10,7 +10,9 @@ import 'package:eassist_tools_app/blocs/gen_profile/mrekangeneralidvcrud_bloc.da
 import 'package:eassist_tools_app/models/gen_profile/mrekangeneralidvcrud_model.dart';
 import 'package:eassist_tools_app/models/combobox/combompekerjaan_model.dart';
 import 'package:eassist_tools_app/models/combobox/combomjnskel_model.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:eassist_tools_app/blocs/login/change_password_bloc.dart';
+import 'package:eassist_tools_app/models/authentication/change_password_model.dart';
 import '../../../../blocs/gen_profile/mrekan1crud_bloc.dart';
 
 class RekanGeneralIdv extends StatefulWidget {
@@ -73,75 +75,84 @@ class _RekanGeneralIdvState extends State<RekanGeneralIdv> {
         return Container(
           color: Colors.white,
           padding: const EdgeInsets.all(12),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  children: [
-                    const Expanded(
-                      child: Text(
-                        "Informasi Umum:",
-                        style: TextStyle(fontSize: 17.5, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        isEditingSection ? Icons.check : Icons.edit,
-                        color: isEditingSection ? null : Colors.red,
-                      ),
-                      tooltip: isEditingSection ? "Simpan" : "Ubah",
-                      onPressed: () {
-                        if (isEditingSection) {
-                          onSaveForm();
-                        } else {
-                          setState(() => isEditingSection = true);
-                        }
-                      },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                _buildLabelText("Nama Rekan", isRequired: true),
-                const SizedBox(height: 6),
-                _buildTextField(
-                  controller: fieldRekanNamaController,
-                  hintText: "Masukkan nama lengkap",
-                ),
-                if (showValidationErrors && fieldRekanNamaController.text.trim().isEmpty)
-                  _buildFieldError("Nama lengkap wajib diisi"),
-
-                const SizedBox(height: 12),
-                _buildLabelText("Jenis Kelamin", isRequired: true),
-                const SizedBox(height: 6),
-                _buildStyledDropdown(
-                  child: isEditingSection
-                      ? _buildComboMJnskel()
-                      : _buildDisabledDropdown(text: fieldComboMJnskel?.jenisDesc ?? "Belum diisi"),
-                ),
-                if (showValidationErrors && fieldComboMJnskel == null)
-                  _buildFieldError("Jenis kelamin wajib dipilih"),
-
-                const SizedBox(height: 12),
-                _buildLabelText("Pekerjaan", isRequired: true),
-                const SizedBox(height: 6),
-                _buildStyledDropdown(
-                  child: isEditingSection
-                      ? _buildComboMPekerjaan()
-                      : _buildDisabledDropdown(text: fieldComboMPekerjaan?.kerjaNama ?? "Belum diisi"),
-                ),
-                if (showValidationErrors && fieldComboMPekerjaan == null)
-                  _buildFieldError("Pekerjaan wajib dipilih"),
-                const SizedBox(height: 12),
-              ],
-            ),
-          ),
+          child: _buildFormUI(),
         );
       },
     );
   }
 
+  Widget _buildFormUI() {
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              const Expanded(
+                child: Text(
+                  "Informasi Umum:",
+                  style: TextStyle(fontSize: 17.5, fontWeight: FontWeight.bold),
+                ),
+              ),
+              IconButton(
+                icon: Icon(
+                  isEditingSection ? Icons.check : Icons.edit,
+                  color: isEditingSection ? null : Colors.red,
+                ),
+                tooltip: isEditingSection ? "Simpan" : "Ubah",
+                onPressed: () {
+                  if (isEditingSection) {
+                    onSaveForm();
+                  } else {
+                    setState(() => isEditingSection = true);
+                  }
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+
+          _buildLabelText("Nama Rekan", isRequired: true),
+          const SizedBox(height: 6),
+          _buildTextField(
+            controller: fieldRekanNamaController,
+            hintText: "Masukkan nama lengkap",
+          ),
+          if (showValidationErrors && fieldRekanNamaController.text.trim().isEmpty)
+            _buildFieldError("Nama lengkap wajib diisi"),
+
+          const SizedBox(height: 12),
+          _buildLabelText("Jenis Kelamin", isRequired: true),
+          const SizedBox(height: 6),
+          _buildStyledDropdown(
+            child: isEditingSection
+                ? _buildComboMJnskel()
+                : _buildDisabledDropdown(
+              text: fieldComboMJnskel?.jenisDesc ?? "Belum diisi",
+            ),
+          ),
+          if (showValidationErrors && fieldComboMJnskel == null)
+            _buildFieldError("Jenis kelamin wajib dipilih"),
+
+          const SizedBox(height: 12),
+          _buildLabelText("Pekerjaan", isRequired: true),
+          const SizedBox(height: 6),
+          _buildStyledDropdown(
+            child: isEditingSection
+                ? _buildComboMPekerjaan()
+                : _buildDisabledDropdown(
+              text: fieldComboMPekerjaan?.kerjaNama ?? "Belum diisi",
+            ),
+          ),
+          if (showValidationErrors && fieldComboMPekerjaan == null)
+            _buildFieldError("Pekerjaan wajib dipilih"),
+
+          const SizedBox(height: 12),
+        ],
+      ),
+    );
+  }
 
   Widget _buildLabelText(String text, {bool isRequired = false}) {
     return Align(

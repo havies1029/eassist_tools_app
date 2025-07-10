@@ -5,6 +5,8 @@ import 'package:eassist_tools_app/widgets/account/login/login_gmail/Base_Dialog.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../blocs/authentication/authentication_bloc.dart';
+
 class OtpEmailDialog extends BaseDialog {
   final String email;
 
@@ -35,74 +37,473 @@ class OtpEmailDialogState extends BaseDialogState<OtpEmailDialog> {
   Widget build(BuildContext context) {
     return BlocConsumer<EmailVerificationBloc, EmailVerificationState>(
       builder: (context, state) {
-        return buildDialogContainer(
-          title: 'Login',
-          body: Column(
-            children: [
-              buildLogo(),
-              const SizedBox(height: 30),
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final isMobile = constraints.maxWidth < 768;
 
-              // Judul
-              const Text(
-                'Berikut Kode Login Anda',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+            return WillPopScope(
+              onWillPop: () async {
+                // Hanya tutup dialog ini, tidak semua
+                return Navigator.of(context).canPop();
+              },
+              child: GestureDetector(
+                onTap: () {
+                  // Tutup dialog ini saja
+                  if (Navigator.of(context).canPop()) {
+                    Navigator.of(context).pop();
+                  }
+                },
+                child: Scaffold(
+                  backgroundColor: isMobile ? Colors.white : Colors.black.withOpacity(0.5),
+                  body: GestureDetector(
+                    onTap: () {}, // ⛔ Cegah tap dalam menutup
+                    child: isMobile
+                        ? _buildMobileLayout(context, true, state)
+                        : _buildDesktopLayout(context, true, state),
+                  ),
                 ),
               ),
-              const SizedBox(height: 10),
-
-              // Deskripsi
-              const Text(
-                'Kode ini akan digunakan untuk masuk dengan aman menggunakan',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14, color: Colors.grey),
-              ),
-              const SizedBox(height: 5),
-
-              // Email
-              Text(
-                widget.email,
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Colors.blue,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 30),
-
-              // Input Kode OTP
-              _buildOTPInputs(),
-              const SizedBox(height: 40),
-
-              if (state.hasFailure)
-                Text(
-                  state.errors[0],
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 14, color: Colors.red),
-                ),
-
-              // Tombol Masuk
-              buildAnimatedButton(
-                text: 'Verifikasi OTP',
-                isHovering: _isHovering,
-                onHover: (hovering) => setState(() => _isHovering = hovering),
-                onPressed: () => _handleOTPLogin(),
-              ),
-            ],
-          ),
+            );
+          },
         );
       },
       listener: (BuildContext context, EmailVerificationState state) {
         if (state.isLoaded && !state.hasFailure) {
           if (state.token.isNotEmpty) {
-            //Navigator.of(context).pop();
+            // Biarkan yang memanggil memutuskan kapan ditutup
           }
         } else if (state.errors.isNotEmpty) {
-          // debugPrint("OTP Login Failed: ${state.errors}");
+          // Tampilkan error (jika perlu)
         }
       },
+    );
+  }
+
+
+// 📱 Mobile Layout - Fullscreen dengan desain yang lebih clean
+  Widget _buildMobileLayout(BuildContext context, bool isLoggedIn, EmailVerificationState state) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeInOut,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            const Color(0xFF7BA05B),
+            const Color(0xFF7BA05B).withOpacity(0.8),
+            Colors.white,
+          ],
+          stops: const [0.0, 0.3, 0.4],
+        ),
+      ),
+      child: SafeArea(
+        child: Column(
+          children: [
+            // ✅ Header dengan design yang lebih modern
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.fromLTRB(20, 16, 20, 32),
+              child: Row(
+                children: [
+                  if (isLoggedIn)
+                    GestureDetector(
+                      onTap: () => Navigator.of(context).pop(),
+                      child: Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.15),
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(
+                            color: Colors.white.withOpacity(0.2),
+                            width: 1,
+                          ),
+                        ),
+                        child: const Icon(
+                          Icons.arrow_back_ios_new,
+                          size: 20,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  if (isLoggedIn) const SizedBox(width: 16),
+                  const Text(
+                    'Verifikasi OTP',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // ✅ Content Area dengan proper spacing
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                margin: const EdgeInsets.only(top: 20),
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(32),
+                    topRight: Radius.circular(32),
+                  ),
+                ),
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Container(
+                    constraints: BoxConstraints(
+                      minHeight: screenHeight * 0.65,
+                    ),
+                    padding: EdgeInsets.fromLTRB(
+                      screenWidth * 0.08,
+                      40,
+                      screenWidth * 0.08,
+                      32,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Logo dengan shadow yang lebih soft
+                        Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0xFF7BA05B).withOpacity(0.15),
+                                blurRadius: 20,
+                                spreadRadius: 0,
+                                offset: const Offset(0, 8),
+                              ),
+                            ],
+                          ),
+                          child: const CircleAvatar(
+                            radius: 40,
+                            backgroundColor: Colors.white,
+                            backgroundImage: AssetImage('assets/images/jps_logo.png'),
+                          ),
+                        ),
+
+                        const SizedBox(height: 32),
+
+                        // Title dengan hierarchy yang jelas
+                        const Text(
+                          'Berikut Kode Login Anda',
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black87,
+                            letterSpacing: -0.8,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+
+                        const SizedBox(height: 8),
+
+                        // Deskripsi
+                        Text(
+                          'Kode ini akan digunakan untuk masuk dengan aman menggunakan',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey.shade600,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+
+                        const SizedBox(height: 4),
+
+                        // Email
+                        Text(
+                          widget.email,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Color(0xFF7BA05B),
+                            fontWeight: FontWeight.w600,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+
+                        const SizedBox(height: 40),
+
+                        // Input Kode OTP
+                        _buildOTPInputs(),
+
+                        const SizedBox(height: 32),
+
+                        // Error message
+                        if (state.hasFailure)
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            decoration: BoxDecoration(
+                              color: Colors.red.shade50,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: Colors.red.shade200,
+                                width: 1,
+                              ),
+                            ),
+                            child: Text(
+                              state.errors[0],
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.red.shade700,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+
+                        if (state.hasFailure) const SizedBox(height: 24),
+
+                        // Tombol Verifikasi
+                        buildAnimatedButton(
+                          text: 'Verifikasi OTP',
+                          isHovering: _isHovering,
+                          onHover: (hovering) => setState(() => _isHovering = hovering),
+                          onPressed: () => _handleOTPLogin(),
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        // Decorative element
+                        Container(
+                          width: 60,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade200,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+// 🖥️ Desktop Layout - Dialog dengan design yang konsisten
+  Widget _buildDesktopLayout(BuildContext context, bool isLoggedIn, EmailVerificationState state) {
+    return Center(
+      child: SingleChildScrollView(
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
+          child: Material(
+            color: Colors.transparent,
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 420),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.08),
+                    blurRadius: 24,
+                    spreadRadius: 0,
+                    offset: const Offset(0, 12),
+                  ),
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.04),
+                    blurRadius: 6,
+                    spreadRadius: 0,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // ✅ Header dengan gradient yang halus
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          const Color(0xFF7BA05B),
+                          const Color(0xFF6B8F4F),
+                        ],
+                      ),
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(24),
+                        topRight: Radius.circular(24),
+                      ),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                    child: Row(
+                      children: [
+                        if (isLoggedIn)
+                          GestureDetector(
+                            onTap: () => Navigator.of(context).pop(),
+                            child: Container(
+                              width: 32,
+                              height: 32,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.15),
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: Colors.white.withOpacity(0.2),
+                                  width: 1,
+                                ),
+                              ),
+                              child: const Icon(
+                                Icons.close,
+                                size: 18,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        if (isLoggedIn) const SizedBox(width: 16),
+                        const Text(
+                          'Verifikasi OTP',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: -0.3,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // ✅ Body dengan spacing yang proporsional
+                  Container(
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(24),
+                        bottomRight: Radius.circular(24),
+                      ),
+                    ),
+                    padding: const EdgeInsets.all(32),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Logo dengan subtle shadow
+                        Container(
+                          width: 64,
+                          height: 64,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0xFF7BA05B).withOpacity(0.12),
+                                blurRadius: 16,
+                                spreadRadius: 0,
+                                offset: const Offset(0, 6),
+                              ),
+                            ],
+                          ),
+                          child: const CircleAvatar(
+                            radius: 32,
+                            backgroundColor: Colors.white,
+                            backgroundImage: AssetImage('assets/images/jps_logo.png'),
+                          ),
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        const Text(
+                          'Berikut Kode Login Anda',
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black87,
+                            letterSpacing: -0.5,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+
+                        const SizedBox(height: 8),
+
+                        Text(
+                          'Kode ini akan digunakan untuk masuk dengan aman menggunakan',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey.shade600,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+
+                        const SizedBox(height: 4),
+
+                        // Email
+                        Text(
+                          widget.email,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Color(0xFF7BA05B),
+                            fontWeight: FontWeight.w600,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+
+                        const SizedBox(height: 32),
+
+                        // Input Kode OTP
+                        _buildOTPInputs(),
+
+                        const SizedBox(height: 24),
+
+                        // Error message
+                        if (state.hasFailure)
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            decoration: BoxDecoration(
+                              color: Colors.red.shade50,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: Colors.red.shade200,
+                                width: 1,
+                              ),
+                            ),
+                            child: Text(
+                              state.errors[0],
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: Colors.red.shade700,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+
+                        if (state.hasFailure) const SizedBox(height: 20),
+
+                        // Tombol Verifikasi
+                        buildAnimatedButton(
+                          text: 'Verifikasi OTP',
+                          isHovering: _isHovering,
+                          onHover: (hovering) => setState(() => _isHovering = hovering),
+                          onPressed: () => _handleOTPLogin(),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 

@@ -87,7 +87,7 @@ class FooterSection extends StatelessWidget {
   }
 
   void _launchMaps() async {
-    final url = 'https://www.bing.com/maps?where=Jl.%20Kramat%20Raya%20No.%207-9%20Kramat%20-%20Senen%2C%20Jakarta%2C%2010430%2C%20ID';
+    final url = 'https://www.google.com/maps/place/PT.+Jaya+Proteksindo+Sakti/@-6.1792182,106.8407798,17.29z/data=!4m6!3m5!1s0x2e69f4462436b6b3:0x969b983768aade03!8m2!3d-6.179265!4d106.842428!16s%2Fg%2F1thwm2z_?entry=ttu&g_ep=EgoyMDI1MDcwNi4wIKXMDSoASAFQAw%3D%3D';
     final uri = Uri.parse(url);
 
     if (await canLaunchUrl(uri)) {
@@ -113,8 +113,8 @@ class FooterSection extends StatelessWidget {
         _buildSignatureSection(context), // ✅ context dikirim
         const SizedBox(height: 20.0),
         _buildMenuSection(),
-        const SizedBox(height: 20.0),
-        _buildSupportSection(),
+        // const SizedBox(height: 20.0),
+        // _buildSupportSection(),
       ],
     )
         : Row(
@@ -139,8 +139,8 @@ class FooterSection extends StatelessWidget {
         Expanded(flex: 2, child: _buildSignatureSection(context)), // ✅ context dikirim
         const SizedBox(width: 40.0),
         Expanded(flex: 2, child: _buildMenuSection()),
-        const SizedBox(width: 40.0),
-        Expanded(flex: 2, child: _buildSupportSection()),
+        // const SizedBox(width: 40.0),
+        // Expanded(flex: 2, child: _buildSupportSection()),
       ],
     );
   }
@@ -150,7 +150,7 @@ class FooterSection extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Image.asset('assets/images/JPS.png', height: 80.0),
+        Image.asset('assets/images/JPS.png', height: 65.0),
       ],
     );
   }
@@ -163,9 +163,9 @@ class FooterSection extends StatelessWidget {
           'PT. Jaya Proteksindo Sakti${isMobile ? ',' : ''}',
           style: TextStyle(
             fontFamily: _fontFamily,
-            fontSize: isMobile ? titleFontSize : titleFontSize,
-            fontWeight: FontWeight.bold,
-            color: _primaryTextColor,
+            fontSize: linkFontSize,
+            color: _secondaryTextColor,
+            height: 1.4,
           ),
         ),
         const SizedBox(height: 8.0),
@@ -173,7 +173,7 @@ class FooterSection extends StatelessWidget {
           'No. 7 - 9, Jl. Kramat Raya, Kramat, Kec. Senen, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10450',
           style: TextStyle(
             fontFamily: _fontFamily,
-            fontSize: titleFontSize,
+            fontSize: linkFontSize,
             color: _secondaryTextColor,
             height: 1.4,
           ),
@@ -193,19 +193,22 @@ class FooterSection extends StatelessWidget {
   }
 
   Widget _buildSocialMediaIcons() {
-    return Wrap(
-      alignment: WrapAlignment.start,
-      spacing: isMobile ? 8.0 : 12.0,
-      runSpacing: isMobile ? 8.0 : 12.0,
-      children: [
-        _buildSvgSocialIconButton('instagram.svg', () {
-          _launchUrl('https://www.instagram.com/jayaproteksindosakti/');
-        }),
-        _buildSvgSocialIconButton('linkedin.svg', () {
-          _launchUrl('https://id.linkedin.com/company/jayaproteksindo');
-        }),
-        _buildSvgSocialIconButton('facebook.svg', () {}),
-      ],
+    return Container(
+      alignment: Alignment.centerLeft,
+      child: Wrap(
+        alignment: WrapAlignment.start,
+        spacing: isMobile ? 8.0 : 12.0,
+        runSpacing: isMobile ? 8.0 : 12.0,
+        children: [
+          _buildSvgSocialIconButton('instagram.svg', () {
+            _launchUrl('https://www.instagram.com/jayaproteksindosakti/');
+          }),
+          _buildSvgSocialIconButton('linkedin.svg', () {
+            _launchUrl('https://id.linkedin.com/company/jayaproteksindo');
+          }),
+          _buildSvgSocialIconButton('facebook.svg', () {}),
+        ],
+      ),
     );
   }
 
@@ -382,24 +385,24 @@ class FooterSection extends StatelessWidget {
     );
   }
 
-  Widget _buildSupportSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Support',
-          style: TextStyle(
-            fontFamily: _fontFamily,
-            fontSize: titleFontSize,
-            fontWeight: FontWeight.bold,
-            color: _primaryColor,
-          ),
-        ),
-        SizedBox(height: isMobile ? 8.0 : 16.0),
-        _buildFooterLink('Customer Services', () {}),
-      ],
-    );
-  }
+  // Widget _buildSupportSection() {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Text(
+  //         'Support',
+  //         style: TextStyle(
+  //           fontFamily: _fontFamily,
+  //           fontSize: titleFontSize,
+  //           fontWeight: FontWeight.bold,
+  //           color: _primaryColor,
+  //         ),
+  //       ),
+  //       SizedBox(height: isMobile ? 8.0 : 16.0),
+  //       _buildFooterLink('Customer Services', () {}),
+  //     ],
+  //   );
+  // }
 
   Widget _buildFooterLink(String text, VoidCallback onPressed) {
     return Padding(
@@ -421,33 +424,25 @@ class FooterSection extends StatelessWidget {
   }
 
   Widget _buildGoogleMapsButton() {
-    return _AnimatedButton(
-      onPressed: _launchMaps,
-      child: OutlinedButton.icon(
-        onPressed: null, // Disabled karena sudah dihandle oleh AnimatedButton
-        icon: Icon(Icons.location_on_outlined, color: _primaryColor, size: 20),
-        label: Text(
-          'Google Maps',
-          style: TextStyle(
-            fontFamily: _fontFamily,
-            fontSize: titleFontSize,
-            color: _primaryColor,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return InkWell(
+          onTap: _launchMaps,
+          child: Container(
+            width: constraints.maxWidth, // Menggunakan lebar penuh dari parent
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: AspectRatio(
+                aspectRatio: 16 / 9, // Rasio aspek yang wajar untuk gambar maps
+                child: Image.asset(
+                  'assets/images/google_maps_location.png',
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
           ),
-        ),
-        style: OutlinedButton.styleFrom(
-          side: const BorderSide(
-            color: _primaryColor,
-            width: _buttonBorderWidth,
-          ),
-          shape: const RoundedRectangleBorder(
-            borderRadius: _buttonBorderRadius,
-          ),
-          padding: EdgeInsets.symmetric(
-            horizontal: titleFontSize < 14.0 ? 16.0 : 24.0,
-            vertical: titleFontSize < 14.0 ? 8.0 : 12.0,
-          ),
-        ),
-      ),
+        );
+      },
     );
   }
 

@@ -6,6 +6,7 @@ import 'package:eassist_tools_app/blocs/chatting/guestscrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/gallery/galleryeventcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gallery/gallerymembercari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gallery/gallerytestimonycari_bloc.dart';
+import 'package:eassist_tools_app/blocs/gen_aset_par/asetparcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekan1list_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekanbankcrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekangeneralcmpcrud_bloc.dart';
@@ -22,22 +23,13 @@ import 'package:eassist_tools_app/blocs/profile/mrekangeneral_bloc.dart';
 import 'package:eassist_tools_app/blocs/profile/rekancontact_bloc.dart';
 import 'package:eassist_tools_app/blocs/progressindicator/progressindicator_bloc.dart';
 import 'package:eassist_tools_app/blocs/reguser/reguser_bloc.dart';
-import 'package:eassist_tools_app/blocs/simuleei/simuleeicrud_bloc.dart';
-import 'package:eassist_tools_app/blocs/simuleei/simuleeilist_bloc.dart';
-import 'package:eassist_tools_app/blocs/simulgis/simulgiscrud_bloc.dart';
-import 'package:eassist_tools_app/blocs/simulgit/simulgitcrud_bloc.dart';
-import 'package:eassist_tools_app/blocs/simulmv/simulmvcrud_bloc.dart';
-import 'package:eassist_tools_app/blocs/simulmv/simulmvlist_bloc.dart';
-import 'package:eassist_tools_app/blocs/simulpar/simulparcrud_bloc.dart';
-import 'package:eassist_tools_app/blocs/simulpar/simulparlist_bloc.dart';
-import 'package:eassist_tools_app/blocs/simulbon/simulboncrud_bloc.dart';
-import 'package:eassist_tools_app/blocs/simulwp/simulwpcrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/takeimage/takeimage_cubit.dart';
 import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:eassist_tools_app/pages/hero_client_page/hero_user_main.dart';
 import 'package:eassist_tools_app/pages/heropage/hero_main.dart';
 import 'package:eassist_tools_app/pages/home/home_page.dart';
 import 'package:eassist_tools_app/repositories/chatting/guestscrud_repository.dart';
+import 'package:eassist_tools_app/repositories/gen_aset_par/asetparcari_repository.dart';
 import 'package:eassist_tools_app/repositories/gen_profile/mrekan1crud_repository.dart';
 import 'package:eassist_tools_app/repositories/gen_profile/mrekan1list_repository.dart';
 import 'package:eassist_tools_app/repositories/gen_profile/mrekanbankcrud_repository.dart';
@@ -55,23 +47,14 @@ import 'package:eassist_tools_app/repositories/profile/rekangeneral_repository.d
 import 'package:eassist_tools_app/repositories/profile/rekanpajak_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/userfoto_repository.dart';
 import 'package:eassist_tools_app/repositories/reguser/reguser_repository.dart';
-import 'package:eassist_tools_app/repositories/simulbon/simulboncrud_repository.dart';
-import 'package:eassist_tools_app/repositories/simulcar/simulcarcrud_repository.dart';
-import 'package:eassist_tools_app/repositories/simulcargo/simulcargocrud_repository.dart';
-import 'package:eassist_tools_app/repositories/simuleei/simuleeicrud_repository.dart';
-import 'package:eassist_tools_app/repositories/simulgis/simulgiscrud_repository.dart';
-import 'package:eassist_tools_app/repositories/simulgit/simulgitcrud_repository.dart';
-import 'package:eassist_tools_app/repositories/simulmb/simulmbcrud_repository.dart';
-import 'package:eassist_tools_app/repositories/simulmv/simulmvcrud_repository.dart';
-import 'package:eassist_tools_app/repositories/simulpar/simulparcrud_repository.dart';
-import 'package:eassist_tools_app/repositories/simultree/simultreecrud_repository.dart';
-import 'package:eassist_tools_app/repositories/simulwp/simulwpcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/user/user_repository.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 // import 'package:js/js_util.dart' as js_util;
+import 'blocs/gen_aset_dashboard/asetdashboardcari_bloc.dart';
+import 'blocs/gen_cob_app/cobcari_bloc.dart';
 import 'blocs/gen_profile/mrekan1crud_bloc.dart';
 import 'blocs/gen_profile/mrekancontactcrud_bloc.dart';
 import 'blocs/gen_profile/mrekangeneralidvcrud_bloc.dart';
@@ -82,10 +65,6 @@ import 'blocs/profile/profile_upload_foto_bloc.dart';
 import 'blocs/profile/rekanbank_bloc.dart';
 import 'blocs/profile/rekangeneral_bloc.dart';
 import 'blocs/profile/rekanpajak_bloc.dart';
-import 'blocs/simulcar/simulcarcrud_bloc.dart';
-import 'blocs/simulcargo/simulcargocrud_bloc.dart';
-import 'blocs/simulmb/simulmbcrud_bloc.dart';
-import 'blocs/simultree/simultreecrud_bloc.dart';
 import 'router/app_router.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'dart:async';
@@ -174,47 +153,6 @@ class App extends StatelessWidget {
             create: (context) => NetworkBloc()..add(NetworkObserve())),
         BlocProvider<OnBoardMenuCariBloc>(
             create: (context) => OnBoardMenuCariBloc()),
-        BlocProvider<SimulmvListBloc>(
-            create: (context) => SimulmvListBloc()),
-        BlocProvider<SimulmvListBloc>(
-            create: (context) => SimulmvListBloc()),
-        BlocProvider<SimulmvCrudBloc>(
-            create: (context) =>
-                SimulmvCrudBloc(repository: SimulmvCrudRepository())),
-        BlocProvider<SimulparListBloc>(
-            create: (context) => SimulparListBloc()),
-        BlocProvider<SimulparCrudBloc>(
-            create: (context) =>
-                SimulparCrudBloc(repository: SimulparCrudRepository())),
-        BlocProvider<SimuleeiListBloc>(
-            create: (context) => SimuleeiListBloc()),
-        BlocProvider<SimuleeiCrudBloc>(
-            create: (context) =>
-                SimuleeiCrudBloc(repository: SimuleeiCrudRepository())),
-        BlocProvider<SimulgitCrudBloc>(
-            create: (context) =>
-                SimulgitCrudBloc(repository: SimulgitCrudRepository())),
-        BlocProvider<SimulgisCrudBloc>(
-            create: (context) =>
-                SimulgisCrudBloc(repository: SimulgisCrudRepository())),
-        BlocProvider<SimulbonCrudBloc>(
-            create: (context) =>
-                SimulbonCrudBloc(repository: SimulbonCrudRepository())),
-        BlocProvider<SimulwpCrudBloc>(
-            create: (context) =>
-                SimulwpCrudBloc(repository: SimulwpCrudRepository())),
-        BlocProvider<SimulcargoCrudBloc>(
-            create: (context) =>
-                SimulcargoCrudBloc(repository: SimulcargoCrudRepository())),
-        BlocProvider<SimulcarCrudBloc>(
-            create: (context) =>
-                SimulcarCrudBloc(repository: SimulcarCrudRepository())),
-        BlocProvider<SimulmbCrudBloc>(
-            create: (context) =>
-                SimulmbCrudBloc(repository: SimulmbCrudRepository())),
-        BlocProvider<SimultreeCrudBloc>(
-            create: (context) =>
-                SimultreeCrudBloc(repository: SimultreeCrudRepository())),
         BlocProvider<Klaim1ListBloc>(
             create: (context) =>
                 Klaim1ListBloc()),
@@ -286,6 +224,10 @@ class App extends StatelessWidget {
         BlocProvider<RegUserBloc>(
             create: (context) =>
                 RegUserBloc(repository: RegUserRepository(), authenticationBloc: BlocProvider.of<AuthenticationBloc>(context))),
+        BlocProvider<CobCariBloc>(
+            create: (context) => CobCariBloc()),
+        BlocProvider<AsetDashboardCariBloc>(
+            create: (context) => AsetDashboardCariBloc()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../blocs/authentication/authentication_bloc.dart';
 import '../../../../blocs/gen_profile/mrekan1crud_bloc.dart';
 import '../../../../blocs/profile/profile_download_foto_bloc.dart';
+import '../../../../common/app_data.dart';
 import 'profile_menu_item.dart';
 
 class ProfileDropdownContent extends StatelessWidget {
@@ -107,20 +108,38 @@ class ProfileDropdownContent extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       BlocBuilder<MRekan1CrudBloc, MRekan1CrudState>(
+                        buildWhen: (prev, curr) =>
+                        prev.record?.rekanNama != curr.record?.rekanNama,
                         builder: (context, rekanState) {
-                          // Ambil nama awal dari AuthenticationBloc
                           String displayName = "(belum diupdate di profile)";
                           final authState = context.read<AuthenticationBloc>().state;
 
                           if (authState is AuthenticationAuthenticated) {
-                            displayName = authState.user.nama ?? displayName;
+                            // Coba dari user.nama terlebih dahulu
+                            displayName = authState.user.nama?.trim() ?? "(belum diupdate di profile)";
+
+                            if (displayName.isEmpty || displayName == "(belum diupdate di profile)") {
+                              // Jika kosong, coba dari AppData.googleDisplayName
+                              if (AppData.googleDisplayName != null &&
+                                  AppData.googleDisplayName!.trim().isNotEmpty) {
+                                displayName = AppData.googleDisplayName!.trim();
+                                debugPrint('[DEBUG] Display name from Google Account: $displayName');
+                              }
+                              // Jika masih kosong, fallback ke AppData.lastLoginEmail
+                              else if (AppData.lastLoginEmail != null &&
+                                  AppData.lastLoginEmail!.trim().isNotEmpty) {
+                                displayName = AppData.lastLoginEmail!.trim();
+                                debugPrint('[DEBUG] Display name from Last Login Email: $displayName');
+                              }
+                            } else {
+                              debugPrint('[DEBUG] Display name from authState.user.nama: $displayName');
+                            }
                           }
 
-                          // Override dengan nama dari rekan jika tersedia
-                          if (rekanState.isLoaded &&
-                              rekanState.record?.rekanNama != null &&
-                              rekanState.record!.rekanNama!.isNotEmpty) {
-                            displayName = rekanState.record!.rekanNama!;
+                          // Jika rekanNama tersedia, override semuanya
+                          final rekanNama = rekanState.record?.rekanNama?.trim();
+                          if (rekanState.isLoaded && rekanNama != null && rekanNama.isNotEmpty) {
+                            displayName = rekanNama;
                           }
 
                           return Text(
@@ -133,19 +152,10 @@ class ProfileDropdownContent extends StatelessWidget {
                             ),
                           );
                         },
-                      ),
-                      Text(
-                        'Online',
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.8),
-                          fontSize: 12,
-                          fontFamily: 'Satoshi-Regular',
-                        ),
-                      ),
+                      )
                     ],
                   ),
                 ),
-
 
                 // Tombol close
                 IconButton(
@@ -159,19 +169,17 @@ class ProfileDropdownContent extends StatelessWidget {
           ),
 
           // Daftar menu
+          // Daftar menu
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 8),
+            padding: const EdgeInsets.symmetric(vertical: 8),
             child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
               builder: (context, state) {
                 bool isClientLogin = false;
 
                 if (state is AuthenticationAuthenticated) {
-                  // Ganti salah satu dari dua cara berikut:
-                  // Jika pakai authenticatedFrom:
+                  // Gunakan salah satu logika yang kamu yakini
                   isClientLogin = state.authenticatedFrom == 'login_client';
-
-                  // Atau jika lebih yakin dari custType:
-                  // isClientLogin = state.user.custType == 'C';
+                  // Atau: isClientLogin = state.user.custType == 'C';
                 }
 
                 return Column(
@@ -188,13 +196,14 @@ class ProfileDropdownContent extends StatelessWidget {
                         title: 'Reset Password',
                         onTap: () => onMenuTap('Reset Password'),
                       ),
-                    Divider(
-                      height: 1,
-                      thickness: 1,
-                      color: Color(0xFFE5E5E5),
-                      indent: 16,
-                      endIndent: 16,
-                    ),
+                    if (isClientLogin)
+                      Divider(
+                        height: 1,
+                        thickness: 1,
+                        color: Color(0xFFE5E5E5),
+                        indent: 16,
+                        endIndent: 16,
+                      ),
                     ProfileMenuItem(
                       icon: Icons.logout,
                       title: 'Logout',
@@ -205,6 +214,7 @@ class ProfileDropdownContent extends StatelessWidget {
               },
             ),
           ),
+
         ],
       ),
     );

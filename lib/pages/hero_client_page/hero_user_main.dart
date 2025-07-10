@@ -13,6 +13,8 @@ import 'package:eassist_tools_app/blocs/gen_profile/mrekan1crud_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../base/base_page.dart';
+import '../gen_aset_dashboard/asetdashboardcari_main.dart';
+import '../gen_cob_app/cobcari_main.dart';
 
 
 
@@ -33,7 +35,7 @@ class HeroUserMain extends StatelessWidget {
                 child: isMobile
                     ? Container(color: const Color(0xFF79AB43))
                     : Image.asset(
-                  'assets/images/home_3.jpg',
+                  'assets/images/bg-home.jpg',
                   fit: BoxFit.cover,
                   alignment: const Alignment(0, 3),
                   cacheWidth: 1440,

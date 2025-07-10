@@ -11,27 +11,30 @@ class FloatingChatWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final viewInsets = MediaQuery.of(context).viewInsets;
-    final bottomPadding = viewInsets.bottom;
+    final viewInsets = MediaQuery.of(context).viewInsets;      // Keyboard
+    final viewPadding = MediaQuery.of(context).viewPadding;    // System nav bar (bottom)
+    final keyboardVisible = viewInsets.bottom > 0;
+    final systemBottomPadding = viewPadding.bottom;
+
+    final double bottomOffset = keyboardVisible
+        ? viewInsets.bottom + 16 // Naik kalau keyboard muncul
+        : systemBottomPadding > 0
+        ? systemBottomPadding + 16 // Tambahkan jarak dari soft key
+        : 16; // Default padding
 
     return Stack(
       children: [
         child,
 
         if (isMobile)
-        // FAB yang naik kalau keyboard muncul
           Positioned(
             right: 16,
-            bottom: bottomPadding > 0 ? bottomPadding + 16 : 16,
-            child: AnimatedPadding(
-              duration: const Duration(milliseconds: 200),
-              padding: EdgeInsets.only(bottom: bottomPadding),
-              child: FloatingActionButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, 'chat');
-                },
-                child: const Icon(Icons.chat),
-              ),
+            bottom: bottomOffset,
+            child: FloatingActionButton(
+              onPressed: () {
+                Navigator.pushNamed(context, 'chat');
+              },
+              child: const Icon(Icons.chat),
             ),
           ),
       ],

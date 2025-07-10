@@ -14,6 +14,8 @@ class AppData {
   static var uriHtpp = useSSL ? Uri.https : Uri.http;
   static String version = "1.0.2";
   static String? lastLoginEmail;
+  static String? googleDisplayName;
+  static bool isInOtpProcess = false;
 
    // static bool useSSL = false;
    // static String apiDomain = "http://localhost/eAssistToolsAPI/";

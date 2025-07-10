@@ -50,9 +50,14 @@ class AuthenticationBloc
     });
   }
 
-  Future<void> _onAppStarted(
-      AppStarted event, Emitter<AuthenticationState> emit) async {
+  Future<void> _onAppStarted(AppStarted event, Emitter<AuthenticationState> emit) async {
     debugPrint("_onAppStarted");
+
+    // ⛔ Cegah jika sedang dalam proses OTP
+    if (AppData.isInOtpProcess) {
+      debugPrint("⛔ Lewati _onAppStarted karena sedang dalam proses OTP");
+      return;
+    }
 
     emit(AuthenticationPreCheckHasToken());
     String token = await userRepository.getToken();
@@ -65,17 +70,13 @@ class AuthenticationBloc
       AppData.user = user;
       AppData.userToken = token;
 
-      //emit(AuthenticatioTokenAuthenticated(user: user));
       emit(AuthenticationAuthenticated(
           user: user, authenticatedFrom: "login_token"));
-
-      //debugPrint("hasToken ? yes -> ${AppData.userToken}");
     } else {
-      //debugPrint("hasToken ? no");
       emit(AuthenticationUnauthenticated());
-      //debugPrint("hasToken ? no -> proceed");
     }
   }
+
 
   Future<void> _onLoggedIn(
       LoggedIn event, Emitter<AuthenticationState> emit) async {
@@ -95,11 +96,13 @@ class AuthenticationBloc
     emit(AuthenticationUnauthenticated());
   }
 
-  Future<void> _onRequirePinEmailVerification(RequirePinEmailVerification event,
+  Future<void> _onRequirePinEmailVerification(
+      RequirePinEmailVerification event,
       Emitter<AuthenticationState> emit) async {
-    emit(AuthenticationLoading());
+    debugPrint("✅ emit AuthenticationRequirePinEmailVerification (no loading)");
     emit(AuthenticationRequirePinEmailVerification(email: event.email));
   }
+
 
   Future<void> _onUserAuthenticated(
       UserAuthenticated event, Emitter<AuthenticationState> emit) async {

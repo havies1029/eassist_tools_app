@@ -11,7 +11,6 @@ class ClientSection extends StatefulWidget {
   State<ClientSection> createState() => ClientSectionState();
 }
 
-
 class ClientSectionState extends State<ClientSection> {
 
   @override
@@ -32,15 +31,8 @@ class ClientSectionState extends State<ClientSection> {
 
     // Hitung ukuran font untuk judul:
     final double titleFontSize = isMobile
-        ? 18.0
+        ? 15.0
         : (isTablet ? 22.0 : 24.0);
-
-    /*
-    final List<String> clientLogos = List.generate(
-      20,
-          (index) => 'assets/images/client_${index + 1}.png',
-    );
-    */
 
     // Tetapkan 5 kolom dan atur aspect ratio agar baris sesuai
     final int crossAxisCount = isMobile ? 3 : 5;
@@ -90,7 +82,6 @@ class ClientSectionState extends State<ClientSection> {
                     return GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      //itemCount: clientLogos.length,
                       itemCount: state.items.length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: crossAxisCount,
@@ -100,7 +91,6 @@ class ClientSectionState extends State<ClientSection> {
                       ),
                       itemBuilder: (context, index) {
                         return ClientLogoCard(
-                          //imagePath: clientLogos[index],
                           imagePath: state.items[index].image1Url,
                           isMobile: isMobile,
                         );
@@ -131,41 +121,25 @@ class ClientLogoCard extends StatefulWidget {
 }
 
 class _ClientLogoCardState extends State<ClientLogoCard> {
-  bool _isHovered = false;
-
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      child: AnimatedScale(
-        scale: _isHovered ? 1.03 : 1.0,
-        duration: const Duration(milliseconds: 100),
-        curve: Curves.easeInOut,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 120),
-          curve: Curves.easeInOut,
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+      ),
+      child: Align(
+        alignment: Alignment.center,
+        child: Container(
+          width: widget.isMobile ? 100.0 : 120.0,
+          height: widget.isMobile ? 100.0 : 120.0,
           decoration: BoxDecoration(
-            color: Colors.white,
             borderRadius: BorderRadius.circular(8.0),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(_isHovered ? 0.12 : 0.06),
-                blurRadius: _isHovered ? 8.0 : 4.0,
-                offset: Offset(0, _isHovered ? 3 : 1),
-              ),
-            ],
-            border: Border.all(
-              color: _isHovered
-                  ? const Color(0xFF79AB43)
-                  : Colors.grey.shade200,
-              width: _isHovered ? 2.0 : 1.0,
-            ),
           ),
-          child: Padding(
-            padding: EdgeInsets.all(widget.isMobile ? 6.0 : 16.0), // Padding kecil untuk mobile
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(4.0),
+          child: Align(
+            alignment: Alignment.center,
+            child: SizedBox(
+              width: widget.isMobile ? 80.0 : 100.0,
+              height: widget.isMobile ? 80.0 : 100.0,
               child: Image.network(
                 widget.imagePath,
                 fit: BoxFit.contain,
@@ -173,14 +147,18 @@ class _ClientLogoCardState extends State<ClientLogoCard> {
                 isAntiAlias: true,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
+                    width: widget.isMobile ? 100.0 : 120.0,
+                    height: widget.isMobile ? 100.0 : 120.0,
                     decoration: BoxDecoration(
                       color: Colors.grey.shade100,
                       borderRadius: BorderRadius.circular(4.0),
                     ),
-                    child: Icon(
-                      Icons.business,
-                      color: Colors.grey.shade400,
-                      size: widget.isMobile ? 24.0 : 32.0,
+                    child: Center(
+                      child: Icon(
+                        Icons.business,
+                        color: Colors.grey.shade400,
+                        size: widget.isMobile ? 40.0 : 48.0,
+                      ),
                     ),
                   );
                 },

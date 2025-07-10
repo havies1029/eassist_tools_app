@@ -42,6 +42,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<ActiveAssetsPageActiveEvent>((event, emit) => emit(ActiveAssetsPageActive()));
     on<ArticlePageActiveEvent>((event, emit) => emit(ArticlePageActive()));
     on<AssetsManagementPageActiveEvent>((event, emit) => emit(AssetsManagementPageActive()));
+    on<PolisManagementPageActiveEvent>((event, emit) => emit(PolisManagementPageActive()));
     on<FindInsurancePageActiveEvent>((event, emit) => emit(FindInsurancePageActive()));
     on<HeroUserPageActiveEvent>((event, emit) => emit(HeroUserPageActive()));
     on<HeroPageActiveEvent>((event, emit) => emit(HeroPageActive()));
@@ -52,5 +53,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<LoadingHeroPageActiveEvent>((event, emit) => emit(LoadingHeroPageActive()));
     on<LoadingHero2PageActiveEvent>((event, emit) => emit(LoadingHero2PageActive()));
     on<LoadingHeroUserPageActiveEvent>((event, emit) => emit(LoadingHeroUserPageActive()));
+
+    on<CobCariPageActiveEvent>((event, emit) => emit(CobCariPageActive()));
+    on<AsetDashboardPageActiveEvent>((event, emit) => emit(AsetDashboardPageActive()));
   }
 }

@@ -7,6 +7,8 @@ import 'package:eassist_tools_app/widgets/account/register/register_client/regis
 // import 'package:eassist_tools_app/widgets/account/login/login_gmail/x_register_user_dialog.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../common/app_data.dart';
+
 class CustomPopupsLoginUser {
   static const Color primaryGreen = Color(0xFF79AB43);
   static const Color lightGreen = Color(0xFF8BC34A);
@@ -50,16 +52,18 @@ class CustomPopupsLoginUser {
 
   // Popup untuk Request OTP Email
   static Future<void> showRequestOTPEmailDialog(BuildContext context, String email) async {
-    debugPrint("showRequestOTPDialog called with email: $email");
-    showDialog(
+    debugPrint("✅ [POPUP] showRequestOTPEmailDialog called with email: $email");
+    AppData.isInOtpProcess = true;
+    await showDialog(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
         return OtpEmailDialog(email: email);
       },
     );
-
+    AppData.isInOtpProcess = false;
   }
+
 
   // Popup untuk Request OTP Email
   static Future<void> showRequestOTPHPDialog(BuildContext context, String hpno) async {

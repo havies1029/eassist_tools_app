@@ -34,6 +34,10 @@ class TrackKlaimPageActiveEvent extends HomeEvent {}
 
 class StartChatPageActiveEvent extends HomeEvent {}
 
+class CobCariPageActiveEvent extends HomeEvent {}
+
+class AsetDashboardPageActiveEvent extends HomeEvent {}
+
 //Active Page
 class SplashPageActiveEvent extends HomeEvent {}
 class ProfileIndividuPageActiveEvent extends HomeEvent {}
@@ -44,6 +48,7 @@ class AboutPageActiveEvent extends HomeEvent {}
 class ActiveAssetsPageActiveEvent extends HomeEvent {}
 class ArticlePageActiveEvent extends HomeEvent {}
 class AssetsManagementPageActiveEvent extends HomeEvent {}
+class PolisManagementPageActiveEvent extends HomeEvent {}
 class FindInsurancePageActiveEvent extends HomeEvent {}
 class HeroUserPageActiveEvent extends HomeEvent {}
 class HeroPageActiveEvent extends HomeEvent {}
