@@ -1,5 +1,7 @@
-import 'package:eassist_tools_app/widgets/section/management_polis_page/assets_management/decorations/AnimatedInsuranceCard.dart';
+import 'package:eassist_tools_app/widgets/section/signature_joss_page/decorations/AnimatedInsuranceCard.dart';
 import 'package:flutter/material.dart';
+
+import '../decorations/AnimatedInsuranceCard.dart';
 
 
 class ActionSection extends StatefulWidget {

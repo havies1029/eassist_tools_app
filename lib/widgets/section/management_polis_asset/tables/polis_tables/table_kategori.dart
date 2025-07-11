@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pluto_grid/pluto_grid.dart';
-import 'polis_category_type.dart';
+import 'package:trina_grid/trina_grid.dart';
+import '../../category_type.dart';
 
 class KategoriPolisTable extends StatefulWidget {
   final BoxConstraints constraints;
@@ -17,7 +17,7 @@ class KategoriPolisTable extends StatefulWidget {
 }
 
 class _KategoriPolisTableState extends State<KategoriPolisTable> {
-  late PlutoGridStateManager stateManager;
+  late TrinaGridStateManager stateManager;
   bool get isMobile => widget.constraints.maxWidth < 768;
   Set<int> expandedRows = <int>{};
 
@@ -38,7 +38,7 @@ class _KategoriPolisTableState extends State<KategoriPolisTable> {
   }
 
   // Fungsi untuk mengecek apakah row memiliki content panjang
-  bool _hasLongContent(PlutoRow row) {
+  bool _hasLongContent(TrinaRow row) {
     final longFields = ['alamat', 'ket', 'nama', 'barang', 'model'];
 
     for (final field in longFields) {
@@ -52,16 +52,16 @@ class _KategoriPolisTableState extends State<KategoriPolisTable> {
     return false;
   }
 
-  PlutoColumn _textCol(String title, String field,
-      {bool isFixed = false, double width = 100, PlutoColumnType? customType}) {
-    return PlutoColumn(
+  TrinaColumn _textCol(String title, String field,
+      {bool isFixed = false, double width = 100, TrinaColumnType? customType}) {
+    return TrinaColumn(
       title: title,
       field: field,
-      type: customType ?? PlutoColumnType.text(),
+      type: customType ?? TrinaColumnType.text(),
       titleSpan: TextSpan(text: title),
       width: width,
       minWidth: width,
-      frozen: isFixed ? PlutoColumnFrozen.start : PlutoColumnFrozen.none,
+      frozen: isFixed ? TrinaColumnFrozen.start : TrinaColumnFrozen.none,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value.toString();
         final rowIdx = rendererContext.rowIdx;
@@ -152,8 +152,8 @@ class _KategoriPolisTableState extends State<KategoriPolisTable> {
     );
   }
 
-  List<PlutoColumn> _buildColumns(CategoryType type) {
-    List<PlutoColumn> base;
+  List<TrinaColumn> _buildColumns(CategoryType type) {
+    List<TrinaColumn> base;
 
     switch (type) {
       case CategoryType.properti:
@@ -218,20 +218,20 @@ class _KategoriPolisTableState extends State<KategoriPolisTable> {
     }
 
     return [
-      PlutoColumn(
+      TrinaColumn(
         title: '',
         field: 'checkbox',
-        type: PlutoColumnType.select([]),
+        type: TrinaColumnType.select([]),
         enableRowChecked: true,
         width: 75,
         minWidth: 75,
-        frozen: PlutoColumnFrozen.start,
+        frozen: TrinaColumnFrozen.start,
       ),
       ...base,
     ];
   }
 
-  List<PlutoRow> _buildRows(CategoryType type) {
+  List<TrinaRow> _buildRows(CategoryType type) {
     List<List<String>> raw;
 
     switch (type) {
@@ -316,14 +316,14 @@ class _KategoriPolisTableState extends State<KategoriPolisTable> {
 
     final colFields = _buildColumns(type).map((e) => e.field).toList();
     return raw.map((values) {
-      final cells = <String, PlutoCell>{};
-      cells['checkbox'] = PlutoCell(value: '');
+      final cells = <String, TrinaCell>{};
+      cells['checkbox'] = TrinaCell(value: '');
 
       for (int i = 0; i < values.length; i++) {
-        cells[colFields[i + 1]] = PlutoCell(value: values[i]);
+        cells[colFields[i + 1]] = TrinaCell(value: values[i]);
       }
 
-      return PlutoRow(cells: cells);
+      return TrinaRow(cells: cells);
     }).toList();
   }
 
@@ -336,22 +336,22 @@ class _KategoriPolisTableState extends State<KategoriPolisTable> {
       color: Colors.white,
       child: SizedBox(
         height: 505,
-        child: PlutoGrid(
+        child: TrinaGrid(
           columns: columns,
           rows: rows,
-          mode: PlutoGridMode.select,
+          mode: TrinaGridMode.select,
           onLoaded: (event) {
             stateManager = event.stateManager;
             stateManager.setShowColumnFilter(false);
             stateManager.setPageSize(10, notify: true);
             stateManager.setPage(1);
           },
-          configuration: PlutoGridConfiguration(
-            columnSize: PlutoGridColumnSizeConfig(
-              autoSizeMode: PlutoAutoSizeMode.none,
-              resizeMode: PlutoResizeMode.normal,
+          configuration: TrinaGridConfiguration(
+            columnSize: TrinaGridColumnSizeConfig(
+              autoSizeMode: TrinaAutoSizeMode.none,
+              resizeMode: TrinaResizeMode.normal,
             ),
-            style: PlutoGridStyleConfig(
+            style: TrinaGridStyleConfig(
               // Row height dinamis berdasarkan apakah ada yang di-expand
               rowHeight: expandedRows.isEmpty ? 40 : 100,
               columnHeight: 45,
@@ -369,7 +369,7 @@ class _KategoriPolisTableState extends State<KategoriPolisTable> {
             ),
           ),
           createFooter: (stateManager) {
-            return PlutoPagination(stateManager);
+            return TrinaPagination(stateManager);
           },
         ),
       ),

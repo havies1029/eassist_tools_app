@@ -39,6 +39,10 @@ class CobCariPageActive extends HomeState {}
 
 class AsetDashboardPageActive extends HomeState {}
 
+class AsetParPageActive extends HomeState {}
+
+class AsetMVPageActive extends HomeState {}
+
 //Active Page
 class SplashPageActive extends HomeState {}
 class ProfileIndividuPageActive extends HomeState {}

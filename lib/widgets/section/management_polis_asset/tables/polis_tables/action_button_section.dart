@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-enum ActionButtonModuleType { polis, asset }
-
 enum ActionButtonType {
   tambahPolis,
   endorse,
@@ -10,18 +8,14 @@ enum ActionButtonType {
   unduh,
   share,
   hapus,
-  refresh,
-  tambahAset,
 }
 
 class ActionButtonSection extends StatelessWidget {
   final BoxConstraints constraints;
-  final ActionButtonModuleType moduleType;
 
   const ActionButtonSection({
     super.key,
     required this.constraints,
-    required this.moduleType,
   });
 
   bool get isMobile => constraints.maxWidth < 768;
@@ -72,16 +66,6 @@ class ActionButtonSection extends StatelessWidget {
       'label': '',
       'color': Color(0xFFFF0000),
     },
-    ActionButtonType.refresh: {
-      'icon': 'assets/icons/refresh.svg',
-      'label': 'Perbarui',
-      'color': Color(0xFF00BFEF),
-    },
-    ActionButtonType.tambahAset: {
-      'icon': 'assets/icons/tambah_polis.svg',
-      'label': 'Tambah Aset',
-      'color': Color(0xFF007AFF),
-    },
   };
 
   Widget _buildButton(ActionButtonType type) {
@@ -112,9 +96,7 @@ class ActionButtonSection extends StatelessWidget {
           constraints: BoxConstraints(maxWidth: maxWidth),
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 15),
-            child: moduleType == ActionButtonModuleType.asset
-                ? _buildAssetLayout()
-                : _buildPolisLayout(),
+            child: _buildPolisLayout(),
           ),
         ),
       ),
@@ -181,40 +163,6 @@ class ActionButtonSection extends StatelessWidget {
               _SearchBox(isMobile: false, hintText: 'Cari Polis'),
             ],
           ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildAssetLayout() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            _buildButtonsGroup([
-              ActionButtonType.tambahAset,
-              ActionButtonType.refresh,
-            ]),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: [
-                ...[
-                  ActionButtonType.unduh,
-                  ActionButtonType.share,
-                ].map(_buildButton),
-                _SearchBox(isMobile: isMobile, hintText: 'Cari Aset'),
-              ],
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: _buildButton(ActionButtonType.hapus),
         ),
       ],
     );

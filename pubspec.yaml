@@ -10,7 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.8 #baru
-  pluto_grid: ^8.0.0 #baru
+#  pluto_grid: ^8.0.0 #baru
   flutter_svg: ^2.0.17 #baru
   flutter_animate: ^3.0.0 #baru
   google_fonts: ^6.1.0 #baru
@@ -19,6 +19,8 @@ dependencies:
   go_router: ^13.0.1
   shared_preferences: ^2.0.15
   webview_flutter: ^4.2.2
+  intl: ^0.19.0
+  trina_grid: ^1.6.10
   js: ^0.6.7
   mobile_chat_flutter: ^1.0.2
   url_launcher: ^6.2.4

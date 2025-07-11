@@ -108,7 +108,8 @@ class _HomePageState extends State<HomePage> {
     if (state is LoadingHeroUserPageActive) return PageType.loadingherouser;
     if (state is CobCariPageActive) return PageType.cobcari;
     if (state is AsetDashboardPageActive) return PageType.asetdashboard;
-
+    if (state is AsetParPageActive) return PageType.asetpar;
+    if (state is AsetMVPageActive) return PageType.asetmv;
     return null;
   }
 }

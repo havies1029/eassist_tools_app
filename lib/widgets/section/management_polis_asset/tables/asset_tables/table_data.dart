@@ -1,4 +1,4 @@
-import 'polis_category_type.dart';
+import '../../category_type.dart';
 
 class TableData {
   static List<List<String>> getData(CategoryType type) {

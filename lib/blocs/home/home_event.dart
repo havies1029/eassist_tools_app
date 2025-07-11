@@ -38,6 +38,10 @@ class CobCariPageActiveEvent extends HomeEvent {}
 
 class AsetDashboardPageActiveEvent extends HomeEvent {}
 
+class AsetParPageActiveEvent extends HomeEvent {}
+
+class AsetMVPageActiveEvent extends HomeEvent {}
+
 //Active Page
 class SplashPageActiveEvent extends HomeEvent {}
 class ProfileIndividuPageActiveEvent extends HomeEvent {}

@@ -20,7 +20,9 @@ import '../customer_service/cs_main.dart';
 import '../find_insurance/find_insurance_main.dart';
 import '../gen_aset_dashboard/asetdashboardcari_list.dart';
 import '../gen_aset_dashboard/asetdashboardcari_main.dart';
+import '../gen_aset_mv/asetmvcari_main.dart';
 import '../gen_aset_par/asetparcari_list.dart';
+import '../gen_aset_par/asetparcari_main.dart';
 import '../gen_cob_app/cobcari_main.dart';
 import '../gen_profile/test_profile_main.dart';
 import '../hero_client_page/hero_user_main.dart';
@@ -289,6 +291,10 @@ class PageContainer extends StatelessWidget {
         return const CobCariMainPage();
       case PageType.asetdashboard:
         return const AsetDashboardCariMainPage();
+      case PageType.asetpar:
+        return const AsetParCariMainPage();
+      case PageType.asetmv:
+        return const AsetMVCariMainPage();
       default:
         return const SizedBox();
     }

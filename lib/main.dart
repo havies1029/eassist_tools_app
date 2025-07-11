@@ -6,6 +6,7 @@ import 'package:eassist_tools_app/blocs/chatting/guestscrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/gallery/galleryeventcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gallery/gallerymembercari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gallery/gallerytestimonycari_bloc.dart';
+import 'package:eassist_tools_app/blocs/gen_aset_mv/asetmvcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_aset_par/asetparcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekan1list_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekanbankcrud_bloc.dart';
@@ -228,6 +229,10 @@ class App extends StatelessWidget {
             create: (context) => CobCariBloc()),
         BlocProvider<AsetDashboardCariBloc>(
             create: (context) => AsetDashboardCariBloc()),
+        BlocProvider<AsetParCariBloc>(
+            create: (context) => AsetParCariBloc()),
+        BlocProvider<AsetMvCariBloc>(
+            create: (context) => AsetMvCariBloc()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'table_ringkasan.dart';
 import 'table_kategori.dart';
-import 'polis_category_type.dart';
+import '../../category_type.dart';
 
 class TableMain extends StatelessWidget {
   final BoxConstraints constraints;
@@ -53,10 +53,10 @@ class TableMain extends StatelessWidget {
     debugPrint('Building table widget for: $selectedCategory');
 
     if (selectedCategory == CategoryType.ringkasan) {
-      return RingkasanPolisTable(constraints: constraints);
+      return RingkasanAsetTable(constraints: constraints);
     }
 
-    return KategoriPolisTable(
+    return KategoriAssetTable(
       key: ValueKey('table_${selectedCategory.name}'),
       constraints: constraints,
       category: selectedCategory,

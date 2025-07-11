@@ -56,5 +56,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     on<CobCariPageActiveEvent>((event, emit) => emit(CobCariPageActive()));
     on<AsetDashboardPageActiveEvent>((event, emit) => emit(AsetDashboardPageActive()));
+    on<AsetParPageActiveEvent>((event, emit) => emit(AsetParPageActive()));
+    on<AsetMVPageActiveEvent>((event, emit) => emit(AsetMVPageActive()));
   }
 }

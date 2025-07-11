@@ -175,6 +175,9 @@
               SubMenuItem(icon: Icons.business_outlined, title: 'Rekan General V2', onTap: () {}),
               SubMenuItem(icon: Icons.business_outlined, title: 'Cob Cari', onTap: () {}),
               SubMenuItem(icon: Icons.business_outlined, title: 'Aset Dashboard', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'Aset Par', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'Aset MV', onTap: () {}),
+
             ],
           },
           {

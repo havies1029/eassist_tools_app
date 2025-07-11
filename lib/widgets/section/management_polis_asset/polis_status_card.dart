@@ -2,8 +2,19 @@ import 'package:flutter/material.dart';
 
 class PolisSummarySection extends StatelessWidget {
   final BoxConstraints constraints;
+  final int aktifQty;
+  final int nonAktifQty;
+  final int onProgressQty;
+  final int berakhirQty;
 
-  const PolisSummarySection({super.key, required this.constraints});
+  const PolisSummarySection({
+    super.key,
+    required this.constraints,
+    required this.aktifQty,
+    required this.nonAktifQty,
+    required this.onProgressQty,
+    required this.berakhirQty,
+  });
 
   bool get isMobile => constraints.maxWidth < 768;
   bool get isTablet => constraints.maxWidth >= 768 && constraints.maxWidth < 992;
@@ -32,25 +43,25 @@ class PolisSummarySection extends StatelessWidget {
         'iconColor': const Color(0xFF79AB43),
         'icon': Icons.work_outline,
         'label': 'Polis Aktif',
-        'value': '11',
+        'value': aktifQty.toString(),
       },
       {
         'iconColor': const Color(0xFFFAA232),
         'icon': Icons.work_outline,
         'label': isMobile ? 'Polis non\nAktif' : 'Polis non Aktif',
-        'value': '0',
+        'value': nonAktifQty.toString(),
       },
       {
         'iconColor': const Color(0xFF62A5F6),
         'icon': Icons.sync,
         'label': isMobile ? 'Sedang di\nProses' : 'Sedang di Proses',
-        'value': '1',
+        'value': onProgressQty.toString(),
       },
       {
         'iconColor': const Color(0xFFF46262),
         'icon': Icons.work_outline,
         'label': isMobile ? 'Akan\nBerakhir' : 'Akan Berakhir',
-        'value': '1',
+        'value': berakhirQty.toString(),
       },
     ];
 
@@ -113,6 +124,7 @@ class PolisSummarySection extends StatelessWidget {
     );
   }
 }
+
 
 class _PolisSummaryCard extends StatelessWidget {
   final Color iconColor;

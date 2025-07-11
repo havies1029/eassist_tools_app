@@ -51,6 +51,8 @@ enum PageType {
   loadingherouser,
   cobcari,
   asetdashboard,
+  asetpar,
+  asetmv,
 }
 
 abstract class PageContainerBase extends StatefulWidget {

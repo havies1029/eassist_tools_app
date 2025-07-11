@@ -10,11 +10,11 @@ abstract class AsetParCariEvents extends Equatable {
 class FetchAsetParCariEvent extends AsetParCariEvents {}
 
 class RefreshAsetParCariEvent extends AsetParCariEvents {
-  final String searchText;
+	final String searchText;
 
-  const RefreshAsetParCariEvent({required this.searchText});
+	const RefreshAsetParCariEvent({required this.searchText});
 
-  @override
-  List<Object> get props => [searchText];
+	@override
+	List<Object> get props => [searchText];
 }
 

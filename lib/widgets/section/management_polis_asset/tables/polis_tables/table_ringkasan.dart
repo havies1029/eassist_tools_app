@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pluto_grid/pluto_grid.dart';
+import 'package:trina_grid/trina_grid.dart';
 
 class RingkasanPolisTable extends StatefulWidget {
   final BoxConstraints constraints;
@@ -11,8 +11,8 @@ class RingkasanPolisTable extends StatefulWidget {
 }
 
 class _RingkasanPolisTableState extends State<RingkasanPolisTable> {
-  late List<PlutoColumn> columns;
-  late List<PlutoRow> rows;
+  late List<TrinaColumn> columns;
+  late List<TrinaRow> rows;
 
   bool get isMobile => widget.constraints.maxWidth < 768;
 
@@ -23,39 +23,39 @@ class _RingkasanPolisTableState extends State<RingkasanPolisTable> {
     rows = _buildRows();
   }
 
-  List<PlutoColumn> _buildColumns() {
+  List<TrinaColumn> _buildColumns() {
     return [
-      PlutoColumn(
+      TrinaColumn(
         title: 'No',
         field: 'no',
-        type: PlutoColumnType.text(),
+        type: TrinaColumnType.text(),
         width: 75,
         minWidth: 75,
       ),
-      PlutoColumn(
+      TrinaColumn(
         title: 'Polis',
         field: 'polis',
-        type: PlutoColumnType.text(),
+        type: TrinaColumnType.text(),
       ),
-      PlutoColumn(
+      TrinaColumn(
         title: 'Jumlah Polis',
         field: 'jumlah',
-        type: PlutoColumnType.number(),
+        type: TrinaColumnType.number(),
       ),
-      PlutoColumn(
+      TrinaColumn(
         title: 'TSI',
         field: 'tsi',
-        type: PlutoColumnType.text(),
+        type: TrinaColumnType.text(),
       ),
-      PlutoColumn(
+      TrinaColumn(
         title: 'Total Premi',
         field: 'premi',
-        type: PlutoColumnType.text(),
+        type: TrinaColumnType.text(),
       ),
     ];
   }
 
-  List<PlutoRow> _buildRows() {
+  List<TrinaRow> _buildRows() {
     final data = [
       {
         'no': '1',
@@ -95,8 +95,8 @@ class _RingkasanPolisTableState extends State<RingkasanPolisTable> {
     ];
 
     return data.map((row) {
-      return PlutoRow(
-        cells: row.map((key, value) => MapEntry(key, PlutoCell(value: value))),
+      return TrinaRow(
+        cells: row.map((key, value) => MapEntry(key, TrinaCell(value: value))),
       );
     }).toList();
   }
@@ -107,16 +107,16 @@ class _RingkasanPolisTableState extends State<RingkasanPolisTable> {
       color: Colors.white,
       child: SizedBox(
         height: 360,
-        child: PlutoGrid(
+        child: TrinaGrid(
           columns: columns,
           rows: rows,
-          mode: PlutoGridMode.readOnly,
-          configuration: PlutoGridConfiguration(
-            columnSize: PlutoGridColumnSizeConfig(
-              autoSizeMode: PlutoAutoSizeMode.equal,
-              resizeMode: PlutoResizeMode.none,
+          mode: TrinaGridMode.readOnly,
+          configuration: TrinaGridConfiguration(
+            columnSize: TrinaGridColumnSizeConfig(
+              autoSizeMode: TrinaAutoSizeMode.equal,
+              resizeMode: TrinaResizeMode.none,
             ),
-            style: PlutoGridStyleConfig(
+            style: TrinaGridStyleConfig(
               borderColor: Colors.grey[300]!,
               gridBorderColor: Colors.grey[300]!,
               cellTextStyle: TextStyle(
