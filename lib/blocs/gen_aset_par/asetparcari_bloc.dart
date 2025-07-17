@@ -18,7 +18,7 @@ Future<void> onRefreshAsetParCari(
 		RefreshAsetParCariEvent event, Emitter<AsetParCariState> emit) async {
 	emit(const AsetParCariState());
 
-  emit(state.copyWith(searchText: event.searchText, hal: 0));
+  emit(state.copyWith( searchText: event.searchText, hal: 0, statusId: event.statusId));
 
 	add(FetchAsetParCariEvent());
 }
@@ -29,14 +29,14 @@ Future<void> onFetchAsetParCari(
 
 	AsetParCariRepository repo = AsetParCariRepository();
 	if (state.status == ListStatus.initial) {
-		List<AsetParCariModel> items = await repo.getAsetParCari(state.searchText, 0);
+		List<AsetParCariModel> items = await repo.getAsetParCari(state.statusId, state.searchText, 0);
 		return emit(state.copyWith(
 			items: items,
 			hasReachedMax: false,
 			status: ListStatus.success,
 			hal: 1));
 	}
-	List<AsetParCariModel> items = await repo.getAsetParCari(state.searchText, state.hal);
+	List<AsetParCariModel> items = await repo.getAsetParCari(state.statusId, state.searchText, state.hal);
 	if (items.isEmpty) {
 		return emit(state.copyWith(hasReachedMax: true));
 	} else {

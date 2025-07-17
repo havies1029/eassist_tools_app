@@ -19,7 +19,7 @@ class AsetRingkasanCariBloc
       Emitter<AsetRingkasanCariState> emit) async {
     emit(const AsetRingkasanCariState());
 
-    emit(state.copyWith(searchText: event.searchText));
+    emit(state.copyWith(searchText: event.searchText, statusId: event.statusId));
 
     add(FetchAsetRingkasanCariEvent());
   }
@@ -31,7 +31,7 @@ class AsetRingkasanCariBloc
     AsetRingkasanCariRepository repo = AsetRingkasanCariRepository();
     if (state.status == ListStatus.initial) {
       List<AsetRingkasanCariModel> items =
-          await repo.getAsetRingkasanCari(state.searchText, 0);
+          await repo.getAsetRingkasanCari(state.statusId, state.searchText, 0);
       return emit(state.copyWith(
           items: items,
           hasReachedMax: false,
@@ -39,7 +39,7 @@ class AsetRingkasanCariBloc
           hal: 1));
     }
     List<AsetRingkasanCariModel> items =
-        await repo.getAsetRingkasanCari(state.searchText, state.hal);
+        await repo.getAsetRingkasanCari(state.statusId, state.searchText, state.hal);
     if (items.isEmpty) {
       return emit(state.copyWith(hasReachedMax: true));
     } else {

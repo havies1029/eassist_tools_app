@@ -40,7 +40,7 @@ class AsetRingkasanCariPageState extends State<AsetRingkasanCariPage> {
 	}
 	void refreshData() {
 		asetRingkasanCariBloc.add(
-			RefreshAsetRingkasanCariEvent(searchText: _searchController.text));
+			RefreshAsetRingkasanCariEvent( statusId: '10001', searchText: _searchController.text));
 	}
 
 	IconButton buildSearchButton() {
@@ -51,7 +51,7 @@ class AsetRingkasanCariPageState extends State<AsetRingkasanCariPage> {
 			),
 			onPressed: () {
 			asetRingkasanCariBloc.add(RefreshAsetRingkasanCariEvent(
-				searchText: _searchController.text));
+				statusId: '10001', searchText: _searchController.text));
 			});
 	}
 

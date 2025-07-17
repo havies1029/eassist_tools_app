@@ -11,10 +11,11 @@ class FetchAsetMvCariEvent extends AsetMvCariEvents {}
 
 class RefreshAsetMvCariEvent extends AsetMvCariEvents {
 	final String searchText;
+  final String statusId;
 
-	const RefreshAsetMvCariEvent({required this.searchText});
+	const RefreshAsetMvCariEvent({required this.searchText, required this.statusId});
 
 	@override
-	List<Object> get props => [searchText];
+	List<Object> get props => [searchText, statusId];
 }
 

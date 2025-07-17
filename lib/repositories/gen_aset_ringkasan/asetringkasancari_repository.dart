@@ -3,8 +3,8 @@ import 'package:eassist_tools_app/models/gen_aset_ringkasan/asetringkasancari_mo
 
 class AsetRingkasanCariRepository {
 
-	Future<List<AsetRingkasanCariModel>> getAsetRingkasanCari(String searchText, int hal) async {
+	Future<List<AsetRingkasanCariModel>> getAsetRingkasanCari(String statusId, String searchText, int hal) async {
 		AsetRingkasanCariAPI api = AsetRingkasanCariAPI();
-		return await api.getAsetRingkasanCariAPI(searchText, hal);
+		return await api.getAsetRingkasanCariAPI(statusId, searchText, hal);
 	}
 }

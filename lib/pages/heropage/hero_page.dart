@@ -3,12 +3,14 @@ import 'package:eassist_tools_app/pages/about_jps/action_about_section.dart';
 import 'package:eassist_tools_app/pages/find_insurance/find_section_insurance.dart';
 import 'package:eassist_tools_app/pages/find_insurance/floating_buttons_insurance.dart';
 import 'package:eassist_tools_app/pages/gen_aset_dashboard/asetdashboardcari_main.dart';
+import 'package:eassist_tools_app/pages/gen_aset_health/asethealthcari_main.dart';
 import 'package:eassist_tools_app/pages/gen_aset_mv/asetmvcari_main.dart';
 import 'package:eassist_tools_app/pages/gen_aset_par/asetparcari_main.dart';
 import 'package:eassist_tools_app/pages/gen_aset_ringkasan/asetringkasancari_main.dart';
 import 'package:eassist_tools_app/pages/gen_cob_app/cobcari_main.dart';
 import 'package:eassist_tools_app/pages/gen_profile/mrekanpiclist_main.dart';
 import 'package:eassist_tools_app/pages/gen_profile/test_profile_page.dart';
+import 'package:eassist_tools_app/pages/gen_status_aset/statusasetcari_main.dart';
 import 'package:eassist_tools_app/pages/heropage/fixed_nambar_overlay.dart';
 import 'package:eassist_tools_app/widgets/section/carousel_section.dart';
 import 'package:eassist_tools_app/widgets/section/client_section.dart';
@@ -191,6 +193,28 @@ class _HeroPageState extends State<HeroPage> {
                                     );
                                   },
                                   child: Text("List Aset MV"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const StatusasetcariMain()),
+                                    );
+                                  },
+                                  child: Text("List Status Aset"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const AsetHealthCariMainPage()),
+                                    );
+                                  },
+                                  child: Text("List Aset Kesehatan"),
                                 ),
                               ],
                             );

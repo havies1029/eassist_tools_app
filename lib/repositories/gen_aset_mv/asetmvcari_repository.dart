@@ -3,8 +3,8 @@ import 'package:eassist_tools_app/models/gen_aset_mv/asetmvcari_model.dart';
 
 class AsetMvCariRepository {
 
-	Future<List<AsetMvCariModel>> getAsetMvCari(String searchText, int hal) async {
+	Future<List<AsetMvCariModel>> getAsetMvCari(String statusId, String searchText, int hal) async {
 		AsetMvCariAPI api = AsetMvCariAPI();
-		return await api.getAsetMvCariAPI(searchText, hal);
+		return await api.getAsetMvCariAPI(statusId, searchText, hal);
 	}
 }

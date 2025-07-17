@@ -4,6 +4,7 @@ import 'package:eassist_tools_app/blocs/gallery/galleryeventcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gallery/gallerymembercari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gallery/gallerytestimonycari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_aset_dashboard/asetdashboardcari_bloc.dart';
+import 'package:eassist_tools_app/blocs/gen_aset_health/asethealthcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_aset_mv/asetmvcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_aset_par/asetparcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_aset_ringkasan/asetringkasancari_bloc.dart';
@@ -14,6 +15,7 @@ import 'package:eassist_tools_app/blocs/gen_profile/mrekangeneralcmpcrud_bloc.da
 import 'package:eassist_tools_app/blocs/gen_profile/mrekangeneralidvcrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekanpiccrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekanpiclist_bloc.dart';
+import 'package:eassist_tools_app/blocs/gen_status_aset/statusasetcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaim/klaim1list_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaim/klaim2list_bloc.dart';
 import 'package:eassist_tools_app/blocs/login/change_password_bloc.dart';
@@ -214,9 +216,11 @@ class App extends StatelessWidget {
           create: (context) => CobCariBloc()),   
         BlocProvider<AsetDashboardCariBloc>(
           create: (context) => AsetDashboardCariBloc()),
-         BlocProvider(create: (context) => AsetRingkasanCariBloc()),
-         BlocProvider(create: (context) => AsetParCariBloc()),
-         BlocProvider(create: (context) => AsetMvCariBloc()),
+        BlocProvider(create: (context) => AsetRingkasanCariBloc()),
+        BlocProvider(create: (context) => AsetParCariBloc()),
+        BlocProvider(create: (context) => AsetMvCariBloc()),
+        BlocProvider(create: (context) => AsetHealthCariBloc()),
+        BlocProvider(create: (context) => StatusAsetCariBloc()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -40,7 +40,7 @@ class AsetParCariPageState extends State<AsetParCariPage> {
 	}
 	void refreshData() {
 		asetParCariBloc.add(
-			RefreshAsetParCariEvent(searchText: _searchController.text));
+			RefreshAsetParCariEvent( statusId: '10001', searchText: _searchController.text));
 	}
 
 	IconButton buildSearchButton() {
@@ -51,7 +51,7 @@ class AsetParCariPageState extends State<AsetParCariPage> {
 			),
 			onPressed: () {
 			asetParCariBloc.add(RefreshAsetParCariEvent(
-				searchText: _searchController.text));
+				statusId: '10001', searchText: _searchController.text));
 			});
 	}
 

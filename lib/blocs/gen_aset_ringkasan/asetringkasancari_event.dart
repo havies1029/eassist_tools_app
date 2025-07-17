@@ -11,10 +11,11 @@ class FetchAsetRingkasanCariEvent extends AsetRingkasanCariEvents {}
 
 class RefreshAsetRingkasanCariEvent extends AsetRingkasanCariEvents {
 	final String searchText;
+  final String statusId;
 
-	const RefreshAsetRingkasanCariEvent({required this.searchText});
+	const RefreshAsetRingkasanCariEvent({required this.searchText, required this.statusId});
 
 	@override
-	List<Object> get props => [searchText];
+	List<Object> get props => [searchText, statusId];
 }
 

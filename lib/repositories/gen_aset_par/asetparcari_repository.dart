@@ -3,8 +3,8 @@ import 'package:eassist_tools_app/models/gen_aset_par/asetparcari_model.dart';
 
 class AsetParCariRepository {
 
-	Future<List<AsetParCariModel>> getAsetParCari(String searchText, int hal) async {
+	Future<List<AsetParCariModel>> getAsetParCari(String statusId, String searchText, int hal) async {
 		AsetParCariAPI api = AsetParCariAPI();
-		return await api.getAsetParCariAPI(searchText, hal);
+		return await api.getAsetParCariAPI(statusId, searchText, hal);
 	}
 }

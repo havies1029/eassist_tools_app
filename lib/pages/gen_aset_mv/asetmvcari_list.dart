@@ -40,7 +40,7 @@ class AsetMvCariPageState extends State<AsetMvCariPage> {
 	}
 	void refreshData() {
 		asetMvCariBloc.add(
-			RefreshAsetMvCariEvent(searchText: _searchController.text));
+			RefreshAsetMvCariEvent(statusId: '10001', searchText: _searchController.text));
 	}
 
 	IconButton buildSearchButton() {
@@ -50,7 +50,7 @@ class AsetMvCariPageState extends State<AsetMvCariPage> {
 				size: 35.0,
 			),
 			onPressed: () {
-			asetMvCariBloc.add(RefreshAsetMvCariEvent(
+			asetMvCariBloc.add(RefreshAsetMvCariEvent(statusId: '10001',
 				searchText: _searchController.text));
 			});
 	}

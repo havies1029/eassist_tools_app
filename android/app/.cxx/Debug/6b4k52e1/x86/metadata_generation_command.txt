@@ -5,10 +5,10 @@
 -DANDROID_PLATFORM=android-21
 -DANDROID_ABI=x86
 -DCMAKE_ANDROID_ARCH_ABI=x86
--DANDROID_NDK=C:\Users\Micky\AppData\Local\Android\Sdk\ndk\26.3.11579264
--DCMAKE_ANDROID_NDK=C:\Users\Micky\AppData\Local\Android\Sdk\ndk\26.3.11579264
--DCMAKE_TOOLCHAIN_FILE=C:\Users\Micky\AppData\Local\Android\Sdk\ndk\26.3.11579264\build\cmake\android.toolchain.cmake
--DCMAKE_MAKE_PROGRAM=C:\Users\Micky\AppData\Local\Android\Sdk\cmake\3.22.1\bin\ninja.exe
+-DANDROID_NDK=D:\Software\Android\Sdk\ndk\26.3.11579264
+-DCMAKE_ANDROID_NDK=D:\Software\Android\Sdk\ndk\26.3.11579264
+-DCMAKE_TOOLCHAIN_FILE=D:\Software\Android\Sdk\ndk\26.3.11579264\build\cmake\android.toolchain.cmake
+-DCMAKE_MAKE_PROGRAM=D:\Software\Android\Sdk\cmake\3.22.1\bin\ninja.exe
 -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=E:\Development\eAssistApp\eAssistTools\App\eassist_tools_app_github\eassist_tools_app\build\app\intermediates\cxx\Debug\6b4k52e1\obj\x86
 -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=E:\Development\eAssistApp\eAssistTools\App\eassist_tools_app_github\eassist_tools_app\build\app\intermediates\cxx\Debug\6b4k52e1\obj\x86
 -DCMAKE_BUILD_TYPE=Debug

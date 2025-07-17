@@ -4,10 +4,10 @@ import 'package:http/http.dart' as http;
 import 'package:eassist_tools_app/models/gen_aset_ringkasan/asetringkasancari_model.dart';
 
 class AsetRingkasanCariAPI{
-	Future<List<AsetRingkasanCariModel>> getAsetRingkasanCariAPI(String searchText, int hal) async {
+	Future<List<AsetRingkasanCariModel>> getAsetRingkasanCariAPI(String statusId, String searchText, int hal) async {
 		String urlGetListEndPoint = "${AppData.prefixEndPoint}/api/assetringkasan/asetringkasancari/getlist";
 
-		Map<String, String> queryParams = {"searchText": searchText, "hal": hal.toString()};
+		Map<String, String> queryParams = {"statusId": statusId, "searchText": searchText, "hal": hal.toString()};
 		var uri = AppData.uriHtpp(AppData.httpAuthority, urlGetListEndPoint, queryParams);
 		final http.Response response = await http.get(uri, headers: <String, String>{
 			'Content-Type': 'application/json; odata=verbos',
