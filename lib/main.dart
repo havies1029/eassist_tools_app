@@ -15,6 +15,7 @@ import 'package:eassist_tools_app/blocs/gen_profile/mrekangeneralcmpcrud_bloc.da
 import 'package:eassist_tools_app/blocs/gen_profile/mrekangeneralidvcrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekanpiccrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekanpiclist_bloc.dart';
+import 'package:eassist_tools_app/blocs/gen_review/reviewcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_status_aset/statusasetcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaim/klaim1list_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaim/klaim2list_bloc.dart';
@@ -221,6 +222,7 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => AsetMvCariBloc()),
         BlocProvider(create: (context) => AsetHealthCariBloc()),
         BlocProvider(create: (context) => StatusAsetCariBloc()),
+        BlocProvider(create: (context) => ReviewCariBloc()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
