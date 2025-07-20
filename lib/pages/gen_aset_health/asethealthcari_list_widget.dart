@@ -43,37 +43,35 @@ class AsetHealthCariListWidgetState extends State<AsetHealthCariListWidget> {
 			}
 
 		return state.items.isNotEmpty
-			? Flexible(
-				child: ListView.builder(
-					padding: EdgeInsets.zero,
-					controller: _scrollController,
-					itemCount: state.items.length,
-					itemBuilder: (_, index) => Container(
-						margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-						padding: const EdgeInsets.all(0.2),
-						decoration: BoxDecoration(
-							borderRadius: BorderRadius.circular(15.0)),
-						child: Column(
-							children: <Widget>[
-								AsetHealthCariTileWidget(
-									asethealthId: state.items[index].asethealthId,
-									dob: state.items[index].dob,
-									jnskel: state.items[index].jnskel,
-									nama: state.items[index].nama,
-									nomor: state.items[index].nomor,
-									polisNo: state.items[index].polisNo,
-									posisi: state.items[index].posisi,
-									status: state.items[index].status,
-								)
-							],
-						),
-					)),
-				)
+			? ListView.builder(
+				padding: EdgeInsets.zero,
+				controller: _scrollController,
+				itemCount: state.items.length,
+				itemBuilder: (_, index) => Container(
+					margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+					padding: const EdgeInsets.all(0.2),
+					decoration: BoxDecoration(
+						borderRadius: BorderRadius.circular(15.0)),
+					child: Column(
+						children: <Widget>[
+							AsetHealthCariTileWidget(
+								asethealthId: state.items[index].asethealthId,
+								dob: state.items[index].dob,
+								jnskel: state.items[index].jnskel,
+								nama: state.items[index].nama,
+								nomor: state.items[index].nomor,
+								polisNo: state.items[index].polisNo,
+								posisi: state.items[index].posisi,
+								status: state.items[index].status,
+							)
+						],
+					),
+				))
 			: const Center(
 				child: Padding(
 					padding: EdgeInsets.only(top: 80.0),
 					child: Text(
-						'No Data Available!!',
+						'No Data Kesehatan Available!!',
 						style: TextStyle(
 							color: Colors.red,
 							fontSize: 12.0,
@@ -84,7 +82,7 @@ class AsetHealthCariListWidgetState extends State<AsetHealthCariListWidget> {
 		} else {
 			return const Center(
 					child: Text(
-						'No Data Available!!',
+						'No Data Kesehatan Available!!',
 						style: TextStyle(
 							color: Colors.red,
 							fontSize: 12.0,

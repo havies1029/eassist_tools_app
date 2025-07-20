@@ -5,10 +5,12 @@ class CobCariState extends Equatable {
 	final ListStatus status;
 	final List<CobCariModel> items;
 	final bool hasReachedMax;
+  final String selectedCOBId;
 	const CobCariState(
 		{this.status = ListStatus.initial,
 		this.items = const <CobCariModel>[],
 		this.hasReachedMax = false,
+		this.selectedCOBId = '',
 		});
 
 	const CobCariState.success(List<CobCariModel> items)
@@ -20,14 +22,16 @@ class CobCariState extends Equatable {
 		{List<CobCariModel>? items,
 		bool? hasReachedMax,
 		ListStatus? status,
+		String? selectedCOBId,
 		}){
 		return CobCariState(
 			items: items ?? this.items,
 			hasReachedMax: hasReachedMax ?? this.hasReachedMax,
 			status: status ?? this.status,
+			selectedCOBId: selectedCOBId ?? this.selectedCOBId,
 			);
 	}
 
 	@override
-	List<Object> get props => [status, items, hasReachedMax];
+	List<Object> get props => [status, items, hasReachedMax, selectedCOBId];
 }

@@ -1,5 +1,6 @@
 import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
 import 'package:eassist_tools_app/pages/about_jps/action_about_section.dart';
+import 'package:eassist_tools_app/pages/aset/aset_main.dart';
 import 'package:eassist_tools_app/pages/find_insurance/find_section_insurance.dart';
 import 'package:eassist_tools_app/pages/find_insurance/floating_buttons_insurance.dart';
 import 'package:eassist_tools_app/pages/gen_aset_dashboard/asetdashboardcari_main.dart';
@@ -227,6 +228,17 @@ class _HeroPageState extends State<HeroPage> {
                                     );
                                   },
                                   child: Text("List Review"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const AsetMainPage()),
+                                    );
+                                  },
+                                  child: Text("Form Aset"),
                                 ),
                               ],
                             );

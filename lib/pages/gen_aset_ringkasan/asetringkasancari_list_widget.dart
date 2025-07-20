@@ -43,36 +43,34 @@ class AsetRingkasanCariListWidgetState extends State<AsetRingkasanCariListWidget
 			}
 
 		return state.items.isNotEmpty
-			? Flexible(
-				child: ListView.builder(
-					padding: EdgeInsets.zero,
-					controller: _scrollController,
-					itemCount: state.items.length,
-					itemBuilder: (_, index) => Container(
-						margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-						padding: const EdgeInsets.all(0.2),
-						decoration: BoxDecoration(
-							borderRadius: BorderRadius.circular(15.0)),
-						child: Column(
-							children: <Widget>[
-								AsetRingkasanCariTileWidget(
-									asetNama: state.items[index].asetNama,
-									asetRingkasanId: state.items[index].asetRingkasanId,
-									curr: state.items[index].curr,
-									jmlAset: state.items[index].jmlAset,
-									nilaiAset: state.items[index].nilaiAset,
-									noUrut: state.items[index].noUrut,
-									satuan: state.items[index].satuan,
-								)
-							],
-						),
-					)),
-				)
+			? ListView.builder(
+				padding: EdgeInsets.zero,
+				controller: _scrollController,
+				itemCount: state.items.length,
+				itemBuilder: (_, index) => Container(
+					margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+					padding: const EdgeInsets.all(0.2),
+					decoration: BoxDecoration(
+						borderRadius: BorderRadius.circular(15.0)),
+					child: Column(
+						children: <Widget>[
+							AsetRingkasanCariTileWidget(
+								asetNama: state.items[index].asetNama,
+								asetRingkasanId: state.items[index].asetRingkasanId,
+								curr: state.items[index].curr,
+								jmlAset: state.items[index].jmlAset,
+								nilaiAset: state.items[index].nilaiAset,
+								noUrut: state.items[index].noUrut,
+								satuan: state.items[index].satuan,
+							)
+						],
+					),
+				))
 			: const Center(
 				child: Padding(
 					padding: EdgeInsets.only(top: 80.0),
 					child: Text(
-						'No Data Available!!',
+						'No Data Ringkasan Available!!',
 						style: TextStyle(
 							color: Colors.red,
 							fontSize: 12.0,
@@ -83,7 +81,7 @@ class AsetRingkasanCariListWidgetState extends State<AsetRingkasanCariListWidget
 		} else {
 			return const Center(
 					child: Text(
-						'No Data Available!!',
+						'No Data Ringkasan Available!!',
 						style: TextStyle(
 							color: Colors.red,
 							fontSize: 12.0,

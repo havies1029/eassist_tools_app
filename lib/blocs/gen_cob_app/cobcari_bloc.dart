@@ -9,49 +9,56 @@ part 'cobcari_event.dart';
 part 'cobcari_state.dart';
 
 class CobCariBloc extends Bloc<CobCariEvents, CobCariState> {
-	CobCariBloc() : super(const CobCariState()) {
-		on<FetchCobCariEvent>(onFetchCobCari);
-		on<RefreshCobCariEvent>(onRefreshCobCari);
-	}
+  CobCariBloc() : super(const CobCariState()) {
+    on<FetchCobCariEvent>(onFetchCobCari);
+    on<RefreshCobCariEvent>(onRefreshCobCari);
+    on<SelectButton>(onSelectButton);
+  }
 
-Future<void> onRefreshCobCari(
-		RefreshCobCariEvent event, Emitter<CobCariState> emit) async {
-	emit(const CobCariState());
+  Future<void> onRefreshCobCari(
+      RefreshCobCariEvent event, Emitter<CobCariState> emit) async {
+    emit(const CobCariState());
 
-	add(FetchCobCariEvent());
-}
+    add(FetchCobCariEvent());
+  }
 
-Future<void> onFetchCobCari(
-		FetchCobCariEvent event, Emitter<CobCariState> emit) async {
-	if (state.hasReachedMax) return;
+  Future<void> onFetchCobCari(
+      FetchCobCariEvent event, Emitter<CobCariState> emit) async {
+    if (state.hasReachedMax) return;
 
-	CobCariRepository repo = CobCariRepository();
-	if (state.status == ListStatus.initial) {
-		List<CobCariModel> items = await repo.getCobCari();
-		return emit(state.copyWith(
-			items: items,
-			hasReachedMax: false,
-			status: ListStatus.success,
-			));
-	}
-	List<CobCariModel> items = await repo.getCobCari();
-	if (items.isEmpty) {
-		return emit(state.copyWith(hasReachedMax: true));
-	} else {
-		List<CobCariModel> cobCari = List.of(state.items)..addAll(items);
+    CobCariRepository repo = CobCariRepository();
+    if (state.status == ListStatus.initial) {
+      List<CobCariModel> items = await repo.getCobCari();
+      return emit(state.copyWith(
+        items: items,
+        hasReachedMax: false,
+        status: ListStatus.success,
+      ));
+    }
+    List<CobCariModel> items = await repo.getCobCari();
+    if (items.isEmpty) {
+      return emit(state.copyWith(hasReachedMax: true));
+    } else {
+      List<CobCariModel> cobCari = List.of(state.items)..addAll(items);
 
-		final result = cobCari
-			.whereWithIndex((e, index) =>
-				cobCari.indexWhere((e2) => e2.mCobApp1Id == e.mCobApp1Id) ==
-				index)
-			.toList();
+      final result = cobCari
+          .whereWithIndex((e, index) =>
+              cobCari.indexWhere((e2) => e2.mCobApp1Id == e.mCobApp1Id) ==
+              index)
+          .toList();
 
-		return emit(state.copyWith(
-			items: result,
-			hasReachedMax: false,
-			status: ListStatus.success,
-			));
-		}
+      return emit(state.copyWith(
+        items: result,
+        hasReachedMax: false,
+        status: ListStatus.success,
+      ));
+    }
+  }
 
-	}
+  Future<void> onSelectButton(
+    SelectButton event, Emitter<CobCariState> emit) async {
+      emit(state.copyWith(
+        selectedCOBId: event.id,
+      ));
+    }
 }

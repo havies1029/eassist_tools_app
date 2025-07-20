@@ -43,40 +43,38 @@ class AsetMvCariListWidgetState extends State<AsetMvCariListWidget> {
 			}
 
 		return state.items.isNotEmpty
-			? Flexible(
-				child: ListView.builder(
-					padding: EdgeInsets.zero,
-					controller: _scrollController,
-					itemCount: state.items.length,
-					itemBuilder: (_, index) => Container(
-						margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-						padding: const EdgeInsets.all(0.2),
-						decoration: BoxDecoration(
-							borderRadius: BorderRadius.circular(15.0)),
-						child: Column(
-							children: <Widget>[
-								AsetMvCariTileWidget(
-									asetMvId: state.items[index].asetMvId,
-									curr: state.items[index].curr,
-									jenisMv: state.items[index].jenisMv,
-									merk: state.items[index].merk,
-									noPolisi: state.items[index].noPolisi,
-									nomor: state.items[index].nomor,
-									polisNo: state.items[index].polisNo,
-									premi: state.items[index].premi,
-									sumInsured: state.items[index].sumInsured,
-									tahun: state.items[index].tahun,
-									tipe: state.items[index].tipe,
-								)
-							],
-						),
-					)),
-				)
+			? ListView.builder(
+				padding: EdgeInsets.zero,
+				controller: _scrollController,
+				itemCount: state.items.length,
+				itemBuilder: (_, index) => Container(
+					margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+					padding: const EdgeInsets.all(0.2),
+					decoration: BoxDecoration(
+						borderRadius: BorderRadius.circular(15.0)),
+					child: Column(
+						children: <Widget>[
+							AsetMvCariTileWidget(
+								asetMvId: state.items[index].asetMvId,
+								curr: state.items[index].curr,
+								jenisMv: state.items[index].jenisMv,
+								merk: state.items[index].merk,
+								noPolisi: state.items[index].noPolisi,
+								nomor: state.items[index].nomor,
+								polisNo: state.items[index].polisNo,
+								premi: state.items[index].premi,
+								sumInsured: state.items[index].sumInsured,
+								tahun: state.items[index].tahun,
+								tipe: state.items[index].tipe,
+							)
+						],
+					),
+				))
 			: const Center(
 				child: Padding(
 					padding: EdgeInsets.only(top: 80.0),
 					child: Text(
-						'No Data Available!!',
+						'No Data Kendaraan Available!!',
 						style: TextStyle(
 							color: Colors.red,
 							fontSize: 12.0,
@@ -87,7 +85,7 @@ class AsetMvCariListWidgetState extends State<AsetMvCariListWidget> {
 		} else {
 			return const Center(
 					child: Text(
-						'No Data Available!!',
+						'No Data Kendaraan Available!!',
 						style: TextStyle(
 							color: Colors.red,
 							fontSize: 12.0,
