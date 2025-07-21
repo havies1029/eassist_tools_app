@@ -8,6 +8,7 @@ import 'package:eassist_tools_app/pages/gen_aset_health/asethealthcari_main.dart
 import 'package:eassist_tools_app/pages/gen_aset_mv/asetmvcari_main.dart';
 import 'package:eassist_tools_app/pages/gen_aset_par/asetparcari_main.dart';
 import 'package:eassist_tools_app/pages/gen_aset_ringkasan/asetringkasancari_main.dart';
+import 'package:eassist_tools_app/pages/gen_berita/berita_main.dart';
 import 'package:eassist_tools_app/pages/gen_cob_app/cobcari_main.dart';
 import 'package:eassist_tools_app/pages/gen_profile/mrekanpiclist_main.dart';
 import 'package:eassist_tools_app/pages/gen_profile/test_profile_page.dart';
@@ -239,6 +240,17 @@ class _HeroPageState extends State<HeroPage> {
                                     );
                                   },
                                   child: Text("Form Aset"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const BeritaMainPage(jenis: 1)),
+                                    );
+                                  },
+                                  child: Text("Berita Utama"),
                                 ),
                               ],
                             );
