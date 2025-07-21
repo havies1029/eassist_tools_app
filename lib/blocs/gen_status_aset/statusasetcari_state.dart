@@ -5,10 +5,13 @@ class StatusAsetCariState extends Equatable {
 	final ListStatus status;
 	final List<StatusAsetCariModel> items;
 	final bool hasReachedMax;
+  final String selectedStatusId;
+
 	const StatusAsetCariState(
 		{this.status = ListStatus.initial,
 		this.items = const <StatusAsetCariModel>[],
 		this.hasReachedMax = false,
+    this.selectedStatusId = '',
 		});
 
 	const StatusAsetCariState.success(List<StatusAsetCariModel> items)
@@ -20,14 +23,16 @@ class StatusAsetCariState extends Equatable {
 		{List<StatusAsetCariModel>? items,
 		bool? hasReachedMax,
 		ListStatus? status,
+    String? selectedStatusId
 		}){
 		return StatusAsetCariState(
 			items: items ?? this.items,
 			hasReachedMax: hasReachedMax ?? this.hasReachedMax,
 			status: status ?? this.status,
+      selectedStatusId: selectedStatusId ?? this.selectedStatusId,
 			);
 	}
 
 	@override
-	List<Object> get props => [status, items, hasReachedMax];
+	List<Object> get props => [status, items, hasReachedMax, selectedStatusId];
 }

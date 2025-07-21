@@ -62,6 +62,7 @@ import 'blocs/gen_profile/mrekan1crud_bloc.dart';
 import 'blocs/gen_profile/mrekancontactcrud_bloc.dart';
 import 'blocs/gen_profile/mrekangeneralidvcrud_bloc.dart';
 import 'blocs/gen_profile/mrekanpiccrud_bloc.dart';
+import 'blocs/gen_review/reviewcari_bloc.dart';
 import 'blocs/gen_status_aset/statusasetcari_bloc.dart';
 import 'blocs/home/home_bloc.dart';
 import 'blocs/profile/profile_download_foto_bloc.dart';
@@ -232,6 +233,7 @@ class App extends StatelessWidget {
         BlocProvider<AsetHealthCariBloc>(
             create: (context) => AsetHealthCariBloc()),
         BlocProvider(create: (context) => StatusAsetCariBloc()),
+        BlocProvider(create: (context) => ReviewCariBloc()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

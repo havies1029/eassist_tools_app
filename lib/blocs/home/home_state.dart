@@ -49,6 +49,8 @@ class AsetHealthPageActive extends HomeState {}
 
 class AsetStatusPageActive extends HomeState {}
 
+class AsetPageActive extends HomeState {}
+
 //Active Page
 class SplashPageActive extends HomeState {}
 class ProfileIndividuPageActive extends HomeState {}

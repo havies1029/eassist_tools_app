@@ -181,6 +181,7 @@
               SubMenuItem(icon: Icons.business_outlined, title: 'Aset MV', onTap: () {}),
               SubMenuItem(icon: Icons.business_outlined, title: 'Aset Health', onTap: () {}),
               SubMenuItem(icon: Icons.business_outlined, title: 'Aset Status', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'Aset', onTap: () {}),
             ],
           },
           {

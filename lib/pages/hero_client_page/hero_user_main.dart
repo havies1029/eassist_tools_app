@@ -12,6 +12,7 @@ import '../../widgets/components/hero/hero_section.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekan1crud_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../aset/aset_main.dart';
 import '../base/base_page.dart';
 import '../gen_aset_dashboard/asetdashboardcari_main.dart';
 import '../gen_cob_app/cobcari_main.dart';
@@ -189,7 +190,8 @@ class _HeroUserPageState extends State<HeroUserPage> {
                       padding: EdgeInsets.only(top: isMobile ? 50 : 88),
                       child: Column(
                         children: [
-                          // Tampilkan data client
+
+                              // Tampilkan data client
                           // Padding(
                           //   padding: const EdgeInsets.symmetric(
                           //       vertical: 20, horizontal: 16),

@@ -1,3 +1,4 @@
+import 'package:eassist_tools_app/pages/aset/aset_main.dart';
 import 'package:eassist_tools_app/pages/chatting/roomcari_list.dart';
 import 'package:eassist_tools_app/pages/gen_aset_health/asethealthcari_main.dart';
 import 'package:eassist_tools_app/pages/groupchat/groupchat_page.dart';
@@ -224,6 +225,8 @@ class PageContainer extends StatelessWidget {
         return "Memuat Aset Dashboard";
       case PageType.asethealth:
         return "Memuat Aset Health";
+      case PageType.aset:
+        return "Memuat Aset";
       default:
         return "Login Page";
     }
@@ -306,6 +309,8 @@ class PageContainer extends StatelessWidget {
         return const AsetHealthCariMainPage();
       case PageType.asetstatus:
         return const StatusasetcariMain();
+      case PageType.aset:
+        return const AsetMainPage();
       default:
         return const SizedBox();
     }

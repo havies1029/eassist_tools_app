@@ -455,6 +455,13 @@ class _NavbarWidgetState extends State<NavbarWidget> {
         // context.go('/assets_management');
         break;
 
+      case 'Aset':
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(AsetPageActiveEvent());
+        });
+        // context.go('/assets_management');
+        break;
+
       case 'Test Profile':
         context.go('/test_profile');
         break;

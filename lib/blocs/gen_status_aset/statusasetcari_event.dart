@@ -11,3 +11,12 @@ class FetchStatusAsetCariEvent extends StatusAsetCariEvents {}
 
 class RefreshStatusAsetCariEvent extends StatusAsetCariEvents {}
 
+class SelectButton extends StatusAsetCariEvents {
+  final String id;
+
+  const SelectButton(this.id);
+
+  @override
+  List<Object> get props => [id];
+}
+
