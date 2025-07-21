@@ -90,7 +90,7 @@ class _FloatingButtonsState extends State<FloatingButtons>
           constraints: BoxConstraints(maxWidth: maxWidth),
           margin: EdgeInsets.symmetric(
             vertical: 8.0,
-            horizontal: isMobile ? (isSmallMobile ? 12.0 : 16.0) : 16.0,
+            horizontal: isMobile ? (isSmallMobile ? 12.0 : 16.0) : 95.0,
           ),
           decoration: BoxDecoration(
             color: Colors.white,

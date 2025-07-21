@@ -31,7 +31,7 @@ class AboutJps extends StatelessWidget {
       width: double.infinity,
       color: Colors.white,
       padding: EdgeInsets.symmetric(
-        horizontal: isMobile ? 35.0 : (isTablet ? 40.0 : 80.0),
+        horizontal: isMobile ? 35.0 : (isTablet ? 40.0 : 105),
         vertical: isMobile ? 40.0 : 60.0,
       ),
       child: Center(

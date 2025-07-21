@@ -24,7 +24,6 @@ class AppStyles {
     fontFamily: fontFamily,
     fontSize: fontSize,
     color: AppColors.textMuted,
-    height: 1.5,
   );
 
   static TextStyle downloadText(double fontSize) => TextStyle(
@@ -61,8 +60,8 @@ class CompanyProfileSection extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(
-        horizontal: isMobile ? 20 : 80,
-        vertical: isMobile ? 40 : 80,
+        horizontal: isMobile ? 100 : 300,
+        vertical: isMobile ? 5 : 10,
       ),
       color: AppColors.backgroundWhite,
       child: isMobile ? _buildMobileLayout(isMobile) : _buildDesktopLayout(isMobile),
@@ -74,7 +73,7 @@ class CompanyProfileSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildContent(isMobile),
-        const SizedBox(height: 40),
+        const SizedBox(height: 10),
         _buildImage(isMobile),
       ],
     );
@@ -85,15 +84,15 @@ class CompanyProfileSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(flex: 2, child: _buildContent(isMobile)),
-        const SizedBox(width: 60),
+        const SizedBox(width: 46),
         Expanded(flex: 1, child: _buildImage(isMobile)),
       ],
     );
   }
 
   Widget _buildContent(bool isMobile) {
-    final double  titleSize = isMobile ? 23 : 45;
-    final double descSize = isMobile ? 9.2 : 18;
+    final double  titleSize = isMobile ? 23 : 29.41;
+    final double descSize = isMobile ? 10 : 15.13;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,23 +109,23 @@ class CompanyProfileSection extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: isMobile ? 16 : 20),
+        SizedBox(height: isMobile ? 15 : 27),
         Text(descriptionText, style: AppStyles.subtitle(descSize)),
-        SizedBox(height: isMobile ? 24 : 32),
+        SizedBox(height: isMobile ? 25 : 34),
         _buildDownloadButton(isMobile),
       ],
     );
   }
 
   Widget _buildDownloadButton(bool isMobile) {
-    final double fontSize = isMobile ? 10 : 20;
-    final double iconSize = isMobile ? 8 : 16;
-    final double circleSize = isMobile ? 20 : 40;
+    final double fontSize = isMobile ? 12 : 15.13;
+    final double iconSize = isMobile ? 10 : 13.45;
+    final double circleSize = isMobile ? 25 : 33.61;
 
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: AppColors.primaryGreen, width: 1.5),
-        borderRadius: BorderRadius.circular(32),
+        border: Border.all(color: AppColors.primaryGreen, width: 1),
+        borderRadius: BorderRadius.circular(33.61),
         color: Colors.transparent,
       ),
       child: Material(
@@ -138,14 +137,14 @@ class CompanyProfileSection extends StatelessWidget {
           borderRadius: BorderRadius.circular(32),
           child: Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: isMobile ? 10 : 15,
-              vertical: isMobile ? 5 : 10,
+              horizontal: isMobile ? 8 : 10,
+              vertical: isMobile ? 5 : 7,
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text('Unduh Sekarang', style: AppStyles.downloadText(fontSize)),
-                const SizedBox(width: 12),
+                const SizedBox(width: 13),
                 Container(
                   width: circleSize,
                   height: circleSize,
@@ -164,8 +163,8 @@ class CompanyProfileSection extends StatelessWidget {
   }
 
   Widget _buildImage(bool isMobile) {
-    final double w = isMobile ? 300 : 378;
-    final double h = isMobile ? 300 : 378;
+    final double w = isMobile ? 300 : 318.86;
+    final double h = isMobile ? 300 : 318.86;
 
     return Center(
       child: Container(
