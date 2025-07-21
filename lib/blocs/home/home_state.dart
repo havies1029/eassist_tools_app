@@ -43,6 +43,12 @@ class AsetParPageActive extends HomeState {}
 
 class AsetMVPageActive extends HomeState {}
 
+class AsetRingkasanPageActive extends HomeState {}
+
+class AsetHealthPageActive extends HomeState {}
+
+class AsetStatusPageActive extends HomeState {}
+
 //Active Page
 class SplashPageActive extends HomeState {}
 class ProfileIndividuPageActive extends HomeState {}

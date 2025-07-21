@@ -138,7 +138,7 @@ class _PopupSuceedPageState extends State<PopupSuceedPage>
   Widget _buildHeader() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 15),
       decoration: const BoxDecoration(
         color: Color(0xFF79AB43),
         borderRadius: BorderRadius.only(
@@ -151,12 +151,11 @@ class _PopupSuceedPageState extends State<PopupSuceedPage>
           GestureDetector(
             onTap: () => Navigator.of(context).pop(),
             child: Container(
-              padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.2),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.close, color: Colors.white, size: 20),
+              child: const Icon(Icons.close, color: Colors.white, size: 15),
             ),
           ),
           const SizedBox(width: 15),
@@ -165,7 +164,7 @@ class _PopupSuceedPageState extends State<PopupSuceedPage>
               'Berhasil!',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 24,
+                fontSize: 15,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -178,7 +177,7 @@ class _PopupSuceedPageState extends State<PopupSuceedPage>
   Widget _buildBody() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 40),
+      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
@@ -197,9 +196,8 @@ class _PopupSuceedPageState extends State<PopupSuceedPage>
                 child: Opacity(
                   opacity: _checkmarkOpacityAnimation.value,
                   child: Container(
-                    width: 80,
-                    height: 80,
-                    margin: const EdgeInsets.only(bottom: 25),
+                    width: 60,
+                    height: 60,
                     decoration: BoxDecoration(
                       color: Color(0xFF79AB43),
                       shape: BoxShape.circle,
@@ -214,25 +212,24 @@ class _PopupSuceedPageState extends State<PopupSuceedPage>
                     child: const Icon(
                       Icons.check,
                       color: Colors.white,
-                      size: 45,
+                      size: 30,
                     ),
                   ),
                 ),
               );
             },
           ),
-
+          const SizedBox(height: 8),
           // Tampilkan pesan dinamis
           Text(
             widget.message,
             textAlign: TextAlign.center,
             style: const TextStyle(
-              fontSize: 16,
-              color: Colors.black87,
-              height: 1.4,
+                fontSize: 15,
+                color: Colors.black87
             ),
           ),
-          const SizedBox(height: 30),
+          const SizedBox(height: 8),
 
           // Tombol "OK" dengan callback onOk
           MouseRegion(
@@ -241,12 +238,12 @@ class _PopupSuceedPageState extends State<PopupSuceedPage>
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               width: double.infinity,
-              height: 50,
+              height: 40,
               decoration: BoxDecoration(
                 color: _isHovering
                     ? const Color(0xFF6B9639)
                     : Color(0xFF79AB43),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(5),
                 boxShadow: _isHovering
                     ? [
                   BoxShadow(
@@ -266,17 +263,17 @@ class _PopupSuceedPageState extends State<PopupSuceedPage>
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(5),
                   onTap: () {
                     Navigator.of(context).pop();
                     widget.onOk();
                   },
                   child: const Center(
                     child: Text(
-                      'OK',
+                      'Oke',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 16,
+                        fontSize: 15,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

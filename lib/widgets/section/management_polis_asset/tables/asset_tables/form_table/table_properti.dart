@@ -5,72 +5,160 @@ import 'package:trina_grid/trina_grid.dart';
 import 'package:eassist_tools_app/blocs/gen_aset_par/asetparcari_bloc.dart';
 import 'package:eassist_tools_app/models/gen_aset_par/asetparcari_model.dart';
 import '../../../../../../common/constants.dart';
+import '../../../../../../helper/export_helper.dart';
+import '../../../../../../helper/mobile_expert_helper.dart';
+import '../../../category_type.dart';
+import '../../asset_tables/action_button_section.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'dart:io' show Platform;
 
-class TableProperti extends StatelessWidget {
+class TableProperti extends StatefulWidget {
   final BoxConstraints constraints;
-  TableProperti({super.key, required this.constraints});
+  const TableProperti({super.key, required this.constraints});
 
-  bool get isMobile => constraints.maxWidth < 768;
-  double get maxW => constraints.maxWidth;
+  @override
+  State<TableProperti> createState() => _TablePropertiState();
+}
+
+class _TablePropertiState extends State<TableProperti> {
+  final GlobalKey<ActionButtonSectionState> _actionKey = GlobalKey();
+  late final ActionButtonSection _actionButton;
+  List<Map<String, dynamic>> _originalItems = [];
+  // List<Map<String, dynamic>> _filteredItems = [];
+  TrinaGridStateManager? _stateManager;
+
+  bool get isMobile => widget.constraints.maxWidth < 768;
+  double get maxW => widget.constraints.maxWidth;
   final currencyFormat = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
 
   @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<AsetParCariBloc, AsetParCariState>(
-      builder: (context, state) {
-        if (state.status == ListStatus.success) {
-          final items = state.items;
-          debugPrint('🚀 Properti Loaded: \${items.length}');
-          if (items.isNotEmpty) {
-            final i = items.first;
-            debugPrint('🔥 Sample Properti:\nAlamat: \${i.alamat}, TSI: \${i.sumInsured}');
-          }
+  void initState() {
+    super.initState();
 
-          final columns = _buildColumns();
-          final rows = _buildRows(items);
-
-          return SizedBox(
-            height: 500, // ✅ penting agar terlihat
-            child: TrinaGrid(
-              columns: columns,
-              rows: rows,
-              mode: TrinaGridMode.normal,
-              configuration: TrinaGridConfiguration(
-                enableMoveHorizontalInEditing: false,
-                columnSize: TrinaGridColumnSizeConfig(
-                  autoSizeMode: TrinaAutoSizeMode.none,
-                  resizeMode: TrinaResizeMode.none,
-                ),
-                style: TrinaGridStyleConfig(
-                  rowHeight: 100,
-                  columnHeight: 45,
-                  borderColor: Colors.grey[300]!,
-                  gridBorderColor: Colors.grey[300]!,
-                  cellTextStyle: TextStyle(
-                    fontFamily: 'Satoshi',
-                    fontSize: isMobile ? 10 : 14,
-                  ),
-                  columnTextStyle: TextStyle(
-                    fontFamily: 'Satoshi',
-                    fontWeight: FontWeight.bold,
-                    fontSize: isMobile ? 11 : 15,
-                  ),
-                ),
-              ),
-              createFooter: (stateManager) => TrinaPagination(stateManager),
-              onLoaded: (event) {
-                event.stateManager.setPageSize(10, notify: true);
-                event.stateManager.setPage(1);
-              },
-            ),
-          );
-        } else if (state.status == ListStatus.loading) {
-          return const Center(child: CircularProgressIndicator());
+    _actionButton = ActionButtonSection(
+      key: _actionKey,
+      constraints: widget.constraints,
+      selectedCategory: CategoryType.properti,
+      tableData: _originalItems,
+      // onDataFiltered: (filtered) {
+      //   setState(() {
+      //     _filteredItems = filtered;
+      //   });
+      //
+      //   _stateManager?.removeAllRows();
+      //   _stateManager?.appendRows(_buildRows(filtered));
+      //   _stateManager?.setPage(1, notify: true);
+      // },
+      onAddAsset: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('🏡 Tambah Aset Properti dijalankan')),
+        );
+      },
+      onExportSelected: (format) async {
+        final messenger = ScaffoldMessenger.of(context);
+        if (kIsWeb || Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+          await ExportHelper.export(format, _originalItems, CategoryType.properti);
+          messenger.showSnackBar(const SnackBar(content: Text('✅ File berhasil diunduh ke perangkat Web/Desktop')));
         } else {
-          return const Center(child: Text('No Data Available!!'));
+          final extension = format.toLowerCase() == 'pdf' ? 'pdf' : 'xlsx';
+          final fileName = 'laporan_properti.$extension';
+          await MobileDownloadHelper.download(
+            context: context,
+            fileName: fileName,
+            data: _originalItems,
+            format: format,
+          );
         }
       },
+      onRefresh: (searchText, statusId) {
+        context.read<AsetParCariBloc>().add(
+          RefreshAsetParCariEvent(
+            statusId: statusId,
+            searchText: searchText,
+          ),
+        );
+      },
     );
+
+    Future.delayed(Duration.zero, () {
+      context.read<AsetParCariBloc>().add(
+        RefreshAsetParCariEvent(statusId: '10001', searchText: ''),
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        _actionButton,
+        const SizedBox(height: 16),
+        BlocBuilder<AsetParCariBloc, AsetParCariState>(
+          builder: (context, state) {
+            debugPrint('🧱 BlocBuilder rebuild | items=${state.items.length} | status=${state.status}');
+            if (state.status == ListStatus.success) {
+              _originalItems = state.items.map(_mapToJson).toList();
+              // _filteredItems = List.from(_originalItems);
+
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                _actionKey.currentState?.updateTableData(_originalItems);
+              });
+
+              return SizedBox(
+                height: 500,
+                child: TrinaGrid(
+                  columns: _buildColumns(),
+                  rows: _buildRows(_originalItems),
+                  mode: TrinaGridMode.normal,
+                  configuration: TrinaGridConfiguration(
+                    enableMoveHorizontalInEditing: false,
+                    columnSize: TrinaGridColumnSizeConfig(
+                      autoSizeMode: TrinaAutoSizeMode.none,
+                      resizeMode: TrinaResizeMode.none,
+                    ),
+                    style: TrinaGridStyleConfig(
+                      rowHeight: 100,
+                      columnHeight: 45,
+                      borderColor: Colors.grey[300]!,
+                      gridBorderColor: Colors.grey[300]!,
+                      cellTextStyle: TextStyle(
+                        fontFamily: 'Satoshi',
+                        fontSize: isMobile ? 10 : 14,
+                      ),
+                      columnTextStyle: TextStyle(
+                        fontFamily: 'Satoshi',
+                        fontWeight: FontWeight.bold,
+                        fontSize: isMobile ? 11 : 15,
+                      ),
+                    ),
+                  ),
+                  createFooter: (stateManager) => TrinaPagination(stateManager),
+                  onLoaded: (event) {
+                    _stateManager = event.stateManager;
+                    _stateManager?.setPageSize(10, notify: true);
+                    _stateManager?.setPage(1);
+                  },
+                ),
+              );
+            } else if (state.status == ListStatus.loading) {
+              return const Center(child: CircularProgressIndicator());
+            } else {
+              return const Center(child: Text('No Data Available!!'));
+            }
+          },
+        ),
+      ],
+    );
+  }
+
+  Map<String, dynamic> _mapToJson(AsetParCariModel item) {
+    return {
+      'alamat': item.alamat,
+      'tsi': item.sumInsured,
+      'premi': item.premi,
+      'klausa': item.klausulaBank,
+      'status': item.status,
+    };
   }
 
   List<TrinaColumn> _buildColumns() {
@@ -80,9 +168,6 @@ class TableProperti extends StatelessWidget {
         field: 'checkbox',
         type: TrinaColumnType.select([]),
         enableRowChecked: true,
-        enableSorting: false,
-        enableColumnDrag: false,
-        enableContextMenu: false,
         width: 60,
         minWidth: 60,
         frozen: TrinaColumnFrozen.start,
@@ -93,7 +178,6 @@ class TableProperti extends StatelessWidget {
       _textCol('Premi', 'premi', maxW * 0.1, isCurrency: true),
       _textCol('Klausa Bank', 'klausa', maxW * 0.15),
       _textCol('Status', 'status', maxW * 0.11, isStatus: true),
-      _actionCol(),
     ];
   }
 
@@ -104,13 +188,8 @@ class TableProperti extends StatelessWidget {
       type: isCurrency
           ? TrinaColumnType.currency(locale: 'id_ID', symbol: 'Rp', decimalDigits: 0)
           : TrinaColumnType.text(),
-      titleSpan: TextSpan(text: title),
       width: width,
       minWidth: width,
-      enableSorting: false,
-      enableEditingMode: false,
-      enableColumnDrag: false,
-      enableContextMenu: false,
       renderer: (context) {
         final value = context.cell.value.toString();
 
@@ -182,55 +261,18 @@ class TableProperti extends StatelessWidget {
     );
   }
 
-  TrinaColumn _actionCol() {
-    return TrinaColumn(
-      title: 'AKSI',
-      field: 'aksi',
-      type: TrinaColumnType.text(),
-      width: maxW * 0.1,
-      minWidth: 100,
-      enableSorting: false,
-      enableEditingMode: false,
-      enableColumnDrag: false,
-      enableContextMenu: false,
-      renderer: (context) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: TextButton.icon(
-            onPressed: () {
-              ScaffoldMessenger.of(context.stateManager.gridKey.currentContext!)
-                  .showSnackBar(SnackBar(content: Text('Melacak data ke-\${context.rowIdx + 1}')));
-            },
-            style: TextButton.styleFrom(
-              backgroundColor: const Color(0xFFE8F3FF),
-              foregroundColor: Colors.blue,
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              textStyle: const TextStyle(fontWeight: FontWeight.w500),
-            ),
-            icon: const Icon(Icons.location_on_outlined, size: 16),
-            label: const Text("Lacak"),
-          ),
-        );
-      },
-    );
-  }
-
-  List<TrinaRow> _buildRows(List<AsetParCariModel> items) {
+  List<TrinaRow> _buildRows(List<Map<String, dynamic>> items) {
     return items.asMap().entries.map((entry) {
       final i = entry.key;
       final item = entry.value;
       return TrinaRow(cells: {
         'checkbox': TrinaCell(value: ''),
         'no': TrinaCell(value: (i + 1).toString()),
-        'alamat': TrinaCell(value: item.alamat),
-        'tsi': TrinaCell(value: item.sumInsured.toString()),
-        'premi': TrinaCell(value: item.premi.toString()),
-        'klausa': TrinaCell(value: item.klausulaBank),
-        'status': TrinaCell(value: item.status),
-        'aksi': TrinaCell(value: ''),
+        'alamat': TrinaCell(value: item['alamat']),
+        'tsi': TrinaCell(value: item['tsi'].toString()),
+        'premi': TrinaCell(value: item['premi'].toString()),
+        'klausa': TrinaCell(value: item['klausa']),
+        'status': TrinaCell(value: item['status']),
       });
     }).toList();
   }

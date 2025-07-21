@@ -155,6 +155,7 @@
               SubMenuItem(icon: Icons.person_outline, title: 'Popup Logout', onTap: () {}),
               SubMenuItem(icon: Icons.business_outlined, title: 'Dialog Confirmation', onTap: () {}),
               SubMenuItem(icon: Icons.business_outlined, title: 'Status Popup', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'Download Popup', onTap: () {}),
             ],
           },
           {
@@ -174,10 +175,12 @@
               SubMenuItem(icon: Icons.business_outlined, title: 'Rekan Pic List Title Widget', onTap: () {}),
               SubMenuItem(icon: Icons.business_outlined, title: 'Rekan General V2', onTap: () {}),
               SubMenuItem(icon: Icons.business_outlined, title: 'Cob Cari', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'Aset Ringkasan', onTap: () {}),
               SubMenuItem(icon: Icons.business_outlined, title: 'Aset Dashboard', onTap: () {}),
               SubMenuItem(icon: Icons.business_outlined, title: 'Aset Par', onTap: () {}),
               SubMenuItem(icon: Icons.business_outlined, title: 'Aset MV', onTap: () {}),
-
+              SubMenuItem(icon: Icons.business_outlined, title: 'Aset Health', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'Aset Status', onTap: () {}),
             ],
           },
           {

@@ -64,185 +64,167 @@ class OtpHpDialogState extends BaseDialogState<OtpHpDialog> {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 400),
       curve: Curves.easeInOut,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            const Color(0xFF7BA05B),
-            const Color(0xFF7BA05B).withOpacity(0.8),
-            Colors.white,
-          ],
-          stops: const [0.0, 0.3, 0.4],
-        ),
+      decoration: const BoxDecoration(
+        color: Colors.transparent,
       ),
-      child: SafeArea(
-        child: Column(
-          children: [
-            // ✅ Header dengan design yang lebih modern
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.fromLTRB(20, 16, 20, 32),
-              child: Row(
-                children: [
-                  if (isLoggedIn)
-                    GestureDetector(
-                      onTap: () => Navigator.of(context).pop(),
-                      child: Container(
-                        width: 44,
-                        height: 44,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.15),
-                          borderRadius: BorderRadius.circular(14),
-                          border: Border.all(
-                            color: Colors.white.withOpacity(0.2),
-                            width: 1,
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Container(
+          constraints: BoxConstraints(
+            minHeight: screenHeight,
+          ),
+          child: Stack(
+            children: [
+              Container(
+                height: screenHeight * 0.4,
+                width: double.infinity,
+                color: const Color(0xFF91C050),
+              ),
+              SafeArea(
+                child: Column(
+                  children: [
+                    // ✅ Header atas
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                      child: Row(
+                        children: [
+                          if (isLoggedIn)
+                            GestureDetector(
+                              onTap: () => Navigator.of(context).pop(),
+                              child: Container(
+                                width: 44,
+                                height: 44,
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.15),
+                                  borderRadius: BorderRadius.circular(14),
+                                  border: Border.all(
+                                    color: Colors.white.withOpacity(0.2),
+                                    width: 1,
+                                  ),
+                                ),
+                                child: const Icon(
+                                  Icons.arrow_back_ios_new,
+                                  size: 20,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          if (isLoggedIn) const SizedBox(width: 16),
+                          const Text(
+                            'Verifikasi OTP',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
-                        ),
-                        child: const Icon(
-                          Icons.arrow_back_ios_new,
-                          size: 20,
-                          color: Colors.white,
-                        ),
+                        ],
                       ),
                     ),
-                  if (isLoggedIn) const SizedBox(width: 16),
-                  const Text(
-                    'Verifikasi OTP',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: -0.5,
+
+                    // ✅ Content
+                    Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.only(top: 20),
+                      padding: EdgeInsets.fromLTRB(
+                        screenWidth * 0.08,
+                        40,
+                        screenWidth * 0.08,
+                        32,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  blurRadius: 20,
+                                  offset: const Offset(0, 8),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  width: 129,
+                                  height: 55,
+                                  child: ClipRRect(
+                                    child: const Image(
+                                      image: AssetImage('assets/images/JPS.png'),
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                ),
+
+                                const SizedBox(height: 8),
+
+                                const Text(
+                                  'Masukkan Kode Token Kamu!',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.black87,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+
+                                const SizedBox(height: 4),
+
+                                Text(
+                                  'Kami sudah kirimkan kode token khusus ke email kamu.  Cek emailnya, lalu masukkan di bawah ini, ya!',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+
+                                const SizedBox(height: 4),
+
+                                // HP Number
+                                Text(
+                                  widget.hpno,
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    color: Color(0xFF91C050),
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+
+                                const SizedBox(height: 10),
+
+                                // Input Kode OTP
+                                _buildOTPInputs(),
+
+                                const SizedBox(height: 10),
+
+                                // Tombol Masuk
+                                buildAnimatedButton(
+                                  text: 'Masuk',
+                                  isHovering: _isHovering,
+                                  onHover: (hovering) => setState(() => _isHovering = hovering),
+                                  onPressed: () => _handleOTPLogin(),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-
-            // ✅ Content Area dengan proper spacing
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                margin: const EdgeInsets.only(top: 20),
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(32),
-                    topRight: Radius.circular(32),
-                  ),
-                ),
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: Container(
-                    constraints: BoxConstraints(
-                      minHeight: screenHeight * 0.65,
-                    ),
-                    padding: EdgeInsets.fromLTRB(
-                      screenWidth * 0.08,
-                      40,
-                      screenWidth * 0.08,
-                      32,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // Logo dengan shadow yang lebih soft
-                        Container(
-                          width: 80,
-                          height: 80,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: const Color(0xFF7BA05B).withOpacity(0.15),
-                                blurRadius: 20,
-                                spreadRadius: 0,
-                                offset: const Offset(0, 8),
-                              ),
-                            ],
-                          ),
-                          child: const CircleAvatar(
-                            radius: 40,
-                            backgroundColor: Colors.white,
-                            backgroundImage: AssetImage('assets/images/jps_logo.png'),
-                          ),
-                        ),
-
-                        const SizedBox(height: 32),
-
-                        // Title dengan hierarchy yang jelas
-                        const Text(
-                          'Berikut Kode Login Anda',
-                          style: TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.black87,
-                            letterSpacing: -0.8,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-
-                        const SizedBox(height: 8),
-
-                        // Deskripsi
-                        Text(
-                          'Kode ini akan digunakan untuk masuk dengan aman menggunakan',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey.shade600,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-
-                        const SizedBox(height: 4),
-
-                        // HP Number
-                        Text(
-                          widget.hpno,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Color(0xFF7BA05B),
-                            fontWeight: FontWeight.w600,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-
-                        const SizedBox(height: 40),
-
-                        // Input Kode OTP
-                        _buildOTPInputs(),
-
-                        const SizedBox(height: 40),
-
-                        // Tombol Masuk
-                        buildAnimatedButton(
-                          text: 'Masuk',
-                          isHovering: _isHovering,
-                          onHover: (hovering) => setState(() => _isHovering = hovering),
-                          onPressed: () => _handleOTPLogin(),
-                        ),
-
-                        const SizedBox(height: 24),
-
-                        // Decorative element
-                        Container(
-                          width: 60,
-                          height: 4,
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade200,
-                            borderRadius: BorderRadius.circular(2),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -286,7 +268,7 @@ class OtpHpDialogState extends BaseDialogState<OtpHpDialog> {
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          const Color(0xFF7BA05B),
+                          const Color(0xFF91C050),
                           const Color(0xFF6B8F4F),
                         ],
                       ),
@@ -295,7 +277,7 @@ class OtpHpDialogState extends BaseDialogState<OtpHpDialog> {
                         topRight: Radius.circular(24),
                       ),
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 15),
                     child: Row(
                       children: [
                         if (isLoggedIn)
@@ -324,9 +306,8 @@ class OtpHpDialogState extends BaseDialogState<OtpHpDialog> {
                           'Verifikasi OTP',
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 20,
+                            fontSize: 15,
                             fontWeight: FontWeight.w600,
-                            letterSpacing: -0.3,
                           ),
                         ),
                       ],
@@ -346,38 +327,25 @@ class OtpHpDialogState extends BaseDialogState<OtpHpDialog> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        // Logo dengan subtle shadow
-                        Container(
-                          width: 64,
-                          height: 64,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: const Color(0xFF7BA05B).withOpacity(0.12),
-                                blurRadius: 16,
-                                spreadRadius: 0,
-                                offset: const Offset(0, 6),
-                              ),
-                            ],
-                          ),
-                          child: const CircleAvatar(
-                            radius: 32,
-                            backgroundColor: Colors.white,
-                            backgroundImage: AssetImage('assets/images/jps_logo.png'),
+                        SizedBox(
+                          width: 129,
+                          height: 55,
+                          child: ClipRRect(
+                            child: const Image(
+                              image: AssetImage('assets/images/JPS.png'),
+                              fit: BoxFit.contain,
+                            ),
                           ),
                         ),
 
                         const SizedBox(height: 24),
 
                         const Text(
-                          'Berikut Kode Login Anda',
+                          'Masukkan Kode Token Kamu!',
                           style: TextStyle(
-                            fontSize: 22,
+                            fontSize: 15,
                             fontWeight: FontWeight.w700,
                             color: Colors.black87,
-                            letterSpacing: -0.5,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -385,9 +353,9 @@ class OtpHpDialogState extends BaseDialogState<OtpHpDialog> {
                         const SizedBox(height: 8),
 
                         Text(
-                          'Kode ini akan digunakan untuk masuk dengan aman menggunakan',
+                          'Kami sudah kirimkan kode token khusus ke email kamu.  Cek emailnya, lalu masukkan di bawah ini, ya!',
                           style: TextStyle(
-                            fontSize: 14,
+                            fontSize: 12,
                             color: Colors.grey.shade600,
                             fontWeight: FontWeight.w400,
                           ),
@@ -400,8 +368,8 @@ class OtpHpDialogState extends BaseDialogState<OtpHpDialog> {
                         Text(
                           widget.hpno,
                           style: const TextStyle(
-                            fontSize: 14,
-                            color: Color(0xFF7BA05B),
+                            fontSize: 12,
+                            color: Color(0xFF91C050),
                             fontWeight: FontWeight.w600,
                           ),
                           textAlign: TextAlign.center,
@@ -412,7 +380,7 @@ class OtpHpDialogState extends BaseDialogState<OtpHpDialog> {
                         // Input Kode OTP
                         _buildOTPInputs(),
 
-                        const SizedBox(height: 32),
+                        const SizedBox(height: 10),
 
                         // Tombol Masuk
                         buildAnimatedButton(
@@ -459,7 +427,7 @@ class OtpHpDialogState extends BaseDialogState<OtpHpDialog> {
                 width: boxWidth,
                 height: boxHeight,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(5),
                   border: Border.all(
                     color: _focusNodes[index].hasFocus
                         ? Colors.blue.shade300

@@ -42,6 +42,14 @@ class AsetParPageActiveEvent extends HomeEvent {}
 
 class AsetMVPageActiveEvent extends HomeEvent {}
 
+class AsetRingkasanPageActiveEvent extends HomeEvent {}
+
+class AsetHealthPageActiveEvent extends HomeEvent {}
+
+
+class AsetStatusPageActiveEvent extends HomeEvent {}
+
+
 //Active Page
 class SplashPageActiveEvent extends HomeEvent {}
 class ProfileIndividuPageActiveEvent extends HomeEvent {}

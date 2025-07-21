@@ -17,12 +17,12 @@ class AppData {
   static String? googleDisplayName;
   static bool isInOtpProcess = false;
 
-   // static bool useSSL = false;
-   // static String apiDomain = "http://localhost/eAssistToolsAPI/";
-   // static String prefixEndPoint = "/eAssistToolsAPI";
-   // static String httpAuthority = "localhost";
-   //
-   //
+  // static bool useSSL = false;
+  // static String apiDomain = "http://localhost/eAssistToolsAPI/";
+  // static String prefixEndPoint = "/eAssistToolsAPI";
+  // static String httpAuthority = "localhost";
+
+
 
   static bool useSSL = true;
   static String apiDomain =

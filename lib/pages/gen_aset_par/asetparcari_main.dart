@@ -8,7 +8,7 @@ class AsetParCariMainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('List Ringkasan Aset'),
+        title: const Text('List Ringkasan Par'),
       ),
       backgroundColor: Colors.grey[100],
       body: AsetParCariPage(),

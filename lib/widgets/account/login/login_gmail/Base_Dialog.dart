@@ -89,7 +89,7 @@ abstract class BaseDialogState<T extends BaseDialog> extends State<T> with Ticke
                           title,
                           style: const TextStyle(
                             color: Colors.white,
-                            fontSize: 24,
+                            fontSize: 15,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -128,7 +128,7 @@ abstract class BaseDialogState<T extends BaseDialog> extends State<T> with Ticke
   }) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(5),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.1),
@@ -143,17 +143,17 @@ abstract class BaseDialogState<T extends BaseDialog> extends State<T> with Ticke
         obscureText: isPassword ? obscureText : false,
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: TextStyle(color: Colors.grey.shade400),
+          hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 15),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(5),
             borderSide: BorderSide(color: Colors.grey.shade300),
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(5),
             borderSide: BorderSide(color: Colors.grey.shade300),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(5),
             borderSide: const BorderSide(
               color: CustomPopupsLoginUser.primaryGreen,
               width: 2,
@@ -194,10 +194,10 @@ abstract class BaseDialogState<T extends BaseDialog> extends State<T> with Ticke
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         width: double.infinity,
-        height: 50,
+        height: 40,
         decoration: BoxDecoration(
-          color: backgroundColor ?? (isHovering ? const Color(0xFF6B9639) : CustomPopupsLoginUser.primaryGreen),
-          borderRadius: BorderRadius.circular(10),
+          color: backgroundColor ?? (isHovering ? const Color(0xFF91C050) : CustomPopupsLoginUser.primaryGreen),
+          borderRadius: BorderRadius.circular(5),
           border: border,
           boxShadow: boxShadow ?? (isHovering
               ? [
@@ -218,14 +218,14 @@ abstract class BaseDialogState<T extends BaseDialog> extends State<T> with Ticke
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(5),
             onTap: onPressed,
             child: Center(
               child: Text(
                 text,
                 style: TextStyle(
                   color: textColor ?? Colors.white,
-                  fontSize: 16,
+                  fontSize: 15,
                   fontWeight: FontWeight.bold,
                 ),
               ),

@@ -16,8 +16,10 @@ class ClientSectionState extends State<ClientSection> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<GallerymemberCariBloc>().add(RefreshGallerymemberCariEvent());
+    });
 
-    context.read<GallerymemberCariBloc>().add(RefreshGallerymemberCariEvent());
   }
 
   @override
@@ -35,7 +37,7 @@ class ClientSectionState extends State<ClientSection> {
         : (isTablet ? 22.0 : 24.0);
 
     // Tetapkan 5 kolom dan atur aspect ratio agar baris sesuai
-    final int crossAxisCount = isMobile ? 3 : 5;
+    final int crossAxisCount = 3;
     final double childAspectRatio = isMobile ? 1.1 : 1.6;
 
     return Container(
@@ -85,8 +87,8 @@ class ClientSectionState extends State<ClientSection> {
                       itemCount: state.items.length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: crossAxisCount,
-                        crossAxisSpacing: isMobile ? 8.0 : 12.0,
-                        mainAxisSpacing: isMobile ? 8.0 : 12.0,
+                        crossAxisSpacing: 4.0,// Dikurangi dari 8.0/12.0
+                        mainAxisSpacing: 4.0,  // Dikurangi dari 8.0/12.0
                         childAspectRatio: childAspectRatio,
                       ),
                       itemBuilder: (context, index) {

@@ -30,6 +30,7 @@ import '../../../pages/user_non_jps/user_non_jps_main.dart';
 import '../../dialog/PopUp/success_popup.dart';
 import '../../../repositories/user/user_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../dialog/popup/donwload_popup.dart';
 import '../../dialog/popup/status_popup.dart';
 import 'package:flutter/src/widgets/navigator.dart';
 
@@ -419,6 +420,13 @@ class _NavbarWidgetState extends State<NavbarWidget> {
         // context.go('/assets_management');
         break;
 
+      case 'Aset Ringkasan':
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(AsetRingkasanPageActiveEvent());
+        });
+        // context.go('/assets_management');
+        break;
+
       case 'Aset Par':
         SchedulerBinding.instance.addPostFrameCallback((_) {
           context.read<HomeBloc>().add(AsetParPageActiveEvent());
@@ -433,6 +441,19 @@ class _NavbarWidgetState extends State<NavbarWidget> {
         // context.go('/assets_management');
         break;
 
+      case 'Aset Health':
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(AsetHealthPageActiveEvent());
+        });
+        // context.go('/assets_management');
+        break;
+
+      case 'Aset Status':
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(AsetStatusPageActiveEvent());
+        });
+        // context.go('/assets_management');
+        break;
 
       case 'Test Profile':
         context.go('/test_profile');
@@ -583,6 +604,14 @@ class _NavbarWidgetState extends State<NavbarWidget> {
           context: context,
           barrierColor: Colors.black54,
           builder: (_) => const StatusPopup(),
+        );
+        break;
+
+      case 'Download Popup':
+        showDialog(
+          context: context,
+          barrierColor: Colors.black54,
+          builder: (_) => const DownloadPopup(),
         );
         break;
 

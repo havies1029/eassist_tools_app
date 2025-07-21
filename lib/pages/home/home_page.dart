@@ -110,6 +110,9 @@ class _HomePageState extends State<HomePage> {
     if (state is AsetDashboardPageActive) return PageType.asetdashboard;
     if (state is AsetParPageActive) return PageType.asetpar;
     if (state is AsetMVPageActive) return PageType.asetmv;
+    if (state is AsetRingkasanPageActive) return PageType.asetringkasan;
+    if (state is AsetHealthPageActive) return PageType.asethealth;
+    if (state is AsetStatusPageActive) return PageType.asetstatus;
     return null;
   }
 }

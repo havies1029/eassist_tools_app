@@ -79,7 +79,7 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
   //                       // Header hijau dengan tombol close dan judul
   //                       Container(
   //                         decoration: const BoxDecoration(
-  //                           color: Color(0xFF7BA05B),
+  //                           color: Color(0xFF91C050),
   //                           borderRadius: BorderRadius.only(
   //                             topLeft: Radius.circular(20),
   //                             topRight: Radius.circular(20),
@@ -125,7 +125,7 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
   //                               'Masuk',
   //                               style: TextStyle(
   //                                 color: Colors.white,
-  //                                 fontSize: 20,
+  //                                 fontSize: 15,
   //                                 fontWeight: FontWeight.w600,
   //                               ),
   //                             ),
@@ -248,161 +248,143 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 400),
       curve: Curves.easeInOut,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            const Color(0xFF7BA05B),
-            const Color(0xFF7BA05B).withOpacity(0.8),
-            Colors.white,
-          ],
-          stops: const [0.0, 0.3, 0.4],
-        ),
+      decoration: const BoxDecoration(
+        color: Colors.transparent,
       ),
-      child: SafeArea(
-        child: Column(
-          children: [
-            // ✅ Header dengan design yang konsisten
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.fromLTRB(20, 16, 20, 32),
-              child: Row(
-                children: [
-                  if (isLoggedIn)
-                    GestureDetector(
-                      onTap: () => Navigator.of(context).pop(),
-                      child: Container(
-                        width: 44,
-                        height: 44,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.15),
-                          borderRadius: BorderRadius.circular(14),
-                          border: Border.all(
-                            color: Colors.white.withOpacity(0.2),
-                            width: 1,
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Container(
+          constraints: BoxConstraints(
+            minHeight: screenHeight,
+          ),
+          child: Stack(
+            children: [
+              Container(
+                height: screenHeight * 0.4,
+                width: double.infinity,
+                color: const Color(0xFF91C050),
+              ),
+              SafeArea(
+                child: Column(
+                  children: [
+                    // ✅ Header atas
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                      child: Row(
+                        children: [
+                          if (isLoggedIn)
+                            GestureDetector(
+                              onTap: () => Navigator.of(context).pop(),
+                              child: Container(
+                                width: 44,
+                                height: 44,
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.15),
+                                  borderRadius: BorderRadius.circular(14),
+                                  border: Border.all(
+                                    color: Colors.white.withOpacity(0.2),
+                                    width: 1,
+                                  ),
+                                ),
+                                child: const Icon(
+                                  Icons.arrow_back_ios_new,
+                                  size: 20,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          if (isLoggedIn) const SizedBox(width: 16),
+                          const Text(
+                            'Masuk Sebagai Klien',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
-                        ),
-                        child: const Icon(
-                          Icons.arrow_back_ios_new,
-                          size: 20,
-                          color: Colors.white,
-                        ),
+                        ],
                       ),
                     ),
-                  if (isLoggedIn) const SizedBox(width: 16),
-                  const Text(
-                    'Login Client',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: -0.5,
+
+                    // ✅ Content
+                    Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.only(top: 20),
+                      padding: EdgeInsets.fromLTRB(
+                        screenWidth * 0.08,
+                        40,
+                        screenWidth * 0.08,
+                        32,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  blurRadius: 20,
+                                  offset: const Offset(0, 8),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  width: 129,
+                                  height: 55,
+                                  child: ClipRRect(
+                                    child: const Image(
+                                      image: AssetImage('assets/images/JPS.png'),
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                ),
+
+                                const SizedBox(height: 8),
+
+                                const Text(
+                                  'Selamat Datang Kembali, Klien JPS!',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.black87,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+
+                                const SizedBox(height: 4),
+
+                                Text(
+                                  'Silakan login menggunakan akun klien yang sudah terdaftar.',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+
+                                const SizedBox(height: 32),
+
+                                _buildLoginForm(context, true, state),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-
-            // ✅ Content Area dengan proper spacing
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                margin: const EdgeInsets.only(top: 20),
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(32),
-                    topRight: Radius.circular(32),
-                  ),
-                ),
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: Container(
-                    constraints: BoxConstraints(
-                      minHeight: screenHeight * 0.65,
-                    ),
-                    padding: EdgeInsets.fromLTRB(
-                      screenWidth * 0.08,
-                      40,
-                      screenWidth * 0.08,
-                      32,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // Logo dengan shadow yang soft
-                        Container(
-                          width: 80,
-                          height: 80,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: const Color(0xFF7BA05B).withOpacity(0.15),
-                                blurRadius: 20,
-                                spreadRadius: 0,
-                                offset: const Offset(0, 8),
-                              ),
-                            ],
-                          ),
-                          child: const CircleAvatar(
-                            radius: 40,
-                            backgroundColor: Colors.white,
-                            backgroundImage: AssetImage('assets/images/jps_logo.png'),
-                          ),
-                        ),
-
-                        const SizedBox(height: 32),
-
-                        // Welcome text dengan hierarchy yang jelas
-                        const Text(
-                          'Masuk Client',
-                          style: TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.black87,
-                            letterSpacing: -0.8,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-
-                        const SizedBox(height: 8),
-
-                        Text(
-                          'Masukkan kredensial untuk mengakses akun client',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey.shade600,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-
-                        const SizedBox(height: 40),
-
-                        // Form dengan design yang konsisten
-                        _buildLoginForm(context, true, state),
-
-                        const SizedBox(height: 24),
-
-                        // Decorative element
-                        Container(
-                          width: 60,
-                          height: 4,
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade200,
-                            borderRadius: BorderRadius.circular(2),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -446,7 +428,7 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          const Color(0xFF7BA05B),
+                          const Color(0xFF91C050),
                           const Color(0xFF6B8F4F),
                         ],
                       ),
@@ -455,7 +437,7 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
                         topRight: Radius.circular(24),
                       ),
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 15),
                     child: Row(
                       children: [
                         if (isLoggedIn)
@@ -481,12 +463,11 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
                           ),
                         if (isLoggedIn) const SizedBox(width: 16),
                         const Text(
-                          'Login Client',
+                          'Masuk Sebagai Klien',
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 20,
+                            fontSize: 15,
                             fontWeight: FontWeight.w600,
-                            letterSpacing: -0.3,
                           ),
                         ),
                       ],
@@ -502,51 +483,38 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
                         bottomRight: Radius.circular(24),
                       ),
                     ),
-                    padding: const EdgeInsets.all(32),
+                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        // Logo dengan subtle shadow
-                        Container(
-                          width: 64,
-                          height: 64,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: const Color(0xFF7BA05B).withOpacity(0.12),
-                                blurRadius: 16,
-                                spreadRadius: 0,
-                                offset: const Offset(0, 6),
-                              ),
-                            ],
-                          ),
-                          child: const CircleAvatar(
-                            radius: 32,
-                            backgroundColor: Colors.white,
-                            backgroundImage: AssetImage('assets/images/jps_logo.png'),
-                          ),
-                        ),
-
-                        const SizedBox(height: 24),
-
-                        const Text(
-                          'Masuk Client',
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.black87,
-                            letterSpacing: -0.5,
+                        SizedBox(
+                          width: 129,
+                          height: 55,
+                          child: ClipRRect(
+                            child: const Image(
+                              image: AssetImage('assets/images/JPS.png'),
+                              fit: BoxFit.contain,
+                            ),
                           ),
                         ),
 
                         const SizedBox(height: 8),
 
-                        Text(
-                          'Masukkan kredensial untuk mengakses akun client',
+                        const Text(
+                          'Selamat Datang Kembali, Klien JPS!',
                           style: TextStyle(
-                            fontSize: 14,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black87,
+                          ),
+                        ),
+
+                        const SizedBox(height: 4),
+
+                        Text(
+                          'Silakan login menggunakan akun klien yang sudah terdaftar',
+                          style: TextStyle(
+                            fontSize: 12,
                             color: Colors.grey.shade600,
                             fontWeight: FontWeight.w400,
                           ),
@@ -573,40 +541,46 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         // Email TextField
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.grey.shade50,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.grey.shade200),
-          ),
-          child: TextField(
-            controller: _emailController,
-            keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(
-              hintText: 'Email',
-              hintStyle: TextStyle(
-                color: Colors.grey.shade500,
-                fontSize: 16,
-              ),
-              border: InputBorder.none,
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: Colors.grey.shade300),
-              ),
-              focusedBorder: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(12)),
-                borderSide: BorderSide(color: Color(0xFF7BA05B), width: 1.8),
-              ),
-              errorBorder: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(12)),
-                borderSide: BorderSide(color: Colors.red, width: 1.5),
-              ),
-              focusedErrorBorder: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(12)),
-                borderSide: BorderSide(color: Colors.red, width: 1.8),
-              ),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        TextField(
+          controller: _emailController,
+          keyboardType: TextInputType.emailAddress,
+          maxLines: 1,
+          scrollPadding: EdgeInsets.zero,
+          textAlign: TextAlign.left,
+          textInputAction: TextInputAction.done,
+          decoration: InputDecoration(
+            hintText: 'Email',
+            hintStyle: TextStyle(
+              color: Colors.grey.shade500,
+              fontSize: 15,
             ),
+            isDense: true,
+            filled: true,
+            fillColor: Colors.grey.shade50,
+            constraints: const BoxConstraints(
+              minHeight: 40, maxHeight: 40,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5),
+              borderSide: BorderSide(color: Colors.grey.shade200),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5),
+              borderSide: BorderSide(color: Colors.grey.shade200),
+            ),
+            focusedBorder: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+              borderSide: BorderSide(color: Color(0xFF91C050), width: 1.8),
+            ),
+            errorBorder: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+              borderSide: BorderSide(color: Colors.red, width: 1.5),
+            ),
+            focusedErrorBorder: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+              borderSide: BorderSide(color: Colors.red, width: 1.8),
+            ),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12), // disesuaikan agar pas dengan tinggi
           ),
         ),
 
@@ -619,53 +593,60 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
             ),
           ),
 
-        const SizedBox(height: 16),
+        const SizedBox(height: 10),
 
         // Password TextField
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.grey.shade50,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.grey.shade200),
-          ),
-          child: TextField(
-            controller: _passwordController,
-            obscureText: _obscurePassword,
-            decoration: InputDecoration(
-              hintText: 'Password',
-              hintStyle: TextStyle(
+        TextField(
+          controller: _passwordController,
+          obscureText: _obscurePassword,
+          maxLines: 1,
+          scrollPadding: EdgeInsets.zero,
+          textAlign: TextAlign.left,
+          textInputAction: TextInputAction.done,
+          decoration: InputDecoration(
+            hintText: 'Password',
+            hintStyle: TextStyle(
+              color: Colors.grey.shade500,
+              fontSize: 15,
+            ),
+            isDense: true,
+            filled: true,
+            fillColor: Colors.grey.shade50,
+            constraints: const BoxConstraints(
+              minHeight: 40,
+              maxHeight: 40,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5),
+              borderSide: BorderSide(color: Colors.grey.shade200),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5),
+              borderSide: BorderSide(color: Colors.grey.shade300),
+            ),
+            focusedBorder: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+              borderSide: BorderSide(color: Color(0xFF91C050), width: 1.8),
+            ),
+            errorBorder: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+              borderSide: BorderSide(color: Colors.red, width: 1.5),
+            ),
+            focusedErrorBorder: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+              borderSide: BorderSide(color: Colors.red, width: 1.8),
+            ),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            suffixIcon: IconButton(
+              icon: Icon(
+                _obscurePassword ? Icons.visibility_off : Icons.visibility,
                 color: Colors.grey.shade500,
-                fontSize: 16,
               ),
-              border: InputBorder.none,
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: Colors.grey.shade300),
-              ),
-              focusedBorder: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(12)),
-                borderSide: BorderSide(color: Color(0xFF7BA05B), width: 1.8),
-              ),
-              errorBorder: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(12)),
-                borderSide: BorderSide(color: Colors.red, width: 1.5),
-              ),
-              focusedErrorBorder: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(12)),
-                borderSide: BorderSide(color: Colors.red, width: 1.8),
-              ),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-              suffixIcon: IconButton(
-                icon: Icon(
-                  _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                  color: Colors.grey.shade500,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _obscurePassword = !_obscurePassword;
-                  });
-                },
-              ),
+              onPressed: () {
+                setState(() {
+                  _obscurePassword = !_obscurePassword;
+                });
+              },
             ),
           ),
         ),
@@ -689,27 +670,27 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
             ),
           ),
 
-        const SizedBox(height: 24),
+        const SizedBox(height: 10),
 
         // Tombol Masuk
         Material(
           color: Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(5),
           child: InkWell(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(5),
             onTap: _handleLogin,
-            splashColor: const Color(0xFF7BA05B).withOpacity(0.3), // warna gelombang
+            splashColor: const Color(0xFF91C050).withOpacity(0.3), // warna gelombang
             highlightColor: Colors.transparent, // hilangkan highlight solid
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               width: double.infinity,
-              height: 50,
+              height: 40,
               decoration: BoxDecoration(
-                color: const Color(0xFF7BA05B),
-                borderRadius: BorderRadius.circular(12),
+                color: const Color(0xFF91C050),
+                borderRadius: BorderRadius.circular(5),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF7BA05B).withOpacity(0.3),
+                    color: const Color(0xFF91C050).withOpacity(0.3),
                     blurRadius: 8,
                     offset: const Offset(0, 4),
                   ),
@@ -720,7 +701,7 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
                   'Masuk',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: 15,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -729,19 +710,9 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
           ),
         ),
 
-
-        const SizedBox(height: 20),
-
-        // Divider dan Login Options
-        Row(
-          children: [
-            Expanded(child: Container(height: 1, color: Colors.grey.shade300)),
-          ],
-        ),
-
-        const SizedBox(height: 20),
+        const SizedBox(height: 10),
         _buildLoginOptions(context),
-        const SizedBox(height: 20),
+        const SizedBox(height: 5),
 
         // Hyperlink: Lupa sandi dan Belum punya user
         LayoutBuilder(
@@ -752,14 +723,6 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  buildLinkLupaSandi(context),
-                  const SizedBox(height: 8),
-                  Container(
-                    height: 1,
-                    width: 60,
-                    color: Colors.grey.shade400,
-                  ),
-                  const SizedBox(height: 8),
                   buildLinkBelumPunyaUser(context),
                 ],
               );
@@ -767,18 +730,6 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
               return Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Flexible(
-                    fit: FlexFit.loose,
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: buildLinkLupaSandi(context),
-                    ),
-                  ),
-                  Container(
-                    width: 1,
-                    height: 36,
-                    color: Colors.grey.shade400,
-                  ),
                   Flexible(
                     fit: FlexFit.loose,
                     child: Align(
@@ -798,48 +749,52 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
   Widget _buildLoginOptions(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              _rememberLogin = !_rememberLogin;
-            });
-          },
-          child: Row(
-            children: [
-              SizedBox(
-                width: 20,
-                height: 20,
-                child: Checkbox(
-                  value: _rememberLogin,
-                  onChanged: (bool? value) {
-                    setState(() {
-                      _rememberLogin = value ?? false;
-                    });
-                  },
-                  activeColor: const Color(0xFF7BA05B),
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        // Kiri: Checkbox + label (expand ke kiri)
+        Expanded(
+          child: GestureDetector(
+            onTap: () {
+              setState(() {
+                _rememberLogin = !_rememberLogin;
+              });
+            },
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: Checkbox(
+                    value: _rememberLogin,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        _rememberLogin = value ?? false;
+                      });
+                    },
+                    activeColor: const Color(0xFF91C050),
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
                 ),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                'Simpan Login',
-                style: TextStyle(
-                  color: Colors.grey.shade600,
-                  fontSize: 14,
+                const SizedBox(width: 8),
+                Text(
+                  'Simpan Login',
+                  style: TextStyle(
+                    color: Colors.grey.shade600,
+                    fontSize: 12,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ],
-    );
-  }
 
-  Widget _buildDivider() {
-    return Row(
-      children: [
-        Expanded(child: Container(height: 1, color: Colors.grey.shade300)),
+        // Kanan: Link lupa sandi (expand ke kanan dan align kanan)
+        Expanded(
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: buildLinkLupaSandi(context),
+          ),
+        ),
       ],
     );
   }
@@ -847,10 +802,9 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
   Widget buildLinkLupaSandi(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 55,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      height: 40,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
           MouseRegion(
             onEnter: (_) => setState(() => _isHoveringForgotPassword  = true),
@@ -865,8 +819,8 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
               child: Text(
                 'Lupa Kata Sandi',
                 style: TextStyle(
-                  color: _isHoveringForgotPassword  ? const Color(0xFF7BA05B) : Colors.blue.shade600,
-                  fontSize: 14,
+                  color: _isHoveringForgotPassword  ? const Color(0xFF91C050) : Colors.blue.shade600,
+                  fontSize: 12,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -880,11 +834,18 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
   Widget buildLinkBelumPunyaUser(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 55,
+      height: 40,
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Text(
+            'Belum menjadi klien? ',
+            style: TextStyle(
+              color: Colors.grey.shade600,
+              fontSize: 12,
+            ),
+          ),
           MouseRegion(
             onEnter: (_) => setState(() => _isHoveringRegister = true),
             onExit: (_) => setState(() => _isHoveringRegister = false),
@@ -893,11 +854,12 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
                 Navigator.of(context).pop();
                 context.read<AuthenticationBloc>().add(RequireLoginUser());
               },
-              child: Text(
-                'Belum punya akun?',
+              child:
+              Text(
+                'Masuk Sebagai Pengguna',
                 style: TextStyle(
-                  color: _isHoveringRegister ? const Color(0xFF7BA05B) : Colors.blue.shade600,
-                  fontSize: 14,
+                  color: _isHoveringRegister ? const Color(0xFF91C050) : Colors.blue.shade600,
+                  fontSize: 12,
                   fontWeight: FontWeight.w600,
                 ),
               ),

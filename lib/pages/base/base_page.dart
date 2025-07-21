@@ -53,6 +53,9 @@ enum PageType {
   asetdashboard,
   asetpar,
   asetmv,
+  asetringkasan,
+  asethealth,
+  asetstatus,
 }
 
 abstract class PageContainerBase extends StatefulWidget {

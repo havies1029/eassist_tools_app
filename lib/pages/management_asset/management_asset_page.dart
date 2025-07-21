@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../blocs/gen_aset_dashboard/asetdashboardcari_bloc.dart';
 import '../../blocs/gen_aset_mv/asetmvcari_bloc.dart';
+import '../../blocs/gen_aset_ringkasan/asetringkasancari_bloc.dart';
 import '../../common/constants.dart';
 import '../../widgets/components/hero/hero_section.dart';
 import '../../widgets/section/management_polis_asset/header_polis.dart';
@@ -74,13 +75,21 @@ class _AssetManagementPageState extends State<AssetManagementPage> {
                             RefreshAsetDashboardCariEvent(cobAppId: value.cobKode),
                           );
 
-                          context.read<AsetMvCariBloc>().add(
-                            FetchAsetMvCariEvent(), // 🔥 penting!
-                          );
-
-                          context.read<AsetParCariBloc>().add(
-                            FetchAsetParCariEvent(), // 🔥 penting!
-                          );
+                          // context.read<AsetMvCariBloc>().add(
+                          //   FetchAsetMvCariEvent(), // 🔥 penting!
+                          // );
+                          //
+                          // context.read<AsetParCariBloc>().add(
+                          //   FetchAsetParCariEvent(), // 🔥 penting!
+                          // );
+                          //
+                          // context.read<AsetRingkasanCariBloc>().add(
+                          //   FetchAsetRingkasanCariEvent(), // 🔥 penting!
+                          // );
+                          //
+                          // context.read<AsetRingkasanCariBloc>().add(
+                          //   FetchAsetRingkasanCariEvent(), // 🔥 penting!
+                          // );
 
                           await Future.delayed(const Duration(milliseconds: 1000)); // ⏱️ Delay animasi
                           setState(() => isLoadingUI = false);
@@ -124,7 +133,10 @@ class _AssetManagementPageState extends State<AssetManagementPage> {
                                 return const SizedBox.shrink(); // atau “Data tidak tersedia”
                               },
                             ),
-                            ActionButtonSection(constraints: constraints),
+                            // ActionButtonSection(
+                            //     constraints: constraints,
+                            //     selectedCategory: selectedCategory
+                            // ),
                             TableMain(
                               constraints: constraints,
                               selectedCategory: selectedCategory,

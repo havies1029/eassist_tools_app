@@ -33,10 +33,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<TestProfilePageActiveEvent>((event, emit) => emit(TestProfilePageActive()));
     on<AboutPageActiveEvent>((event, emit) {
       if (state is! AboutPageActive) {
-        debugPrint("[BLOC] AboutPageActiveEvent triggered");
+        // debugPrint("[BLOC] AboutPageActiveEvent triggered");
         emit(AboutPageActive());
       } else {
-        debugPrint("[BLOC] AboutPageActiveEvent skipped — already in AboutPageActive state");
+        // debugPrint("[BLOC] AboutPageActiveEvent skipped — already in AboutPageActive state");
       }
     });
     on<ActiveAssetsPageActiveEvent>((event, emit) => emit(ActiveAssetsPageActive()));
@@ -58,5 +58,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<AsetDashboardPageActiveEvent>((event, emit) => emit(AsetDashboardPageActive()));
     on<AsetParPageActiveEvent>((event, emit) => emit(AsetParPageActive()));
     on<AsetMVPageActiveEvent>((event, emit) => emit(AsetMVPageActive()));
+    on<AsetRingkasanPageActiveEvent>((event, emit) => emit(AsetRingkasanPageActive()));
+    on<AsetHealthPageActiveEvent>((event, emit) => emit(AsetHealthPageActive()));
+    on<AsetStatusPageActiveEvent>((event, emit) => emit(AsetStatusPageActive()));
   }
 }

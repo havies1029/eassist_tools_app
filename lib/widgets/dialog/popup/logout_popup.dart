@@ -166,28 +166,28 @@ class _LogoutPopupState extends State<LogoutPopup>
 
   Widget _buildContent() {
     return Padding(
-      padding: const EdgeInsets.only(top: 40, left: 30, right: 30, bottom: 20),
+      padding: const EdgeInsets.all(20),
       child: Column(
         children: [
           Container(
-            width: 80,
-            height: 80,
-            margin: const EdgeInsets.only(bottom: 25),
+            width: 60,
+            height: 60,
             decoration: BoxDecoration(
               color: Colors.red.shade50,
               shape: BoxShape.circle,
             ),
-            child: Icon(Icons.logout, color: Colors.red.shade400, size: 40),
+            child: Icon(Icons.logout, color: Colors.red.shade400, size: 25),
           ),
+          const SizedBox(height: 8),
           const Text(
             'Keluar dari Akun',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black87),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
           ),
-          const SizedBox(height: 15),
+          const SizedBox(height: 4),
           const Text(
             'Apakah Anda yakin ingin melanjutkan?',
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16, color: Colors.black54, height: 1.4),
+            style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.w500),
           ),
         ],
       ),
@@ -196,7 +196,7 @@ class _LogoutPopupState extends State<LogoutPopup>
 
   Widget _buildButtons() {
     return Padding(
-      padding: const EdgeInsets.only(left: 30, right: 30, bottom: 30),
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
       child: Row(
         children: [
           Expanded(
@@ -222,10 +222,10 @@ class _LogoutPopupState extends State<LogoutPopup>
   Widget _buildCancelButton() {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
-      height: 50,
+      height: 40,
       decoration: BoxDecoration(
-        color: _isHoveringCancel ? Colors.grey.shade200 : Colors.grey.shade100,
-        borderRadius: BorderRadius.circular(12),
+        color: _isHoveringCancel ? Colors.grey.shade600 : Colors.grey,
+        borderRadius: BorderRadius.circular(5),
         border: Border.all(
           color: _isHoveringCancel ? Colors.grey.shade300 : Colors.grey.shade200,
           width: 1,
@@ -237,16 +237,16 @@ class _LogoutPopupState extends State<LogoutPopup>
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(5),
           onTap: _closePopup,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.close, color: Colors.grey.shade600, size: 20),
+              Icon(Icons.close, color: Colors.white, size: 15),
               const SizedBox(width: 8),
               const Text(
                 'Batal',
-                style: TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.w600),
+                style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600),
               ),
             ],
           ),
@@ -258,10 +258,10 @@ class _LogoutPopupState extends State<LogoutPopup>
   Widget _buildConfirmButton() {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
-      height: 50,
+      height: 40,
       decoration: BoxDecoration(
         color: _isHoveringConfirm ? Colors.red.shade600 : Colors.red.shade500,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(5),
         boxShadow: _isHoveringConfirm
             ? [BoxShadow(color: Colors.red.withOpacity(0.4), blurRadius: 15, offset: const Offset(0, 8))]
             : [BoxShadow(color: Colors.red.withOpacity(0.2), blurRadius: 5, offset: const Offset(0, 3))],
@@ -269,16 +269,16 @@ class _LogoutPopupState extends State<LogoutPopup>
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(5),
           onTap: _confirmLogout,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: const [
-              Icon(Icons.check, color: Colors.white, size: 20),
+              Icon(Icons.check, color: Colors.white, size: 15),
               SizedBox(width: 8),
               Text(
-                'Iya, Keluar',
-                style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                'Keluar',
+                style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
               ),
             ],
           ),

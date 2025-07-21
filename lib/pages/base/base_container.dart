@@ -1,4 +1,5 @@
 import 'package:eassist_tools_app/pages/chatting/roomcari_list.dart';
+import 'package:eassist_tools_app/pages/gen_aset_health/asethealthcari_main.dart';
 import 'package:eassist_tools_app/pages/groupchat/groupchat_page.dart';
 import 'package:eassist_tools_app/pages/home/home_page.dart';
 import 'package:eassist_tools_app/menu/app_menu_drawer.dart';
@@ -23,8 +24,10 @@ import '../gen_aset_dashboard/asetdashboardcari_main.dart';
 import '../gen_aset_mv/asetmvcari_main.dart';
 import '../gen_aset_par/asetparcari_list.dart';
 import '../gen_aset_par/asetparcari_main.dart';
+import '../gen_aset_ringkasan/asetringkasancari_main.dart';
 import '../gen_cob_app/cobcari_main.dart';
 import '../gen_profile/test_profile_main.dart';
+import '../gen_status_aset/statusasetcari_main.dart';
 import '../hero_client_page/hero_user_main.dart';
 import '../heropage/hero_main.dart';
 import '../home/home_redirector_page.dart';
@@ -219,6 +222,8 @@ class PageContainer extends StatelessWidget {
         return "Memuat Cob Cari";
       case PageType.asetdashboard:
         return "Memuat Aset Dashboard";
+      case PageType.asethealth:
+        return "Memuat Aset Health";
       default:
         return "Login Page";
     }
@@ -295,6 +300,12 @@ class PageContainer extends StatelessWidget {
         return const AsetParCariMainPage();
       case PageType.asetmv:
         return const AsetMVCariMainPage();
+      case PageType.asetringkasan:
+        return const AsetRingkasanCariMainPage();
+      case PageType.asethealth:
+        return const AsetHealthCariMainPage();
+      case PageType.asetstatus:
+        return const StatusasetcariMain();
       default:
         return const SizedBox();
     }

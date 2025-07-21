@@ -28,14 +28,14 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
   }
 
   EdgeInsets get horizontalPadding => EdgeInsets.symmetric(
-    horizontal: isMobile ? 35.0 : (isTablet ? 48.0 : 80.0),
+    horizontal: isMobile ? 35.0 : (isTablet ? 48.0 : 105),
   );
 
   EdgeInsets get verticalPadding => isMobile
       ? const EdgeInsets.only(top: 55.0, bottom: 10.0)
       : isTablet
-      ? const EdgeInsets.symmetric(vertical: 72.0)
-      : const EdgeInsets.symmetric(vertical: 100.0);
+      ? const EdgeInsets.only(top: 75, bottom: 20)
+      : const EdgeInsets.only(top: 100, bottom: 20);
 
   TextStyle get baseTextStyle => const TextStyle(
     fontFamily: 'Satoshi-Regular',
@@ -43,21 +43,19 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
   );
 
   TextStyle get titleTextStyle => baseTextStyle.copyWith(
-    fontSize: isMobile ? 30.0 : 60.0,
+    fontSize: isMobile ? 30.0 : 40.0,
     fontWeight: isMobile ? FontWeight.w600 : FontWeight.w200,
     fontStyle: isMobile ? FontStyle.italic : FontStyle.normal,
-    height: 1.2,
   );
 
   TextStyle get subtitleTextStyle => baseTextStyle.copyWith(
-    fontSize: isMobile ? 20.0 : 45.0,
+    fontSize: isMobile ? 20.0 : 40.0,
     fontWeight: isMobile ? FontWeight.w500 : FontWeight.w100,
     fontStyle: isMobile ? FontStyle.italic : FontStyle.normal,
-    height: 1.3,
   );
 
   TextStyle get benefitTextStyle => baseTextStyle.copyWith(
-    fontSize: isMobile? 16.0 : 23,
+    fontSize: isMobile? 16.0 : 20,
     fontWeight: FontWeight.w500,
     color: const Color(0xFF2D3748),
   );
@@ -143,14 +141,14 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildAnimatedTitle(),
-            const SizedBox(height: 30.0),
+            const SizedBox(height: 15.0),
             _buildBenefitPoints(),
           ],
         ),
       ),
       const SizedBox(width: 24.0),
       ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: maxWidth * 0.4, maxHeight: 300),
+        constraints: BoxConstraints(maxWidth: maxWidth * 0.4, maxHeight: 250),
         child: _buildAnimatedImage(),
       ),
     ],
@@ -172,14 +170,14 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
                   Flexible(
                     flex: 0,
                     child: Image.asset(
-                      'assets/images/jps_logo1.png',
-                      height: isMobile ? 36.0 : 96.0,
+                      'assets/images/JPS(2).png',
+                      height: isMobile ? 36.0 : 66.0,
                       fit: BoxFit.contain,
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 8.0),
+              const SizedBox(height: 0.0),
               Text('Klaim mudah, perlindungan aman', style: subtitleTextStyle),
             ],
           ),
@@ -205,7 +203,7 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
             borderRadius: BorderRadius.circular(16.13),
             child: Image.asset(
               'assets/images/about.png',
-              fit: BoxFit.cover,
+              fit: BoxFit.contain,
               width: double.infinity,
               height: double.infinity,
             ),
@@ -251,10 +249,12 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
     return Row(
       children: [
         Container(
-          padding: const EdgeInsets.all(12.0),
+          width: 45,
+          height: 45,
+          padding: const EdgeInsets.all(8.51),
           decoration: BoxDecoration(
-            color: const Color(0xFFF5F9F0),
-            borderRadius: BorderRadius.circular(16.13),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(24.3),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.08),
@@ -263,7 +263,12 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
               ),
             ],
           ),
-          child: Icon(item['icon'], color: const Color(0xFF79AB43), size: 25.0),
+          child: SvgPicture.asset(
+            item['icon'],
+            width: 25,
+            height: 25,
+
+          ),
         ),
         const SizedBox(width: 12.0),
         Flexible(
@@ -280,8 +285,8 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
 }
 
 final List<Map<String, dynamic>> benefitList = [
-  {'icon': Icons.flash_on, 'text': 'Klaim Cepat & Mudah'},
-  {'icon': Icons.home_work, 'text': 'Bengkel Terpercaya'},
-  {'icon': Icons.headset_mic, 'text': 'CS Responsif 24/7'},
-  {'icon': Icons.verified_user, 'text': 'Perlindungan Terjamin'},
+  {'icon': 'assets/icons/fast.svg', 'text': 'Klaim Cepat & Mudah'},
+  {'icon': 'assets/icons/tools.svg', 'text': 'Bengkel Terpercaya'},
+  {'icon': 'assets/icons/cs.svg', 'text': 'CS Responsif 24/7'},
+  {'icon': 'assets/icons/shield.svg', 'text': 'Perlindungan Terjamin'},
 ];

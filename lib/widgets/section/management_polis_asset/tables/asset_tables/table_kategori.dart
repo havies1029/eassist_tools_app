@@ -23,12 +23,13 @@ class KategoriAssetTable extends StatelessWidget {
         return TableMv(constraints: constraints);
       case CategoryType.properti:
         return TableProperti(constraints: constraints);
-      // case CategoryType.kesehatan:
-      //   return TableKesehatan(constraints: constraints);
+      case CategoryType.kesehatan:
+        return TableKesehatan(constraints: constraints);
       // case CategoryType.angkutan:
       //   return TableAngkutan(constraints: constraints);
-      // case CategoryType.ringkasan:
-      //   return TableRingkasan(constraints: constraints);
+      case CategoryType.ringkasan:
+        debugPrint("ringkasan dipanggil");
+        return TableRingkasan(constraints: constraints);
       default:
         return const Center(child: Text('Kategori belum tersedia'));
     }

@@ -55,18 +55,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 // import 'package:js/js_util.dart' as js_util;
 import 'blocs/gen_aset_dashboard/asetdashboardcari_bloc.dart';
+import 'blocs/gen_aset_health/asethealthcari_bloc.dart';
+import 'blocs/gen_aset_ringkasan/asetringkasancari_bloc.dart';
 import 'blocs/gen_cob_app/cobcari_bloc.dart';
 import 'blocs/gen_profile/mrekan1crud_bloc.dart';
 import 'blocs/gen_profile/mrekancontactcrud_bloc.dart';
 import 'blocs/gen_profile/mrekangeneralidvcrud_bloc.dart';
 import 'blocs/gen_profile/mrekanpiccrud_bloc.dart';
+import 'blocs/gen_status_aset/statusasetcari_bloc.dart';
 import 'blocs/home/home_bloc.dart';
 import 'blocs/profile/profile_download_foto_bloc.dart';
 import 'blocs/profile/profile_upload_foto_bloc.dart';
 import 'blocs/profile/rekanbank_bloc.dart';
 import 'blocs/profile/rekangeneral_bloc.dart';
 import 'blocs/profile/rekanpajak_bloc.dart';
-import 'router/app_router.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'dart:async';
 import 'package:flutter/foundation.dart';
@@ -81,14 +83,6 @@ Future<void> main() async {
 
   if (kIsWeb) {
     setUrlStrategy(PathUrlStrategy()); // HILANGKAN TANDA # pada path url
-  }else if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
-    MobileChatInitialization.init(
-      "_zGBGl1xg9V1ZQJVZNyFJg",
-      "-8riuV9imwrYLkoV89aerSoTYsxiEAG-fPplAUw3dsc",
-      "n_pujcjS8Dg7kd-AWjnDKSIPDL0gQhflerRNPhm5XAE",
-      "guest-id-or-static-if-not-logged-in",
-      "Guest",
-    );
   }
 
   // runApp(BlocProvider<AuthenticationBloc>(
@@ -233,6 +227,11 @@ class App extends StatelessWidget {
             create: (context) => AsetParCariBloc()),
         BlocProvider<AsetMvCariBloc>(
             create: (context) => AsetMvCariBloc()),
+        BlocProvider<AsetRingkasanCariBloc>(
+            create: (context) => AsetRingkasanCariBloc()),
+        BlocProvider<AsetHealthCariBloc>(
+            create: (context) => AsetHealthCariBloc()),
+        BlocProvider(create: (context) => StatusAsetCariBloc()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

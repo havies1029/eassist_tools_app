@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/common/constants.dart';
 import 'package:eassist_tools_app/widgets/list_extension.dart';
@@ -16,9 +17,19 @@ class AsetParCariBloc extends Bloc<AsetParCariEvents, AsetParCariState> {
 
 Future<void> onRefreshAsetParCari(
 		RefreshAsetParCariEvent event, Emitter<AsetParCariState> emit) async {
-	emit(const AsetParCariState());
-
-  emit(state.copyWith(searchText: event.searchText, hal: 0));
+	emit(AsetParCariState(
+		items: const [],
+		status: ListStatus.initial,
+		hal: 0,
+		searchText: event.searchText,
+		statusId: event.statusId,
+		hasReachedMax: false,
+	));
+  emit(state.copyWith( searchText: event.searchText, hal: 0, statusId: event.statusId));
+	// 🔍 Tambahkan debugPrint di sini:
+	debugPrint('📡 Bloc menerima RefreshAsetMvCariEvent');
+	debugPrint('🔎 searchText: "${event.searchText}"');
+	debugPrint('📊 statusId: "${event.statusId}"');
 
 	add(FetchAsetParCariEvent());
 }
@@ -29,14 +40,14 @@ Future<void> onFetchAsetParCari(
 
 	AsetParCariRepository repo = AsetParCariRepository();
 	if (state.status == ListStatus.initial) {
-		List<AsetParCariModel> items = await repo.getAsetParCari(state.searchText, 0);
+		List<AsetParCariModel> items = await repo.getAsetParCari(state.statusId, state.searchText, 0);
 		return emit(state.copyWith(
 			items: items,
 			hasReachedMax: false,
 			status: ListStatus.success,
 			hal: 1));
 	}
-	List<AsetParCariModel> items = await repo.getAsetParCari(state.searchText, state.hal);
+	List<AsetParCariModel> items = await repo.getAsetParCari(state.statusId, state.searchText, state.hal);
 	if (items.isEmpty) {
 		return emit(state.copyWith(hasReachedMax: true));
 	} else {

@@ -23,7 +23,9 @@ Future<void> onRefreshAsetMvCari(
     items: const <AsetMvCariModel>[],
     hasReachedMax: false,
     hal: 0,
-    searchText: event.searchText));
+    searchText: event.searchText,
+    statusId: event.statusId,
+    ));
 
 	add(FetchAsetMvCariEvent());
 }
@@ -34,14 +36,14 @@ Future<void> onFetchAsetMvCari(
 
 	AsetMvCariRepository repo = AsetMvCariRepository();
 	if (state.status == ListStatus.initial) {
-		List<AsetMvCariModel> items = await repo.getAsetMvCari(state.searchText, 0);
+		List<AsetMvCariModel> items = await repo.getAsetMvCari(state.statusId, state.searchText, 0);
 		return emit(state.copyWith(
 			items: items,
 			hasReachedMax: false,
 			status: ListStatus.success,
 			hal: 1));
 	}
-	List<AsetMvCariModel> items = await repo.getAsetMvCari(state.searchText, state.hal);
+	List<AsetMvCariModel> items = await repo.getAsetMvCari(state.statusId, state.searchText, state.hal);
 	if (items.isEmpty) {
 		return emit(state.copyWith(hasReachedMax: true));
 	} else {

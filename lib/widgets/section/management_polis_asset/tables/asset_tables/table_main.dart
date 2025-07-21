@@ -1,5 +1,5 @@
+import 'package:eassist_tools_app/widgets/section/management_polis_asset/tables/asset_tables/form_table/table_ringkasan.dart';
 import 'package:flutter/material.dart';
-import 'table_ringkasan.dart';
 import 'table_kategori.dart';
 import '../../category_type.dart';
 
@@ -50,12 +50,6 @@ class TableMain extends StatelessWidget {
   }
 
   Widget _buildTableWidget() {
-    debugPrint('Building table widget for: $selectedCategory');
-
-    if (selectedCategory == CategoryType.ringkasan) {
-      return RingkasanAsetTable(constraints: constraints);
-    }
-
     return KategoriAssetTable(
       key: ValueKey('table_${selectedCategory.name}'),
       constraints: constraints,

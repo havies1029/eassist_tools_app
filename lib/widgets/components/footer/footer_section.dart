@@ -113,34 +113,44 @@ class FooterSection extends StatelessWidget {
         _buildSignatureSection(context), // ✅ context dikirim
         const SizedBox(height: 20.0),
         _buildMenuSection(),
-        // const SizedBox(height: 20.0),
-        // _buildSupportSection(),
       ],
     )
-        : Row(
+        : Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          flex: 3,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildLogoSection(),
-              const SizedBox(height: 20.0),
-              _buildGoogleMapsButton(),
-              const SizedBox(height: 24.0),
-              _buildCompanyInfo(),
-              const SizedBox(height: 16.0),
-              _buildSocialMediaSection(),
-            ],
-          ),
+        _buildLogoSection(),
+        const SizedBox(height: 30),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 350,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildGoogleMapsButton(),
+                  const SizedBox(height: 24.0),
+                  _buildCompanyInfo(),
+                  const SizedBox(height: 16.0),
+                  _buildSocialMediaSection(),
+                ],
+              ),
+            ),
+            const SizedBox(width: 32.0),
+
+            SizedBox(
+              width: 200,
+              child: _buildSignatureSection(context),
+            ),
+            const SizedBox(width: 32.0),
+
+            // Kolom Menu
+            SizedBox(
+              width: 200,
+              child: _buildMenuSection(),
+            ),
+          ],
         ),
-        const SizedBox(width: 40.0),
-        Expanded(flex: 2, child: _buildSignatureSection(context)), // ✅ context dikirim
-        const SizedBox(width: 40.0),
-        Expanded(flex: 2, child: _buildMenuSection()),
-        // const SizedBox(width: 40.0),
-        // Expanded(flex: 2, child: _buildSupportSection()),
       ],
     );
   }
@@ -203,6 +213,9 @@ class FooterSection extends StatelessWidget {
           _buildSvgSocialIconButton('instagram.svg', () {
             _launchUrl('https://www.instagram.com/jayaproteksindosakti/');
           }),
+          _buildSvgSocialIconButton('tiktok.svg', () {
+            _launchUrl('https://www.instagram.com/jayaproteksindosakti/');
+          }),
           _buildSvgSocialIconButton('linkedin.svg', () {
             _launchUrl('https://id.linkedin.com/company/jayaproteksindo');
           }),
@@ -233,16 +246,7 @@ class FooterSection extends StatelessWidget {
             color: Colors.black12,
           ),
           Text(
-            'Protect your future with JPS.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: _fontFamily,
-              fontSize: linkFontSize,
-              color: _secondaryTextColor,
-            ),
-          ),
-          Text(
-            '© ${DateTime.now().year} JPS Insurance Platform.',
+            'Claim is Simple.',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontFamily: _fontFamily,
@@ -252,7 +256,7 @@ class FooterSection extends StatelessWidget {
           ),
           const SizedBox(height: 15.0),
           Text(
-            'All Rights Reserved',
+            'Hak Cipta Dilindungi',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontFamily: _fontFamily,
@@ -271,9 +275,10 @@ class FooterSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+
             Flexible(
               child: Text(
-                'Protect your future with JPS. © ${DateTime.now().year} JPS Insurance Platform.',
+                'Claim is Simple.',
                 style: TextStyle(
                   fontFamily: _fontFamily,
                   fontSize: linkFontSize,
@@ -284,7 +289,7 @@ class FooterSection extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  'All Rights Reserved |',
+                  'Hak Cipta Dilindungi |',
                   style: TextStyle(
                     fontFamily: _fontFamily,
                     fontSize: linkFontSize,
@@ -304,7 +309,7 @@ class FooterSection extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        _buildHoverableLink('Terms and Conditions', () {}),
+        _buildHoverableLink('Syarat dan Ketentuan', () {}),
         Text(
           ' | ',
           style: TextStyle(
@@ -313,7 +318,7 @@ class FooterSection extends StatelessWidget {
             color: _secondaryTextColor,
           ),
         ),
-        _buildHoverableLink('Privacy Policy', () {}),
+        _buildHoverableLink('Kebijakan Privasi', () {}),
       ],
     );
   }
@@ -322,13 +327,17 @@ class FooterSection extends StatelessWidget {
     return _AnimatedButton(
       onPressed: onPressed,
       isTextButton: true,
-      child: Text(
-        text,
-        style: TextStyle(
-          fontFamily: _fontFamily,
-          fontSize: linkFontSize,
-          color: _linkColor,
-          decoration: TextDecoration.underline,
+      child: Text.rich(
+        TextSpan(
+          text: text,
+          style: TextStyle(
+            fontFamily: _fontFamily,
+            fontSize: linkFontSize,
+            color: _linkColor,
+            decoration: TextDecoration.underline,
+            decorationColor: _linkColor,     // ✅ garis bawah biru
+            decorationThickness: 1.5,         // opsional, biar lebih tegas
+          ),
         ),
       ),
     );
@@ -339,7 +348,7 @@ class FooterSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Signature',
+          'Unggulan',
           style: TextStyle(
             fontFamily: _fontFamily,
             fontSize: titleFontSize,
@@ -376,9 +385,9 @@ class FooterSection extends StatelessWidget {
           ),
         ),
         SizedBox(height: isMobile ? 8.0 : 16.0),
-        _buildFooterLink('Management Aset', () {}),
-        _buildFooterLink('Management Polis', () {}),
-        _buildFooterLink('Management Klaim', () {}),
+        _buildFooterLink('Aset', () {}),
+        _buildFooterLink('Polis', () {}),
+        _buildFooterLink('Klaim', () {}),
         _buildFooterLink('Tagihan dan Pembayaran', () {}),
         _buildFooterLink('Literasi', () {}),
       ],
@@ -578,7 +587,7 @@ class _AnimatedButtonState extends State<_AnimatedButton>
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                padding: const EdgeInsets.all(4),
+                padding: const EdgeInsets.all(6),
                 child: Opacity(
                   opacity: _opacityAnimation.value,
                   child: content,
