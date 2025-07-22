@@ -12,6 +12,7 @@ import 'package:eassist_tools_app/pages/gen_berita/berita_main.dart';
 import 'package:eassist_tools_app/pages/gen_cob_app/cobcari_main.dart';
 import 'package:eassist_tools_app/pages/gen_profile/mrekanpiclist_main.dart';
 import 'package:eassist_tools_app/pages/gen_profile/test_profile_page.dart';
+import 'package:eassist_tools_app/pages/gen_promo/promo1cari_main.dart';
 import 'package:eassist_tools_app/pages/gen_review/reviewcari_main.dart';
 import 'package:eassist_tools_app/pages/gen_status_aset/statusasetcari_main.dart';
 import 'package:eassist_tools_app/pages/heropage/fixed_nambar_overlay.dart';
@@ -251,6 +252,17 @@ class _HeroPageState extends State<HeroPage> {
                                     );
                                   },
                                   child: Text("Berita Utama"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const Promo1cariMainPage()),
+                                    );
+                                  },
+                                  child: Text("Promo"),
                                 ),
                               ],
                             );

@@ -18,6 +18,8 @@ import 'package:eassist_tools_app/blocs/gen_profile/mrekangeneralcmpcrud_bloc.da
 import 'package:eassist_tools_app/blocs/gen_profile/mrekangeneralidvcrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekanpiccrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekanpiclist_bloc.dart';
+import 'package:eassist_tools_app/blocs/gen_promo/promo1cari_bloc.dart';
+import 'package:eassist_tools_app/blocs/gen_promo/promo2cari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_review/reviewcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_status_aset/statusasetcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaim/klaim1list_bloc.dart';
@@ -229,6 +231,8 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => Berita1CariBloc()),
         BlocProvider(create: (context) => Berita2CariBloc()),
         BlocProvider(create: (context) => Berita3CariBloc()),
+        BlocProvider(create: (context) => Promo1CariBloc()),
+        BlocProvider(create: (context) => Promo2CariBloc()),
 
       ],
       child: MaterialApp(
