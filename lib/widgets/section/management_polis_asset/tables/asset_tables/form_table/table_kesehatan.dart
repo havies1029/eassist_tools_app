@@ -4,13 +4,13 @@ import 'package:intl/intl.dart';
 import 'package:trina_grid/trina_grid.dart';
 import 'package:eassist_tools_app/blocs/gen_aset_health/asethealthcari_bloc.dart';
 import 'package:eassist_tools_app/models/gen_aset_health/asethealthcari_model.dart';
+import '../../../../../../common/constants.dart';
 import '../../../../../../helper/export_helper.dart';
 import '../../../../../../helper/mobile_expert_helper.dart';
-import '../../../../../../common/constants.dart';
 import '../../../category_type.dart';
 import '../../asset_tables/action_button_section.dart';
-import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'dart:io' show Platform;
 
 class TableKesehatan extends StatefulWidget {
   final BoxConstraints constraints;
@@ -21,109 +21,83 @@ class TableKesehatan extends StatefulWidget {
 }
 
 class _TableKesehatanState extends State<TableKesehatan> {
+  final GlobalKey<ActionButtonSectionState> _actionKey = GlobalKey();
+  late final ActionButtonSection _actionButton;
   List<Map<String, dynamic>> _originalItems = [];
-  List<Map<String, dynamic>> _filteredItems = [];
   TrinaGridStateManager? _stateManager;
 
   bool get isMobile => widget.constraints.maxWidth < 768;
   double get maxW => widget.constraints.maxWidth;
   final dateFormat = DateFormat('dd MMM yyyy');
-// ✅ Tambahkan controller pencarian jika perlu
-  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
 
-    // ✅ Panggil event awal dengan parameter statusId + searchText
+    _actionButton = ActionButtonSection(
+      key: _actionKey,
+      constraints: widget.constraints,
+      selectedCategory: CategoryType.kesehatan,
+      tableData: _originalItems,
+      onAddAsset: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('🩺 Tambah Aset Kesehatan dijalankan')),
+        );
+      },
+      onExportSelected: (format) async {
+        final messenger = ScaffoldMessenger.of(context);
+        if (kIsWeb || Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+          await ExportHelper.export(format, _originalItems, CategoryType.kesehatan);
+          messenger.showSnackBar(const SnackBar(content: Text('✅ File berhasil diunduh ke perangkat Web/Desktop')));
+        } else {
+          final extension = format.toLowerCase() == 'pdf' ? 'pdf' : 'xlsx';
+          final fileName = 'laporan_kesehatan.$extension';
+          await MobileDownloadHelper.download(
+            context: context,
+            fileName: fileName,
+            data: _originalItems,
+            format: format,
+          );
+        }
+      },
+      onRefresh: (searchText, statusId) {
+        context.read<AsetHealthCariBloc>().add(
+          RefreshAsetHealthCariEvent(
+            searchText: searchText,
+            statusId: statusId,
+          ),
+        );
+      },
+    );
+
     Future.delayed(Duration.zero, () {
       context.read<AsetHealthCariBloc>().add(
-        RefreshAsetHealthCariEvent(
-          statusId: '10001', // 🟡 Status default misalnya "aktif"
-          searchText: _searchController.text,
-        ),
+        RefreshAsetHealthCariEvent(statusId: '10001', searchText: ''),
       );
     });
   }
+
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AsetHealthCariBloc, AsetHealthCariState>(
-      builder: (context, state) {
-        if (state.status == ListStatus.success) {
-          if (_originalItems.isEmpty) {
-            _originalItems = state.items.map((e) => _mapToJson(e)).toList();
-            _filteredItems = List.from(_originalItems);
+    return Column(
+      children: [
+        _actionButton,
+        const SizedBox(height: 16),
+        BlocBuilder<AsetHealthCariBloc, AsetHealthCariState>(
+          builder: (context, state) {
+            if (state.status == ListStatus.success) {
+              _originalItems = state.items.map(_mapToJson).toList();
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                _actionKey.currentState?.updateTableData(_originalItems);
+              });
 
-            debugPrint('✅ Data berhasil dimuat: ${_originalItems.length} item');
-            for (var item in _originalItems) {
-              debugPrint(item.toString());
-            }
-          }
-
-          return Column(
-            children: [
-              ActionButtonSection(
-                constraints: widget.constraints,
-                selectedCategory: CategoryType.kesehatan,
-                tableData: _originalItems,
-                onDataFiltered: (filtered) {
-                  setState(() {
-                    _filteredItems = filtered;
-                  });
-
-                  _stateManager!
-                    ..removeAllRows()
-                    ..appendRows(_buildRows(filtered))
-                    ..setPage(1, notify: true);
-                },
-                onAddAsset: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('➕ Tambah Aset Kesehatan dijalankan')),
-                  );
-                },
-                onExportSelected: (format) async {
-                  final messenger = ScaffoldMessenger.of(context);
-                  if (kIsWeb || Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-                    await ExportHelper.export(format, _filteredItems, CategoryType.kesehatan);
-                    messenger.showSnackBar(const SnackBar(content: Text('✅ File berhasil diunduh')));
-                  } else {
-                    await MobileDownloadHelper.download(
-                      context: context,
-                      fileName: 'laporan_kesehatan.$format',
-                      data: _filteredItems,
-                      format: format,
-                    );
-                  }
-                },
-                onRefresh: (searchText, statusId) {
-                  context.read<AsetHealthCariBloc>().add(
-                    RefreshAsetHealthCariEvent(
-                      searchText: searchText,
-                      statusId: statusId,
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 16),
-              SizedBox(
+              return SizedBox(
                 height: 500,
-                child: _filteredItems.isEmpty
-                    ? const Center(
-                  child: Text(
-                    'Data tidak tersedia',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                )
-                    : TrinaGrid(
+                child: TrinaGrid(
                   columns: _buildColumns(),
-                  rows: _buildRows(_filteredItems),
+                  rows: _buildRows(_originalItems),
                   mode: TrinaGridMode.normal,
                   configuration: TrinaGridConfiguration(
-                    enableMoveHorizontalInEditing: false,
                     columnSize: TrinaGridColumnSizeConfig(
                       autoSizeMode: TrinaAutoSizeMode.none,
                       resizeMode: TrinaResizeMode.none,
@@ -151,15 +125,16 @@ class _TableKesehatanState extends State<TableKesehatan> {
                     _stateManager?.setPage(1);
                   },
                 ),
-              ),
-            ],
-          );
-        } else if (state.status == ListStatus.loading) {
-          return const Center(child: CircularProgressIndicator());
-        } else {
-          return const Center(child: Text('No Data Available!!'));
-        }
-      },
+              );
+            } else if (state.status == ListStatus.loading) {
+              return const Center(child: CircularProgressIndicator());
+            } else {
+              // return const Center(child: Text('No Data Available!!'));
+              return const Center(child: CircularProgressIndicator());
+            }
+          },
+        ),
+      ],
     );
   }
 

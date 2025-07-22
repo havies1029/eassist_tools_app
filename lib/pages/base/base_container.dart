@@ -26,8 +26,12 @@ import '../gen_aset_mv/asetmvcari_main.dart';
 import '../gen_aset_par/asetparcari_list.dart';
 import '../gen_aset_par/asetparcari_main.dart';
 import '../gen_aset_ringkasan/asetringkasancari_main.dart';
+import '../gen_berita/berita_main.dart';
+import '../gen_berita/beritaartikel_main.dart';
+import '../gen_berita/beritasampingan_main.dart';
 import '../gen_cob_app/cobcari_main.dart';
 import '../gen_profile/test_profile_main.dart';
+import '../gen_review/reviewcari_main.dart';
 import '../gen_status_aset/statusasetcari_main.dart';
 import '../hero_client_page/hero_user_main.dart';
 import '../heropage/hero_main.dart';
@@ -227,6 +231,14 @@ class PageContainer extends StatelessWidget {
         return "Memuat Aset Health";
       case PageType.aset:
         return "Memuat Aset";
+      case PageType.review:
+        return "Memuat Review";
+      case PageType.berita:
+        return "Memuat Berita";
+      case PageType.beritasampingan:
+        return "Memuat Berita Sampingan";
+      case PageType.beritaartikel:
+        return "Memuat Berita Artikel";
       default:
         return "Login Page";
     }
@@ -311,6 +323,14 @@ class PageContainer extends StatelessWidget {
         return const StatusasetcariMain();
       case PageType.aset:
         return const AsetMainPage();
+      case PageType.review:
+        return const ReviewCariMainPage();
+      case PageType.berita:
+        return const BeritaMainPage(jenis: 1);
+      case PageType.beritaartikel:
+        return const BeritaArtikelMainPage(jenis: 2);
+      case PageType.beritasampingan:
+        return const BeritaSampinganMainPage(jenis: 3);
       default:
         return const SizedBox();
     }

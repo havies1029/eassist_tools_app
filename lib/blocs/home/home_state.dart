@@ -51,6 +51,14 @@ class AsetStatusPageActive extends HomeState {}
 
 class AsetPageActive extends HomeState {}
 
+class ReviewCariPageActive extends HomeState {}
+
+class BeritaPageActive extends HomeState {}
+
+class BeritaSampinganPageActive extends HomeState {}
+
+class BeritaArtikelPageActive extends HomeState {}
+
 //Active Page
 class SplashPageActive extends HomeState {}
 class ProfileIndividuPageActive extends HomeState {}

@@ -188,6 +188,20 @@ flutter:
     - assets/icons/refresh.png
     - assets/images/refresh.png
     - assets/images/management_polis_bg.png
+    - assets/icons/arsitek.svg
+    - assets/icons/check.svg
+    - assets/icons/cs.svg
+    - assets/icons/fast.svg
+    - assets/icons/konsultan.svg
+    - assets/icons/pengacara.svg
+    - assets/icons/penilaian.svg
+    - assets/icons/percent.svg
+    - assets/icons/shield.svg
+    - assets/icons/thumbsup.svg
+    - assets/icons/thumbsup_solid.svg
+    - assets/icons/tiktok.svg
+    - assets/icons/tools.svg
+    - assets/icons/user_roles.svg
 
 fonts:
     - family: HeeboBold

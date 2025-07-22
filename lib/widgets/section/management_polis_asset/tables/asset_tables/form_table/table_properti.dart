@@ -143,7 +143,8 @@ class _TablePropertiState extends State<TableProperti> {
             } else if (state.status == ListStatus.loading) {
               return const Center(child: CircularProgressIndicator());
             } else {
-              return const Center(child: Text('No Data Available!!'));
+              // return const Center(child: Text('No Data Available!!'));
+              return const Center(child: CircularProgressIndicator());
             }
           },
         ),

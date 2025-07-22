@@ -5,6 +5,7 @@ import 'package:eassist_tools_app/common/constants.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 
 class CarouselSection extends StatefulWidget {
   final BoxConstraints constraints;
@@ -175,43 +176,54 @@ class _CarouselSectionState extends State<CarouselSection>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // RichText Title
-              Padding(
-                padding: const EdgeInsets.only(bottom: 40.0),
-                child: RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    style: TextStyle(
-                      fontFamily: 'Satoshi-Regular',
-                      fontSize: titleFontSize,
-                      color: Colors.black,
-                    ),
-                    children: const [
-                      TextSpan(text: 'Apakah Anda siap bergabung dengan '),
-                      TextSpan(
-                        text: 'JPS',
-                        style: TextStyle(
-                          color: Color(0xFF79AB43),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      TextSpan(text: ' dan mendapatkan '),
-                      TextSpan(
-                        text: 'Perlindungan Terbaik',
-                        style: TextStyle(
-                          color: Color(0xFF79AB43),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      TextSpan(text: ' ?'),
-                    ],
+              SvgPicture.asset(
+                'assets/icons/percent.svg',
+                width: isMobile ? 40 : 50.0,
+                height: isMobile ? 40 : 50.0,
+              ),
+
+              SizedBox(height: 15),
+
+              // Judul
+              RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  style: TextStyle(
+                    fontFamily: 'Satoshi-Regular',
+                    fontSize: titleFontSize,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
                   ),
+                  children: const [
+                    TextSpan(text: 'Promo '),
+                    TextSpan(text: 'Spesial Asuransi '),
+                    TextSpan(
+                      text: 'JPS',
+                      style: TextStyle(
+                        color: Color(0xFF91C050),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 10),
+
+              // Subtitle
+              Text(
+                'Nikmati kemudahan perlindungan asuransi resmi dan terpercaya. '
+                    'Daftar sekarang dan dapatkan penawaran eksklusif untuk \n'
+                    'perlindungan aset pribadi maupun perusahaan Anda.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: 'Satoshi-Regular',
+                  fontSize: 15.0,
+                  color: const Color(0xFFA6A6A6),
                 ),
               ),
 
               MouseRegion(
-                onEnter: (_) => _onHoverEnter(),
-                onExit: (_) => _onHoverExit(),
+                // onEnter: (_) => _onHoverEnter(),
+                // onExit: (_) => _onHoverExit(),
                 child: Listener(
                   onPointerSignal: (pointerSignal) {
                     if (pointerSignal is PointerScrollEvent) {
@@ -240,7 +252,7 @@ class _CarouselSectionState extends State<CarouselSection>
                         child: Container(
                           height: carouselHeight,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16.0),
+                            borderRadius: BorderRadius.circular(14.47),
                           ),
                           child: ScrollConfiguration(
                             behavior: ScrollConfiguration.of(context).copyWith(
@@ -283,14 +295,14 @@ class _CarouselSectionState extends State<CarouselSection>
                                           scale: scale,
                                           child: Container(
                                             decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(16.0),
+                                              borderRadius: BorderRadius.circular(14.47),
                                             ),
                                             child: Center(
                                               child: Container(
                                                 width: carouselWidth * imageScaleFactor,
                                                 height: (carouselWidth * imageScaleFactor) / _imageAspectRatio,
                                                 child: ClipRRect(
-                                                  borderRadius: BorderRadius.circular(16.0),
+                                                  borderRadius: BorderRadius.circular(14.47),
                                                   child: AspectRatio(
                                                     aspectRatio: _imageAspectRatio,
                                                     child: Stack(
@@ -343,8 +355,6 @@ class _CarouselSectionState extends State<CarouselSection>
                   ),
                 ),
               ),
-
-              const SizedBox(height: 20.0),
 
               BlocBuilder<GalleryeventCariBloc, GalleryeventCariState>(
                   builder: (context, state) {

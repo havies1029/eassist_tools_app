@@ -6,28 +6,22 @@ import 'package:flutter_svg/flutter_svg.dart';
 class AppStyles {
   static const String fontFamily = 'Satoshi';
 
-  static const TextStyle headerStyle = TextStyle(
+  static TextStyle headerStyle(bool isMobile) => TextStyle(
       fontFamily: fontFamily,
       fontWeight: FontWeight.bold,
       color: AppColors.textColor,
-      fontSize: 27
+      fontSize: isMobile? 20: 27
   );
 
-  static const TextStyle subtitleStyle = TextStyle(
+  static const TextStyle subtitleStyle=TextStyle(
     fontFamily: fontFamily,
     fontSize: 15,
     color: AppColors.colorMuted,
   );
 
-  static const TextStyle titleStyle = TextStyle(
+  static TextStyle descriptionStyle(bool isMobile) =>TextStyle(
     fontFamily: fontFamily,
-    fontWeight: FontWeight.w600,
-    fontSize: 27,
-  );
-
-  static const TextStyle descriptionStyle = TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 20,
+    fontSize: isMobile? 15 : 20,
     color: AppColors.textColor,
   );
 }
@@ -37,13 +31,6 @@ class AppColors {
   static const Color primaryOrange = Color(0xFFFAA232);
   static const Color textColor = Colors.black;
   static const Color colorMuted = Color(0xFFCACED8);
-
-  static const List<Color> roleColors = [
-    primaryGreen,
-    primaryGreen,
-    primaryGreen,
-    primaryGreen,
-  ];
 }
 
 class PeranJpsSection extends StatefulWidget {
@@ -58,7 +45,7 @@ class PeranJpsSection extends StatefulWidget {
 
 class _PeranJpsSectionState extends State<PeranJpsSection>
     with TickerProviderStateMixin {
-  int selectedTabIndex = 0; // Default to "Arsitek" tab
+  int selectedTabIndex = 0;
   late PageController _pageController;
   late AnimationController _tabAnimationController;
   late AnimationController _contentAnimationController;
@@ -132,7 +119,7 @@ class _PeranJpsSectionState extends State<PeranJpsSection>
 
               // ===== TAB NAVIGATION =====
               _buildTabNavigation(isMobile),
-              const SizedBox(height: 34),
+              SizedBox(height: isMobile ? 16 : 34),
 
               // ===== CONTENT AREA =====
               _buildContentArea(isMobile),
@@ -149,32 +136,32 @@ class _PeranJpsSectionState extends State<PeranJpsSection>
         // Broker icon at the top
         SvgPicture.asset(
           'assets/icons/user_roles.svg',
-          width: 60,
-          height: 60,
+          width: isMobile? 40:60,
+          height: isMobile? 40:60,
           // colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
         ),
         const SizedBox(height: 15),
         RichText(
           textAlign: TextAlign.center,
           text: TextSpan(
-            style: AppStyles.headerStyle,
+            style: AppStyles.headerStyle(isMobile),
             children: [
               const TextSpan(text: 'Peran '),
               TextSpan(
                 text: 'J',
-                style: AppStyles.headerStyle.copyWith(
+                style: AppStyles.headerStyle(isMobile).copyWith(
                   color: AppColors.primaryGreen,
                 ),
               ),
               TextSpan(
                 text: 'P',
-                style: AppStyles.headerStyle.copyWith(
+                style: AppStyles.headerStyle(isMobile).copyWith(
                   color: AppColors.primaryOrange,
                 ),
               ),
               TextSpan(
                 text: 'S',
-                style: AppStyles.headerStyle.copyWith(
+                style: AppStyles.headerStyle(isMobile).copyWith(
                   color: AppColors.primaryGreen,
                 ),
               ),
@@ -202,7 +189,7 @@ class _PeranJpsSectionState extends State<PeranJpsSection>
           final role = roleItems[index];
           final isSelected = selectedTabIndex == index;
           return Container(
-            margin: EdgeInsets.only(right: index < roleItems.length - 1 ? 10 : 0),
+            margin: EdgeInsets.only(right: index < roleItems.length - 1 ? (isMobile ? 5 : 10) : 0),
             child: GestureDetector(
               onTap: () => _onTabSelected(index),
               child: AnimatedBuilder(
@@ -212,7 +199,10 @@ class _PeranJpsSectionState extends State<PeranJpsSection>
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOutCubic,
                     alignment: Alignment.center,
-                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                    padding: EdgeInsets.symmetric(
+                        vertical: isMobile ? 8 : 12,
+                        horizontal: isMobile ? 8 : 20
+                    ),
                     decoration: BoxDecoration(
                       color: isSelected ? const Color(0xFFE2FFC2) : Colors.transparent,
                       borderRadius: const BorderRadius.only(
@@ -228,7 +218,8 @@ class _PeranJpsSectionState extends State<PeranJpsSection>
                       )
                           : null,
                     ),
-                    child: Row(
+                    child: isMobile?
+                    Column(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -237,20 +228,53 @@ class _PeranJpsSectionState extends State<PeranJpsSection>
                           curve: Curves.easeInOutCubic,
                           child: SvgPicture.asset(
                             role.svgAsset,
-                            width: 27,
-                            height: 27,
+                            width: isMobile ? 25 : 27,
+                            height: isMobile ? 25 : 27,
                             colorFilter: ColorFilter.mode(
                               isSelected ? AppColors.primaryGreen : AppColors.colorMuted,
                               BlendMode.srcIn,
                             ),
                           ),
                         ),
-                        const SizedBox(width: 12),
+                        SizedBox(width: isMobile ? 10 : 12),
                         AnimatedDefaultTextStyle(
                           duration: const Duration(milliseconds: 300),
                           curve: Curves.easeInOutCubic,
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: isMobile ? 12 : 18,
+                            fontWeight: isSelected? FontWeight.bold : FontWeight.normal,
+                            color: isSelected ? AppColors.primaryGreen : AppColors.colorMuted,
+                          ),
+                          child: Text(
+                            role.title,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ) :
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOutCubic,
+                          child: SvgPicture.asset(
+                            role.svgAsset,
+                            width: isMobile ? 18 : 27,
+                            height: isMobile ? 18 : 27,
+                            colorFilter: ColorFilter.mode(
+                              isSelected ? AppColors.primaryGreen : AppColors.colorMuted,
+                              BlendMode.srcIn,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: isMobile ? 6 : 12),
+                        AnimatedDefaultTextStyle(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOutCubic,
+                          style: TextStyle(
+                            fontSize: isMobile ? 12 : 18,
                             fontWeight: isSelected? FontWeight.bold : FontWeight.normal,
                             color: isSelected ? AppColors.primaryGreen : AppColors.colorMuted,
                           ),
@@ -273,7 +297,7 @@ class _PeranJpsSectionState extends State<PeranJpsSection>
 
   Widget _buildContentArea(bool isMobile) {
     return Container(
-      height: 250, // Fixed height to prevent layout jumps
+      height: isMobile ? 320 : 250, // Slightly taller for mobile
       child: PageView.builder(
         controller: _pageController,
         onPageChanged: (index) {
@@ -305,7 +329,9 @@ class _PeranJpsSectionState extends State<PeranJpsSection>
             )),
             child: Container(
               width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 100),
+              padding: EdgeInsets.symmetric(
+                horizontal: isMobile ? 40 : 100, // Reduced padding for mobile
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: role.descriptions.asMap().entries.map((entry) {
@@ -325,21 +351,23 @@ class _PeranJpsSectionState extends State<PeranJpsSection>
                           child: Opacity(
                             opacity: value,
                             child: Padding(
-                              padding: const EdgeInsets.only(bottom: 22.45),
+                              padding: EdgeInsets.only(
+                                bottom: isMobile ? 18 : 22.45, // Reduced spacing for mobile
+                              ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   SvgPicture.asset(
                                     'assets/icons/check.svg',
-                                    width: 28.07,
-                                    height: 28.07,
+                                    width: isMobile ? 23.39 : 28.07,
+                                    height: isMobile ? 23.39 : 28.07,
                                   ),
-                                  const SizedBox(width: 18.71),
+                                  SizedBox(width: isMobile ? 12 : 18.71), // Reduced spacing for mobile
                                   Expanded(
                                     child: Text(
                                       description,
-                                      style: AppStyles.descriptionStyle,
+                                      style: AppStyles.descriptionStyle(isMobile),
                                       textAlign: TextAlign.left,
                                     ),
                                   ),

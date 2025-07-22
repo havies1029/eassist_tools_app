@@ -43,8 +43,8 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
   );
 
   TextStyle get titleTextStyle => baseTextStyle.copyWith(
-    fontSize: isMobile ? 30.0 : 40.0,
-    fontWeight: isMobile ? FontWeight.w600 : FontWeight.w200,
+    fontSize: isMobile ? 25.0 : 40.0,
+    fontWeight: isMobile ? FontWeight.normal : FontWeight.w200,
     fontStyle: isMobile ? FontStyle.italic : FontStyle.normal,
   );
 
@@ -55,7 +55,7 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
   );
 
   TextStyle get benefitTextStyle => baseTextStyle.copyWith(
-    fontSize: isMobile? 16.0 : 20,
+    fontSize: isMobile? 12.0 : 20,
     fontWeight: FontWeight.w500,
     color: const Color(0xFF2D3748),
   );
@@ -126,9 +126,9 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       _buildAnimatedTitle(),
-      const SizedBox(height: 32.0),
+      const SizedBox(height: 15.0),
       _buildBenefitPoints(),
-      const SizedBox(height: 20.0),
+      const SizedBox(height: 15.0),
       _buildAnimatedImage(),
     ],
   );
@@ -171,7 +171,7 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
                     flex: 0,
                     child: Image.asset(
                       'assets/images/JPS(2).png',
-                      height: isMobile ? 36.0 : 66.0,
+                      height: isMobile ? 41 : 66.0,
                       fit: BoxFit.contain,
                     ),
                   ),
@@ -187,8 +187,8 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
   }
 
   Widget _buildAnimatedImage() {
-    final maxImgWidth = isMobile ? 374.0 : 400.0;
-    final maxImgHeight = isMobile ? 271.0 : 400.0;
+    final maxImgWidth = isMobile ? 346.65 : 400.0;
+    final maxImgHeight = isMobile ? 251.18 : 400.0;
 
     return FadeTransition(
       opacity: _imageController,
@@ -249,8 +249,8 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
     return Row(
       children: [
         Container(
-          width: 45,
-          height: 45,
+          width: isMobile? 28.89:45,
+          height: isMobile? 28.89:45,
           padding: const EdgeInsets.all(8.51),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -265,12 +265,12 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
           ),
           child: SvgPicture.asset(
             item['icon'],
-            width: 25,
-            height: 25,
+            width: isMobile? 17 :25,
+            height: isMobile? 17 :25,
 
           ),
         ),
-        const SizedBox(width: 12.0),
+        SizedBox(width: isMobile? 8:12.0),
         Flexible(
           child: Text(
             item['text'],

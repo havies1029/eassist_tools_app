@@ -182,6 +182,10 @@
               SubMenuItem(icon: Icons.business_outlined, title: 'Aset Health', onTap: () {}),
               SubMenuItem(icon: Icons.business_outlined, title: 'Aset Status', onTap: () {}),
               SubMenuItem(icon: Icons.business_outlined, title: 'Aset', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'Review', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'Berita1', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'Berita2', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'Berita3', onTap: () {}),
             ],
           },
           {

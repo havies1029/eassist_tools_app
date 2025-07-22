@@ -45,7 +45,7 @@ class TestimonialSectionState extends State<TestimonialSection> {
       child: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: widget.constraints.maxWidth > 1200 ? 105 : 20.0,
-          vertical: isMobile ? 5.0 : 10.0,
+          vertical: 20,
         ),
         child: Center(
           child: Container(
@@ -101,12 +101,12 @@ class TestimonialSectionState extends State<TestimonialSection> {
         Container(
           child: SvgPicture.asset(
             'assets/icons/thumbsup.svg',
-            width: isMobile ? 25.0 : 50.0,
-            height: isMobile ? 25.0 : 50.0,
+            width: isMobile ? 40 : 50,
+            height: isMobile ? 40 : 50,
           ),
         ),
 
-        SizedBox(height: isMobile ? 10.0 : 15.0),
+        SizedBox(height: 15),
 
         // Title
         RichText(
@@ -129,15 +129,15 @@ class TestimonialSectionState extends State<TestimonialSection> {
             ],
           ),
         ),
-        SizedBox(height: isMobile ? 10.0 : 15.0),
+        SizedBox(height: 15.0),
 
         // Subtitle
         Container(
-          width: 214,
-          height: 52,
+          width: 180,
+          height: 43.74,
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(50.0),
+            borderRadius: BorderRadius.circular(42.06),
             border: Border.all(color: const Color(0xFF91C050)),
           ),
           child: Row(
@@ -148,14 +148,14 @@ class TestimonialSectionState extends State<TestimonialSection> {
                 'Dari layanan ',
                 style: TextStyle(
                   fontFamily: 'Satoshi-Regular',
-                  fontSize: isMobile ? 12.0 : 15.0,
+                  fontSize: isMobile ? 12 : 15,
                   color: Colors.black,
                 ),
               ),
               Image.asset(
                 'assets/images/JPS(2).png',
-                width: 65,
-                height: isMobile ? 16.0 : 32.0,
+                width: isMobile? 54.67 : 65,
+                height: isMobile ? 27.02 : 32,
                 fit: BoxFit.contain,
               )
             ],
@@ -168,24 +168,24 @@ class TestimonialSectionState extends State<TestimonialSection> {
   Widget _buildRatingSection(bool isMobile) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12.0),
-      child:
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Row(
+            mainAxisAlignment: isMobile ? MainAxisAlignment.center : MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Bulat hijau dengan nilai 5,0
               SizedBox(
-                width: isMobile ? 50.0 : 90.39,
-                height: isMobile ? 50.0 : 90.39,
+                width: isMobile ? 76.19 : 90.39,
+                height: isMobile ? 76.19 : 90.39,
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
                     // ✅ Outer border (gradient)
                     Container(
-                      width: isMobile ? 50.0 : 90.39,
-                      height: isMobile ? 50.0 : 90.39,
+                      width: isMobile ? 76.19 : 90.39,
+                      height: isMobile ? 76.19 : 90.39,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         gradient: const RadialGradient(
@@ -198,8 +198,8 @@ class TestimonialSectionState extends State<TestimonialSection> {
 
                     // ✅ Inner white border
                     Container(
-                      width: isMobile ? 40.0 : 80.0,
-                      height: isMobile ? 40.0 : 80.0,
+                      width: isMobile ? 66.03 : 80,
+                      height: isMobile ? 66.03 : 80,
                       decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                         color: Colors.white,
@@ -208,8 +208,8 @@ class TestimonialSectionState extends State<TestimonialSection> {
 
                     // ✅ Innermost circle (greenish background)
                     Container(
-                      width: isMobile ? 35.0 : 70.0,
-                      height: isMobile ? 35.0 : 70.0,
+                      width: isMobile ? 57 : 70,
+                      height: isMobile ? 57 : 70,
                       decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                         color: Color(0xFFE6F3D6),
@@ -219,7 +219,7 @@ class TestimonialSectionState extends State<TestimonialSection> {
                         '5,0',
                         style: TextStyle(
                           fontFamily: 'Satoshi',
-                          fontSize: isMobile ? 25.0 : 30.13,
+                          fontSize: isMobile ? 25.4 : 30.13,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF91C050),
                         ),
@@ -237,26 +237,29 @@ class TestimonialSectionState extends State<TestimonialSection> {
                     'Terpercaya',
                     style: TextStyle(
                       fontFamily: 'Satoshi-Regular',
-                      fontSize: isMobile ? 15.0 : 30.13,
+                      fontSize: isMobile ? 25 : 30.13,
                       fontWeight: FontWeight.bold,
                       color: const Color(0xFF91C050),
                     ),
                   ),
-                  const SizedBox(height: 2.0),
+
+                  const SizedBox(height: 0),
 
                   Row(
                     children: List.generate(5, (index) => Icon(
                       Icons.star,
-                      color: Colors.amber,
-                      size: isMobile ? 10.0 : 21.28,
+                      color: Color(0xFFFFC728),
+                      size: isMobile ? 17.94 : 21.28,
                     )),
                   ),
-                  const SizedBox(height: 2.0),
+
+                  const SizedBox(height: 0),
+
                   Text(
                     '50 dari 50 ulasan',
                     style: TextStyle(
                       fontFamily: 'Satoshi-Regular',
-                      fontSize: isMobile ? 12.0 : 15.42,
+                      fontSize: isMobile ? 12 : 15.42,
                       color: Colors.black54,
                     ),
                   ),
@@ -268,7 +271,7 @@ class TestimonialSectionState extends State<TestimonialSection> {
           Text(
             'Ulasan Nasabah',
             style: TextStyle(
-              fontSize: isMobile? 15 : 18,
+              fontSize: isMobile ? 15 : 18,
               color: Colors.black54,
             ),
           ),
@@ -283,7 +286,7 @@ class TestimonialSectionState extends State<TestimonialSection> {
     final totalPages = (items.length / itemsPerPage).ceil();
 
     return Container(
-      height: isMobile ? 200.0 : 210.37,
+      height: isMobile ? 204.37 : 210.37,
       child: PageView.builder(
         controller: _pageController,
         onPageChanged: (int page) {
@@ -345,7 +348,7 @@ class TestimonialSectionState extends State<TestimonialSection> {
                       text: TextSpan(
                         style: TextStyle(
                           fontFamily: 'Satoshi',
-                          fontSize: isMobile ? 8.0 : 10,
+                          fontSize: 10,
                           fontWeight: FontWeight.bold,
                         ),
                         children: [
@@ -368,20 +371,20 @@ class TestimonialSectionState extends State<TestimonialSection> {
                 children: List.generate(5, (index) => Icon(
                   Icons.star,
                   color: const Color(0xFFFFD700),
-                  size: isMobile ? 15.0 : 20.37,
+                  size: 20.37,
                 )),
               ),
             ],
           ),
 
-          SizedBox(height: isMobile ? 10.0 : 15.0),
+          SizedBox(height: 15.0),
 
           // Name and subtitle
           Text(
             testimonial['name'] ?? 'Unknown',
             style: TextStyle(
               fontFamily: 'Satoshi-Regular',
-              fontSize: isMobile ? 15.0 : 16.0,
+              fontSize: 16.0,
               fontWeight: FontWeight.bold,
               color: Colors.black,
             ),
@@ -396,7 +399,7 @@ class TestimonialSectionState extends State<TestimonialSection> {
                   'Klien JPS',
                   style: TextStyle(
                     fontFamily: 'Satoshi-Regular',
-                    fontSize: isMobile ? 10.0 : 12.0,
+                    fontSize: 12.0,
                     color: Colors.black54,
                   ),
                 ),
@@ -408,15 +411,15 @@ class TestimonialSectionState extends State<TestimonialSection> {
                   children: [
                     SvgPicture.asset(
                       'assets/icons/thumbsup_solid.svg',
-                      width: isMobile ? 10.0 : 16.66,
-                      height: isMobile ? 10.0 : 16.66,
+                      width: 16.66,
+                      height: 16.66,
                     ),
                     const SizedBox(width: 4.0),
                     Text(
                       'Testimonial',
                       style: TextStyle(
                         fontFamily: 'Satoshi-Regular',
-                        fontSize: isMobile ? 10.0 : 12.0,
+                        fontSize: 12.0,
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
                       ),
@@ -427,7 +430,7 @@ class TestimonialSectionState extends State<TestimonialSection> {
             ],
           ),
 
-          SizedBox(height: isMobile ? 10.0 : 15.0),
+          SizedBox(height:  15.0),
 
           // Quote
           Expanded(

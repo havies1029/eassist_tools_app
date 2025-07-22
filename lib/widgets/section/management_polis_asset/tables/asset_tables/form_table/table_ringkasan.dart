@@ -21,123 +21,88 @@ class TableRingkasan extends StatefulWidget {
 }
 
 class _TableRingkasanState extends State<TableRingkasan> {
+  final GlobalKey<ActionButtonSectionState> _actionKey = GlobalKey();
+  late final ActionButtonSection _actionButton;
   List<Map<String, dynamic>> _originalItems = [];
-  List<Map<String, dynamic>> _filteredItems = [];
   TrinaGridStateManager? _stateManager;
-  bool _isFirstLoad = true;
+
   bool get isMobile => widget.constraints.maxWidth < 768;
   double get maxW => widget.constraints.maxWidth;
   final currencyFormat = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
-  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
 
+    _actionButton = ActionButtonSection(
+      key: _actionKey,
+      constraints: widget.constraints,
+      selectedCategory: CategoryType.ringkasan,
+      tableData: _originalItems,
+      showStatusFilter: false,
+      showSearchBox: true,
+      visibleButtons: const [
+        ActionButtonType.tambahAset,
+        ActionButtonType.refresh,
+        ActionButtonType.unduh,
+        ActionButtonType.share,
+      ],
+      onAddAsset: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('🎯 Tambah Aset Ringkasan dijalankan')),
+        );
+      },
+      onExportSelected: (format) async {
+        final messenger = ScaffoldMessenger.of(context);
+        if (kIsWeb || Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+          await ExportHelper.export(format, _originalItems, CategoryType.ringkasan);
+          messenger.showSnackBar(const SnackBar(content: Text('✅ File berhasil diunduh ke perangkat Web/Desktop')));
+        } else {
+          final extension = format.toLowerCase() == 'pdf' ? 'pdf' : 'xlsx';
+          final fileName = 'laporan_ringkasan.$extension';
+          await MobileDownloadHelper.download(
+            context: context,
+            fileName: fileName,
+            data: _originalItems,
+            format: format,
+          );
+        }
+      },
+      onRefresh: (searchText, statusId) {
+        context.read<AsetRingkasanCariBloc>().add(
+          RefreshAsetRingkasanCariEvent(
+            searchText: searchText,
+            statusId: '10001', // Dummy but required
+          ),
+        );
+      },
+    );
+
     Future.delayed(Duration.zero, () {
       context.read<AsetRingkasanCariBloc>().add(
-        RefreshAsetRingkasanCariEvent(
-          searchText: _searchController.text,
-          statusId: '10001', // Default status aktif
-        ),
+        RefreshAsetRingkasanCariEvent(searchText: '', statusId: '10001'),
       );
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AsetRingkasanCariBloc, AsetRingkasanCariState>(
-      builder: (context, state) {
-        if (state.status == ListStatus.success) {
-          if (_isFirstLoad) {
-            _originalItems = state.items.map(_mapToJson).toList();
-            _filteredItems = List.from(_originalItems);
-            _isFirstLoad = false;
-          }
-          return Column(
-            children: [
-              ActionButtonSection(
-                constraints: widget.constraints,
-                selectedCategory: CategoryType.ringkasan,
-                tableData: _originalItems,
-                onDataFiltered: (filtered) {
-                  setState(() => _filteredItems = filtered);
-                  _stateManager!
-                    ..removeAllRows()
-                    ..appendRows(_buildRows(filtered))
-                    ..setPage(1, notify: true);
-                },
-                visibleButtons: const [
-                  ActionButtonType.tambahAset,
-                  ActionButtonType.refresh,
-                  ActionButtonType.unduh,
-                  ActionButtonType.share,
-                ],
-                showStatusFilter: false,
-                showSearchBox: true,
-
-                onAddAsset: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('🎯 Tambah Aset KHUSUS untuk Tabel Ringkasan'),
-                    ),
-                  );
-                },
-
-                // ✅ Tambahkan ini untuk menghubungkan tombol "Unduh"
-                onExportSelected: (format) async {
-                  final messenger = ScaffoldMessenger.of(context);
-                  try {
-                    if (kIsWeb || Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-                      // 💻 Web/Desktop
-                      await ExportHelper.export(
-                        format,
-                        _filteredItems,
-                        CategoryType.ringkasan,
-                      );
-
-                      // messenger.showSnackBar(
-                      //   SnackBar(content: Text('✅ Berhasil mengunduh $format di web')),
-                      // );
-                    } else {
-                      // 📱 Mobile
-                      final extension = format.toLowerCase() == 'pdf' ? 'pdf' : 'xlsx';
-                      final fileName = 'laporan_ringkasan.$extension';
-
-                      await MobileDownloadHelper.download(
-                        context: context,
-                        fileName: fileName,
-                        data: _filteredItems,
-                        format: format,
-                      );
-
-                      messenger.showSnackBar(
-                        SnackBar(content: Text('✅ Berhasil mengunduh $fileName di perangkat kamu')),
-                      );
-                    }
-                  } catch (e) {
-                    messenger.showSnackBar(
-                      SnackBar(content: Text('❌ Gagal mengunduh file: $e')),
-                    );
-                  }
-                },
-
-                onRefresh: (searchText, statusId) {
-                  context.read<AsetRingkasanCariBloc>().add(
-                    RefreshAsetRingkasanCariEvent(
-                      searchText: searchText,
-                      statusId: statusId,
-                    ),
-                  );
-                },
-              ),
-
-              const SizedBox(height: 16),
-              SizedBox(
+    return Column(
+      children: [
+        _actionButton,
+        const SizedBox(height: 16),
+        BlocBuilder<AsetRingkasanCariBloc, AsetRingkasanCariState>(
+          builder: (context, state) {
+            if (state.status == ListStatus.success) {
+              _originalItems = state.items.map(_mapToJson).toList();
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                _actionKey.currentState?.updateTableData(_originalItems);
+              });
+              return SizedBox(
                 height: 500,
                 child: TrinaGrid(
                   columns: _buildColumns(),
-                  rows: _buildRows(_filteredItems),
+                  rows: _buildRows(_originalItems),
                   mode: TrinaGridMode.normal,
                   configuration: TrinaGridConfiguration(
                     enableMoveHorizontalInEditing: false,
@@ -168,15 +133,16 @@ class _TableRingkasanState extends State<TableRingkasan> {
                     _stateManager?.setPage(1);
                   },
                 ),
-              ),
-            ],
-          );
-        } else if (state.status == ListStatus.loading) {
-          return const Center(child: CircularProgressIndicator());
-        } else {
-          return const Center(child: Text('No Data Available!!'));
-        }
-      },
+              );
+            } else if (state.status == ListStatus.loading) {
+              return const Center(child: CircularProgressIndicator());
+            } else {
+              // return const Center(child: Text('No Data Available!!'));
+              return const Center(child: CircularProgressIndicator());
+            }
+          },
+        ),
+      ],
     );
   }
 
@@ -219,10 +185,7 @@ class _TableRingkasanState extends State<TableRingkasan> {
       minWidth: width,
       renderer: (context) {
         final value = context.cell.value.toString();
-        final display = isCurrency
-            ? currencyFormat.format(double.tryParse(value) ?? 0)
-            : value;
-
+        final display = isCurrency ? currencyFormat.format(double.tryParse(value) ?? 0) : value;
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           child: Text(

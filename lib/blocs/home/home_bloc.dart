@@ -62,5 +62,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<AsetHealthPageActiveEvent>((event, emit) => emit(AsetHealthPageActive()));
     on<AsetStatusPageActiveEvent>((event, emit) => emit(AsetStatusPageActive()));
     on<AsetPageActiveEvent>((event, emit) => emit(AsetPageActive()));
+
+    on<ReviewCariPageActiveEvent>((event, emit) => emit(ReviewCariPageActive()));
+
+    on<BeritaPageActiveEvent>((event, emit) => emit(BeritaPageActive()));
+    on<BeritaSampinganPageActiveEvent>((event, emit) => emit(BeritaSampinganPageActive()));
+    on<BeritaArtikelPageActiveEvent>((event, emit) => emit(BeritaArtikelPageActive()));
   }
 }

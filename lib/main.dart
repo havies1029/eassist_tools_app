@@ -57,6 +57,9 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'blocs/gen_aset_dashboard/asetdashboardcari_bloc.dart';
 import 'blocs/gen_aset_health/asethealthcari_bloc.dart';
 import 'blocs/gen_aset_ringkasan/asetringkasancari_bloc.dart';
+import 'blocs/gen_berita/berita1cari_bloc.dart';
+import 'blocs/gen_berita/berita2cari_bloc.dart';
+import 'blocs/gen_berita/berita3cari_bloc.dart';
 import 'blocs/gen_cob_app/cobcari_bloc.dart';
 import 'blocs/gen_profile/mrekan1crud_bloc.dart';
 import 'blocs/gen_profile/mrekancontactcrud_bloc.dart';
@@ -234,6 +237,9 @@ class App extends StatelessWidget {
             create: (context) => AsetHealthCariBloc()),
         BlocProvider(create: (context) => StatusAsetCariBloc()),
         BlocProvider(create: (context) => ReviewCariBloc()),
+        BlocProvider(create: (context) => Berita1CariBloc()),
+        BlocProvider(create: (context) => Berita2CariBloc()),
+        BlocProvider(create: (context) => Berita3CariBloc()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

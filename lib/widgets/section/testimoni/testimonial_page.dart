@@ -84,10 +84,11 @@ class ActionSectionState extends State<ActionSection> with SingleTickerProviderS
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 70),
-                  // New Header Design
+                  const SizedBox(height: 30),
                   _buildHeader(isMobile),
-                  const SizedBox(height: 50.0),
+                  const SizedBox(height: 15),
+                  _buildRatingSection(isMobile),
+                  const SizedBox(height: 30),
                   BlocBuilder<GallerytestimonyCariBloc, GallerytestimonyCariState>(
                     builder: (context, state) {
                       if (state.status == ListStatus.initial) {
@@ -127,16 +128,23 @@ class ActionSectionState extends State<ActionSection> with SingleTickerProviderS
                             const SizedBox(height: 32),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF91C050),
-                                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+                                backgroundColor: Colors.white,
+                                foregroundColor: const Color(0xFF91C050),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  side: const BorderSide(
+                                    color: Color(0xFF91C050),
+                                  ),
+                                ),
+                                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                               ),
                               onPressed: () => _loadMore(maxDisplay.length),
                               child: const Text(
                                 'Lihat Lebih Banyak',
                                 style: TextStyle(
                                   fontFamily: 'Satoshi-Regular',
-                                  fontSize: 16,
-                                  color: Colors.white,
+                                  fontSize: 15,
+                                  color: Color(0xFF91C050),
                                 ),
                               ),
                             ),
@@ -158,106 +166,172 @@ class ActionSectionState extends State<ActionSection> with SingleTickerProviderS
   Widget _buildHeader(bool isMobile) {
     return Column(
       children: [
-        SizedBox(
-          width: isMobile ? 50.0 : 125,
-          height: isMobile ? 50.0 : 125,
-          child: Stack(
-            alignment: Alignment.center,
+        // Icon
+        Container(
+          child: SvgPicture.asset(
+            'assets/icons/thumbsup.svg',
+            width: isMobile ? 40 : 50,
+            height: isMobile ? 40 : 50,
+          ),
+        ),
+
+        SizedBox(height: 15),
+
+        // Title
+        RichText(
+          textAlign: TextAlign.center,
+          text: TextSpan(
+            style: TextStyle(
+              fontFamily: 'Satoshi-Regular',
+              fontSize: isMobile ? 20.0 : 25.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
             children: [
-              // Outer border (gradient)
-              Container(
-                width: isMobile ? 50.0 : 125,
-                height: isMobile ? 50.0 : 125,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: const RadialGradient(
-                    colors: [Color(0xFFE4FFBE), Color(0xFF91C050)],
-                    center: Alignment.center,
-                    radius: 0.8,
-                  ),
-                ),
-              ),
-              // Inner white border
-              Container(
-                width: isMobile ? 40.0 : 108.33,
-                height: isMobile ? 40.0 : 108.33,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white,
-                ),
-              ),
-              // Innermost circle (greenish background)
-              Container(
-                width: isMobile ? 35.0 : 96,
-                height: isMobile ? 35.0 : 96,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(0xFFE6F3D6),
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  '5,0',
-                  style: TextStyle(
-                    fontFamily: 'Satoshi',
-                    fontSize: isMobile ? 25.0 : 40,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF91C050),
-                  ),
+              const TextSpan(text: 'Kata Mereka Tentang '),
+              const TextSpan(
+                text: 'Kami',
+                style: TextStyle(
+                  color: Color(0xFF91C050),
                 ),
               ),
             ],
           ),
         ),
+        SizedBox(height: 15.0),
 
-        SizedBox(height: isMobile ? 10.0 : 16.0),
+        // Subtitle
+        Container(
+          width: 180,
+          height: 43.74,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(42.06),
+            border: Border.all(color: const Color(0xFF91C050)),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Dari layanan ',
+                style: TextStyle(
+                  fontFamily: 'Satoshi-Regular',
+                  fontSize: isMobile ? 12 : 15,
+                  color: Colors.black,
+                ),
+              ),
+              Image.asset(
+                'assets/images/JPS(2).png',
+                width: isMobile? 54.67 : 65,
+                height: isMobile ? 27.02 : 32,
+                fit: BoxFit.contain,
+              )
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 
+  Widget _buildRatingSection(bool isMobile) {
+    return Column(
+      children: [
         Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: isMobile ? MainAxisAlignment.center : MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Teks di kiri
-            Text(
-              'Terpercaya',
-              style: TextStyle(
-                fontFamily: 'Satoshi-Regular',
-                fontSize: isMobile ? 15.0 : 30.13,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xFF91C050),
+            // Bulat hijau dengan nilai 5,0
+            SizedBox(
+              width: isMobile ? 76.19 : 90.39,
+              height: isMobile ? 76.19 : 90.39,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  // ✅ Outer border (gradient)
+                  Container(
+                    width: isMobile ? 76.19 : 90.39,
+                    height: isMobile ? 76.19 : 90.39,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: const RadialGradient(
+                        colors: [Color(0xFFE4FFBE), Color(0xFF91C050)],
+                        center: Alignment.center,
+                        radius: 0.8,
+                      ),
+                    ),
+                  ),
+
+                  // ✅ Inner white border
+                  Container(
+                    width: isMobile ? 66.03 : 80,
+                    height: isMobile ? 66.03 : 80,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white,
+                    ),
+                  ),
+
+                  // ✅ Innermost circle (greenish background)
+                  Container(
+                    width: isMobile ? 57 : 70,
+                    height: isMobile ? 57 : 70,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color(0xFFE6F3D6),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      '5,0',
+                      style: TextStyle(
+                        fontFamily: 'Satoshi',
+                        fontSize: isMobile ? 25.4 : 30.13,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF91C050),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
+            const SizedBox(width: 12.0),
+            // Bagian teks
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Terpercaya',
+                  style: TextStyle(
+                    fontFamily: 'Satoshi-Regular',
+                    fontSize: isMobile ? 25 : 30.13,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF91C050),
+                  ),
+                ),
 
-            const SizedBox(width: 9),
+                const SizedBox(height: 0),
 
-            // Ikon di kanan
-            SvgPicture.asset(
-              'assets/icons/thumbsup_solid.svg',
-              width: isMobile ? 10.0 : 25,
-              height: isMobile ? 10.0 : 25,
+                Row(
+                  children: List.generate(5, (index) => Icon(
+                    Icons.star,
+                    color: Color(0xFFFFC728),
+                    size: isMobile ? 17.94 : 21.28,
+                  )),
+                ),
+
+                const SizedBox(height: 0),
+
+                Text(
+                  '50 dari 50 ulasan',
+                  style: TextStyle(
+                    fontFamily: 'Satoshi-Regular',
+                    fontSize: isMobile ? 12 : 15.42,
+                    color: Colors.black54,
+                  ),
+                ),
+              ],
             ),
           ],
-        ),
-
-        SizedBox(height: 0),
-
-        // Star rating
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(5, (index) => Icon(
-            Icons.star,
-            color: Color(0xFFFFC728),
-            size: isMobile ? 15.0 : 21.28,
-          )),
-        ),
-
-        SizedBox(height: 0),
-
-        // "50 dari 50 ulasan" text
-        Text(
-          '50 dari 50 ulasan',
-          style: TextStyle(
-            fontFamily: 'Satoshi-Regular',
-            fontSize: isMobile ? 12.0 : 15.42,
-            color: Colors.black54,
-          ),
         ),
         const SizedBox(height: 16),
         Align(
@@ -267,6 +341,7 @@ class ActionSectionState extends State<ActionSection> with SingleTickerProviderS
             style: TextStyle(
               fontSize: isMobile ? 15 : 18,
               color: Colors.black54,
+              fontWeight: FontWeight.w400,
             ),
           ),
         ),
@@ -275,7 +350,18 @@ class ActionSectionState extends State<ActionSection> with SingleTickerProviderS
   }
 
   Widget _buildTestimonialGrid(List displayedItems, bool isMobile) {
-    // Split items into rows of 3
+    if (isMobile) {
+      return Column(
+        children: displayedItems.map<Widget>((item) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
+            child: _buildTestimonialCard(item, true),
+          );
+        }).toList(),
+      );
+    }
+
+    // Desktop: 3 kolom per baris
     List<List> rows = [];
     for (int i = 0; i < displayedItems.length; i += 3) {
       rows.add(displayedItems.skip(i).take(3).toList());
@@ -289,16 +375,13 @@ class ActionSectionState extends State<ActionSection> with SingleTickerProviderS
               children: [
                 for (int i = 0; i < row.length; i++) ...[
                   Expanded(
-                    child: _buildTestimonialCard(row[i], isMobile),
+                    child: _buildTestimonialCard(row[i], false),
                   ),
                   if (i < row.length - 1) const SizedBox(width: 16),
                 ],
-                // Fill remaining space if less than 3 cards in row
+                // Fill empty slots
                 if (row.length < 3)
-                  ...List.generate(
-                      3 - row.length,
-                          (index) => const Expanded(child: SizedBox())
-                  ),
+                  ...List.generate(3 - row.length, (_) => const Expanded(child: SizedBox())),
               ],
             ),
           )

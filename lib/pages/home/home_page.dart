@@ -114,6 +114,10 @@ class _HomePageState extends State<HomePage> {
     if (state is AsetHealthPageActive) return PageType.asethealth;
     if (state is AsetStatusPageActive) return PageType.asetstatus;
     if (state is AsetPageActive) return PageType.aset;
+    if (state is ReviewCariPageActive) return PageType.review;
+    if (state is BeritaPageActive) return PageType.berita;
+    if (state is BeritaSampinganPageActive) return PageType.beritasampingan;
+    if (state is BeritaArtikelPageActive) return PageType.beritaartikel;
     return null;
   }
 }

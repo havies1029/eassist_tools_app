@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../../../../../common/constants.dart';
 import '../../../../dialog/popup/donwload_popup.dart';
 import '../../category_type.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:eassist_tools_app/blocs/gen_status_aset/statusasetcari_bloc.dart';
 
 String _mapStatusToId(String statusLabel) {
   switch (statusLabel.toLowerCase()) {
@@ -109,10 +112,10 @@ class ActionButtonSectionState extends State<ActionButtonSection> {
       'color': Color(0xFFFF0000),
     },
   };
-
-  static const List<String> _statusFilters = [
-    'Semua', 'Aktif', 'Non Aktif', 'Diproses', 'Berakhir'
-  ];
+  //
+  // static const List<String> _statusFilters = [
+  //   'Semua', 'Aktif', 'Non Aktif', 'Diproses', 'Berakhir'
+  // ];
 
   String _activeStatusFilter = 'Semua';
   String _searchText = '';
@@ -121,6 +124,11 @@ class ActionButtonSectionState extends State<ActionButtonSection> {
   @override
   void initState() {
     super.initState();
+
+    final bloc = context.read<StatusAsetCariBloc>();
+    if (bloc.state.items.isEmpty) {
+      bloc.add(RefreshStatusAsetCariEvent());
+    }
     debugPrint('🔥 Category in ActionButtonSection: ${widget.selectedCategory}');
   }
 
@@ -417,11 +425,24 @@ class ActionButtonSectionState extends State<ActionButtonSection> {
     if (!shouldShowFilter) return const SizedBox.shrink();
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
-      child: _StatusFilterChips(
-        active: _activeStatusFilter,
-        options: _statusFilters,
-        onChanged: _onFilterChanged,
-      ),
+      child:
+      BlocBuilder<StatusAsetCariBloc, StatusAsetCariState>(
+        builder: (context, state) {
+          if (state.status == ListStatus.loading || state.items.isEmpty) {
+            return const SizedBox.shrink();
+          }
+
+          final rawOptions = state.items.map((e) => e.statusNama).toSet().toList();
+          final statusOptions = ['Semua', ...rawOptions.where((e) => e.toLowerCase() != 'semua')];
+
+          return _StatusFilterChips(
+            active: _activeStatusFilter,
+            options: statusOptions,
+            onChanged: _onFilterChanged,
+          );
+        },
+      )
+
     );
   }
 
@@ -507,11 +528,24 @@ class ActionButtonSectionState extends State<ActionButtonSection> {
               Expanded(
                 child: Align(
                   alignment: Alignment.centerRight,
-                  child: _StatusFilterChips(
-                    active: _activeStatusFilter,
-                    options: _statusFilters,
-                    onChanged: _onFilterChanged,
-                  ),
+                  child:
+                  BlocBuilder<StatusAsetCariBloc, StatusAsetCariState>(
+                    builder: (context, state) {
+                      if (state.status == ListStatus.loading || state.items.isEmpty) {
+                        return const SizedBox.shrink();
+                      }
+
+                      final rawOptions = state.items.map((e) => e.statusNama).toSet().toList();
+                      final statusOptions = ['Semua', ...rawOptions.where((e) => e.toLowerCase() != 'semua')];
+
+
+                      return _StatusFilterChips(
+                        active: _activeStatusFilter,
+                        options: statusOptions,
+                        onChanged: _onFilterChanged,
+                      );
+                    },
+                  )
                 ),
               ),
           ],

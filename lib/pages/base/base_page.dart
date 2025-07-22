@@ -57,6 +57,10 @@ enum PageType {
   asethealth,
   asetstatus,
   aset,
+  review,
+  berita,
+  beritasampingan,
+  beritaartikel,
 }
 
 abstract class PageContainerBase extends StatefulWidget {

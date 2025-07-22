@@ -462,6 +462,34 @@ class _NavbarWidgetState extends State<NavbarWidget> {
         // context.go('/assets_management');
         break;
 
+      case 'Review':
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(ReviewCariPageActiveEvent());
+        });
+        // context.go('/assets_management');
+        break;
+
+      case 'Berita1':
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(BeritaPageActiveEvent());
+        });
+        // context.go('/assets_management');
+        break;
+
+      case 'Berita2':
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(BeritaArtikelPageActiveEvent());
+        });
+        // context.go('/assets_management');
+        break;
+
+      case 'Berita3':
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(BeritaSampinganPageActiveEvent());
+        });
+        // context.go('/assets_management');
+        break;
+
       case 'Test Profile':
         context.go('/test_profile');
         break;

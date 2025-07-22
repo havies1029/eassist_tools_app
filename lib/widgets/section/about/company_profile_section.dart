@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 // =================== STYLES & CONSTANTS ===================
 class AppColors {
-  static const Color primaryGreen = Color(0xFF79AB43);
+  static const Color primaryGreen = Color(0xFF91C050);
   static const Color primaryOrange = Color(0xFFFAA232);
   static const Color backgroundLightGreen = Color(0xFFE8F5D8);
   static const Color textColor = Colors.black;
-  static const Color textMuted = Color(0xFF585858);
+  static const Color textMuted = Color(0xFF636363);
   static const Color backgroundWhite = Colors.white;
 }
 
@@ -60,8 +60,8 @@ class CompanyProfileSection extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(
-        horizontal: isMobile ? 100 : 300,
-        vertical: isMobile ? 5 : 10,
+        horizontal: isMobile ? 20 : 300,
+        vertical: 10,
       ),
       color: AppColors.backgroundWhite,
       child: isMobile ? _buildMobileLayout(isMobile) : _buildDesktopLayout(isMobile),
@@ -91,8 +91,8 @@ class CompanyProfileSection extends StatelessWidget {
   }
 
   Widget _buildContent(bool isMobile) {
-    final double  titleSize = isMobile ? 23 : 29.41;
-    final double descSize = isMobile ? 10 : 15.13;
+    final double  titleSize = isMobile ? 22 : 29.41;
+    final double descSize = isMobile ? 15 : 15.13;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -118,9 +118,9 @@ class CompanyProfileSection extends StatelessWidget {
   }
 
   Widget _buildDownloadButton(bool isMobile) {
-    final double fontSize = isMobile ? 12 : 15.13;
-    final double iconSize = isMobile ? 10 : 13.45;
-    final double circleSize = isMobile ? 25 : 33.61;
+    final double fontSize = isMobile ? 10.22 : 15.13;
+    final double iconSize = isMobile ? 8.17 : 13.45;
+    final double circleSize = isMobile ? 20.44 : 33.61;
 
     return Container(
       decoration: BoxDecoration(

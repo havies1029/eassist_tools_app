@@ -15,7 +15,7 @@ class ArticleListPage extends StatefulWidget {
 class _ArticleListPageState extends State<ArticleListPage> {
   int hoveredMainIndex = -1;
   int hoveredSideIndex = -1;
-
+  int hoveredSidebarIndex = -1;
 
   Color getCategoryColor(String category) {
     switch (category.toLowerCase()) {
@@ -270,6 +270,82 @@ class _ArticleListPageState extends State<ArticleListPage> {
     );
   }
 
+  Widget buildSidebarArticleItem(Map<String, String> article, int index) {
+    final bool isHovered = hoveredSidebarIndex == index;
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => hoveredSidebarIndex = index),
+      onExit: (_) => setState(() => hoveredSidebarIndex = -1),
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: () => debugPrint('Sidebar tapped: ${article['title']}'),
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 16),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: isHovered ? const Color(0xFF79AB43).withOpacity(0.05) : Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: isHovered
+                  ? const Color(0xFF79AB43).withOpacity(0.2)
+                  : Colors.grey.shade200,
+              width: 1,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                article['title']!,
+                style: const TextStyle(
+                  fontFamily: 'Satoshi-Regular',
+                  fontSize: 16,
+                  color: Colors.black87,
+                  height: 1.4,
+                  fontWeight: FontWeight.w600,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF79AB43),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: Text(
+                      article['category']!,
+                      style: const TextStyle(
+                        fontFamily: 'Satoshi-Regular',
+                        fontSize: 12,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  const Icon(Icons.menu_book, size: 14, color: Colors.grey),
+                  const SizedBox(width: 4),
+                  Text(
+                    article['readTime']!,
+                    style: TextStyle(
+                      fontFamily: 'Satoshi-Regular',
+                      fontSize: 12,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final double constraintWidth = widget.constraints.maxWidth;
@@ -314,9 +390,42 @@ class _ArticleListPageState extends State<ArticleListPage> {
               ),
               const SizedBox(height: 40),
 
-              // Section Cerita Sampingan - Mobile
+              // Section Cerita Lainnya - Mobile (adaptif berdasarkan lebar)
               const Text(
-                'Cerita Sampingan',
+                'Cerita Lainnya',
+                style: TextStyle(
+                  fontFamily: 'Satoshi-Regular',
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 20),
+              // Cek apakah layar cukup lebar untuk 2 kolom
+              constraintWidth < 500
+                  ? ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: sideArticles.length,
+                itemBuilder: (context, index) => buildSideArticleItem(sideArticles[index], index),
+              )
+                  : GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 16,
+                  crossAxisSpacing: 16,
+                  childAspectRatio: 2.5, // Wide ratio for mobile side articles
+                ),
+                itemCount: sideArticles.length,
+                itemBuilder: (context, index) => buildSideArticleItem(sideArticles[index], index),
+              ),
+              const SizedBox(height: 40),
+
+              // Section Artikel Lainnya - Mobile (sidebar articles)
+              const Text(
+                'Artikel Lainnya',
                 style: TextStyle(
                   fontFamily: 'Satoshi-Regular',
                   fontSize: 20,
@@ -328,8 +437,8 @@ class _ArticleListPageState extends State<ArticleListPage> {
               ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: sideArticles.length,
-                itemBuilder: (context, index) => buildSideArticleItem(sideArticles[index], index),
+                itemCount: sidebarArticles.length,
+                itemBuilder: (context, index) => buildSidebarArticleItem(sidebarArticles[index], index),
               ),
             ],
           )
@@ -363,9 +472,9 @@ class _ArticleListPageState extends State<ArticleListPage> {
               ),
               const SizedBox(height: 40),
 
-              // Section Cerita Sampingan - Tablet
+              // Section Cerita Lainnya - Tablet (2 kolom untuk sideArticles)
               const Text(
-                'Cerita Sampingan',
+                'Cerita Lainnya',
                 style: TextStyle(
                   fontFamily: 'Satoshi-Regular',
                   fontSize: 24,
@@ -374,7 +483,6 @@ class _ArticleListPageState extends State<ArticleListPage> {
                 ),
               ),
               const SizedBox(height: 20),
-              // Tablet: 2 columns for side articles
               GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -387,12 +495,37 @@ class _ArticleListPageState extends State<ArticleListPage> {
                 itemCount: sideArticles.length,
                 itemBuilder: (context, index) => buildSideArticleItem(sideArticles[index], index),
               ),
+              const SizedBox(height: 40),
+
+              // Section Artikel Lainnya - Tablet (sidebar articles)
+              const Text(
+                'Artikel Lainnya',
+                style: TextStyle(
+                  fontFamily: 'Satoshi-Regular',
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 20),
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 16,
+                  crossAxisSpacing: 16,
+                  childAspectRatio: 2.5, // Aspect ratio for tablet sidebar articles
+                ),
+                itemCount: sidebarArticles.length,
+                itemBuilder: (context, index) => buildSidebarArticleItem(sidebarArticles[index], index),
+              ),
             ],
           )
               : Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Kolom Kiri - Cerita Besar (Desktop)
+              // Kolom Kiri - Cerita Besar + Cerita Lainnya (Desktop)
               Expanded(
                 flex: 7,
                 child: Column(
@@ -421,20 +554,11 @@ class _ArticleListPageState extends State<ArticleListPage> {
                       itemCount: mainArticles.length,
                       itemBuilder: (context, index) => buildMainArticleCard(mainArticles[index], index),
                     ),
-                  ],
-                ),
-              ),
+                    const SizedBox(height: 40),
 
-              const SizedBox(width: 32),
-
-              // Kolom Kanan - Cerita Sampingan (Desktop)
-              Expanded(
-                flex: 3,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                    // Section Cerita Lainnya - Desktop (2 kolom untuk sideArticles)
                     const Text(
-                      'Cerita Sampingan',
+                      'Cerita Lainnya',
                       style: TextStyle(
                         fontFamily: 'Satoshi-Regular',
                         fontSize: 24,
@@ -443,11 +567,45 @@ class _ArticleListPageState extends State<ArticleListPage> {
                       ),
                     ),
                     const SizedBox(height: 20),
+                    GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 16,
+                        crossAxisSpacing: 16,
+                        childAspectRatio: 3.5, // Wide ratio for desktop side articles
+                      ),
+                      itemCount: sideArticles.length,
+                      itemBuilder: (context, index) => buildSideArticleItem(sideArticles[index], index),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(width: 32),
+
+              // Kolom Kanan - Artikel Lainnya (Desktop)
+              Expanded(
+                flex: 3,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Artikel Lainnya',
+                      style: TextStyle(
+                        fontFamily: 'Satoshi-Regular',
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
                     ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: sideArticles.length,
-                      itemBuilder: (context, index) => buildSideArticleItem(sideArticles[index], index),
+                      itemCount: sidebarArticles.length,
+                      itemBuilder: (context, index) => buildSidebarArticleItem(sidebarArticles[index], index),
                     ),
                   ],
                 ),

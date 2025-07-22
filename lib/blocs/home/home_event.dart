@@ -50,6 +50,14 @@ class AsetStatusPageActiveEvent extends HomeEvent {}
 
 class AsetPageActiveEvent extends HomeEvent {}
 
+class ReviewCariPageActiveEvent extends HomeEvent {}
+
+class BeritaPageActiveEvent extends HomeEvent {}
+
+class BeritaSampinganPageActiveEvent extends HomeEvent {}
+
+class BeritaArtikelPageActiveEvent extends HomeEvent {}
+
 //Active Page
 class SplashPageActiveEvent extends HomeEvent {}
 class ProfileIndividuPageActiveEvent extends HomeEvent {}
