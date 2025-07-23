@@ -60,6 +60,8 @@ import 'blocs/gen_aset_ringkasan/asetringkasancari_bloc.dart';
 import 'blocs/gen_berita/berita1cari_bloc.dart';
 import 'blocs/gen_berita/berita2cari_bloc.dart';
 import 'blocs/gen_berita/berita3cari_bloc.dart';
+import 'blocs/gen_berita/beritakecilcari_bloc.dart';
+import 'blocs/gen_berita/beritalaincari_bloc.dart';
 import 'blocs/gen_cob_app/cobcari_bloc.dart';
 import 'blocs/gen_profile/mrekan1crud_bloc.dart';
 import 'blocs/gen_profile/mrekancontactcrud_bloc.dart';
@@ -240,6 +242,8 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => Berita1CariBloc()),
         BlocProvider(create: (context) => Berita2CariBloc()),
         BlocProvider(create: (context) => Berita3CariBloc()),
+        BlocProvider(create: (context) => BeritaKecilCariBloc()),
+        BlocProvider(create: (context) => BeritaLainCariBloc()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -12,7 +12,8 @@ class FetchBerita3CariEvent extends Berita3CariEvents {}
 class RefreshBerita3CariEvent extends Berita3CariEvents {
   final String berita1Id;
 
-  const RefreshBerita3CariEvent(this.berita1Id);
+  const RefreshBerita3CariEvent({required this.berita1Id}); // ✅ named parameter
+
 
   @override
   List<Object> get props => [berita1Id];

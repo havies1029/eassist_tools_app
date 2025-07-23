@@ -16,6 +16,8 @@ class AppData {
   static String? lastLoginEmail;
   static String? googleDisplayName;
   static bool isInOtpProcess = false;
+  static String? berita1Id;
+  static String? gambarArtikel;
 
   // static bool useSSL = false;
   // static String apiDomain = "http://localhost/eAssistToolsAPI/";

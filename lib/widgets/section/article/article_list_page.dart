@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:go_router/go_router.dart';
+import '../../../blocs/gen_berita/berita1cari_bloc.dart';
+import '../../../blocs/gen_berita/berita2cari_bloc.dart';
+import '../../../blocs/gen_berita/berita3cari_bloc.dart';
+import '../../../blocs/gen_berita/beritakecilcari_bloc.dart';
+import '../../../blocs/gen_berita/beritalaincari_bloc.dart';
+import '../../../blocs/home/home_bloc.dart';
+import '../../../common/app_data.dart';
+import '../../../common/constants.dart';
+import '../../../models/gen_berita/berita1cari_model.dart';
 import '../../../pages/article_page/article_detail.dart';
 import 'article_content.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ArticleListPage extends StatefulWidget {
   final BoxConstraints constraints;
@@ -17,47 +28,104 @@ class _ArticleListPageState extends State<ArticleListPage> {
   int hoveredSideIndex = -1;
   int hoveredSidebarIndex = -1;
 
-  Color getCategoryColor(String category) {
-    switch (category.toLowerCase()) {
-      case 'teknologi':
-        return const Color(0xFF3B82F6);
-      case 'lingkungan':
-        return const Color(0xFF10B981);
-      case 'bisnis':
-        return const Color(0xFF8B5CF6);
-      case 'pendidikan':
-        return const Color(0xFFEF4444);
-      case 'ekonomi':
-        return const Color(0xFFF59E0B);
-      case 'budaya':
-        return const Color(0xFFEC4899);
-      case 'infrastruktur':
-        return const Color(0xFF6B7280);
-      case 'kesehatan':
-        return const Color(0xFF06B6D4);
-      case 'olahraga':
-        return const Color(0xFFEAB308);
-      default:
-        return const Color(0xFF79AB43);
-    }
+  @override
+  void initState() {
+    super.initState();
+
+    // Kirim refresh untuk masing-masing bloc
+    debugPrint('🔥 Refresh Berita jenis 1');
+    context.read<Berita1CariBloc>().add(const RefreshBerita1CariEvent(1));
+
+    debugPrint('🔥 Refresh Berita jenis 2');
+    context.read<BeritaKecilCariBloc>().add(const RefreshBeritaKecilCariEvent(2));
+
+    debugPrint('🔥 Refresh Berita jenis 3');
+    context.read<BeritaLainCariBloc>().add(const RefreshBeritaLainCariEvent(3));
   }
 
-  Widget buildMainArticleCard(Map<String, String> article, int index) {
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<Berita1CariBloc, Berita1CariState>(
+      builder: (context, state1) {
+        return BlocBuilder<BeritaKecilCariBloc, BeritaKecilCariState>(
+          builder: (context, state2) {
+            return BlocBuilder<BeritaLainCariBloc, BeritaLainCariState>(
+              builder: (context, state3) {
+                final mainArticles = state1.items;
+                final sideArticles = state2.items;
+                final sidebarArticles = state3.items;
+
+                final double constraintWidth = widget.constraints.maxWidth;
+                final bool isMobile = constraintWidth < 768;
+                final bool isTablet = constraintWidth >= 768 && constraintWidth < 1024;
+                final double maxWidth = constraintWidth > 1300
+                    ? 1200.0
+                    : constraintWidth * 0.9;
+
+                final isLoading = (state1.status == ListStatus.loading &&
+                    state2.status == ListStatus.loading &&
+                    state3.status == ListStatus.loading) &&
+                    mainArticles.isEmpty &&
+                    sideArticles.isEmpty &&
+                    sidebarArticles.isEmpty;
+
+                if (isLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                return Center(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: maxWidth),
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.symmetric(
+                        vertical: isMobile ? 40.0 : 60.0,
+                        horizontal: isMobile ? 16.0 : 0,
+                      ),
+                      physics: const BouncingScrollPhysics(),
+                      child: isMobile
+                          ? buildMobileLayout(mainArticles, sideArticles, sidebarArticles, constraintWidth)
+                          : isTablet
+                          ? buildTabletLayout(mainArticles, sideArticles, sidebarArticles)
+                          : buildDesktopLayout(mainArticles, sideArticles, sidebarArticles),
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
+
+
+  Widget buildMainArticleCard(Berita1CariModel article, int index) {
     final bool isHovered = hoveredMainIndex == index;
 
     return MouseRegion(
       onEnter: (_) => setState(() => hoveredMainIndex = index),
       onExit: (_) => setState(() => hoveredMainIndex = -1),
       child: GestureDetector(
-        onTap: () {
-          debugPrint('Klik artikel utama: ${article['title']}');
-          if (index == 0) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ArticleDetailMain()),
-            ); // 👈 arahkan hanya untuk artikel pertama
-          }
-        },
+          onTap: () {
+            debugPrint('Klik buildMainArticleCard utama: ${article.judul ?? '-'}');
+            final berita1Id = article.berita1Id;
+            final gambar = article.gambar;
+
+            AppData.berita1Id = berita1Id;
+            AppData.gambarArtikel = gambar;
+            debugPrint('🎯 Gambar Artikel: ${article.gambar}');
+
+            if (berita1Id != null) {
+              context.read<Berita2CariBloc>().add(RefreshBerita2CariEvent(berita1Id: berita1Id));
+              context.read<Berita3CariBloc>().add(RefreshBerita3CariEvent(berita1Id: berita1Id));
+
+              SchedulerBinding.instance.addPostFrameCallback((_) {
+                context.read<HomeBloc>().add(Article1PageActiveEvent());
+              });
+            }
+          },
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           decoration: BoxDecoration(
@@ -78,11 +146,10 @@ class _ArticleListPageState extends State<ArticleListPage> {
               fit: StackFit.expand,
               children: [
                 // Background Image
-                Image.asset(
-                  article['image']!,
+                Image.network(
+                  article.gambar ?? '',
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
-                    // Fallback gradient if image not found
                     return Container(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
@@ -97,7 +164,6 @@ class _ArticleListPageState extends State<ArticleListPage> {
                     );
                   },
                 ),
-
                 // Dark Overlay
                 Container(
                   decoration: BoxDecoration(
@@ -130,7 +196,7 @@ class _ArticleListPageState extends State<ArticleListPage> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          article['title']!,
+                          article.judul ?? '-',
                           style: const TextStyle(
                             fontFamily: 'Satoshi-Regular',
                             fontSize: 14,
@@ -143,7 +209,7 @@ class _ArticleListPageState extends State<ArticleListPage> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          article['date']!,
+                          article.sumber,
                           style: TextStyle(
                             fontFamily: 'Satoshi-Regular',
                             fontSize: 11,
@@ -172,7 +238,7 @@ class _ArticleListPageState extends State<ArticleListPage> {
     );
   }
 
-  Widget buildSideArticleItem(Map<String, String> article, int index) {
+  Widget buildSideArticleItem(Berita1CariModel article, int index) {
     final bool isHovered = hoveredSideIndex == index;
 
     return MouseRegion(
@@ -180,7 +246,22 @@ class _ArticleListPageState extends State<ArticleListPage> {
       onExit: (_) => setState(() => hoveredSideIndex = -1),
       child: GestureDetector(
         onTap: () {
-          debugPrint('Klik artikel sampingan: ${article['title']}');
+          debugPrint('Klik Sidebar utama: ${article.judul ?? '-'}');
+          final berita1Id = article.berita1Id;
+          final gambar = article.gambar;
+
+          AppData.berita1Id = berita1Id;
+          AppData.gambarArtikel = gambar;
+          debugPrint('🎯 Gambar Artikel: ${article.gambar}');
+
+          if (berita1Id != null) {
+            context.read<Berita2CariBloc>().add(RefreshBerita2CariEvent(berita1Id: berita1Id));
+            context.read<Berita3CariBloc>().add(RefreshBerita3CariEvent(berita1Id: berita1Id));
+
+            SchedulerBinding.instance.addPostFrameCallback((_) {
+              context.read<HomeBloc>().add(Article1PageActiveEvent());
+            });
+          }
         },
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 150),
@@ -204,11 +285,11 @@ class _ArticleListPageState extends State<ArticleListPage> {
                 child: Container(
                   width: 60,
                   height: 60,
-                  child: Image.asset(
-                    article['image']!,
+                  child:
+                  Image.network(
+                    article.gambar ?? '',
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
-                      // Fallback gradient if image not found
                       return Container(
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
@@ -220,10 +301,12 @@ class _ArticleListPageState extends State<ArticleListPage> {
                             ],
                           ),
                         ),
-                        child: const Icon(
-                          Icons.article,
-                          color: Colors.white,
-                          size: 24,
+                        child: const Center(
+                          child: Icon(
+                            Icons.article,
+                            color: Colors.white,
+                            size: 24,
+                          ),
                         ),
                       );
                     },
@@ -239,7 +322,7 @@ class _ArticleListPageState extends State<ArticleListPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      article['title']!,
+                      article.judul ?? '-'!,
                       style: const TextStyle(
                         fontFamily: 'Satoshi-Regular',
                         fontSize: 13,
@@ -252,7 +335,7 @@ class _ArticleListPageState extends State<ArticleListPage> {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      'Sumber: ${article['source']!}',
+                      'Sumber: ${article.sumber ?? ''}',
                       style: TextStyle(
                         fontFamily: 'Satoshi-Regular',
                         fontSize: 11,
@@ -270,7 +353,7 @@ class _ArticleListPageState extends State<ArticleListPage> {
     );
   }
 
-  Widget buildSidebarArticleItem(Map<String, String> article, int index) {
+  Widget buildSidebarArticleItem(Berita1CariModel article, int index) {
     final bool isHovered = hoveredSidebarIndex == index;
 
     return MouseRegion(
@@ -278,7 +361,24 @@ class _ArticleListPageState extends State<ArticleListPage> {
       onExit: (_) => setState(() => hoveredSidebarIndex = -1),
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
-        onTap: () => debugPrint('Sidebar tapped: ${article['title']}'),
+        onTap: () {
+          debugPrint('Klik Sidebar utama: ${article.judul ?? '-'}');
+          final berita1Id = article.berita1Id;
+          final gambar = article.gambar;
+
+          AppData.berita1Id = berita1Id;
+          AppData.gambarArtikel = gambar;
+          debugPrint('🎯 Gambar Artikel: ${article.gambar}');
+
+          if (berita1Id != null) {
+            context.read<Berita2CariBloc>().add(RefreshBerita2CariEvent(berita1Id: berita1Id));
+            context.read<Berita3CariBloc>().add(RefreshBerita3CariEvent(berita1Id: berita1Id));
+
+            SchedulerBinding.instance.addPostFrameCallback((_) {
+              context.read<HomeBloc>().add(Article1PageActiveEvent());
+            });
+          }
+        },
         child: Container(
           margin: const EdgeInsets.only(bottom: 16),
           padding: const EdgeInsets.all(16),
@@ -296,7 +396,7 @@ class _ArticleListPageState extends State<ArticleListPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                article['title']!,
+                article.judul ?? '-'!,
                 style: const TextStyle(
                   fontFamily: 'Satoshi-Regular',
                   fontSize: 16,
@@ -317,7 +417,7 @@ class _ArticleListPageState extends State<ArticleListPage> {
                       borderRadius: BorderRadius.circular(50),
                     ),
                     child: Text(
-                      article['category']!,
+                      article.tema ?? '',
                       style: const TextStyle(
                         fontFamily: 'Satoshi-Regular',
                         fontSize: 12,
@@ -330,7 +430,7 @@ class _ArticleListPageState extends State<ArticleListPage> {
                   const Icon(Icons.menu_book, size: 14, color: Colors.grey),
                   const SizedBox(width: 4),
                   Text(
-                    article['readTime']!,
+                    article.tglTerbit.toString(),
                     style: TextStyle(
                       fontFamily: 'Satoshi-Regular',
                       fontSize: 12,
@@ -346,93 +446,154 @@ class _ArticleListPageState extends State<ArticleListPage> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final double constraintWidth = widget.constraints.maxWidth;
-    final bool isMobile = constraintWidth < 768;
-    final bool isTablet = constraintWidth >= 768 && constraintWidth < 1024;
-    final double maxWidth = constraintWidth > 1300 ? 1200.0 : constraintWidth * 0.9;
-
-    return Center(
-      child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: maxWidth),
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(
-            vertical: isMobile ? 40.0 : 60.0,
-            horizontal: isMobile ? 16.0 : 0,
+  Widget buildMobileLayout(List mainArticles, List sideArticles, List sidebarArticles, double constraintWidth) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('Cerita Besar', style: TextStyle(fontFamily: 'Satoshi-Regular', fontSize: 20, fontWeight: FontWeight.w700, color: Colors.black87)),
+        const SizedBox(height: 20),
+        ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: mainArticles.length,
+          separatorBuilder: (_, __) => const SizedBox(height: 16),
+          itemBuilder: (context, index) => SizedBox(height: 200, child: buildMainArticleCard(mainArticles[index], index)),
+        ),
+        const SizedBox(height: 40),
+        const Text('Cerita Lainnya', style: TextStyle(fontFamily: 'Satoshi-Regular', fontSize: 20, fontWeight: FontWeight.w700, color: Colors.black87)),
+        const SizedBox(height: 20),
+        constraintWidth < 500
+            ? ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: sideArticles.length,
+          itemBuilder: (context, index) => buildSideArticleItem(sideArticles[index], index),
+        )
+            : GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisSpacing: 16,
+            crossAxisSpacing: 16,
+            childAspectRatio: 2.5,
           ),
-          physics: const BouncingScrollPhysics(),
-          child: isMobile
-              ? Column(
+          itemCount: sideArticles.length,
+          itemBuilder: (context, index) => buildSideArticleItem(sideArticles[index], index),
+        ),
+        const SizedBox(height: 40),
+        const Text('Artikel Lainnya', style: TextStyle(fontFamily: 'Satoshi-Regular', fontSize: 20, fontWeight: FontWeight.w700, color: Colors.black87)),
+        const SizedBox(height: 20),
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: sidebarArticles.length,
+          itemBuilder: (context, index) => buildSidebarArticleItem(sidebarArticles[index], index),
+        ),
+      ],
+    );
+  }
+
+  Widget buildTabletLayout(List mainArticles, List sideArticles, List sidebarArticles) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('Cerita Besar', style: TextStyle(fontFamily: 'Satoshi-Regular', fontSize: 24, fontWeight: FontWeight.w700, color: Colors.black87)),
+        const SizedBox(height: 20),
+        GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisSpacing: 20,
+            crossAxisSpacing: 20,
+            childAspectRatio: 1.6,
+          ),
+          itemCount: mainArticles.length,
+          itemBuilder: (context, index) => buildMainArticleCard(mainArticles[index], index),
+        ),
+        const SizedBox(height: 40),
+        const Text('Cerita Lainnya', style: TextStyle(fontFamily: 'Satoshi-Regular', fontSize: 24, fontWeight: FontWeight.w700, color: Colors.black87)),
+        const SizedBox(height: 20),
+        GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisSpacing: 16,
+            crossAxisSpacing: 16,
+            childAspectRatio: 3.0,
+          ),
+          itemCount: sideArticles.length,
+          itemBuilder: (context, index) => buildSideArticleItem(sideArticles[index], index),
+        ),
+        const SizedBox(height: 40),
+        const Text('Artikel Lainnya', style: TextStyle(fontFamily: 'Satoshi-Regular', fontSize: 24, fontWeight: FontWeight.w700, color: Colors.black87)),
+        const SizedBox(height: 20),
+        GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisSpacing: 16,
+            crossAxisSpacing: 16,
+            childAspectRatio: 2.5,
+          ),
+          itemCount: sidebarArticles.length,
+          itemBuilder: (context, index) => buildSidebarArticleItem(sidebarArticles[index], index),
+        ),
+      ],
+    );
+  }
+
+  Widget buildDesktopLayout(List mainArticles, List sideArticles, List sidebarArticles) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          flex: 7,
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Section Cerita Besar - Mobile
-              const Text(
-                'Cerita Besar',
-                style: TextStyle(
-                  fontFamily: 'Satoshi-Regular',
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black87,
-                ),
-              ),
+              const Text('Cerita Besar', style: TextStyle(fontFamily: 'Satoshi-Regular', fontSize: 24, fontWeight: FontWeight.w700, color: Colors.black87)),
               const SizedBox(height: 20),
-              // Mobile: Single column with landscape cards
-              ListView.separated(
+              GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: mainArticles.length,
-                separatorBuilder: (context, index) => const SizedBox(height: 16),
-                itemBuilder: (context, index) => Container(
-                  height: 200, // Fixed height for mobile landscape cards
-                  child: buildMainArticleCard(mainArticles[index], index),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 20,
+                  crossAxisSpacing: 20,
+                  childAspectRatio: 1.4,
                 ),
+                itemCount: mainArticles.length,
+                itemBuilder: (context, index) => buildMainArticleCard(mainArticles[index], index),
               ),
               const SizedBox(height: 40),
-
-              // Section Cerita Lainnya - Mobile (adaptif berdasarkan lebar)
-              const Text(
-                'Cerita Lainnya',
-                style: TextStyle(
-                  fontFamily: 'Satoshi-Regular',
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black87,
-                ),
-              ),
+              const Text('Cerita Lainnya', style: TextStyle(fontFamily: 'Satoshi-Regular', fontSize: 24, fontWeight: FontWeight.w700, color: Colors.black87)),
               const SizedBox(height: 20),
-              // Cek apakah layar cukup lebar untuk 2 kolom
-              constraintWidth < 500
-                  ? ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: sideArticles.length,
-                itemBuilder: (context, index) => buildSideArticleItem(sideArticles[index], index),
-              )
-                  : GridView.builder(
+              GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   mainAxisSpacing: 16,
                   crossAxisSpacing: 16,
-                  childAspectRatio: 2.5, // Wide ratio for mobile side articles
+                  childAspectRatio: 3.5,
                 ),
                 itemCount: sideArticles.length,
                 itemBuilder: (context, index) => buildSideArticleItem(sideArticles[index], index),
               ),
-              const SizedBox(height: 40),
-
-              // Section Artikel Lainnya - Mobile (sidebar articles)
-              const Text(
-                'Artikel Lainnya',
-                style: TextStyle(
-                  fontFamily: 'Satoshi-Regular',
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black87,
-                ),
-              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: 32),
+        Expanded(
+          flex: 3,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Artikel Lainnya', style: TextStyle(fontFamily: 'Satoshi-Regular', fontSize: 20, fontWeight: FontWeight.w700, color: Colors.black87)),
               const SizedBox(height: 20),
               ListView.builder(
                 shrinkWrap: true,
@@ -441,179 +602,9 @@ class _ArticleListPageState extends State<ArticleListPage> {
                 itemBuilder: (context, index) => buildSidebarArticleItem(sidebarArticles[index], index),
               ),
             ],
-          )
-              : isTablet
-              ? Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Section Cerita Besar - Tablet
-              const Text(
-                'Cerita Besar',
-                style: TextStyle(
-                  fontFamily: 'Satoshi-Regular',
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black87,
-                ),
-              ),
-              const SizedBox(height: 20),
-              // Tablet: 2 columns with landscape cards
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 20,
-                  crossAxisSpacing: 20,
-                  childAspectRatio: 1.6, // Landscape ratio
-                ),
-                itemCount: mainArticles.length,
-                itemBuilder: (context, index) => buildMainArticleCard(mainArticles[index], index),
-              ),
-              const SizedBox(height: 40),
-
-              // Section Cerita Lainnya - Tablet (2 kolom untuk sideArticles)
-              const Text(
-                'Cerita Lainnya',
-                style: TextStyle(
-                  fontFamily: 'Satoshi-Regular',
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black87,
-                ),
-              ),
-              const SizedBox(height: 20),
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 16,
-                  childAspectRatio: 3.0, // Wide ratio for side articles
-                ),
-                itemCount: sideArticles.length,
-                itemBuilder: (context, index) => buildSideArticleItem(sideArticles[index], index),
-              ),
-              const SizedBox(height: 40),
-
-              // Section Artikel Lainnya - Tablet (sidebar articles)
-              const Text(
-                'Artikel Lainnya',
-                style: TextStyle(
-                  fontFamily: 'Satoshi-Regular',
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black87,
-                ),
-              ),
-              const SizedBox(height: 20),
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 16,
-                  childAspectRatio: 2.5, // Aspect ratio for tablet sidebar articles
-                ),
-                itemCount: sidebarArticles.length,
-                itemBuilder: (context, index) => buildSidebarArticleItem(sidebarArticles[index], index),
-              ),
-            ],
-          )
-              : Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Kolom Kiri - Cerita Besar + Cerita Lainnya (Desktop)
-              Expanded(
-                flex: 7,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Cerita Besar',
-                      style: TextStyle(
-                        fontFamily: 'Satoshi-Regular',
-                        fontSize: 24,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    // Desktop: 2 columns with landscape cards
-                    GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 20,
-                        crossAxisSpacing: 20,
-                        childAspectRatio: 1.4, // Landscape ratio for desktop
-                      ),
-                      itemCount: mainArticles.length,
-                      itemBuilder: (context, index) => buildMainArticleCard(mainArticles[index], index),
-                    ),
-                    const SizedBox(height: 40),
-
-                    // Section Cerita Lainnya - Desktop (2 kolom untuk sideArticles)
-                    const Text(
-                      'Cerita Lainnya',
-                      style: TextStyle(
-                        fontFamily: 'Satoshi-Regular',
-                        fontSize: 24,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 16,
-                        crossAxisSpacing: 16,
-                        childAspectRatio: 3.5, // Wide ratio for desktop side articles
-                      ),
-                      itemCount: sideArticles.length,
-                      itemBuilder: (context, index) => buildSideArticleItem(sideArticles[index], index),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(width: 32),
-
-              // Kolom Kanan - Artikel Lainnya (Desktop)
-              Expanded(
-                flex: 3,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Artikel Lainnya',
-                      style: TextStyle(
-                        fontFamily: 'Satoshi-Regular',
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: sidebarArticles.length,
-                      itemBuilder: (context, index) => buildSidebarArticleItem(sidebarArticles[index], index),
-                    ),
-                  ],
-                ),
-              ),
-            ],
           ),
         ),
-      ),
+      ],
     );
   }
 }

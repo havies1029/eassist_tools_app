@@ -26,9 +26,6 @@ import '../gen_aset_mv/asetmvcari_main.dart';
 import '../gen_aset_par/asetparcari_list.dart';
 import '../gen_aset_par/asetparcari_main.dart';
 import '../gen_aset_ringkasan/asetringkasancari_main.dart';
-import '../gen_berita/berita_main.dart';
-import '../gen_berita/beritaartikel_main.dart';
-import '../gen_berita/beritasampingan_main.dart';
 import '../gen_cob_app/cobcari_main.dart';
 import '../gen_profile/test_profile_main.dart';
 import '../gen_review/reviewcari_main.dart';
@@ -275,6 +272,7 @@ class PageContainer extends StatelessWidget {
           selectedChoice: 'Perusahaan',
         );
       case PageType.article1:
+        debugPrint('Navigating to ArticleDetailMain (PageType: article1)');
         return const ArticleDetailMain();
       case PageType.testprofile:
         return const TestProfileMain();
@@ -282,6 +280,7 @@ class PageContainer extends StatelessWidget {
         debugPrint("🟢 AboutMain dibuild");
         return const AboutPage();
       case PageType.article:
+        debugPrint('Navigating to ArticleMain (PageType: article)');
         return const ArticleMain();
       case PageType.assetsmanagement:
         return const AssetManagementMain();
@@ -325,12 +324,12 @@ class PageContainer extends StatelessWidget {
         return const AsetMainPage();
       case PageType.review:
         return const ReviewCariMainPage();
-      case PageType.berita:
-        return const BeritaMainPage(jenis: 1);
-      case PageType.beritaartikel:
-        return const BeritaArtikelMainPage(jenis: 2);
-      case PageType.beritasampingan:
-        return const BeritaSampinganMainPage(jenis: 3);
+      // case PageType.berita:
+      //   return const BeritaMainPage(jenis: 1);
+      // case PageType.beritaartikel:
+      //   return const BeritaArtikelMainPage(jenis: 2);
+      // case PageType.beritasampingan:
+      //   return const BeritaSampinganMainPage(jenis: 3);
       default:
         return const SizedBox();
     }

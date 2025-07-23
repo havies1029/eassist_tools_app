@@ -30,7 +30,7 @@ class Berita3CariPageState extends State<Berita3CariPage> {
 	}
 	void refreshData() {
 		berita3CariBloc.add(
-			RefreshBerita3CariEvent(widget.berita1Id));
+				RefreshBerita3CariEvent(berita1Id: widget.berita1Id));
 	}
 
 }

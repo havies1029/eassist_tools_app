@@ -40,7 +40,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       }
     });
     on<ActiveAssetsPageActiveEvent>((event, emit) => emit(ActiveAssetsPageActive()));
-    on<ArticlePageActiveEvent>((event, emit) => emit(ArticlePageActive()));
+    on<ArticlePageActiveEvent>((event, emit) {
+      debugPrint("[BLOC] ArticlePageActiveEvent");
+      emit(ArticlePageActive());
+    });
     on<AssetsManagementPageActiveEvent>((event, emit) => emit(AssetsManagementPageActive()));
     on<PolisManagementPageActiveEvent>((event, emit) => emit(PolisManagementPageActive()));
     on<FindInsurancePageActiveEvent>((event, emit) => emit(FindInsurancePageActive()));

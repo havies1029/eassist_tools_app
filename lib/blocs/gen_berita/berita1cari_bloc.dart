@@ -18,7 +18,7 @@ Future<void> onRefreshBerita1Cari(
 		RefreshBerita1CariEvent event, Emitter<Berita1CariState> emit) async {
 	emit(const Berita1CariState());
 
-  emit(state.copyWith(hal: 0, jenis: event.jenis));
+  emit(state.copyWith(hal: 0, jenis: event.jenis, berita1Id: event.berita1Id, ));
 
 	add(FetchBerita1CariEvent());
 }

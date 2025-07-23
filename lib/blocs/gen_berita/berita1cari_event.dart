@@ -11,8 +11,8 @@ class FetchBerita1CariEvent extends Berita1CariEvents {}
 
 class RefreshBerita1CariEvent extends Berita1CariEvents {
   final int jenis;
-
-  const RefreshBerita1CariEvent(this.jenis);
+  final String? berita1Id; // ⬅️ tambahkan
+  const RefreshBerita1CariEvent(this.jenis, {this.berita1Id});
 
   @override
   List<Object> get props => [jenis];

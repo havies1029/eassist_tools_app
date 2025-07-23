@@ -5,13 +5,16 @@ import '../../widgets/section/about/floating_buttons_about.dart';
 import '../../widgets/components/footer/footer_section.dart';
 import '../../widgets/components/hero/hero_section.dart';
 import '../../widgets/section/article/action_article_section2.dart';
+import '../../widgets/section/article/article_detail_page.dart';
 import '../base/base_page.dart';
 
 class DummyUserRepository extends UserRepository {
   // Override semua method yang dibutuhkan dengan return dummy data atau kosong
 }
 
+// ✅ Terima berita1Id dan teruskan ke ArticlePage
 class ArticleDetailMain extends StatelessWidget {
+
   const ArticleDetailMain({super.key});
 
   @override
@@ -39,12 +42,14 @@ class ArticleDetailMain extends StatelessWidget {
           textTheme: ButtonTextTheme.primary,
         ),
       ),
-      home: const ArticlePage(),
+      home: ArticlePage(), // ⬅️ kirim ke ArticlePage
     );
   }
 }
 
+// ✅ Terima berita1Id dan teruskan ke ArticleDetailPage
 class ArticlePage extends StatelessWidget {
+
   const ArticlePage({super.key});
 
   @override
@@ -87,26 +92,31 @@ class ArticlePage extends StatelessWidget {
                 ),
               ),
 
+              // Overlay semi gelap
               Container(
                 color: Colors.black.withOpacity(0.4),
               ),
-              // Layer 2: Scrollable content (tanpa navbar)
+
+              // Layer 2: Konten scroll
               Positioned.fill(
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.only(top: isMobile? 65 : 88),
+                  padding: EdgeInsets.only(top: isMobile ? 65 : 88),
                   child: Column(
                     children: [
-                      HeroSection(constraints: constraints, sectionType: SectionType.article)  ,
+                      HeroSection(constraints: constraints, sectionType: SectionType.article),
                       FloatingButtons(constraints: constraints),
                       ActionSection2(constraints: constraints),
-                      // ArticleDetailPage(constraints: constraints),
+                      // ArticleDetailPage( // ⬅️ KIRIM berita1Id ke sini
+                      //   constraints: constraints,
+                      //   berita1Id: berita1Id,
+                      // ),
                       FooterSection(constraints: constraints),
                     ],
                   ),
                 ),
               ),
 
-              // Layer 3: Always-on-top Navbar with overlay support
+              // Layer 3: Navbar tetap di atas
               const _FixedNavbarOverlay(),
             ],
           );
