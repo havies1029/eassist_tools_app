@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import '../../../pages/base/base_page.dart';
 import '../../dialog/popup/status_popup.dart';
 
 class MenuActionSection extends StatelessWidget {
@@ -120,7 +121,8 @@ class MenuActionSection extends StatelessWidget {
     switch (menuLabel) {
       case 'Cari Asuransi':
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          context.read<HomeBloc>().add(FindInsurancePageActiveEvent());
+          // context.read<HomeBloc>().add(FindInsurancePageActiveEvent());
+          context.read<HomeBloc>().add(PushPageEvent(PageType.findinsurance));
         });
         break;
 
@@ -130,7 +132,8 @@ class MenuActionSection extends StatelessWidget {
 
       case 'Aset':
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          context.read<HomeBloc>().add(AssetsManagementPageActiveEvent());
+          // context.read<HomeBloc>().add(AssetsManagementPageActiveEvent());
+          context.read<HomeBloc>().add(PushPageEvent(PageType.assetsmanagement));
         });
         break;
 

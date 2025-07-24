@@ -92,30 +92,31 @@ class _NavBarState extends State<NavBar> {
                             final from = authState.authenticatedFrom;
                             final custType = authState.user.custType;
 
-                            if (from == "login_user") {
-                              context.read<HomeBloc>().add(HeroPageActiveEvent());
-                            } else if (from == "login_client") {
-                              context.read<HomeBloc>().add(HeroUserPageActiveEvent());
-                            } else if (from == "login_token") {
-                              if (custType == "C") {
-                                context.read<HomeBloc>().add(HeroUserPageActiveEvent());
-                              } else {
-                                context.read<HomeBloc>().add(HeroPageActiveEvent());
-                              }
-                            } else {
-                              context.read<HomeBloc>().add(HeroPageActiveEvent());
-                            }
-                          } else if (authState is AuthenticationGoogleUserAuthenticated) {
-                            context.read<HomeBloc>().add(HeroPageActiveEvent());
-                          } else {
-                            context.read<HomeBloc>().add(HeroUserPageActiveEvent());
+                            //   if (from == "login_user") {
+                            //     context.read<HomeBloc>().add(HeroPageActiveEvent());
+                            //   } else if (from == "login_client") {
+                            //     context.read<HomeBloc>().add(HeroUserPageActiveEvent());
+                            //   } else if (from == "login_token") {
+                            //     if (custType == "C") {
+                            //       context.read<HomeBloc>().add(HeroUserPageActiveEvent());
+                            //     } else {
+                            //       context.read<HomeBloc>().add(HeroPageActiveEvent());
+                            //     }
+                            //   } else {
+                            //     context.read<HomeBloc>().add(HeroPageActiveEvent());
+                            //   }
+                            // } else if (authState is AuthenticationGoogleUserAuthenticated) {
+                            //   context.read<HomeBloc>().add(HeroPageActiveEvent());
+                            // } else {
+                            //   context.read<HomeBloc>().add(HeroUserPageActiveEvent());
+                            // }
+                            context.read<HomeBloc>().add(PushPageEvent(PageType.home));
+                            // context.read<HomeBloc>().add(HomePageActiveEvent());
                           }
                         });
                       },
                       child: isMobile &&
-                          (widget.pageType == PageType.home ||
-                              widget.pageType == PageType.hero ||
-                              widget.pageType == PageType.herouser)
+                          (widget.pageType == PageType.home)
                           ? Image.asset(
                         'assets/images/JPS.png',
                         height: 50.0,

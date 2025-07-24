@@ -8,6 +8,7 @@ import '../../../blocs/home/home_bloc.dart';
 import '../../../common/app_data.dart';
 import '../../../models/gen_berita/berita2cari_model.dart';
 import '../../../models/gen_berita/berita3cari_model.dart';
+import '../../../pages/base/base_page.dart';
 
 class ArticleDetailPage extends StatefulWidget {
   final BoxConstraints constraints;
@@ -652,7 +653,8 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
 
   void _handleBackAction() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      context.read<HomeBloc>().add(ArticlePageActiveEvent());
+      // context.read<HomeBloc>().add(ArticlePageActiveEvent());
+      context.read<HomeBloc>().add(PushPageEvent(PageType.article));
     });
   }
 

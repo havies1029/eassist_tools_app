@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../blocs/home/home_bloc.dart';
+import '../../../pages/base/base_page.dart';
 import '../../dialog/popup/status_popup.dart';
 
 class FooterSection extends StatelessWidget {
@@ -360,7 +361,8 @@ class FooterSection extends StatelessWidget {
           // SchedulerBinding.instance.addPostFrameCallback((_) {
           //   context.read<HomeBloc>().add(FindInsurancePageActiveEvent());
           // });
-          context.read<HomeBloc>().add(FindInsurancePageActiveEvent());
+          // context.read<HomeBloc>().add(FindInsurancePageActiveEvent());
+          context.read<HomeBloc>().add(PushPageEvent(PageType.findinsurance));
         }),
         _buildFooterLink('Lapor Klaim', () {
           StatusPopupHelper.show(context);

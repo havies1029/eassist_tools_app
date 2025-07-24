@@ -67,7 +67,7 @@ class _LoadingClientPageState extends State<LoadingClientPage>
     Future.delayed(const Duration(seconds: 4), () async {
       if (mounted) {
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          context.read<HomeBloc>().add(HeroUserPageActiveEvent());
+          context.read<HomeBloc>().add(HomePageActiveEvent());
         });
       }
     });

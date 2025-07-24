@@ -40,8 +40,6 @@ enum PageType {
   assetsmanagement,
   polismanagement,
   findinsurance,
-  herouser,
-  hero,
   testimony,
   cs,
   usernonjps,

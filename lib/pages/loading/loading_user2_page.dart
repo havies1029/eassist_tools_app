@@ -22,7 +22,7 @@ class _LoadingUser2PageState extends State<LoadingUser2Page> {
 
       // Trigger event ke HomeBloc
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      context.read<HomeBloc>().add(HeroPageActiveEvent());
+      context.read<HomeBloc>().add(HomePageActiveEvent());
     });
 
   }

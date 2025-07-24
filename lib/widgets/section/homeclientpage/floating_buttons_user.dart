@@ -22,15 +22,15 @@ final GoogleSignIn _googleSignIn = GoogleSignIn(
 );
 
 //====================[ MAIN WIDGET CLASS ]=====================//
-class FloatingButtons extends StatefulWidget {
+class FloatingButtonsUser extends StatefulWidget {
   final BoxConstraints constraints;
-  const FloatingButtons({super.key, required this.constraints});
+  const FloatingButtonsUser({super.key, required this.constraints});
 
   @override
-  State<FloatingButtons> createState() => _FloatingButtonsState();
+  State<FloatingButtonsUser> createState() => _FloatingButtonsUserState();
 }
 
-class _FloatingButtonsState extends State<FloatingButtons> with TickerProviderStateMixin {
+class _FloatingButtonsUserState extends State<FloatingButtonsUser> with TickerProviderStateMixin {
   late AnimationController _buttonsController;
   late Animation<double> _buttonsStaggerAnimation;
 

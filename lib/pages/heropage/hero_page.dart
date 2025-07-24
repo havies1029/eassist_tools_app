@@ -16,6 +16,7 @@ import '../../widgets/components/feature/feature_section.dart';
 import '../../widgets/components/floating_button/floating_buttons.dart';
 import '../../widgets/components/footer/footer_section.dart';
 import '../../widgets/components/navbar/navbar_widget.dart';
+import '../../widgets/section/homeclientpage/floating_buttons_user.dart';
 import '../../widgets/section/testimoni/testimonial_section.dart';
 
 import '../gen_profile/test_profile_page.dart';
@@ -27,118 +28,119 @@ class HeroPage extends StatefulWidget {
   @override
   State<HeroPage> createState() => _HeroPageState();
 }
-
 class _HeroPageState extends State<HeroPage> {
-  bool _dialogShown = false;
+  // bool _dialogShown = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocListener<MRekan1CrudBloc, MRekan1CrudState>(
         listener: (context, state) {
-          final mjnsclientId = state.record?.mjnsclientId?.toString();
-          if (!_dialogShown && (mjnsclientId == "10" || mjnsclientId == "20")) {
-            _dialogShown = true;
-            showDialog(
-              context: context,
-              builder: (context) => Dialog(
-                insetPadding: const EdgeInsets.all(32),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                child: SizedBox(
-                  width: 1200,
-                  child: ProfileMainPage(
-                    userid: 123,
-                    selectedChoice:
-                    mjnsclientId == "10" ? 'Individual' : 'Perusahaan',
-                  ),
-                ),
-              ),
-            );
-          }
+          // Dialog profile bisa kamu aktifkan kembali di sini kalau perlu
         },
         child: LayoutBuilder(
           builder: (context, constraints) {
-            final bool isMobile = constraints.maxWidth < 768;
+            final isMobile = constraints.maxWidth < 768;
 
-            // Trigger login popup once on build
-            final authState = context.read<AuthenticationBloc>().state;
-
-            // ⛔ Jangan munculkan kalau SUDAH login
-            final sudahLogin = authState is AuthenticationAuthenticated;
-
-            if (!_dialogShown && !sudahLogin) {
-              _dialogShown = true;
-              //
-              // WidgetsBinding.instance.addPostFrameCallback((_) {
-              //   CustomPopupsLoginUser.showLoginUserDialog(context);
-              // });
-            }
-            return Stack(
-              children: [
-                // Layer 1: Background
-                Positioned.fill(
-                  child: isMobile
-                      ? Container(color: const Color(0xFF91C050))
-                      : Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      Image.asset(
-                        'assets/images/bg-home.jpg',
-                        fit: BoxFit.cover,
-                        alignment: const Alignment(0, 3),
-                        cacheWidth: 1440,
-                        cacheHeight: 800,
-                      ),
-                    ],
-                  ),
-                ),
-
-                // Layer 2: Konten scrollable
-                // Layer 2: Konten scrollable
-                Positioned.fill(
-                  child: SingleChildScrollView(
-                    padding: EdgeInsets.only(top: isMobile ? 50 : 88),
-                    child: Column(
-                      children: [
-                        isMobile
-                            ? Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            HeroSection(constraints: constraints, sectionType: SectionType.home),
-                            Positioned(
-                              top: 0,
-                              bottom: -235,
-                              left: 0,
-                              right: 0,
-                              child: FloatingButtons(constraints: constraints),
-                            ),
-                          ],
-                        )
-                            : Column(
-                          children: [
-                            HeroSection(constraints: constraints, sectionType: SectionType.home),
-                            FloatingButtons(constraints: constraints),
-                          ],
-                        ),
-                        const SizedBox(height: 0),
-                        MenuActionSection(constraints: constraints),
-                        CarouselSection(constraints: constraints),
-                        ClientSection(constraints: constraints),
-                        FooterSection(constraints: constraints),
-                      ],
-                    ),
-                  ),
-                ),
-
-                // Layer 3: Navbar overlay
-                const FixedNavbarOverlay(),
-              ],
+            return BlocBuilder<AuthenticationBloc, AuthenticationState>(
+              builder: (context, authState) {
+                return KeyedSubtree(
+                  key: ValueKey(authState.runtimeType.toString() + DateTime.now().millisecondsSinceEpoch.toString()),
+                  child: _buildHeroMainContent(authState, constraints),
+                );
+              },
             );
           },
         ),
       ),
     );
   }
+
+  SectionType _getHeroSectionType(AuthenticationState state) {
+    if (state is AuthenticationAuthenticated) {
+      final from = state.authenticatedFrom;
+      final custType = state.user.custType;
+
+      if (from == "login_user") return SectionType.home;
+      if (from == "login_client") return SectionType.home_client;
+      if (from == "login_token") {
+        return custType == "C" ? SectionType.home_client : SectionType.home;
+      }
+    }
+    return SectionType.home;
+  }
+
+  Widget _buildFloatingButtons(AuthenticationState state, BoxConstraints constraints) {
+    if (state is AuthenticationAuthenticated) {
+      final from = state.authenticatedFrom;
+      final custType = state.user.custType;
+
+      if (from == "login_client") return FloatingButtonsUser(constraints: constraints);
+      if (from == "login_token" && custType == "C") return FloatingButtonsUser(constraints: constraints);
+    }
+    return FloatingButtons(constraints: constraints);
+  }
+
+  Widget _buildHeroMainContent(AuthenticationState authState, BoxConstraints constraints) {
+    final sectionType = _getHeroSectionType(authState);
+    final floatingButtonWidget = _buildFloatingButtons(authState, constraints);
+    final isMobile = constraints.maxWidth < 768;
+
+    return Stack(
+      children: [
+        // Background
+        Positioned.fill(
+          child: isMobile
+              ? Container(color: const Color(0xFF91C050))
+              : Image.asset(
+            'assets/images/bg-home.jpg',
+            fit: BoxFit.cover,
+            alignment: const Alignment(0, 3),
+            cacheWidth: 1440,
+            cacheHeight: 800,
+          ),
+        ),
+
+        // Konten scrollable
+        Positioned.fill(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.only(top: isMobile ? 50 : 88),
+            child: Column(
+              children: [
+                isMobile
+                    ? Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    HeroSection(constraints: constraints, sectionType: sectionType),
+                    Positioned(
+                      top: 0,
+                      bottom: -235,
+                      left: 0,
+                      right: 0,
+                      child: floatingButtonWidget,
+                    ),
+                  ],
+                )
+                    : Column(
+                  children: [
+                    HeroSection(constraints: constraints, sectionType: sectionType),
+                    floatingButtonWidget,
+                  ],
+                ),
+                const SizedBox(height: 0),
+                MenuActionSection(constraints: constraints),
+                CarouselSection(constraints: constraints),
+                ClientSection(constraints: constraints),
+                FooterSection(constraints: constraints),
+              ],
+            ),
+          ),
+        ),
+
+        // Navbar
+        const FixedNavbarOverlay(),
+      ],
+    );
+  }
+
 }

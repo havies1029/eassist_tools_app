@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../pages/base/base_page.dart';
 import '../../../pages/user_jps/user_jps_main.dart';
 import '../../../pages/user_non_jps/user_non_jps_main.dart';
 
@@ -89,14 +90,16 @@ class _StatusPopupState extends State<StatusPopup>
               Future.microtask(() {
                 SchedulerBinding.instance.addPostFrameCallback((_) {
                   if (!mounted) return;
-                  context.read<HomeBloc>().add(UserJPSPageActiveEvent());
+                  // context.read<HomeBloc>().add(UserJPSPageActiveEvent());
+                  context.read<HomeBloc>().add(PushPageEvent(PageType.userjps));
                 });
               });
             } else {
               Future.microtask(() {
                 SchedulerBinding.instance.addPostFrameCallback((_) {
                   if (!mounted) return;
-                  context.read<HomeBloc>().add(UserNonJPSPageActiveEvent());
+                  // context.read<HomeBloc>().add(UserNonJPSPageActiveEvent());
+                  context.read<HomeBloc>().add(PushPageEvent(PageType.usernonjps));
                 });
               });
               // SchedulerBinding.instance.addPostFrameCallback((_) {

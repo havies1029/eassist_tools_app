@@ -151,10 +151,6 @@
 //     switch (type) {
 //       case PageType.home:
 //         return HomePageActiveEvent();
-//       case PageType.hero:
-//         return HeroPageActiveEvent();
-//       case PageType.herouser:
-//         return HeroUserPageActiveEvent();
 //       case PageType.profile:
 //         return ProfilePageActiveEvent();
 //       case PageType.profileindividu:
@@ -318,10 +314,6 @@
 //         return "Manajemen Polis";
 //       case PageType.findinsurance:
 //         return "Cari Asuransi";
-//       case PageType.herouser:
-//         return "Halaman Utama User";
-//       case PageType.hero:
-//         return "Halaman Utama";
 //       case PageType.testimony:
 //         return "Testimoni";
 //       case PageType.cs:
@@ -395,10 +387,6 @@
 //         return const PolisManagementMain();
 //       case PageType.findinsurance:
 //         return const FindInsuranceMain();
-//       case PageType.herouser:
-//         return const HeroUserMain();
-//       case PageType.hero:
-//         return const HeroMain();
 //       case PageType.testimony:
 //         return const TestimonyMain();
 //       case PageType.cs:
@@ -462,6 +450,7 @@ import 'package:flutter/material.dart';
 // import 'package:eassist_tools_app/pages/profile/profile_main_page.dart';
 import 'package:eassist_tools_app/repositories/user/user_repository.dart';
 import '../../blocs/authentication/authentication_bloc.dart';
+import '../../blocs/home/home_bloc.dart';
 import '../../widgets/account/profile/profile_main_page.dart';
 import '../about_jps/about_main.dart';
 import '../active_assets/active_assets_main.dart';
@@ -583,15 +572,38 @@ class PageContainer extends StatelessWidget {
   // Widget build(BuildContext context) {
   //   return _buildBody(context);
   // }
+  //
+  // @override
+  // Widget build(BuildContext context) {
+  //   final body = _buildBody(context);
+  //
+  //   if (kIsWeb) {
+  //     return body; // Jangan bungkus dengan FloatingChatWrapper
+  //   } else {
+  //     return FloatingChatWrapper(child: body);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
+    final bloc = context.read<HomeBloc>();
     final body = _buildBody(context);
 
+    final child = WillPopScope(
+      onWillPop: () async {
+        if (bloc.canGoBack) {
+          bloc.add(PopPageEvent()); // pop stack
+          return false; // cegah navigator asli
+        }
+        return true; // izinkan keluar app/browser
+      },
+      child: body,
+    );
+
     if (kIsWeb) {
-      return body; // Jangan bungkus dengan FloatingChatWrapper
+      return child; // tanpa FloatingChatWrapper
     } else {
-      return FloatingChatWrapper(child: body);
+      return FloatingChatWrapper(child: child);
     }
   }
 
@@ -653,10 +665,10 @@ class PageContainer extends StatelessWidget {
         return "Manajemen Polis";
       case PageType.findinsurance:
         return "Cari Asuransi";
-      case PageType.herouser:
-        return "Halaman Utama User";
-      case PageType.hero:
-        return "Halaman Utama";
+      // case PageType.herouser:
+      //   return "Halaman Utama User";
+      // case PageType.hero:
+      //   return "Halaman Utama";
       case PageType.testimony:
         return "Testimoni";
       case PageType.cs:
@@ -737,10 +749,6 @@ class PageContainer extends StatelessWidget {
         return const PolisManagementMain();
       case PageType.findinsurance:
         return const FindInsuranceMain();
-      case PageType.herouser:
-        return const HeroUserMain();
-      case PageType.hero:
-        return const HeroMain();
       case PageType.testimony:
         return const TestimonyMain();
       case PageType.cs:

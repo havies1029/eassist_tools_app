@@ -189,10 +189,17 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../pages/base/base_page.dart';
+
 part 'home_state.dart';
 part 'home_event.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
+  final List<PageType> _pageStack = [PageType.home]; // 👈 Stack awal
+
+  PageType get currentPage => _pageStack.last;
+  bool get canGoBack => _pageStack.length > 1;
+
   HomeBloc() : super(HomePageActive()) {
     on<HomePageActiveEvent>((event, emit) => emit(HomePageActive()));
     on<ProfilePageActiveEvent>((event, emit) => emit(ProfilePageActive()));
@@ -231,8 +238,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<AssetsManagementPageActiveEvent>((event, emit) => emit(AssetsManagementPageActive()));
     on<PolisManagementPageActiveEvent>((event, emit) => emit(PolisManagementPageActive()));
     on<FindInsurancePageActiveEvent>((event, emit) => emit(FindInsurancePageActive()));
-    on<HeroUserPageActiveEvent>((event, emit) => emit(HeroUserPageActive()));
-    on<HeroPageActiveEvent>((event, emit) => emit(HeroPageActive()));
+    // on<HeroUserPageActiveEvent>((event, emit) => emit(HeroUserPageActive()));
+    // on<HeroPageActiveEvent>((event, emit) => emit(HeroPageActive()));
     on<TestimonyPageActiveEvent>((event, emit) => emit(TestimonyPageActive()));
     on<CsPageActiveEvent>((event, emit) => emit(CsPageActive()));
     on<UserNonJPSPageActiveEvent>((event, emit) => emit(UserNonJPSPageActive()));
@@ -256,5 +263,93 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<BeritaSampinganPageActiveEvent>((event, emit) => emit(BeritaSampinganPageActive()));
     on<BeritaArtikelPageActiveEvent>((event, emit) => emit(BeritaArtikelPageActive()));
 
+    on<PushPageEvent>((event, emit) {
+      if (event.pageType != currentPage) {
+        _pageStack.add(event.pageType);
+        emit(_mapPageTypeToState(event.pageType));
+      }
+    });
+
+    on<PopPageEvent>((event, emit) {
+      if (canGoBack) {
+        _pageStack.removeLast();
+        emit(_mapPageTypeToState(currentPage));
+      }
+    });
+  }
+}
+
+HomeState _mapPageTypeToState(PageType pageType) {
+  switch (pageType) {
+    case PageType.home:
+      return HomePageActive();
+    case PageType.groupchat:
+      return StartChatPageActive(); // asumsi ini untuk groupchat
+    case PageType.roomchat:
+      return RoomCariPageActive();
+    case PageType.changepswd:
+      return ChangePasswordPageActive();
+    case PageType.klaimtrack:
+      return TrackKlaimPageActive();
+    case PageType.splash:
+      return SplashPageActive();
+    case PageType.profileindividu:
+      return ProfileIndividuPageActive();
+    case PageType.profileperusahaan:
+      return ProfilePerusahaanPageActive();
+    case PageType.article1:
+      return Article1PageActive();
+    case PageType.testprofile:
+      return TestProfilePageActive();
+    case PageType.about:
+      return AboutPageActive();
+    case PageType.article:
+      return ArticlePageActive();
+    case PageType.assetsmanagement:
+      return AssetsManagementPageActive();
+    case PageType.polismanagement:
+      return PolisManagementPageActive();
+    case PageType.findinsurance:
+      return FindInsurancePageActive();
+    case PageType.testimony:
+      return TestimonyPageActive();
+    case PageType.cs:
+      return CsPageActive();
+    case PageType.usernonjps:
+      return UserNonJPSPageActive();
+    case PageType.userjps:
+      return UserJPSPageActive();
+    case PageType.loadinghero:
+      return LoadingHeroPageActive();
+    case PageType.loadinghero2:
+      return LoadingHero2PageActive();
+    case PageType.loadingherouser:
+      return LoadingHeroUserPageActive();
+    case PageType.cobcari:
+      return CobCariPageActive();
+    case PageType.asetdashboard:
+      return AsetDashboardPageActive();
+    case PageType.asetpar:
+      return AsetParPageActive();
+    case PageType.asetmv:
+      return AsetMVPageActive();
+    case PageType.asetringkasan:
+      return AsetRingkasanPageActive();
+    case PageType.asethealth:
+      return AsetHealthPageActive();
+    case PageType.asetstatus:
+      return AsetStatusPageActive();
+    case PageType.aset:
+      return AsetPageActive();
+    case PageType.review:
+      return ReviewCariPageActive();
+    case PageType.berita:
+      return BeritaPageActive();
+    case PageType.beritasampingan:
+      return BeritaSampinganPageActive();
+    case PageType.beritaartikel:
+      return BeritaArtikelPageActive();
+    default:
+      return HomePageActive(); // fallback aman
   }
 }

@@ -341,8 +341,6 @@ class _HomePageState extends State<HomePage> {
     if (state is AssetsManagementPageActive) return PageType.assetsmanagement;
     if (state is PolisManagementPageActive) return PageType.polismanagement;
     if (state is FindInsurancePageActive) return PageType.findinsurance;
-    if (state is HeroUserPageActive) return PageType.herouser;
-    if (state is HeroPageActive) return PageType.hero;
     if (state is TestimonyPageActive) return PageType.testimony;
     if (state is CsPageActive) return PageType.cs;
     if (state is UserNonJPSPageActive) return PageType.usernonjps;

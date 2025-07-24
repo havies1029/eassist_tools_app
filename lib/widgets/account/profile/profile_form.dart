@@ -10,6 +10,7 @@ import '../../../blocs/gen_profile/mrekanpiccrud_bloc.dart';
 import '../../../blocs/gen_profile/mrekanpiclist_bloc.dart';
 import '../../../blocs/profile/profile_download_foto_bloc.dart';
 import '../../../blocs/profile/profile_upload_foto_bloc.dart';
+import '../../../pages/base/base_page.dart';
 import '../../../pages/hero_client_page/hero_user_main.dart';
 import 'form_sections/pic_form/rekan_pic_crud_body.dart';
 import '../../../widgets/account/profile/form_sections/pic_form//rekan_pic_list_body.dart';
@@ -94,7 +95,8 @@ class _ProfileFormSectionState extends State<ProfileFormSection> {
               message: 'Terimakasih telah menjadi bagian dari JPS',
               onOk: () async {
                 SchedulerBinding.instance.addPostFrameCallback((_) {
-                  context.read<HomeBloc>().add(HeroUserPageActiveEvent());
+                  // context.read<HomeBloc>().add(HomePageActiveEvent());
+                  context.read<HomeBloc>().add(PushPageEvent(PageType.home));
                 });
               },
             ),

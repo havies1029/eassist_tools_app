@@ -35,7 +35,7 @@ class _LoadingUserPageState extends State<LoadingUserPage> with SingleTickerProv
       // Pindah ke halaman utama user
       if (mounted) {
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          context.read<HomeBloc>().add(HeroPageActiveEvent());
+          context.read<HomeBloc>().add(HomePageActiveEvent());
         });
       }
     });

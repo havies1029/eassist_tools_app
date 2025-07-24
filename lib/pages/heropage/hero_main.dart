@@ -11,6 +11,7 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import '../../blocs/gen_profile/mrekan1crud_bloc.dart';
 import '../../blocs/home/home_bloc.dart';
 import '../../common/app_data.dart';
+import '../base/base_page.dart';
 import 'hero_page.dart';
 
 class HeroMain extends StatefulWidget {
@@ -239,31 +240,8 @@ class _HeroMainState extends State<HeroMain> {
 
       SchedulerBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
-
-        final authState = context.read<AuthenticationBloc>().state;
-
-        if (authState is AuthenticationAuthenticated) {
-          final from = authState.authenticatedFrom;
-          final custType = authState.user.custType;
-
-          if (from == "login_user") {
-            context.read<HomeBloc>().add(HeroPageActiveEvent());
-          } else if (from == "login_client") {
-            context.read<HomeBloc>().add(HeroUserPageActiveEvent());
-          } else if (from == "login_token") {
-            if (custType == "C") {
-              context.read<HomeBloc>().add(HeroUserPageActiveEvent());
-            } else {
-              context.read<HomeBloc>().add(HeroPageActiveEvent());
-            }
-          } else {
-            context.read<HomeBloc>().add(HeroPageActiveEvent());
-          }
-        } else if (authState is AuthenticationGoogleUserAuthenticated) {
-          context.read<HomeBloc>().add(HeroPageActiveEvent());
-        } else {
-          context.read<HomeBloc>().add(HeroUserPageActiveEvent());
-        }
+        // context.read<HomeBloc>().add(HomePageActiveEvent());
+        context.read<HomeBloc>().add(PushPageEvent(PageType.home));
       });
     }
 

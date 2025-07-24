@@ -71,8 +71,8 @@ class ArticlePageActive extends HomeState {}
 class AssetsManagementPageActive extends HomeState {}
 class PolisManagementPageActive extends HomeState {}
 class FindInsurancePageActive extends HomeState {}
-class HeroUserPageActive extends HomeState {}
-class HeroPageActive extends HomeState {}
+// class HeroUserPageActive extends HomeState {}
+// class HeroPageActive extends HomeState {}
 class TestimonyPageActive extends HomeState {}
 class CsPageActive extends HomeState {}
 class UserNonJPSPageActive extends HomeState {}

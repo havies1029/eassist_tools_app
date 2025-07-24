@@ -70,8 +70,8 @@ class ArticlePageActiveEvent extends HomeEvent {}
 class AssetsManagementPageActiveEvent extends HomeEvent {}
 class PolisManagementPageActiveEvent extends HomeEvent {}
 class FindInsurancePageActiveEvent extends HomeEvent {}
-class HeroUserPageActiveEvent extends HomeEvent {}
-class HeroPageActiveEvent extends HomeEvent {}
+// class HeroUserPageActiveEvent extends HomeEvent {}
+// class HeroPageActiveEvent extends HomeEvent {}
 class TestimonyPageActiveEvent extends HomeEvent {}
 class CsPageActiveEvent extends HomeEvent {}
 class UserNonJPSPageActiveEvent extends HomeEvent {}
@@ -82,3 +82,9 @@ class LoadingHeroPageActiveEvent extends HomeEvent {}
 class LoadingHero2PageActiveEvent extends HomeEvent {}
 class LoadingHeroUserPageActiveEvent extends HomeEvent {}
 
+class PushPageEvent extends HomeEvent {
+  final PageType pageType;
+  const PushPageEvent(this.pageType);
+}
+
+class PopPageEvent extends HomeEvent {}

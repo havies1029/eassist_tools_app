@@ -313,47 +313,50 @@ class _NavbarWidgetState extends State<NavbarWidget> {
 
       case 'Tentang JPS':
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          context.read<HomeBloc>().add(AboutPageActiveEvent());
+          // context.read<HomeBloc>().add(AboutPageActiveEvent());
+          context.read<HomeBloc>().add(PushPageEvent(PageType.about));
         });
         break;
 
-      case 'Home Page':
-        SchedulerBinding.instance.addPostFrameCallback((_) {
-          context.read<HomeBloc>().add(HeroPageActiveEvent());
-        });
-        // context.go('/hero');
-        break;
-
-      case 'Hero User Page':
-        SchedulerBinding.instance.addPostFrameCallback((_) {
-          context.read<HomeBloc>().add(HeroUserPageActiveEvent());
-        });
-        // context.go('/hero_user');
-        break;
+      // case 'Home Page':
+      //   SchedulerBinding.instance.addPostFrameCallback((_) {
+      //     context.read<HomeBloc>().add(HeroPageActiveEvent());
+      //   });
+      //   // context.go('/hero');
+      //   break;
+      //
+      // case 'Hero User Page':
+      //   SchedulerBinding.instance.addPostFrameCallback((_) {
+      //     context.read<HomeBloc>().add(HeroUserPageActiveEvent());
+      //   });
+      //   // context.go('/hero_user');
+      //   break;
 
       case 'About JPS':
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          context.read<HomeBloc>().add(AboutPageActiveEvent());
+          context.read<HomeBloc>().add(PushPageEvent(PageType.about));
         });
         // context.go('/about');
         break;
 
       case 'Customer Service':
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          context.read<HomeBloc>().add(CsPageActiveEvent());
+          context.read<HomeBloc>().add(PushPageEvent(PageType.cs));
         });
         // context.go('/cs');
         break;
 
       case 'Article Page':
       case 'Artikel Asuransi':
-          context.read<HomeBloc>().add(ArticlePageActiveEvent());
+      context.read<HomeBloc>().add(PushPageEvent(PageType.article));
+      // context.read<HomeBloc>().add(ArticlePageActiveEvent());
         // context.go('/article');
         break;
 
       case 'Testimoni':
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          context.read<HomeBloc>().add(TestimonyPageActiveEvent());
+          // context.read<HomeBloc>().add(TestimonyPageActiveEvent());
+          context.read<HomeBloc>().add(PushPageEvent(PageType.testimony));
         });
         // context.go('/testimony');
         break;
@@ -361,7 +364,8 @@ class _NavbarWidgetState extends State<NavbarWidget> {
       case 'Find Insurance':
       case 'Cari Asuransi':
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          context.read<HomeBloc>().add(FindInsurancePageActiveEvent());
+          // context.read<HomeBloc>().add(FindInsurancePageActiveEvent());
+          context.read<HomeBloc>().add(PushPageEvent(PageType.findinsurance));
         });
         // context.go('/find_insurance');
         break;
@@ -406,84 +410,96 @@ class _NavbarWidgetState extends State<NavbarWidget> {
 
       case 'Cob Cari':
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          context.read<HomeBloc>().add(CobCariPageActiveEvent());
+          // context.read<HomeBloc>().add(CobCariPageActiveEvent());
+          context.read<HomeBloc>().add(PushPageEvent(PageType.cobcari));
         });
         // context.go('/assets_management');
         break;
 
       case 'Aset Dashboard':
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          context.read<HomeBloc>().add(AsetDashboardPageActiveEvent());
+          // context.read<HomeBloc>().add(AsetDashboardPageActiveEvent());
+          context.read<HomeBloc>().add(PushPageEvent(PageType.asetdashboard));
         });
         // context.go('/assets_management');
         break;
 
       case 'Aset Ringkasan':
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          context.read<HomeBloc>().add(AsetRingkasanPageActiveEvent());
+          // context.read<HomeBloc>().add(AsetRingkasanPageActiveEvent());
+          context.read<HomeBloc>().add(PushPageEvent(PageType.asetringkasan));
         });
         // context.go('/assets_management');
         break;
 
       case 'Aset Par':
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          context.read<HomeBloc>().add(AsetParPageActiveEvent());
+          context.read<HomeBloc>().add(PushPageEvent(PageType.asetpar));
+          // context.read<HomeBloc>().add(AsetParPageActiveEvent());
         });
         // context.go('/assets_management');
         break;
 
       case 'Aset MV':
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          context.read<HomeBloc>().add(AsetMVPageActiveEvent());
+          context.read<HomeBloc>().add(PushPageEvent(PageType.asetmv));
+          // context.read<HomeBloc>().add(AsetMVPageActiveEvent());
         });
         // context.go('/assets_management');
         break;
 
       case 'Aset Health':
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          context.read<HomeBloc>().add(AsetHealthPageActiveEvent());
+          context.read<HomeBloc>().add(PushPageEvent(PageType.asethealth));
+          // context.read<HomeBloc>().add(AsetHealthPageActiveEvent());
         });
         // context.go('/assets_management');
         break;
 
       case 'Aset Status':
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          context.read<HomeBloc>().add(AsetStatusPageActiveEvent());
+          // context.read<HomeBloc>().add(AsetStatusPageActiveEvent());
+          context.read<HomeBloc>().add(PushPageEvent(PageType.asetstatus));
         });
         // context.go('/assets_management');
         break;
 
       case 'Aset':
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          context.read<HomeBloc>().add(AsetPageActiveEvent());
+          // context.read<HomeBloc>().add(AsetPageActiveEvent());
+          context.read<HomeBloc>().add(PushPageEvent(PageType.aset));
         });
         // context.go('/assets_management');
         break;
 
       case 'Review':
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          context.read<HomeBloc>().add(ReviewCariPageActiveEvent());
+          context.read<HomeBloc>().add(PushPageEvent(PageType.review));
+          // context.read<HomeBloc>().add(ReviewCariPageActiveEvent());
         });
         // context.go('/assets_management');
         break;
 
       case 'Berita1':
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          context.read<HomeBloc>().add(BeritaPageActiveEvent());
+          context.read<HomeBloc>().add(PushPageEvent(PageType.berita));
+          // context.read<HomeBloc>().add(BeritaPageActiveEvent());
         });
         // context.go('/assets_management');
         break;
 
       case 'Berita2':
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          context.read<HomeBloc>().add(BeritaArtikelPageActiveEvent());
+          context.read<HomeBloc>().add(PushPageEvent(PageType.beritaartikel));
+          // context.read<HomeBloc>().add(BeritaArtikelPageActiveEvent());
         });
         // context.go('/assets_management');
         break;
 
       case 'Berita3':
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          context.read<HomeBloc>().add(BeritaSampinganPageActiveEvent());
+          context.read<HomeBloc>().add(PushPageEvent(PageType.beritasampingan));
+          // context.read<HomeBloc>().add(BeritaSampinganPageActiveEvent());
         });
         // context.go('/assets_management');
         break;
@@ -494,35 +510,40 @@ class _NavbarWidgetState extends State<NavbarWidget> {
 
       case 'Management Asset':
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          context.read<HomeBloc>().add(AssetsManagementPageActiveEvent());
+          context.read<HomeBloc>().add(PushPageEvent(PageType.assetsmanagement));
+          // context.read<HomeBloc>().add(AssetsManagementPageActiveEvent());
         });
         // context.go('/assets_management');
         break;
 
       case 'Management Polis':
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          context.read<HomeBloc>().add(PolisManagementPageActiveEvent());
+          context.read<HomeBloc>().add(PushPageEvent(PageType.polismanagement));
+          // context.read<HomeBloc>().add(PolisManagementPageActiveEvent());
         });
         // context.go('/assets_management');
         break;
 
       case 'Active Asset':
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          context.read<HomeBloc>().add(ActiveAssetsPageActiveEvent());
+          context.read<HomeBloc>().add(PushPageEvent(PageType.activeassets));
+          // context.read<HomeBloc>().add(ActiveAssetsPageActiveEvent());
         });
         // context.go('/active_assets');
         break;
 
       case 'User JPS':
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          context.read<HomeBloc>().add(UserJPSPageActiveEvent());
+          context.read<HomeBloc>().add(PushPageEvent(PageType.userjps));
+          // context.read<HomeBloc>().add(UserJPSPageActiveEvent());
         });
         // context.go('/user_jps');
         break;
 
       case 'User Non JPS':
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          context.read<HomeBloc>().add(UserNonJPSPageActiveEvent());
+          context.read<HomeBloc>().add(PushPageEvent(PageType.usernonjps));
+          // context.read<HomeBloc>().add(UserNonJPSPageActiveEvent());
         });
         // context.go('/user_non_jps');
         break;
@@ -556,7 +577,8 @@ class _NavbarWidgetState extends State<NavbarWidget> {
         break;
       case 'Change Password':
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          context.read<HomeBloc>().add(ChangePasswordPageActiveEvent());
+          context.read<HomeBloc>().add(PushPageEvent(PageType.changepswd));
+          // context.read<HomeBloc>().add(ChangePasswordPageActiveEvent());
         });
         break;
       case 'Popup Succeed':

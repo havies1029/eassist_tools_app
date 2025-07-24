@@ -11,6 +11,7 @@ import '../../../common/app_data.dart';
 import '../../../common/constants.dart';
 import '../../../models/gen_berita/berita1cari_model.dart';
 import '../../../pages/article_page/article_detail.dart';
+import '../../../pages/base/base_page.dart';
 import 'article_content.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -124,7 +125,7 @@ class _ArticleListPageState extends State<ArticleListPage> {
               context.read<Berita2CariBloc>().add(RefreshBerita2CariEvent(berita1Id: berita1Id));
               context.read<Berita3CariBloc>().add(RefreshBerita3CariEvent(berita1Id: berita1Id));
 
-                context.read<HomeBloc>().add(Article1PageActiveEvent());
+              context.read<HomeBloc>().add(PushPageEvent(PageType.article1));
             }
           },
         child: AnimatedContainer(
@@ -262,7 +263,7 @@ class _ArticleListPageState extends State<ArticleListPage> {
             context.read<Berita2CariBloc>().add(RefreshBerita2CariEvent(berita1Id: berita1Id));
             context.read<Berita3CariBloc>().add(RefreshBerita3CariEvent(berita1Id: berita1Id));
 
-              context.read<HomeBloc>().add(Article1PageActiveEvent());
+            context.read<HomeBloc>().add(PushPageEvent(PageType.article1));
           }
         },
         child: AnimatedContainer(
@@ -379,7 +380,7 @@ class _ArticleListPageState extends State<ArticleListPage> {
             context.read<Berita2CariBloc>().add(RefreshBerita2CariEvent(berita1Id: berita1Id));
             context.read<Berita3CariBloc>().add(RefreshBerita3CariEvent(berita1Id: berita1Id));
 
-              context.read<HomeBloc>().add(Article1PageActiveEvent());
+            context.read<HomeBloc>().add(PushPageEvent(PageType.article1));
           }
         },
         child: Container(

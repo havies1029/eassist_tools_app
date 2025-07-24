@@ -58,44 +58,23 @@ class HeroUserMain extends StatelessWidget {
                           HeroSection(constraints: constraints, sectionType: SectionType.home_client),
                           Positioned(
                             top: 0,
-                            bottom: -200,
+                            bottom: -235,
                             left: 0,
                             right: 0,
-                            child: FloatingButtons(constraints: constraints),
+                            child: FloatingButtonsUser(constraints: constraints),
                           ),
                         ],
                       )
                           : Column(
                         children: [
                           HeroSection(constraints: constraints, sectionType: SectionType.home_client),
-                          FloatingButtons(constraints: constraints),
+                          FloatingButtonsUser(constraints: constraints),
                         ],
                       ),
-                      // Transform.translate(
-                      //   offset: const Offset(0, -1),
-                      //   child: ActionSection(constraints: constraints),
-                      // ),
-                      // OFFSET 1 inci ke atas
-                      Transform.translate(
-                        offset: const Offset(0, -1),
-                        child: MenuActionSection(constraints: constraints),
-                      ),
-                      Transform.translate(
-                        offset: const Offset(0, -2),
-                        child: CarouselSection(constraints: constraints),
-                      ),
-                      Transform.translate(
-                        offset: const Offset(0, -3),
-                        child: ClientSection(constraints: constraints),
-                      ),
-                      Transform.translate(
-                        offset: const Offset(0, -4),
-                        child: FooterSection(constraints: constraints),
-                      ),
-                      // MenuActionSection(constraints: constraints),
-                      // CarouselSection(constraints: constraints),
-                      // ClientSection(constraints: constraints),
-                      // FooterSection(constraints: constraints),
+                      MenuActionSection(constraints: constraints),
+                      CarouselSection(constraints: constraints),
+                      ClientSection(constraints: constraints),
+                      FooterSection(constraints: constraints),
                     ],
                   ),
                 ),
@@ -271,7 +250,7 @@ class _HeroUserPageState extends State<HeroUserPage> {
                                 bottom: -200,
                                 left: 0,
                                 right: 0,
-                                child: FloatingButtons(constraints: constraints),
+                                child: FloatingButtonsUser(constraints: constraints),
                               ),
                             ],
                           )
@@ -280,7 +259,7 @@ class _HeroUserPageState extends State<HeroUserPage> {
                               HeroSection(constraints: constraints, sectionType: SectionType.home_client),
                               Transform.translate(
                                 offset: Offset(0, -40),
-                                child: FloatingButtons(constraints: constraints),
+                                child: FloatingButtonsUser(constraints: constraints),
                               ),
                             ],
                           ),
@@ -325,7 +304,7 @@ class _FixedNavbarOverlay extends StatelessWidget {
               constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width,
               ),
-              pageType: PageType.herouser,
+              pageType: PageType.home,
             ),
           ),
         ],
