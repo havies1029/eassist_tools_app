@@ -18,6 +18,8 @@ class AppData {
   static bool isInOtpProcess = false;
   static String? berita1Id;
   static String? gambarArtikel;
+  static String? JudulArtikel;
+
 
   // static bool useSSL = false;
   // static String apiDomain = "http://localhost/eAssistToolsAPI/";

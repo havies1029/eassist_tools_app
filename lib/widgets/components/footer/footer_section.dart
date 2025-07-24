@@ -12,7 +12,7 @@ class FooterSection extends StatelessWidget {
   const FooterSection({super.key, required this.constraints});
 
   // ─── Colors ───────────────────────────────────────────────
-  static const _primaryColor = Color(0xFF79AB43);
+  static const _primaryColor = Color(0xFF91C050);
 
   // ─── Button Styles ────────────────────────────────────
   static const _buttonBorderWidth = 1.5;
@@ -30,11 +30,10 @@ class FooterSection extends StatelessWidget {
 
   double get horizontalPadding => constraints.maxWidth > 1200
       ? 95
-      : constraints.maxWidth > 992
-      ? 64
       : isTablet
-      ? 40
+      ? 36 // padding tablet (sedikit lebih lebar dari mobile)
       : 24;
+
 
   double get maxWidth => constraints.maxWidth > 1200
       ? 1200
@@ -98,7 +97,7 @@ class FooterSection extends StatelessWidget {
   }
 
   Widget _buildFooterContent(BuildContext context) {
-    return isMobile || isTablet
+    return (isMobile)
         ? Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -124,7 +123,7 @@ class FooterSection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              width: 350,
+              width: isTablet ? 280 : 350,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -136,17 +135,17 @@ class FooterSection extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(width: 32.0),
+            SizedBox(width: isTablet ? 24.0 : 32.0),
 
             SizedBox(
-              width: 200,
+              width: isTablet ? 180 : 200,
               child: _buildSignatureSection(context),
             ),
-            const SizedBox(width: 32.0),
+            SizedBox(width: isTablet ? 24.0 : 32.0),
 
             // Kolom Menu
             SizedBox(
-              width: 200,
+              width: isTablet ? 180 : 200,
               child: _buildMenuSection(),
             ),
           ],
@@ -236,7 +235,7 @@ class FooterSection extends StatelessWidget {
 
 
   Widget _buildCopyrightContent() {
-    if (isMobile || isTablet) {
+    if (isMobile) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -289,7 +288,7 @@ class FooterSection extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  'Hak Cipta Dilindungi |',
+                  'Hak Cipta Dilindungi | ',
                   style: TextStyle(
                     fontFamily: _fontFamily,
                     fontSize: linkFontSize,
@@ -415,7 +414,7 @@ class FooterSection extends StatelessWidget {
 
   Widget _buildFooterLink(String text, VoidCallback onPressed) {
     return Padding(
-      padding: EdgeInsets.only(bottom: isMobile ? 4.0 : 8.0),
+      padding: const EdgeInsets.only(bottom: 10),
       child: _AnimatedButton(
         onPressed: onPressed,
         isTextButton: true,
@@ -579,19 +578,9 @@ class _AnimatedButtonState extends State<_AnimatedButton>
 
             return Transform.scale(
               scale: _scaleAnimation.value,
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                decoration: BoxDecoration(
-                  color: _isHovered
-                      ? Colors.grey.withOpacity(0.1)
-                      : Colors.transparent,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                padding: const EdgeInsets.all(6),
-                child: Opacity(
-                  opacity: _opacityAnimation.value,
-                  child: content,
-                ),
+              child: Opacity(
+                opacity: _opacityAnimation.value,
+                child: content,
               ),
             );
           },

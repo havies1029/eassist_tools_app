@@ -347,9 +347,7 @@ class _NavbarWidgetState extends State<NavbarWidget> {
 
       case 'Article Page':
       case 'Artikel Asuransi':
-        SchedulerBinding.instance.addPostFrameCallback((_) {
           context.read<HomeBloc>().add(ArticlePageActiveEvent());
-        });
         // context.go('/article');
         break;
 

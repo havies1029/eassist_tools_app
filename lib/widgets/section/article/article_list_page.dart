@@ -112,18 +112,19 @@ class _ArticleListPageState extends State<ArticleListPage> {
             debugPrint('Klik buildMainArticleCard utama: ${article.judul ?? '-'}');
             final berita1Id = article.berita1Id;
             final gambar = article.gambar;
+            final judul = article.judul;
 
             AppData.berita1Id = berita1Id;
             AppData.gambarArtikel = gambar;
+            AppData.JudulArtikel = judul;
+
             debugPrint('🎯 Gambar Artikel: ${article.gambar}');
 
             if (berita1Id != null) {
               context.read<Berita2CariBloc>().add(RefreshBerita2CariEvent(berita1Id: berita1Id));
               context.read<Berita3CariBloc>().add(RefreshBerita3CariEvent(berita1Id: berita1Id));
 
-              SchedulerBinding.instance.addPostFrameCallback((_) {
                 context.read<HomeBloc>().add(Article1PageActiveEvent());
-              });
             }
           },
         child: AnimatedContainer(
@@ -249,18 +250,19 @@ class _ArticleListPageState extends State<ArticleListPage> {
           debugPrint('Klik Sidebar utama: ${article.judul ?? '-'}');
           final berita1Id = article.berita1Id;
           final gambar = article.gambar;
+          final judul = article.judul;
 
           AppData.berita1Id = berita1Id;
           AppData.gambarArtikel = gambar;
+          AppData.JudulArtikel = judul;
+
           debugPrint('🎯 Gambar Artikel: ${article.gambar}');
 
           if (berita1Id != null) {
             context.read<Berita2CariBloc>().add(RefreshBerita2CariEvent(berita1Id: berita1Id));
             context.read<Berita3CariBloc>().add(RefreshBerita3CariEvent(berita1Id: berita1Id));
 
-            SchedulerBinding.instance.addPostFrameCallback((_) {
               context.read<HomeBloc>().add(Article1PageActiveEvent());
-            });
           }
         },
         child: AnimatedContainer(
@@ -365,18 +367,19 @@ class _ArticleListPageState extends State<ArticleListPage> {
           debugPrint('Klik Sidebar utama: ${article.judul ?? '-'}');
           final berita1Id = article.berita1Id;
           final gambar = article.gambar;
+          final judul = article.judul;
 
           AppData.berita1Id = berita1Id;
           AppData.gambarArtikel = gambar;
+          AppData.JudulArtikel = judul;
+
           debugPrint('🎯 Gambar Artikel: ${article.gambar}');
 
           if (berita1Id != null) {
             context.read<Berita2CariBloc>().add(RefreshBerita2CariEvent(berita1Id: berita1Id));
             context.read<Berita3CariBloc>().add(RefreshBerita3CariEvent(berita1Id: berita1Id));
 
-            SchedulerBinding.instance.addPostFrameCallback((_) {
               context.read<HomeBloc>().add(Article1PageActiveEvent());
-            });
           }
         },
         child: Container(

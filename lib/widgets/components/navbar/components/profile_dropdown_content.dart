@@ -177,10 +177,11 @@ class ProfileDropdownContent extends StatelessWidget {
                 bool isClientLogin = false;
 
                 if (state is AuthenticationAuthenticated) {
-                  // Gunakan salah satu logika yang kamu yakini
-                  isClientLogin = state.authenticatedFrom == 'login_client';
-                  // Atau: isClientLogin = state.user.custType == 'C';
+                  final from = state.authenticatedFrom;
+                  final custType = state.user.custType;
+                  isClientLogin = (from == 'login_client' || from == 'login_token') && custType == 'C';
                 }
+
 
                 return Column(
                   children: [

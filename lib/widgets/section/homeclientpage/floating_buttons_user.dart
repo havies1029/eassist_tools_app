@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 //====================[ GLOBAL STYLE CONSTANTS ]=====================//
-const _primaryColor = Color(0xFF79AB43);
+const _primaryColor = Color(0xFF91C050);
 const _white = Colors.white;
 const _shadowColor = Colors.black;
 const _fontFamily = 'Satoshi-Regular';

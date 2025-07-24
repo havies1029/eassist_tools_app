@@ -14,8 +14,10 @@ class CustomPopupsLoginUser {
   static const Color lightGreen = Color(0xFF8BC34A);
 
   // popup dialog login user
+  // popup dialog login user
   static Future<bool> showLoginUserDialog(BuildContext context) async {
-    debugPrint("showLoginDialog called");
+    debugPrint("showLoginUserDialog called");
+
     final result = await showDialog<bool>(
       context: context,
       barrierDismissible: true,
@@ -23,13 +25,22 @@ class CustomPopupsLoginUser {
         return const LoginUserDialog();
       },
     );
+
     return result ?? true;
   }
 
-  // popup dialog login client
+// popup dialog login client
   static Future<void> showLoginClientDialog(BuildContext context) async {
-    debugPrint("showLoginDialog called");
-    showDialog(
+    debugPrint("showLoginClientDialog called");
+
+    // Coba tutup dialog sebelumnya jika masih aktif
+    if (Navigator.of(context, rootNavigator: true).canPop()) {
+      Navigator.of(context, rootNavigator: true).pop();
+      await Future.delayed(const Duration(milliseconds: 100));
+    }
+
+    // Tampilkan dialog login client
+    await showDialog(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
@@ -37,6 +48,7 @@ class CustomPopupsLoginUser {
       },
     );
   }
+
 
   // Popup lupa sandi
   static Future<void> showForgotPasswordDialog(BuildContext context) async {

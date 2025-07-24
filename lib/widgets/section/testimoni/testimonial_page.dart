@@ -7,8 +7,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class ActionSection extends StatefulWidget {
   final BoxConstraints constraints;
-  final int? maxItems; // Maksimum global (opsional)
-  final int? maxItemsPerPage; // Maksimum per halaman/tampilan (opsional)
+  final int? maxItems;
+  final int? maxItemsPerPage;
 
   const ActionSection({
     super.key,
@@ -38,7 +38,7 @@ class ActionSectionState extends State<ActionSection> with SingleTickerProviderS
     );
     _fadeAnimation = CurvedAnimation(parent: _fadeController, curve: Curves.easeIn);
 
-    currentItemCount = 9; // Default to show 9 items (3x3 grid)
+    currentItemCount = 9;
   }
 
   @override
@@ -49,15 +49,16 @@ class ActionSectionState extends State<ActionSection> with SingleTickerProviderS
 
   void _loadMore(int max) {
     setState(() {
-      final step = 9; // Always add 9 more items (3 rows)
+      final step = 9;
       currentItemCount = (currentItemCount + step).clamp(0, max);
-      _fadeController.forward(from: 0); // ulangi animasi
+      _fadeController.forward(from: 0);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final bool isMobile = widget.constraints.maxWidth < 768;
+    final bool isTablet = widget.constraints.maxWidth >= 768 && widget.constraints.maxWidth < 1024;
     final double maxWidth = widget.constraints.maxWidth > 1200 ? 1200 : widget.constraints.maxWidth * 0.9;
 
     return ClipRRect(
@@ -85,9 +86,9 @@ class ActionSectionState extends State<ActionSection> with SingleTickerProviderS
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(height: 30),
-                  _buildHeader(isMobile),
+                  _buildHeader(isMobile, isTablet),
                   const SizedBox(height: 15),
-                  _buildRatingSection(isMobile),
+                  _buildRatingSection(isMobile, isTablet),
                   const SizedBox(height: 30),
                   BlocBuilder<GallerytestimonyCariBloc, GallerytestimonyCariState>(
                     builder: (context, state) {
@@ -105,7 +106,7 @@ class ActionSectionState extends State<ActionSection> with SingleTickerProviderS
                           : allItems;
 
                       if (currentItemCount == 0) {
-                        currentItemCount = 9; // Default to 9 items
+                        currentItemCount = 9;
                       }
 
                       final displayedItems = maxDisplay.take(currentItemCount).toList();
@@ -120,7 +121,7 @@ class ActionSectionState extends State<ActionSection> with SingleTickerProviderS
                             builder: (context, child) {
                               return Opacity(
                                 opacity: _fadeAnimation.value,
-                                child: _buildTestimonialGrid(displayedItems, isMobile),
+                                child: _buildTestimonialGrid(displayedItems, isMobile, isTablet),
                               );
                             },
                           ),
@@ -132,9 +133,7 @@ class ActionSectionState extends State<ActionSection> with SingleTickerProviderS
                                 foregroundColor: const Color(0xFF91C050),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
-                                  side: const BorderSide(
-                                    color: Color(0xFF91C050),
-                                  ),
+                                  side: const BorderSide(color: Color(0xFF91C050)),
                                 ),
                                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                               ),
@@ -163,47 +162,41 @@ class ActionSectionState extends State<ActionSection> with SingleTickerProviderS
     );
   }
 
-  Widget _buildHeader(bool isMobile) {
+  Widget _buildHeader(bool isMobile, bool isTablet) {
+    final isSmall = isMobile || isTablet;
+
     return Column(
       children: [
-        // Icon
         Container(
           child: SvgPicture.asset(
             'assets/icons/thumbsup.svg',
-            width: isMobile ? 40 : 50,
-            height: isMobile ? 40 : 50,
+            width: isSmall ? 40 : 50,
+            height: isSmall ? 40 : 50,
           ),
         ),
-
-        SizedBox(height: 15),
-
-        // Title
+        const SizedBox(height: 15),
         RichText(
           textAlign: TextAlign.center,
           text: TextSpan(
             style: TextStyle(
               fontFamily: 'Satoshi-Regular',
-              fontSize: isMobile ? 20.0 : 25.0,
+              fontSize: isSmall ? 20.0 : 25.0,
               fontWeight: FontWeight.bold,
               color: Colors.black,
             ),
-            children: [
-              const TextSpan(text: 'Kata Mereka Tentang '),
-              const TextSpan(
+            children: const [
+              TextSpan(text: 'Kata Mereka Tentang '),
+              TextSpan(
                 text: 'Kami',
-                style: TextStyle(
-                  color: Color(0xFF91C050),
-                ),
+                style: TextStyle(color: Color(0xFF91C050)),
               ),
             ],
           ),
         ),
-        SizedBox(height: 15.0),
-
-        // Subtitle
+        const SizedBox(height: 15),
         Container(
-          width: 180,
-          height: 43.74,
+          width: isSmall ? 180 : 200,
+          height: isSmall ? 43.74 : 48,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(42.06),
@@ -211,20 +204,19 @@ class ActionSectionState extends State<ActionSection> with SingleTickerProviderS
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
             children: [
               Text(
                 'Dari layanan ',
                 style: TextStyle(
                   fontFamily: 'Satoshi-Regular',
-                  fontSize: isMobile ? 12 : 15,
+                  fontSize: isSmall ? 12 : 15,
                   color: Colors.black,
                 ),
               ),
               Image.asset(
                 'assets/images/JPS(2).png',
-                width: isMobile? 54.67 : 65,
-                height: isMobile ? 27.02 : 32,
+                width: isSmall ? 54.67 : 65,
+                height: isSmall ? 27.02 : 32,
                 fit: BoxFit.contain,
               )
             ],
@@ -234,48 +226,41 @@ class ActionSectionState extends State<ActionSection> with SingleTickerProviderS
     );
   }
 
-  Widget _buildRatingSection(bool isMobile) {
+  Widget _buildRatingSection(bool isMobile, bool isTablet) {
+    final isSmall = isMobile || isTablet;
+
     return Column(
       children: [
         Row(
           mainAxisAlignment: isMobile ? MainAxisAlignment.center : MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Bulat hijau dengan nilai 5,0
             SizedBox(
-              width: isMobile ? 76.19 : 90.39,
-              height: isMobile ? 76.19 : 90.39,
+              width: isSmall ? 76.19 : 90.39,
+              height: isSmall ? 76.19 : 90.39,
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  // ✅ Outer border (gradient)
                   Container(
-                    width: isMobile ? 76.19 : 90.39,
-                    height: isMobile ? 76.19 : 90.39,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       shape: BoxShape.circle,
-                      gradient: const RadialGradient(
+                      gradient: RadialGradient(
                         colors: [Color(0xFFE4FFBE), Color(0xFF91C050)],
                         center: Alignment.center,
                         radius: 0.8,
                       ),
                     ),
                   ),
-
-                  // ✅ Inner white border
                   Container(
-                    width: isMobile ? 66.03 : 80,
-                    height: isMobile ? 66.03 : 80,
+                    width: isSmall ? 66.03 : 80,
+                    height: isSmall ? 66.03 : 80,
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.white,
                     ),
                   ),
-
-                  // ✅ Innermost circle (greenish background)
                   Container(
-                    width: isMobile ? 57 : 70,
-                    height: isMobile ? 57 : 70,
+                    width: isSmall ? 57 : 70,
+                    height: isSmall ? 57 : 70,
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: Color(0xFFE6F3D6),
@@ -285,9 +270,9 @@ class ActionSectionState extends State<ActionSection> with SingleTickerProviderS
                       '5,0',
                       style: TextStyle(
                         fontFamily: 'Satoshi',
-                        fontSize: isMobile ? 25.4 : 30.13,
+                        fontSize: isSmall ? 25.4 : 30.13,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF91C050),
+                        color: const Color(0xFF91C050),
                       ),
                     ),
                   ),
@@ -295,7 +280,6 @@ class ActionSectionState extends State<ActionSection> with SingleTickerProviderS
               ),
             ),
             const SizedBox(width: 12.0),
-            // Bagian teks
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -303,29 +287,23 @@ class ActionSectionState extends State<ActionSection> with SingleTickerProviderS
                   'Terpercaya',
                   style: TextStyle(
                     fontFamily: 'Satoshi-Regular',
-                    fontSize: isMobile ? 25 : 30.13,
+                    fontSize: isSmall ? 25 : 30.13,
                     fontWeight: FontWeight.bold,
                     color: const Color(0xFF91C050),
                   ),
                 ),
-
-                const SizedBox(height: 0),
-
                 Row(
                   children: List.generate(5, (index) => Icon(
                     Icons.star,
-                    color: Color(0xFFFFC728),
-                    size: isMobile ? 17.94 : 21.28,
+                    color: const Color(0xFFFFC728),
+                    size: isSmall ? 17.94 : 21.28,
                   )),
                 ),
-
-                const SizedBox(height: 0),
-
                 Text(
                   '50 dari 50 ulasan',
                   style: TextStyle(
                     fontFamily: 'Satoshi-Regular',
-                    fontSize: isMobile ? 12 : 15.42,
+                    fontSize: isSmall ? 12 : 15.42,
                     color: Colors.black54,
                   ),
                 ),
@@ -339,7 +317,7 @@ class ActionSectionState extends State<ActionSection> with SingleTickerProviderS
           child: Text(
             'Ulasan Nasabah',
             style: TextStyle(
-              fontSize: isMobile ? 15 : 18,
+              fontSize: isSmall ? 15 : 18,
               color: Colors.black54,
               fontWeight: FontWeight.w400,
             ),
@@ -349,22 +327,20 @@ class ActionSectionState extends State<ActionSection> with SingleTickerProviderS
     );
   }
 
-  Widget _buildTestimonialGrid(List displayedItems, bool isMobile) {
+  Widget _buildTestimonialGrid(List items, bool isMobile, bool isTablet) {
     if (isMobile) {
       return Column(
-        children: displayedItems.map<Widget>((item) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 16.0),
-            child: _buildTestimonialCard(item, true),
-          );
-        }).toList(),
+        children: items.map((item) => Padding(
+          padding: const EdgeInsets.only(bottom: 16.0),
+          child: _buildTestimonialCard(item, true),
+        )).toList(),
       );
     }
 
-    // Desktop: 3 kolom per baris
+    final chunkSize = isTablet ? 2 : 3;
     List<List> rows = [];
-    for (int i = 0; i < displayedItems.length; i += 3) {
-      rows.add(displayedItems.skip(i).take(3).toList());
+    for (int i = 0; i < items.length; i += chunkSize) {
+      rows.add(items.skip(i).take(chunkSize).toList());
     }
 
     return Column(
@@ -374,14 +350,11 @@ class ActionSectionState extends State<ActionSection> with SingleTickerProviderS
             child: Row(
               children: [
                 for (int i = 0; i < row.length; i++) ...[
-                  Expanded(
-                    child: _buildTestimonialCard(row[i], false),
-                  ),
+                  Expanded(child: _buildTestimonialCard(row[i], false)),
                   if (i < row.length - 1) const SizedBox(width: 16),
                 ],
-                // Fill empty slots
-                if (row.length < 3)
-                  ...List.generate(3 - row.length, (_) => const Expanded(child: SizedBox())),
+                if (row.length < chunkSize)
+                  ...List.generate(chunkSize - row.length, (_) => const Expanded(child: SizedBox())),
               ],
             ),
           )
@@ -390,82 +363,58 @@ class ActionSectionState extends State<ActionSection> with SingleTickerProviderS
   }
 
   Widget _buildTestimonialCard(Map<String, String> testimonial, bool isMobile) {
+    final isSmall = isMobile;
+
     return Container(
-      height: isMobile ? 200.0 : 210.37,
+      height: isSmall ? 200.0 : 210.37,
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: const Color(0xFFE6E9F2),
-          width: 1.0,
-        ),
+        border: Border.all(color: const Color(0xFFE6E9F2), width: 1.0),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Rating section at top right
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                height: 19,
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFFC728).withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    RichText(
-                      text: TextSpan(
-                        style: TextStyle(
-                          fontFamily: 'Satoshi',
-                          fontSize: isMobile ? 8.0 : 10,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        children: [
-                          TextSpan(
-                            text: '5,0',
-                            style: const TextStyle(color: Color(0xFFFFC728)),
-                          ),
-                          TextSpan(
-                            text: '/5',
-                            style: const TextStyle(color: Color(0xFFA6A6A6)),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
+          Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+            Container(
+              height: 19,
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFC728).withOpacity(0.2),
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: Center(
+                child: RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    style: TextStyle(
+                      fontFamily: 'Satoshi',
+                      fontSize: isSmall ? 8.0 : 10,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    children: const [
+                      TextSpan(text: '5,0', style: TextStyle(color: Color(0xFFFFC728))),
+                      TextSpan(text: '/5', style: TextStyle(color: Color(0xFFA6A6A6))),
+                    ],
+                  ),
                 ),
               ),
-              const SizedBox(width: 8.0),
-              Row(
-                children: List.generate(5, (index) => Icon(
-                  Icons.star,
-                  color: const Color(0xFFFFD700),
-                  size: isMobile ? 15.0 : 20.37,
-                )),
-              ),
-            ],
-          ),
-
-          SizedBox(height: isMobile ? 10.0 : 15.0),
-
-          // Name and subtitle
+            ),
+            const SizedBox(width: 8.0),
+            Row(children: List.generate(5, (index) => Icon(Icons.star, color: const Color(0xFFFFD700), size: isSmall ? 15.0 : 20.37))),
+          ]),
+          SizedBox(height: isSmall ? 10.0 : 15.0),
           Text(
             testimonial['name'] ?? 'Unknown',
             style: TextStyle(
               fontFamily: 'Satoshi-Regular',
-              fontSize: isMobile ? 15.0 : 16.0,
+              fontSize: isSmall ? 15.0 : 16.0,
               fontWeight: FontWeight.bold,
               color: Colors.black,
             ),
           ),
-
           const SizedBox(height: 1),
-
           Row(
             children: [
               Expanded(
@@ -473,7 +422,7 @@ class ActionSectionState extends State<ActionSection> with SingleTickerProviderS
                   'Klien JPS',
                   style: TextStyle(
                     fontFamily: 'Satoshi-Regular',
-                    fontSize: isMobile ? 10.0 : 12.0,
+                    fontSize: isSmall ? 10.0 : 12.0,
                     color: Colors.black54,
                   ),
                 ),
@@ -485,15 +434,15 @@ class ActionSectionState extends State<ActionSection> with SingleTickerProviderS
                   children: [
                     SvgPicture.asset(
                       'assets/icons/thumbsup_solid.svg',
-                      width: isMobile ? 10.0 : 16.66,
-                      height: isMobile ? 10.0 : 16.66,
+                      width: isSmall ? 10.0 : 16.66,
+                      height: isSmall ? 10.0 : 16.66,
                     ),
                     const SizedBox(width: 4.0),
                     Text(
                       'Testimonial',
                       style: TextStyle(
                         fontFamily: 'Satoshi-Regular',
-                        fontSize: isMobile ? 10.0 : 12.0,
+                        fontSize: isSmall ? 10.0 : 12.0,
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
                       ),
@@ -503,16 +452,13 @@ class ActionSectionState extends State<ActionSection> with SingleTickerProviderS
               ),
             ],
           ),
-
-          SizedBox(height: isMobile ? 10.0 : 15.0),
-
-          // Quote
+          SizedBox(height: isSmall ? 10.0 : 15.0),
           Expanded(
             child: Text(
               '"${testimonial['quote'] ?? 'No quote available'}"',
               style: TextStyle(
                 fontFamily: 'Satoshi-Regular',
-                fontSize: isMobile ? 15.0 : 16.0,
+                fontSize: isSmall ? 15.0 : 16.0,
                 color: Colors.black,
               ),
               maxLines: 4,

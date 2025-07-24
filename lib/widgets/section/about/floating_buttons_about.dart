@@ -13,6 +13,8 @@ class _FloatingButtonsState extends State<FloatingButtons>
     with TickerProviderStateMixin {
   bool get isMobile => widget.constraints.maxWidth < 768;
   bool get isSmallMobile => widget.constraints.maxWidth < 400;
+  bool get isTablet =>
+      widget.constraints.maxWidth >= 768 && widget.constraints.maxWidth < 1024;
   double get maxWidth =>
       widget.constraints.maxWidth > 1200 ? 1200 : widget.constraints.maxWidth * 0.95;
 
@@ -83,14 +85,19 @@ class _FloatingButtonsState extends State<FloatingButtons>
   @override
   Widget build(BuildContext context) {
     return Transform.translate(
-      offset: Offset(0, isMobile ? -30 : -60),
+      offset: Offset(0, isMobile ? -30 : isTablet ? -45 : -60),
+
       child: Align(
         alignment: Alignment.center,
         child: Container(
           constraints: BoxConstraints(maxWidth: maxWidth),
           margin: EdgeInsets.symmetric(
             vertical: 8.0,
-            horizontal: isMobile ? (isSmallMobile ? 12.0 : 16.0) : 95.0,
+            horizontal: isMobile
+                ? (isSmallMobile ? 12.0 : 16.0)
+                : isTablet
+                ? 40.0
+                : 95.0,
           ),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -109,8 +116,16 @@ class _FloatingButtonsState extends State<FloatingButtons>
           ),
           child: Padding(
             padding: EdgeInsets.symmetric(
-              vertical: isMobile ? (isSmallMobile ? 8.0 : 12.0) : 12.0,
-              horizontal: isMobile ? (isSmallMobile ? 8.0 : 12.0) : 20.0,
+              vertical: isMobile
+                  ? (isSmallMobile ? 8.0 : 12.0)
+                  : isTablet
+                  ? 14.0
+                  : 16.0,
+              horizontal: isMobile
+                  ? (isSmallMobile ? 8.0 : 12.0)
+                  : isTablet
+                  ? 14.0
+                  : 20.0,
             ),
             child: isMobile ? _buildMobileLayout() : _buildDesktopLayout(),
           ),
@@ -168,6 +183,7 @@ class _FloatingButtonsState extends State<FloatingButtons>
           color: const Color(0xFF79AB43),
           isMobile: mobile,
           isSmallMobile: isSmallMobile,
+          isTablet: !mobile, // ini logika tambahan
         );
       },
     );
@@ -180,6 +196,7 @@ class StatCard extends StatelessWidget {
   final Color color;
   final bool isMobile;
   final bool isSmallMobile;
+  final bool isTablet;
 
   const StatCard({
     super.key,
@@ -188,11 +205,16 @@ class StatCard extends StatelessWidget {
     required this.color,
     this.isMobile = false,
     this.isSmallMobile = false,
+    this.isTablet = false,
   });
 
   TextStyle get titleStyle => TextStyle(
     fontFamily: 'Satoshi-Regular',
-    fontSize: isMobile ? (isSmallMobile ? 10 : 11) : 17,
+    fontSize: isMobile
+        ? (isSmallMobile ? 10 : 11)
+        : isTablet
+        ? 14
+        : 17,
     fontWeight: FontWeight.w600,
     color: Colors.grey[600],
     height: 1.2,
@@ -200,7 +222,11 @@ class StatCard extends StatelessWidget {
 
   TextStyle get valueStyle => TextStyle(
     fontFamily: 'Satoshi-Bold',
-    fontSize: isMobile ? (isSmallMobile ? 16 : 18) : 32,
+    fontSize: isMobile
+        ? (isSmallMobile ? 16 : 18)
+        : isTablet
+        ? 24
+        : 32,
     fontWeight: FontWeight.w700,
     color: color,
     height: 1.1,
@@ -210,8 +236,16 @@ class StatCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(
-        vertical: isMobile ? (isSmallMobile ? 8 : 10) : 12,
-        horizontal: isMobile ? (isSmallMobile ? 4 : 6) : 8,
+        vertical: isMobile
+            ? (isSmallMobile ? 8 : 10)
+            : isTablet
+            ? 12
+            : 14,
+        horizontal: isMobile
+            ? (isSmallMobile ? 4 : 6)
+            : isTablet
+            ? 6
+            : 8,
       ),
       decoration: BoxDecoration(
         color: Colors.transparent,

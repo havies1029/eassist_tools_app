@@ -96,30 +96,25 @@ class _ResetPasswordPageState extends State<ResetPasswordPage>
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 768;
     final screenWidth = MediaQuery.of(context).size.width;
-    final dialogWidth = screenWidth < 450 ? screenWidth * 0.9 : 400.0;
 
     return BlocConsumer<ChangePasswordBloc, ChangePasswordState>(
       listener: (context, state) {
         if (state.isSaved) {
-          if (state.hasFailure) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text("Password lama salah."),
-                backgroundColor: Colors.red,
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                state.hasFailure
+                    ? "Password lama salah."
+                    : "Password berhasil diubah.",
               ),
-            );
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text("Password berhasil diubah."),
-                backgroundColor: Colors.green,
-              ),
-            );
-            Navigator.of(context).pop();
-          }
+              backgroundColor: state.hasFailure ? Colors.red : Colors.green,
+            ),
+          );
 
-          // Bersihkan semua field
+          if (!state.hasFailure) Navigator.of(context).pop();
+
           _oldPasswordController.clear();
           _newPasswordController.clear();
           _confirmPasswordController.clear();
@@ -127,41 +122,17 @@ class _ResetPasswordPageState extends State<ResetPasswordPage>
       },
       builder: (context, state) {
         return Scaffold(
-          backgroundColor: Colors.black54,
+          backgroundColor:
+          isMobile ? Colors.white : Colors.black.withOpacity(0.5),
           body: GestureDetector(
             onTap: () => Navigator.of(context).pop(),
             behavior: HitTestBehavior.opaque,
             child: Center(
               child: GestureDetector(
-                onTap: () {}, // Mencegah propagasi ke luar dialog
-                child: AnimatedBuilder(
-                  animation: _scaleAnimation,
-                  builder: (context, child) {
-                    return Transform.scale(
-                      scale: _scaleAnimation.value,
-                      child: Container(
-                        width: dialogWidth,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.3),
-                              blurRadius: 20,
-                              offset: const Offset(0, 10),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            _buildHeader(context),
-                            _buildBody(),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
+                onTap: () {}, // Blok klik luar
+                child: isMobile
+                    ? _buildMobileLayout(context)
+                    : _buildDesktopLayout(context),
               ),
             ),
           ),
@@ -170,18 +141,19 @@ class _ResetPasswordPageState extends State<ResetPasswordPage>
     );
   }
 
+
   // -------------------------------------------------
   // HEADER DIALOG
   // -------------------------------------------------
   Widget _buildHeader(BuildContext context) {
     return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 15),
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
       decoration: const BoxDecoration(
-        color: Color(0xFF79AB43),
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
+        color: Color(0xFF91C050),
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(24),
+          topRight: Radius.circular(24),
         ),
       ),
       child: Row(
@@ -203,7 +175,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage>
               'Reset Password',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 24,
+                fontSize: 15,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -219,18 +191,15 @@ class _ResetPasswordPageState extends State<ResetPasswordPage>
   Widget _buildBody() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(30),
+      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
       decoration: const BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(20),
-          bottomRight: Radius.circular(20),
-        ),
+        borderRadius: BorderRadius.all(Radius.circular(24)),
       ),
       child: Column(
         children: [
           _buildLogo(),
-          const SizedBox(height: 15),
+          const SizedBox(height: 8),
           const Text(
             'Masukkan Password kamu!',
             style: TextStyle(
@@ -238,14 +207,16 @@ class _ResetPasswordPageState extends State<ResetPasswordPage>
               fontWeight: FontWeight.bold,
               color: Colors.black87,
             ),
+            textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 5),
+          const SizedBox(height: 4),
           const Text(
             'Yuk, isi data kamu dan jadi bagian dari klien eksklusif kami.',
             style: TextStyle(
               fontSize: 12,
               color: Colors.black54,
             ),
+            textAlign: TextAlign.center,
           ),
           const SizedBox(height: 35),
 
@@ -267,25 +238,13 @@ class _ResetPasswordPageState extends State<ResetPasswordPage>
   // LOGO DI BAGIAN ATAS BODY
   // -------------------------------------------------
   Widget _buildLogo() {
-    return Container(
-      width: 80,
-      height: 80,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.3),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: ClipOval(
-        child: Image.asset(
-          'assets/images/jps_logo.png',
-          width: 60,
-          height: 60,
-          fit: BoxFit.cover,
+    return SizedBox(
+      width: 129,
+      height: 55,
+      child: ClipRRect(
+        child: const Image(
+          image: AssetImage('assets/images/JPS.png'),
+          fit: BoxFit.contain,
         ),
       ),
     );
@@ -303,7 +262,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage>
       children: [
         _buildPasswordField(
           controller: _oldPasswordController,
-          hintText: 'Masukkan Password Lama',
+          hintText: 'Password Lama',
           obscureText: !_showOldPassword,
           onToggle: () => setState(() => _showOldPassword = !_showOldPassword),
         ),
@@ -320,6 +279,125 @@ class _ResetPasswordPageState extends State<ResetPasswordPage>
       ],
     );
   }
+  Widget _buildMobileLayout(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      child: Container(
+        constraints: BoxConstraints(minHeight: screenHeight),
+        child: Stack(
+          children: [
+            Container(
+              height: screenHeight * 0.4,
+              width: double.infinity,
+              color: const Color(0xFF91C050),
+            ),
+            SafeArea(
+              child: Column(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () => Navigator.of(context).pop(),
+                          child: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(Icons.close, color: Colors.white, size: 20),
+                          ),
+                        ),
+                        const SizedBox(width: 15),
+                        const Text(
+                          'Reset Password',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.only(top: 20),
+                    padding: EdgeInsets.fromLTRB(
+                      screenWidth * 0.08,
+                      40,
+                      screenWidth * 0.08,
+                      32,
+                    ),
+                    child: Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 20,
+                            offset: const Offset(0, 8),
+                          ),
+                        ],
+                      ),
+                      child: _buildBody(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  Widget _buildDesktopLayout(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final dialogWidth = screenWidth < 450 ? screenWidth * 0.9 : 400.0;
+
+    return AnimatedBuilder(
+      animation: _scaleAnimation,
+      builder: (context, child) {
+        return Transform.scale(
+          scale: _scaleAnimation.value,
+          child: Container(
+            width: dialogWidth,
+            margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.08),
+                  blurRadius: 24,
+                  offset: const Offset(0, 12),
+                ),
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.04),
+                  blurRadius: 6,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildHeader(context),
+                _buildBody(),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   // Field untuk "Password Baru" beserta error‐nya
   Widget _buildNewPasswordField() {
@@ -328,7 +406,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage>
       children: [
         _buildPasswordField(
           controller: _newPasswordController,
-          hintText: 'Masukkan Password Baru',
+          hintText: 'Password Baru',
           obscureText: !_showNewPassword,
           onToggle: () => setState(() => _showNewPassword = !_showNewPassword),
         ),
@@ -353,7 +431,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage>
       children: [
         _buildPasswordField(
           controller: _confirmPasswordController,
-          hintText: 'Ketik Ulang Password Baru',
+          hintText: 'Konfirmasi Passsword',
           obscureText: !_showConfirmPassword,
           onToggle: () =>
               setState(() => _showConfirmPassword = !_showConfirmPassword),
@@ -396,22 +474,35 @@ class _ResetPasswordPageState extends State<ResetPasswordPage>
         obscureText: obscureText,
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: TextStyle(color: Colors.grey.shade400),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Colors.grey.shade300),
+          hintStyle: TextStyle(
+            color: Colors.grey.shade500,
+            fontSize: 15,
           ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Colors.grey.shade300),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: Color(0xFF79AB43), width: 2),
-          ),
+          isDense: true,
           filled: true,
           fillColor: Colors.grey.shade50,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+          constraints: const BoxConstraints(maxHeight: 40),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(5),
+            borderSide: BorderSide(color: Colors.grey.shade200),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(5),
+            borderSide: BorderSide(color: Colors.grey.shade200),
+          ),
+          focusedBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+            borderSide: BorderSide(color: Color(0xFF91C050), width: 1.8),
+          ),
+          errorBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+            borderSide: BorderSide(color: Colors.red, width: 1.5),
+          ),
+          focusedErrorBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+            borderSide: BorderSide(color: Colors.red, width: 1.8),
+          ),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           suffixIcon: Padding(
             padding: const EdgeInsets.only(right: 10),
             child: IconButton(
@@ -432,45 +523,43 @@ class _ResetPasswordPageState extends State<ResetPasswordPage>
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovering = true),
       onExit: (_) => setState(() => _isHovering = false),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        width: double.infinity,
-        height: 50,
-        decoration: BoxDecoration(
-          color: _isHovering
-              ? const Color(0xFF6B9639)
-              : const Color(0xFF79AB43),
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: _isHovering
-              ? [
-            BoxShadow(
-              color: Color(0xFF79AB43).withOpacity(0.4),
-              blurRadius: 15,
-              offset: const Offset(0, 8),
-            ),
-          ]
-              : [
-            BoxShadow(
-              color: Color(0xFF79AB43).withOpacity(0.2),
-              blurRadius: 5,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            borderRadius: BorderRadius.circular(10),
-            onTap: _submitReset,
-            child: const Center(
-              child: Text(
-                'Submit',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+      child: GestureDetector(
+        onTap: _submitReset,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          curve: Curves.easeInOut,
+          width: double.infinity,
+          height: 40,
+          decoration: BoxDecoration(
+            color: _isHovering
+                ? const Color(0xFF8BB467)
+                : const Color(0xFF91C050),
+            borderRadius: BorderRadius.circular(5),
+            boxShadow: _isHovering
+                ? [
+              BoxShadow(
+                color: const Color(0xFF91C050).withOpacity(0.3),
+                blurRadius: 12,
+                offset: const Offset(0, 6),
+              )
+            ]
+                : [
+              BoxShadow(
+                color: const Color(0xFF91C050).withOpacity(0.2),
+                blurRadius: 8,
+                offset: const Offset(0, 4),
+              )
+            ],
+          ),
+          child: const Center(
+            child: AnimatedDefaultTextStyle(
+              duration: Duration(milliseconds: 150),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
               ),
+              child: Text('Submit'),
             ),
           ),
         ),

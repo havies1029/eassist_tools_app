@@ -190,7 +190,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
       children: [
         // Article Title with responsive font size
         Text(
-          'Judul Artikel Dinamis', // Bisa diganti dengan data dinamis
+          AppData.JudulArtikel ?? 'Judul tidak tersedia',
           style: TextStyle(
             fontFamily: 'Satoshi-Regular',
             fontSize: isMobile ? 22 : (isTablet ? 26 : 28),
@@ -199,6 +199,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
             height: 1.3,
           ),
         ),
+
         SizedBox(height: isMobile ? 12 : 16),
 
         // Author & Date + Social Actions - Responsive layout
@@ -379,7 +380,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
           title,
           style: TextStyle(
             fontFamily: 'Satoshi-Regular',
-            fontSize: isMobile ? 18 : (isTablet ? 19 : 20),
+            fontSize: isMobile ? 13 : (isTablet ? 15 : 16),
             fontWeight: FontWeight.w500,
             color: Colors.black87,
             height: 1.3,
@@ -407,7 +408,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
             'Daftar Isi',
             style: TextStyle(
               fontFamily: 'Satoshi-Regular',
-              fontSize: isMobile ? 16 : (isTablet ? 17 : 18),
+              fontSize: isMobile ? 12 : (isTablet ? 14 : 16),
               fontWeight: FontWeight.w600,
               color: Colors.black87,
             ),

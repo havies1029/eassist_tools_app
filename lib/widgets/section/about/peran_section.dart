@@ -6,22 +6,22 @@ import 'package:flutter_svg/flutter_svg.dart';
 class AppStyles {
   static const String fontFamily = 'Satoshi';
 
-  static TextStyle headerStyle(bool isMobile) => TextStyle(
-      fontFamily: fontFamily,
-      fontWeight: FontWeight.bold,
-      color: AppColors.textColor,
-      fontSize: isMobile? 20: 27
+  static TextStyle headerStyle(bool isMobile, bool isTablet) => TextStyle(
+    fontFamily: fontFamily,
+    fontWeight: FontWeight.bold,
+    color: AppColors.textColor,
+    fontSize: isMobile ? 20 : isTablet ? 24 : 27,
   );
 
-  static const TextStyle subtitleStyle=TextStyle(
+  static const TextStyle subtitleStyle = TextStyle(
     fontFamily: fontFamily,
     fontSize: 15,
     color: AppColors.colorMuted,
   );
 
-  static TextStyle descriptionStyle(bool isMobile) =>TextStyle(
+  static TextStyle descriptionStyle(bool isMobile, bool isTablet) => TextStyle(
     fontFamily: fontFamily,
-    fontSize: isMobile? 15 : 20,
+    fontSize: isMobile ? 15 : isTablet ? 17 : 20,
     color: AppColors.textColor,
   );
 }
@@ -93,36 +93,34 @@ class _PeranJpsSectionState extends State<PeranJpsSection>
 
   @override
   Widget build(BuildContext context) {
-    final bool isMobile = widget.constraints.maxWidth < 768;
+    final double maxWidth = widget.constraints.maxWidth;
+    final bool isMobile = maxWidth < 768;
+    final bool isTablet = maxWidth >= 768 && maxWidth < 1024;
+    final bool isDesktop = maxWidth >= 1024;
 
     return Container(
       width: double.infinity,
       color: Colors.white,
       padding: EdgeInsets.symmetric(
-        horizontal: isMobile ? 20 : 40,
-        vertical: isMobile ? 5 : 20,
+        horizontal: isMobile ? 20 : isTablet ? 30 : 40,
+        vertical: isMobile ? 5 : isTablet ? 12 : 20,
       ),
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 800),
           child: Column(
             children: [
-              // ===== HEADER =====
-              _buildHeader(isMobile),
+              _buildHeader(isMobile, isTablet),
               const SizedBox(height: 10),
               Text(
                 'Sebagai pusat peran strategis JPS, Broker membawahi empat peran utama berikut:',
                 style: AppStyles.subtitleStyle,
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: isMobile ? 20 : 34),
-
-              // ===== TAB NAVIGATION =====
-              _buildTabNavigation(isMobile),
-              SizedBox(height: isMobile ? 16 : 34),
-
-              // ===== CONTENT AREA =====
-              _buildContentArea(isMobile),
+              SizedBox(height: isMobile ? 20 : isTablet ? 28 : 34),
+              _buildTabNavigation(isMobile, isTablet),
+              SizedBox(height: isMobile ? 16 : isTablet ? 24 : 34),
+              _buildContentArea(isMobile, isTablet),
             ],
           ),
         ),
@@ -130,41 +128,26 @@ class _PeranJpsSectionState extends State<PeranJpsSection>
     );
   }
 
-  Widget _buildHeader(bool isMobile) {
+  Widget _buildHeader(bool isMobile, bool isTablet) {
+    final double iconSize = isMobile ? 40 : isTablet ? 50 : 60;
+
     return Column(
       children: [
-        // Broker icon at the top
         SvgPicture.asset(
           'assets/icons/user_roles.svg',
-          width: isMobile? 40:60,
-          height: isMobile? 40:60,
-          // colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+          width: iconSize,
+          height: iconSize,
         ),
         const SizedBox(height: 15),
         RichText(
           textAlign: TextAlign.center,
           text: TextSpan(
-            style: AppStyles.headerStyle(isMobile),
+            style: AppStyles.headerStyle(isMobile, isTablet),
             children: [
               const TextSpan(text: 'Peran '),
-              TextSpan(
-                text: 'J',
-                style: AppStyles.headerStyle(isMobile).copyWith(
-                  color: AppColors.primaryGreen,
-                ),
-              ),
-              TextSpan(
-                text: 'P',
-                style: AppStyles.headerStyle(isMobile).copyWith(
-                  color: AppColors.primaryOrange,
-                ),
-              ),
-              TextSpan(
-                text: 'S',
-                style: AppStyles.headerStyle(isMobile).copyWith(
-                  color: AppColors.primaryGreen,
-                ),
-              ),
+              TextSpan(text: 'J', style: AppStyles.headerStyle(isMobile, isTablet).copyWith(color: AppColors.primaryGreen)),
+              TextSpan(text: 'P', style: AppStyles.headerStyle(isMobile, isTablet).copyWith(color: AppColors.primaryOrange)),
+              TextSpan(text: 'S', style: AppStyles.headerStyle(isMobile, isTablet).copyWith(color: AppColors.primaryGreen)),
             ],
           ),
         ),
@@ -172,15 +155,12 @@ class _PeranJpsSectionState extends State<PeranJpsSection>
     );
   }
 
-  Widget _buildTabNavigation(bool isMobile) {
+  Widget _buildTabNavigation(bool isMobile, bool isTablet) {
     return Container(
       alignment: Alignment.center,
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(
-            color: AppColors.colorMuted,
-            width: 1,
-          ),
+          bottom: BorderSide(color: AppColors.colorMuted, width: 1),
         ),
       ),
       child: Row(
@@ -188,6 +168,9 @@ class _PeranJpsSectionState extends State<PeranJpsSection>
         children: List.generate(roleItems.length, (index) {
           final role = roleItems[index];
           final isSelected = selectedTabIndex == index;
+          final iconSize = isMobile ? 25.0 : isTablet ? 27.0 : 30.0;
+          final fontSize = isMobile ? 12.0 : isTablet ? 15.0 : 18.0;
+
           return Container(
             margin: EdgeInsets.only(right: index < roleItems.length - 1 ? (isMobile ? 5 : 10) : 0),
             child: GestureDetector(
@@ -200,8 +183,8 @@ class _PeranJpsSectionState extends State<PeranJpsSection>
                     curve: Curves.easeInOutCubic,
                     alignment: Alignment.center,
                     padding: EdgeInsets.symmetric(
-                        vertical: isMobile ? 8 : 12,
-                        horizontal: isMobile ? 8 : 20
+                      vertical: isMobile ? 8 : isTablet ? 10 : 12,
+                      horizontal: isMobile ? 8 : isTablet ? 15 : 20,
                     ),
                     decoration: BoxDecoration(
                       color: isSelected ? const Color(0xFFE2FFC2) : Colors.transparent,
@@ -211,77 +194,58 @@ class _PeranJpsSectionState extends State<PeranJpsSection>
                       ),
                       border: isSelected
                           ? const Border(
-                        bottom: BorderSide(
-                          color: AppColors.primaryGreen,
-                          width: 2.0,
-                        ),
+                        bottom: BorderSide(color: AppColors.primaryGreen, width: 2.0),
                       )
                           : null,
                     ),
-                    child: isMobile?
-                    Column(
+                    child: isMobile
+                        ? Column(
                       mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOutCubic,
-                          child: SvgPicture.asset(
-                            role.svgAsset,
-                            width: isMobile ? 25 : 27,
-                            height: isMobile ? 25 : 27,
-                            colorFilter: ColorFilter.mode(
-                              isSelected ? AppColors.primaryGreen : AppColors.colorMuted,
-                              BlendMode.srcIn,
-                            ),
+                        SvgPicture.asset(
+                          role.svgAsset,
+                          width: iconSize,
+                          height: iconSize,
+                          colorFilter: ColorFilter.mode(
+                            isSelected ? AppColors.primaryGreen : AppColors.colorMuted,
+                            BlendMode.srcIn,
                           ),
                         ),
-                        SizedBox(width: isMobile ? 10 : 12),
+                        const SizedBox(height: 6),
                         AnimatedDefaultTextStyle(
                           duration: const Duration(milliseconds: 300),
                           curve: Curves.easeInOutCubic,
                           style: TextStyle(
-                            fontSize: isMobile ? 12 : 18,
-                            fontWeight: isSelected? FontWeight.bold : FontWeight.normal,
+                            fontSize: fontSize,
+                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                             color: isSelected ? AppColors.primaryGreen : AppColors.colorMuted,
                           ),
-                          child: Text(
-                            role.title,
-                            textAlign: TextAlign.center,
-                          ),
+                          child: Text(role.title, textAlign: TextAlign.center),
                         ),
                       ],
-                    ) :
-                    Row(
+                    )
+                        : Row(
                       mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOutCubic,
-                          child: SvgPicture.asset(
-                            role.svgAsset,
-                            width: isMobile ? 18 : 27,
-                            height: isMobile ? 18 : 27,
-                            colorFilter: ColorFilter.mode(
-                              isSelected ? AppColors.primaryGreen : AppColors.colorMuted,
-                              BlendMode.srcIn,
-                            ),
+                        SvgPicture.asset(
+                          role.svgAsset,
+                          width: iconSize,
+                          height: iconSize,
+                          colorFilter: ColorFilter.mode(
+                            isSelected ? AppColors.primaryGreen : AppColors.colorMuted,
+                            BlendMode.srcIn,
                           ),
                         ),
-                        SizedBox(width: isMobile ? 6 : 12),
+                        SizedBox(width: isTablet ? 10 : 12),
                         AnimatedDefaultTextStyle(
                           duration: const Duration(milliseconds: 300),
                           curve: Curves.easeInOutCubic,
                           style: TextStyle(
-                            fontSize: isMobile ? 12 : 18,
-                            fontWeight: isSelected? FontWeight.bold : FontWeight.normal,
+                            fontSize: fontSize,
+                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                             color: isSelected ? AppColors.primaryGreen : AppColors.colorMuted,
                           ),
-                          child: Text(
-                            role.title,
-                            textAlign: TextAlign.center,
-                          ),
+                          child: Text(role.title, textAlign: TextAlign.center),
                         ),
                       ],
                     ),
@@ -295,9 +259,11 @@ class _PeranJpsSectionState extends State<PeranJpsSection>
     );
   }
 
-  Widget _buildContentArea(bool isMobile) {
-    return Container(
-      height: isMobile ? 320 : 250, // Slightly taller for mobile
+  Widget _buildContentArea(bool isMobile, bool isTablet) {
+    final double height = isMobile ? 320 : isTablet ? 290 : 250;
+
+    return SizedBox(
+      height: height,
       child: PageView.builder(
         controller: _pageController,
         onPageChanged: (index) {
@@ -307,77 +273,71 @@ class _PeranJpsSectionState extends State<PeranJpsSection>
         },
         itemCount: roleItems.length,
         itemBuilder: (context, index) {
-          return _buildContentPage(roleItems[index], isMobile);
+          return _buildContentPage(roleItems[index], isMobile, isTablet);
         },
       ),
     );
   }
 
-  Widget _buildContentPage(RoleData role, bool isMobile) {
+  Widget _buildContentPage(RoleData role, bool isMobile, bool isTablet) {
+    final double iconSize = isMobile ? 23.39 : isTablet ? 26 : 28.07;
+    final double spacing = isMobile ? 12 : isTablet ? 16 : 18.71;
+    final double padding = isMobile ? 20 : isTablet ? 60 : 100;
+
     return AnimatedBuilder(
       animation: _contentAnimationController,
       builder: (context, child) {
         return FadeTransition(
           opacity: _contentAnimationController,
           child: SlideTransition(
-            position: Tween<Offset>(
-              begin: const Offset(0, 0.1),
-              end: Offset.zero,
-            ).animate(CurvedAnimation(
+            position: Tween<Offset>(begin: const Offset(0, 0.1), end: Offset.zero)
+                .animate(CurvedAnimation(
               parent: _contentAnimationController,
               curve: Curves.easeInOutCubic,
             )),
             child: Container(
               width: double.infinity,
-              padding: EdgeInsets.symmetric(
-                horizontal: isMobile ? 40 : 100, // Reduced padding for mobile
-              ),
+              padding: EdgeInsets.symmetric(horizontal: padding),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: role.descriptions.asMap().entries.map((entry) {
                   final index = entry.key;
                   final description = entry.value;
 
-                  return AnimatedContainer(
-                    duration: Duration(milliseconds: 300 + (index * 100)),
+                  return TweenAnimationBuilder<double>(
+                    duration: Duration(milliseconds: 400 + (index * 100)),
+                    tween: Tween(begin: 0.0, end: 1.0),
                     curve: Curves.easeInOutCubic,
-                    child: TweenAnimationBuilder<double>(
-                      duration: Duration(milliseconds: 400 + (index * 100)),
-                      tween: Tween(begin: 0.0, end: 1.0),
-                      curve: Curves.easeInOutCubic,
-                      builder: (context, value, child) {
-                        return Transform.translate(
-                          offset: Offset(0, (1 - value) * 20),
-                          child: Opacity(
-                            opacity: value,
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                bottom: isMobile ? 18 : 22.45, // Reduced spacing for mobile
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  SvgPicture.asset(
-                                    'assets/icons/check.svg',
-                                    width: isMobile ? 23.39 : 28.07,
-                                    height: isMobile ? 23.39 : 28.07,
+                    builder: (context, value, child) {
+                      return Transform.translate(
+                        offset: Offset(0, (1 - value) * 20),
+                        child: Opacity(
+                          opacity: value,
+                          child: Padding(
+                            padding: EdgeInsets.only(bottom: isMobile ? 18 : isTablet ? 20 : 22.45),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/icons/check.svg',
+                                  width: iconSize,
+                                  height: iconSize,
+                                ),
+                                SizedBox(width: spacing),
+                                Expanded(
+                                  child: Text(
+                                    description,
+                                    style: AppStyles.descriptionStyle(isMobile, isTablet),
+                                    textAlign: TextAlign.left,
                                   ),
-                                  SizedBox(width: isMobile ? 12 : 18.71), // Reduced spacing for mobile
-                                  Expanded(
-                                    child: Text(
-                                      description,
-                                      style: AppStyles.descriptionStyle(isMobile),
-                                      textAlign: TextAlign.left,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
-                        );
-                      },
-                    ),
+                        ),
+                      );
+                    },
                   );
                 }).toList(),
               ),

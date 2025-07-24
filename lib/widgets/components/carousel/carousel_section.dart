@@ -178,8 +178,8 @@ class _CarouselSectionState extends State<CarouselSection>
             children: [
               SvgPicture.asset(
                 'assets/icons/percent.svg',
-                width: isMobile ? 40 : 50.0,
-                height: isMobile ? 40 : 50.0,
+                width: isMobile ? 35 : 50.0,
+                height: isMobile ? 35 : 50.0,
               ),
 
               SizedBox(height: 15),
@@ -206,21 +206,20 @@ class _CarouselSectionState extends State<CarouselSection>
                   ],
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
 
               // Subtitle
               Text(
-                'Nikmati kemudahan perlindungan asuransi resmi dan terpercaya. '
-                    'Daftar sekarang dan dapatkan penawaran eksklusif untuk \n'
+                'Daftar sekarang dan dapatkan penawaran eksklusif untuk '
                     'perlindungan aset pribadi maupun perusahaan Anda.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: 'Satoshi-Regular',
-                  fontSize: 15.0,
+                  fontSize: isMobile? 12 : 15.0,
                   color: const Color(0xFFA6A6A6),
                 ),
               ),
-
+              const SizedBox(height: 15),
               MouseRegion(
                 // onEnter: (_) => _onHoverEnter(),
                 // onExit: (_) => _onHoverExit(),
@@ -355,7 +354,7 @@ class _CarouselSectionState extends State<CarouselSection>
                   ),
                 ),
               ),
-
+              const SizedBox(height: 15),
               BlocBuilder<GalleryeventCariBloc, GalleryeventCariState>(
                   builder: (context, state) {
                     if (state.status == ListStatus.initial) {

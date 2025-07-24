@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
 import 'package:eassist_tools_app/widgets/account/login/login_gmail/popup_dialog_login.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 import '../../blocs/gen_profile/mrekan1crud_bloc.dart';
 import '../../blocs/home/home_bloc.dart';
@@ -51,6 +52,125 @@ class _HeroMainState extends State<HeroMain> {
     );
   }
 
+  // Future<void> _handleAuthenticationState(
+  //     BuildContext context, AuthenticationState state) async {
+  //   debugPrint("AuthenticationBloc state: $state");
+  //
+  //   if (state is AuthenticationUnauthenticated) {
+  //     if (_lastAuthState is AuthenticationRequirePinEmailVerification ||
+  //         _lastAuthState is AuthenticationRequirePinHPVerification ||
+  //         _lastAuthState is AuthenticationRequireRegisterClient) {
+  //       debugPrint("❌ [SKIP] Jangan tutup popup! Masih dalam proses verifikasi OTP/email.");
+  //       return;
+  //     }
+  //
+  //     if (AppData.isInOtpProcess) {
+  //       debugPrint("❌ [SKIP] Jangan tampilkan Login User karena OTP sedang aktif");
+  //       return;
+  //     }
+  //     HydratedBloc.storage.clear();
+  //     // Lanjutkan kalau bukan dari proses verifikasi
+  //     while (Navigator.of(context, rootNavigator: true).canPop()) {
+  //       Navigator.of(context, rootNavigator: true).pop();
+  //     }
+  //
+  //     await Future.delayed(const Duration(milliseconds: 100));
+  //     await CustomPopupsLoginUser.showLoginUserDialog(context);
+  //   }else if (state is AuthenticationRequireLoginClient) {
+  //     if (Navigator.of(context, rootNavigator: true).canPop()) {
+  //       Navigator.of(context, rootNavigator: true).pop();
+  //       await Future.delayed(const Duration(milliseconds: 100));
+  //     }
+  //
+  //     if (state.requiredFrom == "bloc_email_verification") {
+  //       setState(() => _sudahTerdaftarSebagaiClient = true);
+  //       await Future.delayed(const Duration(milliseconds: 150));
+  //     }
+  //
+  //     CustomPopupsLoginUser.showLoginClientDialog(context);
+  //   }
+  //
+  //   else if (state is AuthenticationForgotPassword) {
+  //     CustomPopupsLoginUser.showForgotPasswordDialog(context);
+  //   }
+  //
+  //   else if (state is AuthenticationRequireRegisterClient) {
+  //     CustomPopupsLoginUser.showRegisterClientDialog(context);
+  //   }
+  //
+  //   else if (state is AuthenticationRequirePinHPVerification) {
+  //     CustomPopupsLoginUser.showRequestOTPHPDialog(context, state.hpno);
+  //   }
+  //
+  //   else if (state is AuthenticationRequirePinEmailVerification) {
+  //     CustomPopupsLoginUser.showRequestOTPEmailDialog(context, state.email);
+  //   }
+  //
+  //   else if (state is AuthenticationPhonePinVerified) {
+  //     BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
+  //   }
+  //
+  //   else if (state is AuthenticationAuthenticated) {
+  //     if (state.user.custType == "C") {
+  //       debugPrint("👤 User is a client, Load MRekan state");
+  //       context.read<MRekan1CrudBloc>().add(MRekan1CrudLihatEvent());
+  //     } else {
+  //       debugPrint("👤 User is not a client, staying on HeroMain");
+  //     }
+  //
+  //     SchedulerBinding.instance.addPostFrameCallback((_) {
+  //       if (!mounted) return;
+  //
+  //       final authState = context.read<AuthenticationBloc>().state;
+  //       final homeState = context.read<HomeBloc>().state;
+  //
+  //       debugPrint("✅ BlocListener triggered: user authenticated");
+  //       debugPrint("🧠 [CHECK] Current HomeBloc state: $homeState");
+  //
+  //       // ✅ Dispatch event awal HANYA jika state masih default (HomePageActive)
+  //       final isDefaultState = homeState is HomePageActive;
+  //
+  //       if (isDefaultState) {
+  //         if (authState is AuthenticationAuthenticated) {
+  //           final from = authState.authenticatedFrom;
+  //           final custType = authState.user.custType;
+  //
+  //           if (from == "login_user") {
+  //             debugPrint("➡️ Default state + login_user → HeroPageActiveEvent");
+  //             context.read<HomeBloc>().add(HeroPageActiveEvent());
+  //           } else if (from == "login_client") {
+  //             debugPrint("➡️ Default state + login_client → HeroUserPageActiveEvent");
+  //             context.read<HomeBloc>().add(HeroUserPageActiveEvent());
+  //           } else if (from == "login_token") {
+  //             if (custType == "C") {
+  //               debugPrint("➡️ Default state + token + client → HeroUserPageActiveEvent");
+  //               context.read<HomeBloc>().add(HeroUserPageActiveEvent());
+  //             } else {
+  //               debugPrint("➡️ Default state + token + non-client → HeroPageActiveEvent");
+  //               context.read<HomeBloc>().add(HeroPageActiveEvent());
+  //             }
+  //           } else {
+  //             debugPrint("➡️ Default state + unknown source → HeroPageActiveEvent (fallback)");
+  //             context.read<HomeBloc>().add(HeroPageActiveEvent());
+  //           }
+  //         } else if (authState is AuthenticationGoogleUserAuthenticated) {
+  //           debugPrint("➡️ Default state + Google Auth → HeroPageActiveEvent");
+  //           context.read<HomeBloc>().add(HeroPageActiveEvent());
+  //         } else {
+  //           debugPrint("➡️ Default state + fallback → HeroUserPageActiveEvent");
+  //           context.read<HomeBloc>().add(HeroUserPageActiveEvent());
+  //         }
+  //       } else {
+  //         context.read<HomeBloc>().add(HeroUserPageActiveEvent());
+  //         debugPrint("🛑 SKIP: HomeBloc sudah punya state aktif dari history → $homeState");
+  //       }
+  //     });
+  //   }
+  //
+  //
+  //   // ✅ Simpan state terakhir untuk digunakan saat Unauthenticated
+  //   _lastAuthState = state;
+  // }
   Future<void> _handleAuthenticationState(
       BuildContext context, AuthenticationState state) async {
     debugPrint("AuthenticationBloc state: $state");
@@ -151,3 +271,4 @@ class _HeroMainState extends State<HeroMain> {
     _lastAuthState = state;
   }
 }
+

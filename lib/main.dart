@@ -53,6 +53,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 // import 'package:js/js_util.dart' as js_util;
 import 'blocs/gen_aset_dashboard/asetdashboardcari_bloc.dart';
 import 'blocs/gen_aset_health/asethealthcari_bloc.dart';
@@ -79,47 +80,52 @@ import 'package:flutter_web_plugins/url_strategy.dart';
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:mobile_chat_flutter/mobile_chat_flutter.dart';
+import 'package:path_provider/path_provider.dart';
+
 // NONAKTIFKAN DEBUG PRINT & ERROR MERAH
 
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   // disableAllLogs();
 
   final userRepository = UserRepository();
   AppData.kIsWeb = kIsWeb;
 
+  // Hilangkan tanda # di URL saat web
   if (kIsWeb) {
-    setUrlStrategy(PathUrlStrategy()); // HILANGKAN TANDA # pada path url
+    setUrlStrategy(PathUrlStrategy());
   }
 
-  // runApp(BlocProvider<AuthenticationBloc>(
-  //   create: (context) {
-  //     return AuthenticationBloc(userRepository: userRepository)
-  //       ..add(AppStarted());
-  //   },
-  //   child: App(
-  //     userRepository: userRepository,
-  //     key: null,
-  //   ),
-  // ));
-  runApp(MultiBlocProvider(
-    providers: [
-      BlocProvider<AuthenticationBloc>(
-        create: (context) {
-          return AuthenticationBloc(userRepository: userRepository)
-            ..add(AppStarted());
-        },
-      ),
-      BlocProvider<HomeBloc>(
-        create: (context) => HomeBloc(),
-      ),
-      // Tambahkan Bloc lain di sini jika perlu
-    ],
-    child: App(
-      userRepository: userRepository,
-      key: null,
-    ),
-  ));
+  // Inisialisasi storage untuk hydrated_bloc
+  final storage = await HydratedStorage.build(
+    storageDirectory: kIsWeb
+        ? HydratedStorage.webStorageDirectory
+        : await getApplicationDocumentsDirectory(),
+  );
 
+  // Gunakan cara lama
+  HydratedBloc.storage = storage;
+
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthenticationBloc>(
+          create: (_) => AuthenticationBloc(userRepository: userRepository)
+            ..add(AppStarted()),
+        ),
+        BlocProvider<HomeBloc>(
+          create: (_) => HomeBloc(),
+        ),
+        // Tambahkan bloc lainnya di sini
+      ],
+      child: App(
+        userRepository: userRepository,
+        key: null,
+      ),
+    ),
+  );
 }
 
 class App extends StatelessWidget {
@@ -251,7 +257,7 @@ class App extends StatelessWidget {
         theme: FlexThemeData.light(scheme: FlexScheme.mandyRed),
         darkTheme: FlexThemeData.dark(scheme: FlexScheme.mandyRed),
         themeMode: ThemeMode.light,
-
+        navigatorObservers: [routeObserver],
         onGenerateRoute: (settings) {
           switch (settings.name) {
             case 'chat':
@@ -283,7 +289,7 @@ class App extends StatelessWidget {
 }
 
 
-//
+
 // void disableAllLogs() {
 //   // 1. Matikan semua print/debugPrint
 //   debugPrint = (String? message, {int? wrapWidth}) {};

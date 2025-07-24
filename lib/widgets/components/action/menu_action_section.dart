@@ -128,14 +128,14 @@ class MenuActionSection extends StatelessWidget {
         StatusPopupHelper.show(context);
         break;
 
-      case 'Management Aset':
+      case 'Aset':
         SchedulerBinding.instance.addPostFrameCallback((_) {
           context.read<HomeBloc>().add(AssetsManagementPageActiveEvent());
         });
         break;
 
-      case 'Management Polis':
-      case 'Management Klaim':
+      case 'Polis':
+      case 'Klaim':
       case 'Tagihan dan Pembayaran':
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -300,8 +300,8 @@ class _MenuItemWidgetState extends State<MenuItemWidget>
 final List<Map<String, String>> menuList = [
   {'icon': 'assets/images/cari_asuransi.png', 'label': 'Cari Asuransi'},
   {'icon': 'assets/images/lapor_klaim.png', 'label': 'Lapor Klaim'},
-  {'icon': 'assets/images/management_aset.png', 'label': 'Management Aset'},
-  {'icon': 'assets/images/management_polis.png', 'label': 'Management Polis'},
-  {'icon': 'assets/images/management_klaim.png', 'label': 'Management Klaim'},
+  {'icon': 'assets/images/management_aset.png', 'label': 'Aset'},
+  {'icon': 'assets/images/management_polis.png', 'label': 'Polis'},
+  {'icon': 'assets/images/management_klaim.png', 'label': 'Klaim'},
   {'icon': 'assets/images/tagihan_pembayaran.png', 'label': 'Tagihan dan Pembayaran'},
 ];

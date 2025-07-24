@@ -47,7 +47,6 @@ class AppStyles {
   );
 }
 
-// =================== MAIN WIDGET ===================
 class CompanyProfileSection extends StatelessWidget {
   final BoxConstraints constraints;
 
@@ -55,44 +54,68 @@ class CompanyProfileSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isMobile = constraints.maxWidth < 768;
+    final double maxWidth = constraints.maxWidth;
+    final bool isMobile = maxWidth < 768;
+    final bool isTablet = maxWidth >= 768 && maxWidth < 1024;
+    final bool isDesktop = maxWidth >= 1024;
+
+    final double horizontalPadding = isMobile
+        ? 20
+        : isTablet
+        ? 60
+        : 105;
 
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(
-        horizontal: isMobile ? 20 : 300,
-        vertical: 10,
+        horizontal: horizontalPadding,
+        vertical: 40,
       ),
       color: AppColors.backgroundWhite,
-      child: isMobile ? _buildMobileLayout(isMobile) : _buildDesktopLayout(isMobile),
+      child: (isMobile)
+          ? Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildContent(isMobile: true, isTablet: false),
+          const SizedBox(height: 10),
+          _buildImage(isMobile: true, isTablet: false),
+        ],
+      )
+          : Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(flex: 2, child: _buildContent(isMobile: false, isTablet: isTablet)),
+          const SizedBox(width: 46),
+          Expanded(flex: 1, child: _buildImage(isMobile: false, isTablet: isTablet)),
+        ],
+      ),
     );
   }
 
-  Widget _buildMobileLayout(bool isMobile) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildContent(isMobile),
-        const SizedBox(height: 10),
-        _buildImage(isMobile),
-      ],
-    );
-  }
+  Widget _buildContent({required bool isMobile, required bool isTablet}) {
+    final double titleSize = isMobile
+        ? 22
+        : isTablet
+        ? 26
+        : 29.41;
 
-  Widget _buildDesktopLayout(bool isMobile) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Expanded(flex: 2, child: _buildContent(isMobile)),
-        const SizedBox(width: 46),
-        Expanded(flex: 1, child: _buildImage(isMobile)),
-      ],
-    );
-  }
+    final double descSize = isMobile
+        ? 15
+        : isTablet
+        ? 15
+        : 15.13;
 
-  Widget _buildContent(bool isMobile) {
-    final double  titleSize = isMobile ? 22 : 29.41;
-    final double descSize = isMobile ? 15 : 15.13;
+    final double spacing1 = isMobile
+        ? 15
+        : isTablet
+        ? 20
+        : 27;
+
+    final double spacing2 = isMobile
+        ? 25
+        : isTablet
+        ? 30
+        : 34;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,18 +132,44 @@ class CompanyProfileSection extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: isMobile ? 15 : 27),
+        SizedBox(height: spacing1),
         Text(descriptionText, style: AppStyles.subtitle(descSize)),
-        SizedBox(height: isMobile ? 25 : 34),
-        _buildDownloadButton(isMobile),
+        SizedBox(height: spacing2),
+        _buildDownloadButton(isMobile: isMobile, isTablet: isTablet),
       ],
     );
   }
 
-  Widget _buildDownloadButton(bool isMobile) {
-    final double fontSize = isMobile ? 10.22 : 15.13;
-    final double iconSize = isMobile ? 8.17 : 13.45;
-    final double circleSize = isMobile ? 20.44 : 33.61;
+  Widget _buildDownloadButton({required bool isMobile, required bool isTablet}) {
+    final double fontSize = isMobile
+        ? 10.22
+        : isTablet
+        ? 13
+        : 15.13;
+
+    final double iconSize = isMobile
+        ? 8.17
+        : isTablet
+        ? 11
+        : 13.45;
+
+    final double circleSize = isMobile
+        ? 20.44
+        : isTablet
+        ? 28
+        : 33.61;
+
+    final double paddingH = isMobile
+        ? 8
+        : isTablet
+        ? 10
+        : 12;
+
+    final double paddingV = isMobile
+        ? 5
+        : isTablet
+        ? 6
+        : 7;
 
     return Container(
       decoration: BoxDecoration(
@@ -137,8 +186,8 @@ class CompanyProfileSection extends StatelessWidget {
           borderRadius: BorderRadius.circular(32),
           child: Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: isMobile ? 8 : 10,
-              vertical: isMobile ? 5 : 7,
+              horizontal: paddingH,
+              vertical: paddingV,
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -162,14 +211,17 @@ class CompanyProfileSection extends StatelessWidget {
     );
   }
 
-  Widget _buildImage(bool isMobile) {
-    final double w = isMobile ? 300 : 318.86;
-    final double h = isMobile ? 300 : 318.86;
+  Widget _buildImage({required bool isMobile, required bool isTablet}) {
+    final double size = isMobile
+        ? 300
+        : isTablet
+        ? 310
+        : 318.86;
 
     return Center(
       child: Container(
-        width: w,
-        height: h,
+        width: size,
+        height: size,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: AppColors.backgroundLightGreen,
@@ -177,8 +229,8 @@ class CompanyProfileSection extends StatelessWidget {
         child: Center(
           child: Image.asset(
             profileImagePath,
-            width: w,
-            height: h,
+            width: size,
+            height: size,
             fit: BoxFit.contain,
           ),
         ),

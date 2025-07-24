@@ -46,11 +46,11 @@ class ClientSectionState extends State<ClientSection> {
         children: [
           SvgPicture.asset(
             'assets/icons/shield.svg',
-            width: isMobile ? 24.0 : 50.0,
-            height: isMobile ? 24.0 : 50.0,
+            width: isMobile ? 35 : 50.0,
+            height: isMobile ? 35 : 50.0,
           ),
 
-          SizedBox(height: isMobile ? 20.0 : 10.0),
+          SizedBox(height: 15),
 
           // Judul
           RichText(
@@ -74,7 +74,7 @@ class ClientSectionState extends State<ClientSection> {
               ],
             ),
           ),
-          SizedBox(height: isMobile ? 12.0 : 16.0),
+          SizedBox(height: 10),
 
           // Subtitle
           Text(
@@ -87,7 +87,7 @@ class ClientSectionState extends State<ClientSection> {
             ),
           ),
 
-          SizedBox(height: isMobile ? 10.0 : 15.0),
+          SizedBox(height: 15.0),
 
           // Grid Klien - Menggunakan Wrap untuk layout yang lebih fleksibel
           BlocBuilder<GallerymemberCariBloc, GallerymemberCariState>(
@@ -116,7 +116,7 @@ class ClientSectionState extends State<ClientSection> {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontFamily: 'Satoshi-Regular',
-              fontSize: isMobile ? 12.0 : 15.0,
+              fontSize: 15.0,
               color: Colors.black,
               fontWeight: FontWeight.bold,
             ),
@@ -152,8 +152,8 @@ class _ClientLogoCardState extends State<ClientLogoCard> {
       ),
       child: Center(
         child: SizedBox(
-          width: widget.isMobile ? 80.0 : 206,
-          height: widget.isMobile ? 40.0 : 109,
+          width: widget.isMobile ? 94 : 206,
+          height: widget.isMobile ? 62.89 : 109,
           child: Image.network(
             widget.imagePath,
             fit: BoxFit.contain,
@@ -161,8 +161,8 @@ class _ClientLogoCardState extends State<ClientLogoCard> {
             isAntiAlias: true,
             errorBuilder: (context, error, stackTrace) {
               return Container(
-                width: widget.isMobile ? 80.0 : 100.0,
-                height: widget.isMobile ? 40.0 : 60.0,
+                width: widget.isMobile ? 94 : 100.0,
+                height: widget.isMobile ? 62.89 : 60.0,
                 decoration: BoxDecoration(
                   color: Colors.grey.shade100,
                   borderRadius: BorderRadius.circular(4.0),

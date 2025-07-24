@@ -64,15 +64,15 @@ class _EnhancedHoverButtonState extends State<EnhancedHoverButton>
 
     if (widget.isLogin) {
       _backgroundAnimation = AlwaysStoppedAnimation(Colors.white);
-      _borderAnimation = AlwaysStoppedAnimation(const Color(0xFF79AB43));
+      _borderAnimation = AlwaysStoppedAnimation(const Color(0xFF91C050));
     } else {
       _backgroundAnimation = ColorTween(
-        begin: const Color(0xFF79AB43),
+        begin: const Color(0xFF91C050),
         end: const Color(0xFF5D8B32),
       ).animate(_hoverController);
 
       _borderAnimation = ColorTween(
-        begin: const Color(0xFF79AB43),
+        begin: const Color(0xFF91C050),
         end: const Color(0xFF5D8B32),
       ).animate(_hoverController);
     }
@@ -155,7 +155,7 @@ class _EnhancedHoverButtonState extends State<EnhancedHoverButton>
                   boxShadow: [
                     if (_isHovered || !widget.isLogin)
                       BoxShadow(
-                        color: const Color(0xFF79AB43).withOpacity(0.3),
+                        color: const Color(0xFF91C050).withOpacity(0.3),
                         blurRadius: _elevationAnimation.value + 4,
                         offset: Offset(0, _elevationAnimation.value / 2),
                       ),
@@ -171,7 +171,7 @@ class _EnhancedHoverButtonState extends State<EnhancedHoverButton>
                         child: Icon(
                           widget.isLogin ? Icons.login : Icons.person_add,
                           color: widget.isLogin
-                              ? const Color(0xFF79AB43)
+                              ? const Color(0xFF91C050)
                               : Colors.white,
                           size: isMobile ? 13.0 : 18.0,
                         ),
@@ -185,7 +185,7 @@ class _EnhancedHoverButtonState extends State<EnhancedHoverButton>
                         style: TextStyle(
                           fontFamily: 'Satoshi-Regular',
                           color: widget.isLogin
-                              ? const Color(0xFF79AB43)
+                              ? const Color(0xFF91C050)
                               : Colors.white,
                           fontWeight:
                           _isHovered ? FontWeight.w600 : FontWeight.w500,
@@ -268,7 +268,7 @@ Widget build(BuildContext context) {
                 boxShadow: [
                   if (_isHovered || !widget.isLogin)
                     BoxShadow(
-                      color: const Color(0xFF79AB43).withOpacity(0.3),
+                      color: const Color(0xFF91C050).withOpacity(0.3),
                       blurRadius: _elevationAnimation.value + 4,
                       offset: Offset(0, _elevationAnimation.value / 2),
                     ),
@@ -284,7 +284,7 @@ Widget build(BuildContext context) {
                       child: Icon(
                         widget.isLogin ? Icons.login : Icons.person_add,
                         color: widget.isLogin
-                            ? const Color(0xFF79AB43)
+                            ? const Color(0xFF91C050)
                             : Colors.white,
                         size: 18.0,
                       ),
@@ -298,7 +298,7 @@ Widget build(BuildContext context) {
                       style: TextStyle(
                         fontFamily: 'Satoshi-Regular',
                         color: widget.isLogin
-                            ? const Color(0xFF79AB43)
+                            ? const Color(0xFF91C050)
                             : Colors.white,
                         fontWeight:
                             _isHovered ? FontWeight.w600 : FontWeight.w500,

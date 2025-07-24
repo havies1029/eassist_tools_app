@@ -6,10 +6,13 @@ import '../../../blocs/gen_profile/mrekan1crud_bloc.dart';
 class AppTheme {
   static const String fontFamily = 'Satoshi-Regular';
   static const Color white = Colors.white;
-  static const Color primaryColor = Color(0xFF79AB43);
+  static const Color primaryColor = Color(0xFF91C050);
 
-  static double titleSize(bool isMobile) => isMobile ? 20 : 43;
-  static double bodySize(bool isMobile) => isMobile ? 13 : 18;
+  static double titleSize(bool isMobile, {bool isTablet = false}) =>
+      isMobile ? 20 : (isTablet ? 32 : 43);
+
+  static double bodySize(bool isMobile, {bool isTablet = false}) =>
+      isMobile ? 13 : (isTablet ? 15 : 18);
 
   static EdgeInsets responsivePadding(BoxConstraints constraints) {
     final double width = constraints.maxWidth;
@@ -64,6 +67,8 @@ class HeroSection extends StatelessWidget {
   });
 
   bool get isMobile => constraints.maxWidth < 768;
+  bool get isTablet => constraints.maxWidth >= 768 && constraints.maxWidth < 1024;
+
   double get maxWidth =>
       constraints.maxWidth > 1200 ? 1200 : constraints.maxWidth * 0.95;
 
@@ -90,7 +95,7 @@ class HeroSection extends StatelessWidget {
           margin: AppTheme.responsiveMargin(constraints, sectionType: sectionType),
           padding: EdgeInsets.all(isMobile ? 0 : 40),
           decoration: BoxDecoration(
-            color: Color(0xFF79AB43),
+            color: Color(0xFF91C050),
             borderRadius: BorderRadius.circular(isMobile ? 0 : 20),
           ),
 
@@ -203,7 +208,7 @@ class HeroSection extends StatelessWidget {
             text: titleData[key],
             style: TextStyle(
               fontFamily: AppTheme.fontFamily,
-              fontSize: AppTheme.titleSize(isMobile),
+              fontSize: AppTheme.titleSize(isMobile, isTablet: isTablet),
               fontWeight: key.startsWith('bold') ? FontWeight.w700 : FontWeight.w400,
               color: AppTheme.white,
               height: 1.2,
@@ -228,7 +233,7 @@ class HeroSection extends StatelessWidget {
             text: descData[key],
             style: TextStyle(
               fontFamily: AppTheme.fontFamily,
-              fontSize: key.startsWith('bold') ? AppTheme.bodySize(isMobile) : AppTheme.bodySize(isMobile),
+              fontSize: AppTheme.bodySize(isMobile, isTablet: isTablet),
               fontWeight: key.startsWith('bold') ? FontWeight.w600 : FontWeight.w400,
               color: key.startsWith('bold') ? AppTheme.white : AppTheme.white.withOpacity(0.9),
               height: 1.6,
@@ -244,8 +249,12 @@ class HeroSection extends StatelessWidget {
   Widget _buildHumanImage() {
     return Image.asset(
       'assets/images/human.png',
-      width: isMobile ? 182.37 : null,
-      height: isMobile ? 197 : null,
+      width: isMobile
+          ? 182.37
+          : null,
+      height: isMobile
+          ? 197
+          : null,
       fit: BoxFit.contain,
     );
   }

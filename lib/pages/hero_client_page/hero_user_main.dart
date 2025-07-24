@@ -8,6 +8,7 @@ import '../../widgets/section/homeclientpage/client_section.dart';
 import '../../widgets/section/homeclientpage/floating_buttons_user.dart';
 import '../../widgets/components/footer/footer_section.dart';
 import '../../widgets/components/hero/hero_section.dart';
+import '../../widgets/components/action/action_section.dart';
 
 import 'package:eassist_tools_app/blocs/gen_profile/mrekan1crud_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,7 +35,7 @@ class HeroUserMain extends StatelessWidget {
               // Layer 1: Background
               Positioned.fill(
                 child: isMobile
-                    ? Container(color: const Color(0xFF79AB43))
+                    ? Container(color: const Color(0xFF91C050))
                     : Image.asset(
                   'assets/images/bg-home.jpg',
                   fit: BoxFit.cover,
@@ -70,11 +71,15 @@ class HeroUserMain extends StatelessWidget {
                           FloatingButtons(constraints: constraints),
                         ],
                       ),
+                      // Transform.translate(
+                      //   offset: const Offset(0, -1),
+                      //   child: ActionSection(constraints: constraints),
+                      // ),
+                      // OFFSET 1 inci ke atas
                       Transform.translate(
                         offset: const Offset(0, -1),
                         child: MenuActionSection(constraints: constraints),
                       ),
-                      // OFFSET 1 inci ke atas
                       Transform.translate(
                         offset: const Offset(0, -2),
                         child: CarouselSection(constraints: constraints),
@@ -169,7 +174,7 @@ class _HeroUserPageState extends State<HeroUserPage> {
                   // Background
                   Positioned.fill(
                     child: isMobile
-                        ? Container(color: const Color(0xFF79AB43))
+                        ? Container(color: const Color(0xFF91C050))
                         : Stack(
                       fit: StackFit.expand,
                       children: [
@@ -191,7 +196,7 @@ class _HeroUserPageState extends State<HeroUserPage> {
                       child: Column(
                         children: [
 
-                              // Tampilkan data client
+                          // Tampilkan data client
                           // Padding(
                           //   padding: const EdgeInsets.symmetric(
                           //       vertical: 20, horizontal: 16),

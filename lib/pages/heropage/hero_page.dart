@@ -80,7 +80,7 @@ class _HeroPageState extends State<HeroPage> {
                 // Layer 1: Background
                 Positioned.fill(
                   child: isMobile
-                      ? Container(color: const Color(0xFF79AB43))
+                      ? Container(color: const Color(0xFF91C050))
                       : Stack(
                     fit: StackFit.expand,
                     children: [

@@ -92,7 +92,7 @@ class AboutPage extends StatelessWidget {
                       // VisiSection(constraints: constraints),
                       PeranJpsSection(constraints: constraints),
                       PencapaianSection(constraints: constraints),
-                      ManagementProfileSection(constraints: constraints),
+                      // ManagementProfileSection(constraints: constraints),
                       CompanyProfileSection(constraints: constraints),
                       // ArtikelCard(constraints: constraints),
                       TestimonialSection(constraints: constraints),

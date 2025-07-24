@@ -45,7 +45,7 @@ class TestimonialSectionState extends State<TestimonialSection> {
       child: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: widget.constraints.maxWidth > 1200 ? 105 : 20.0,
-          vertical: 20,
+          vertical: 40,
         ),
         child: Center(
           child: Container(
