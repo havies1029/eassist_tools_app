@@ -449,6 +449,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 // import 'package:eassist_tools_app/pages/profile/profile_main_page.dart';
 import 'package:eassist_tools_app/repositories/user/user_repository.dart';
+import 'package:flutter/scheduler.dart';
 import '../../blocs/authentication/authentication_bloc.dart';
 import '../../blocs/home/home_bloc.dart';
 import '../../widgets/account/profile/profile_main_page.dart';
@@ -587,25 +588,56 @@ class PageContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<HomeBloc>();
-    final body = _buildBody(context);
+    final currentPage = bloc.currentPage;
 
-    final child = WillPopScope(
-      onWillPop: () async {
-        if (bloc.canGoBack) {
-          bloc.add(PopPageEvent()); // pop stack
-          return false; // cegah navigator asli
-        }
-        return true; // izinkan keluar app/browser
+    final isInitialStackOnly = bloc.pageStack.length == 1 &&
+        bloc.pageStack.first == pageType;
+
+    if (!isInitialStackOnly && pageType != currentPage) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        debugPrint("⏫ PageContainer Detected PageType: $pageType (current: $currentPage)");
+        bloc.add(PushPageEvent(pageType));
+      });
+    }
+
+    final child = BlocBuilder<HomeBloc, HomeState>(
+      builder: (context, state) {
+        final activePageType = state.isLoading
+            ? bloc.pendingPageType ?? pageType
+            : pageType;
+
+        final body = WillPopScope(
+          onWillPop: () async {
+            if (bloc.canGoBack) {
+              bloc.add(PopPageEvent());
+              return false;
+            }
+            return true;
+          },
+          child: _buildBodyFor(context, activePageType),
+        );
+
+        return Stack(
+          children: [
+            body,
+            if (state.isLoading)
+              Positioned.fill(
+                child: Container(
+                  color: Colors.white,
+                  child: const Center(child: CircularProgressIndicator()),
+                ),
+              ),
+          ],
+        );
       },
-      child: body,
     );
 
-    if (kIsWeb) {
-      return child; // tanpa FloatingChatWrapper
-    } else {
-      return FloatingChatWrapper(child: child);
-    }
+    return kIsWeb
+        ? child
+        : FloatingChatWrapper(child: child);
   }
+
+
 
   String get _pageTitle {
     switch (pageType) {
@@ -705,8 +737,11 @@ class PageContainer extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context) {
-    // debugPrint("🏗 Membangun body untuk: $pageType");
-    switch (pageType) {
+    return _buildBodyFor(context, pageType);
+  }
+
+  Widget _buildBodyFor(BuildContext context, PageType type) {
+    switch (type) {
       case PageType.home:
         return const HeroMain();
       case PageType.groupchat:
@@ -721,25 +756,15 @@ class PageContainer extends StatelessWidget {
         return const SplashPage();
       case PageType.profileindividu:
         final userId = int.tryParse(Uri.base.queryParameters['userid'] ?? '') ?? 0;
-
-        return ProfileMainPage(
-          userid: userId,
-          selectedChoice: 'Individu',
-        );
-
+        return ProfileMainPage(userid: userId, selectedChoice: 'Individu');
       case PageType.profileperusahaan:
         final userId = int.tryParse(Uri.base.queryParameters['userid'] ?? '') ?? 0;
-
-        return ProfileMainPage(
-          userid: userId,
-          selectedChoice: 'Perusahaan',
-        );
+        return ProfileMainPage(userid: userId, selectedChoice: 'Perusahaan');
       case PageType.article1:
         return const ArticleDetailMain();
       case PageType.testprofile:
         return const TestProfileMain();
       case PageType.about:
-        debugPrint("🟢 AboutMain dibuild");
         return const AboutPage();
       case PageType.article:
         return const ArticleMain();
@@ -783,12 +808,11 @@ class PageContainer extends StatelessWidget {
         return const ReviewCariMainPage();
       case PageType.berita:
         return const BeritaMainPage(jenis: 1);
-      // case PageType.beritaartikel:
-      //   return const BeritaArtikelMainPage(jenis: 2);
       default:
         return const SizedBox();
     }
   }
+
 
   @override
   Widget get background => Container();

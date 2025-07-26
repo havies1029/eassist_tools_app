@@ -26,6 +26,7 @@ import 'package:eassist_tools_app/blocs/progressindicator/progressindicator_bloc
 import 'package:eassist_tools_app/blocs/reguser/reguser_bloc.dart';
 import 'package:eassist_tools_app/blocs/takeimage/takeimage_cubit.dart';
 import 'package:eassist_tools_app/common/app_data.dart';
+import 'package:eassist_tools_app/pages/base/base_page.dart';
 import 'package:eassist_tools_app/pages/hero_client_page/hero_user_main.dart';
 import 'package:eassist_tools_app/pages/heropage/hero_main.dart';
 import 'package:eassist_tools_app/pages/home/home_page.dart';
@@ -54,6 +55,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:js/js_util.dart' as js_util;
 import 'blocs/gen_aset_dashboard/asetdashboardcari_bloc.dart';
 import 'blocs/gen_aset_health/asethealthcari_bloc.dart';
@@ -85,28 +87,33 @@ import 'package:path_provider/path_provider.dart';
 // NONAKTIFKAN DEBUG PRINT & ERROR MERAH
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // disableAllLogs();
 
   final userRepository = UserRepository();
   AppData.kIsWeb = kIsWeb;
 
-  // Hilangkan tanda # di URL saat web
   if (kIsWeb) {
     setUrlStrategy(PathUrlStrategy());
   }
 
-  // Inisialisasi storage untuk hydrated_bloc
+  // Inisialisasi hydrated_bloc
   final storage = await HydratedStorage.build(
     storageDirectory: kIsWeb
         ? HydratedStorage.webStorageDirectory
         : await getApplicationDocumentsDirectory(),
   );
-
-  // Gunakan cara lama
   HydratedBloc.storage = storage;
+
+  // Ambil lastPage dari SharedPreferences
+  final prefs = await SharedPreferences.getInstance();
+  final lastPage = prefs.getString('lastPageType');
+  final initialPageType = PageType.values.firstWhere(
+        (e) => e.name == lastPage,
+    orElse: () => PageType.home,
+  );
 
   runApp(
     MultiBlocProvider(
@@ -116,32 +123,53 @@ Future<void> main() async {
             ..add(AppStarted()),
         ),
         BlocProvider<HomeBloc>(
-          create: (_) => HomeBloc(),
+          create: (_) => HomeBloc(initialPage: PageType.home), // ← jangan emit langsung di sini
         ),
-        // Tambahkan bloc lainnya di sini
       ],
       child: App(
         userRepository: userRepository,
+        navigatorKey: navigatorKey, // ⬅️ ditambahkan di sini
         key: null,
       ),
     ),
   );
+
+  // ✅ Setelah runApp selesai
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    final context = navigatorKey.currentContext;
+    if (context != null) {
+      final homeBloc = BlocProvider.of<HomeBloc>(context);
+      if (initialPageType != PageType.home) {
+        debugPrint("🧠 PostFrame: Push page from SharedPreferences: $initialPageType");
+        homeBloc.add(PushPageEvent(initialPageType));
+      }
+    }
+  });
 }
+
+
 
 class App extends StatelessWidget {
   final UserRepository userRepository;
-  const App({required super.key, required this.userRepository});
+  final GlobalKey<NavigatorState> navigatorKey; // ⬅️ TAMBAHKAN INI
+
+  const App({
+    required super.key,
+    required this.userRepository,
+    required this.navigatorKey, // ⬅️ JANGAN LUPA INI JUGA
+  });
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+
         BlocProvider<LoginBloc>(
-            create: (context) =>
-                LoginBloc(
-                  authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
-                  userRepository: userRepository,
-                )
+          create: (context) => LoginBloc(
+            authenticationBloc: context.read<AuthenticationBloc>(),
+            userRepository: userRepository,
+            homeBloc: context.read<HomeBloc>(), // ✅ Tambahkan ini
+          ),
         ),
         BlocProvider<EmailVerificationBloc>(
             create: (context) =>
@@ -252,6 +280,7 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => BeritaLainCariBloc()),
       ],
       child: MaterialApp(
+        navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
         title: 'JPS Insurance',
         theme: FlexThemeData.light(scheme: FlexScheme.mandyRed),

@@ -227,23 +227,66 @@ class _HeroMainState extends State<HeroMain> {
     }
 
     else if (state is AuthenticationPhonePinVerified) {
-      BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
+      // BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
+      BlocProvider.of<AuthenticationBloc>(context).add(
+        LoggedOut(homeBloc: context.read<HomeBloc>()),
+      );
     }
-
+    // else if (state is AuthenticationAuthenticated) {
+    //   if (state.user.custType == "C") {
+    //     debugPrint("User is a client, Load Mrekan state");
+    //     context.read<MRekan1CrudBloc>().add(MRekan1CrudLihatEvent());
+    //   } else {
+    //     debugPrint("User is not a client, staying on HeroMain");
+    //   }
+    //
+    //   SchedulerBinding.instance.addPostFrameCallback((_) {
+    //     if (!context.mounted) return;
+    //
+    //     try {
+    //       final bloc = context.read<HomeBloc>();
+    //       final currentPage = bloc.currentPage;
+    //
+    //       // ✅ Jangan force ke home saat startup, cukup jalankan kalau bukan dari startup
+    //       final isStartup = bloc.pageStack.length == 1;
+    //
+    //       if (!isStartup && currentPage != PageType.home) {
+    //         debugPrint("🔁 Force to home karena bukan di home (bukan startup)");
+    //         bloc.add(PushPageEvent(PageType.home));
+    //       } else {
+    //         debugPrint("⛔ Skip push home karena startup atau sudah di home");
+    //       }
+    //     } catch (e, stack) {
+    //       debugPrint("⚠️ HomeBloc belum tersedia saat AuthAuthenticated. Error: $e");
+    //     }
+    //   });
+    // }
     else if (state is AuthenticationAuthenticated) {
       if (state.user.custType == "C") {
         debugPrint("User is a client, Load Mrekan state");
-        BlocProvider.of<MRekan1CrudBloc>(context).add(MRekan1CrudLihatEvent());
+        context.read<MRekan1CrudBloc>().add(MRekan1CrudLihatEvent());
       } else {
         debugPrint("User is not a client, staying on HeroMain");
       }
 
       SchedulerBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) return;
-        // context.read<HomeBloc>().add(HomePageActiveEvent());
-        context.read<HomeBloc>().add(PushPageEvent(PageType.home));
+        if (!context.mounted) return;
+
+        try {
+          final currentPage = context.read<HomeBloc>().currentPage;
+
+          if (currentPage != PageType.home) {
+            debugPrint("🔁 Force to home karena bukan di home");
+            context.read<HomeBloc>().add(PushPageEvent(PageType.home));
+          } else {
+            debugPrint("⛔ Skip push home karena sudah di home");
+          }
+        } catch (e, stack) {
+          debugPrint("⚠️ HomeBloc belum tersedia saat AuthAuthenticated. Error: $e");
+        }
       });
     }
+
 
     // ✅ Simpan state terakhir untuk digunakan saat Unauthenticated
     _lastAuthState = state;

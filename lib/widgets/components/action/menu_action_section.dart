@@ -1,16 +1,20 @@
+import 'dart:ui';
+
 import 'package:eassist_tools_app/blocs/home/home_bloc.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import '../../../pages/base/base_page.dart';
 import '../../dialog/popup/status_popup.dart';
 
 class MenuActionSection extends StatelessWidget {
   final BoxConstraints constraints;
+  final List<String>? enabledLabels;
 
-  const MenuActionSection({super.key, required this.constraints});
+  const MenuActionSection({
+    super.key,
+    required this.constraints,
+    this.enabledLabels,
+  });
 
   bool get isMobile => constraints.maxWidth < 800;
   bool get isTablet => constraints.maxWidth >= 768 && constraints.maxWidth < 1024;
@@ -30,26 +34,19 @@ class MenuActionSection extends StatelessWidget {
       ? const EdgeInsets.only(top: 48.0, bottom: 0.0)
       : const EdgeInsets.only(top: 60.0, bottom: 0.0);
 
-  // Base dimensions untuk formasi 3-3 - diperbesar untuk mobile
   double get baseItemWidth => isMobile ? 100.0 : 120.0;
   double get baseItemHeight => isMobile ? 130.0 : 200.0;
   double get baseIconSize => isMobile ? 75.0 : 120.0;
   double get baseFontSize => isMobile ? 13.0 : 18.0;
   double get baseSpacing => isMobile ? 12.0 : 28.0;
 
-  // Scale calculation untuk 3 items per row
   double get scaleFactor {
     final availableWidth = constraints.maxWidth - horizontalPadding.horizontal;
-
-    // Hitung kebutuhan width untuk 3 items dalam satu row
     final threeItemsNeededWidth = (baseItemWidth * 3) + (baseSpacing * 2);
     final threeItemsScale = availableWidth / threeItemsNeededWidth;
-
-    // Clamp untuk mencegah terlalu kecil atau terlalu besar
     return threeItemsScale.clamp(0.5, 1.0);
   }
 
-  // Calculated dimensions dengan overflow protection - diperbesar minimum untuk mobile
   double get itemWidth => (baseItemWidth * scaleFactor).clamp(isMobile ? 85.0 : 40.0, 120.0);
   double get itemHeight => (baseItemHeight * scaleFactor).clamp(isMobile ? 110.0 : 65.0, 180.0);
   double get iconSize => (baseIconSize * scaleFactor).clamp(isMobile ? 60.0 : 30.0, 90.0);
@@ -73,10 +70,8 @@ class MenuActionSection extends StatelessWidget {
           constraints: BoxConstraints(maxWidth: maxWidth),
           child: Column(
             children: [
-              // Row 1: 3 items pertama
               _buildMenuRow(context, [0, 1, 2]),
               SizedBox(height: spacing),
-              // Row 2: 3 items terakhir
               _buildMenuRow(context, [3, 4, 5]),
             ],
           ),
@@ -100,19 +95,40 @@ class MenuActionSection extends StatelessWidget {
   }
 
   Widget _buildMenuItem(BuildContext context, Map<String, String> item) {
+    final bool isEnabled = enabledLabels == null || enabledLabels!.contains(item['label']);
+
     return ConstrainedBox(
       constraints: BoxConstraints(
         maxWidth: itemWidth,
         maxHeight: itemHeight,
       ),
-      child: MenuItemWidget(
-        item: item,
-        itemWidth: itemWidth,
-        itemHeight: itemHeight,
-        iconSize: iconSize,
-        fontSize: fontSize,
-        scaleFactor: scaleFactor,
-        onTap: () => _handleMenuTap(context, item['label']!),
+      child: Stack(
+        children: [
+          MenuItemWidget(
+            item: item,
+            itemWidth: itemWidth,
+            itemHeight: itemHeight,
+            iconSize: iconSize,
+            fontSize: fontSize,
+            scaleFactor: scaleFactor,
+            isEnabled: isEnabled,
+            onTap: isEnabled ? () => _handleMenuTap(context, item['label']!) : () {},
+          ),
+          if (!isEnabled)
+            Positioned.fill(
+              child: AbsorbPointer(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16.13 * scaleFactor),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
+                    child: Container(
+                      color: Colors.white.withOpacity(0.4),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
@@ -121,8 +137,7 @@ class MenuActionSection extends StatelessWidget {
     switch (menuLabel) {
       case 'Cari Asuransi':
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          // context.read<HomeBloc>().add(FindInsurancePageActiveEvent());
-          context.read<HomeBloc>().add(PushPageEvent(PageType.findinsurance));
+          context.read<HomeBloc>().add(FindInsurancePageActiveEvent());
         });
         break;
 
@@ -130,15 +145,19 @@ class MenuActionSection extends StatelessWidget {
         StatusPopupHelper.show(context);
         break;
 
-      case 'Aset':
+      case 'Management Aset':
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          // context.read<HomeBloc>().add(AssetsManagementPageActiveEvent());
-          context.read<HomeBloc>().add(PushPageEvent(PageType.assetsmanagement));
+          context.read<HomeBloc>().add(AssetsManagementPageActiveEvent());
         });
         break;
 
-      case 'Polis':
-      case 'Klaim':
+      case 'Management Polis':
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(PolisManagementPageActiveEvent());
+        });
+        break;
+
+      case 'Management Klaim':
       case 'Tagihan dan Pembayaran':
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -167,6 +186,7 @@ class MenuItemWidget extends StatefulWidget {
   final double iconSize;
   final double fontSize;
   final double scaleFactor;
+  final bool isEnabled;
   final VoidCallback onTap;
 
   const MenuItemWidget({
@@ -177,6 +197,7 @@ class MenuItemWidget extends StatefulWidget {
     required this.iconSize,
     required this.fontSize,
     required this.scaleFactor,
+    required this.isEnabled,
     required this.onTap,
   });
 
@@ -184,15 +205,13 @@ class MenuItemWidget extends StatefulWidget {
   State<MenuItemWidget> createState() => _MenuItemWidgetState();
 }
 
-class _MenuItemWidgetState extends State<MenuItemWidget>
-    with TickerProviderStateMixin {
+class _MenuItemWidgetState extends State<MenuItemWidget> with TickerProviderStateMixin {
   late AnimationController _tapController;
   late Animation<double> _scaleAnimation;
 
   @override
   void initState() {
     super.initState();
-
     _tapController = AnimationController(
       duration: const Duration(milliseconds: 150),
       vsync: this,
@@ -213,19 +232,9 @@ class _MenuItemWidgetState extends State<MenuItemWidget>
     super.dispose();
   }
 
-  void _onTapDown() {
-    _tapController.forward();
-  }
-
-  void _onTapUp() {
-    _tapController.reverse().then((_) {
-      widget.onTap();
-    });
-  }
-
-  void _onTapCancel() {
-    _tapController.reverse();
-  }
+  void _onTapDown() => _tapController.forward();
+  void _onTapUp() => _tapController.reverse().then((_) => widget.onTap());
+  void _onTapCancel() => _tapController.reverse();
 
   @override
   Widget build(BuildContext context) {
@@ -246,10 +255,8 @@ class _MenuItemWidgetState extends State<MenuItemWidget>
                 borderRadius: BorderRadius.circular(16.13 * widget.scaleFactor),
               ),
               child: Column(
-                mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Icon container dengan size yang fleksibel
                   Container(
                     width: widget.iconSize,
                     height: widget.iconSize,
@@ -261,18 +268,27 @@ class _MenuItemWidgetState extends State<MenuItemWidget>
                       borderRadius: BorderRadius.circular(16.13 * widget.scaleFactor),
                     ),
                     clipBehavior: Clip.antiAlias,
-                    child: Image.asset(
-                      widget.item['icon']!,
-                      fit: BoxFit.contain,
+                    child: ColorFiltered(
+                      colorFilter: widget.isEnabled
+                          ? const ColorFilter.mode(Colors.transparent, BlendMode.multiply)
+                          : const ColorFilter.matrix(<double>[
+                        0.2126, 0.7152, 0.0722, 0, 0,
+                        0.2126, 0.7152, 0.0722, 0, 0,
+                        0.2126, 0.7152, 0.0722, 0, 0,
+                        0, 0, 0, 1, 0,
+                      ]),
+                      child: Image.asset(
+                        widget.item['icon']!,
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   ),
                   SizedBox(height: (6 * widget.scaleFactor).clamp(4.0, 10.0)),
-                  // Text container dengan overflow protection
                   Container(
                     width: widget.itemWidth,
                     height: widget.itemHeight * 0.3,
                     padding: EdgeInsets.symmetric(
-                        horizontal: (2 * widget.scaleFactor).clamp(1.0, 4.0)
+                      horizontal: (2 * widget.scaleFactor).clamp(1.0, 4.0),
                     ),
                     alignment: Alignment.topCenter,
                     child: Text(
@@ -303,8 +319,8 @@ class _MenuItemWidgetState extends State<MenuItemWidget>
 final List<Map<String, String>> menuList = [
   {'icon': 'assets/images/cari_asuransi.png', 'label': 'Cari Asuransi'},
   {'icon': 'assets/images/lapor_klaim.png', 'label': 'Lapor Klaim'},
-  {'icon': 'assets/images/management_aset.png', 'label': 'Aset'},
-  {'icon': 'assets/images/management_polis.png', 'label': 'Polis'},
-  {'icon': 'assets/images/management_klaim.png', 'label': 'Klaim'},
+  {'icon': 'assets/images/management_aset.png', 'label': 'Management Aset'},
+  {'icon': 'assets/images/management_polis.png', 'label': 'Management Polis'},
+  {'icon': 'assets/images/management_klaim.png', 'label': 'Management Klaim'},
   {'icon': 'assets/images/tagihan_pembayaran.png', 'label': 'Tagihan dan Pembayaran'},
 ];

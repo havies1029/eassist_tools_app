@@ -5,6 +5,8 @@ import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:eassist_tools_app/repositories/user/user_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../home/home_bloc.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
@@ -12,14 +14,16 @@ part 'login_state.dart';
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final UserRepository userRepository;
   final AuthenticationBloc authenticationBloc;
+  final HomeBloc homeBloc;
 
   LoginBloc({
     required this.userRepository,
     required this.authenticationBloc,
+    required this.homeBloc,
   }) : super(LoginInitial()) {
     on<LoginButtonPressed>(_onLoginButtonPressed);
-    //on<PinVerified>(_onPinVerified);
   }
+
 
   Future<void> _onLoginButtonPressed(
       LoginButtonPressed event, Emitter<LoginState> emit) async {
@@ -47,7 +51,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       }
 
       print("🚀 Mengirim event LoggedIn ke AuthenticationBloc...");
-      authenticationBloc.add(LoggedIn(user: user));
+      authenticationBloc.add(
+        LoggedIn(
+          user: user,
+          homeBloc: homeBloc, // ✅ GUNAKAN YANG DITERIMA DARI CONSTRUCTOR
+        ),
+      );
+
+
 
       emit(LoginPostAuthenticate());
       print("🎉 LoginBloc: Emit LoginPostAuthenticate()");

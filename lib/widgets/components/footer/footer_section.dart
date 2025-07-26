@@ -123,8 +123,9 @@ class FooterSection extends StatelessWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              width: isTablet ? 280 : 350,
+            // Kolom Map & Info
+            Expanded(
+              flex: 2,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -136,21 +137,23 @@ class FooterSection extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(width: isTablet ? 24.0 : 32.0),
+            const SizedBox(width: 24.0),
 
-            SizedBox(
-              width: isTablet ? 180 : 200,
+            // Kolom Unggulan
+            Expanded(
+              flex: 1,
               child: _buildSignatureSection(context),
             ),
-            SizedBox(width: isTablet ? 24.0 : 32.0),
+            const SizedBox(width: 24.0),
 
             // Kolom Menu
-            SizedBox(
-              width: isTablet ? 180 : 200,
+            Expanded(
+              flex: 1,
               child: _buildMenuSection(),
             ),
           ],
         ),
+
       ],
     );
   }

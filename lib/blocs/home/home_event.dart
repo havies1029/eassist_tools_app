@@ -7,11 +7,15 @@ abstract class HomeEvent extends Equatable {
   List<Object> get props => [];
 }
 
+// ───────────────────────
+// Active Page Events
+// ───────────────────────
 class HomePageActiveEvent extends HomeEvent {}
 class ProfilePageActiveEvent extends HomeEvent {}
 class RoomCariPageActiveEvent extends HomeEvent {}
 class ChatSupportPageActiveEvent extends HomeEvent {}
 class ChangePasswordPageActiveEvent extends HomeEvent {}
+
 class SimulMVPageActiveEvent extends HomeEvent {}
 class SimulPARPageActiveEvent extends HomeEvent {}
 class SimulEEIPageActiveEvent extends HomeEvent {}
@@ -19,46 +23,31 @@ class SimulGITPageActiveEvent extends HomeEvent {}
 class SimulGISPageActiveEvent extends HomeEvent {}
 class SimulBONPageActiveEvent extends HomeEvent {}
 class SimulWPPageActiveEvent extends HomeEvent {}
-
 class SimulCARGOPageActiveEvent extends HomeEvent {}
-
 class SimulFlexasPageActiveEvent extends HomeEvent {}
-
 class SimulTREEPageActiveEvent extends HomeEvent {}
-
 class SimulCARPageActiveEvent extends HomeEvent {}
-
 class SimulMBPageActiveEvent extends HomeEvent {}
 
 class TrackKlaimPageActiveEvent extends HomeEvent {}
-
 class StartChatPageActiveEvent extends HomeEvent {}
 
 class CobCariPageActiveEvent extends HomeEvent {}
 
 class AsetDashboardPageActiveEvent extends HomeEvent {}
-
 class AsetParPageActiveEvent extends HomeEvent {}
-
 class AsetMVPageActiveEvent extends HomeEvent {}
-
 class AsetRingkasanPageActiveEvent extends HomeEvent {}
-
 class AsetHealthPageActiveEvent extends HomeEvent {}
-
 class AsetStatusPageActiveEvent extends HomeEvent {}
-
 class AsetPageActiveEvent extends HomeEvent {}
 
 class ReviewCariPageActiveEvent extends HomeEvent {}
 
 class BeritaPageActiveEvent extends HomeEvent {}
-
 class BeritaSampinganPageActiveEvent extends HomeEvent {}
-
 class BeritaArtikelPageActiveEvent extends HomeEvent {}
 
-//Active Page
 class SplashPageActiveEvent extends HomeEvent {}
 class ProfileIndividuPageActiveEvent extends HomeEvent {}
 class ProfilePerusahaanPageActiveEvent extends HomeEvent {}
@@ -70,21 +59,27 @@ class ArticlePageActiveEvent extends HomeEvent {}
 class AssetsManagementPageActiveEvent extends HomeEvent {}
 class PolisManagementPageActiveEvent extends HomeEvent {}
 class FindInsurancePageActiveEvent extends HomeEvent {}
-// class HeroUserPageActiveEvent extends HomeEvent {}
-// class HeroPageActiveEvent extends HomeEvent {}
 class TestimonyPageActiveEvent extends HomeEvent {}
 class CsPageActiveEvent extends HomeEvent {}
 class UserNonJPSPageActiveEvent extends HomeEvent {}
 class UserJPSPageActiveEvent extends HomeEvent {}
 
-//loading
+// ───────────────────────
+// Loading Pages (Special)
+// ───────────────────────
 class LoadingHeroPageActiveEvent extends HomeEvent {}
 class LoadingHero2PageActiveEvent extends HomeEvent {}
 class LoadingHeroUserPageActiveEvent extends HomeEvent {}
 
+// ───────────────────────
+// Stack Management
+// ───────────────────────
 class PushPageEvent extends HomeEvent {
   final PageType pageType;
   const PushPageEvent(this.pageType);
+
+  @override
+  List<Object> get props => [pageType];
 }
 
 class PopPageEvent extends HomeEvent {}

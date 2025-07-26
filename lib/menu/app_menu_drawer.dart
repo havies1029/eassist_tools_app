@@ -130,8 +130,9 @@ class AppMenuState extends State<AppMenu> with RouteAware {
                       leading: const Icon(Icons.logout),
                       title: const Text("Logout"),
                       onTap: () {
-                        BlocProvider.of<AuthenticationBloc>(context)
-                            .add(LoggedOut());
+                        BlocProvider.of<AuthenticationBloc>(context).add(
+                          LoggedOut(homeBloc: context.read<HomeBloc>()),
+                        );
                       },
                     ),
                   ],

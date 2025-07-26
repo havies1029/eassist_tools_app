@@ -9,6 +9,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../home/home_bloc.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
@@ -84,17 +87,35 @@ class AuthenticationBloc
 
     emit(AuthenticationLoading());
 
-    //emit(AuthenticationClientAuthenticated(user: event.user));
+    // 🧼 Bersihin lastPageType supaya gak restore halaman lama
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('lastPageType');
+
+    // Emit ke state authenticated
     emit(AuthenticationAuthenticated(
-        user: event.user, authenticatedFrom: "login_client"));
+      user: event.user,
+      authenticatedFrom: "login_client",
+    ));
   }
+
 
   Future<void> _onLoggedOut(
       LoggedOut event, Emitter<AuthenticationState> emit) async {
     emit(AuthenticationLoading());
+
+    // Hapus token login
     await userRepository.deleteToken(id: 0);
+
+    // ❗ RESET STACK DAN LAST PAGE
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('lastPageType');
+
+    // ❗ Akses dan reset HomeBloc
+    event.homeBloc.resetStack();
+
     emit(AuthenticationUnauthenticated());
   }
+
 
   Future<void> _onRequirePinEmailVerification(
       RequirePinEmailVerification event,

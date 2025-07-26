@@ -81,13 +81,36 @@ class CompanyProfileSection extends StatelessWidget {
           _buildImage(isMobile: true, isTablet: false),
         ],
       )
-          : Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Expanded(flex: 2, child: _buildContent(isMobile: false, isTablet: isTablet)),
-          const SizedBox(width: 46),
-          Expanded(flex: 1, child: _buildImage(isMobile: false, isTablet: isTablet)),
-        ],
+          : _buildDesktopLayout(isTablet: isTablet),
+    );
+  }
+
+  Widget _buildDesktopLayout({required bool isTablet}) {
+    // Batasi lebar maksimum konten untuk layar yang sangat lebar
+    final double maxContentWidth = isTablet ? 900 : 1200;
+    final double actualWidth = constraints.maxWidth - (isTablet ? 120 : 210); // Kurangi padding horizontal
+    final double contentWidth = actualWidth > maxContentWidth ? maxContentWidth : actualWidth;
+
+    // Hitung spacing antara konten dan gambar berdasarkan lebar yang tersedia
+    final double spacing = (contentWidth * 0.08).clamp(30.0, 80.0); // 8% dari lebar konten, minimum 30px, maksimum 80px
+
+    return Center(
+      child: Container(
+        width: contentWidth,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+                flex: 3,
+                child: _buildContent(isMobile: false, isTablet: isTablet)
+            ),
+            SizedBox(width: spacing),
+            Expanded(
+                flex: 2,
+                child: _buildImage(isMobile: false, isTablet: isTablet)
+            ),
+          ],
+        ),
       ),
     );
   }

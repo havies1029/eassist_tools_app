@@ -11,14 +11,20 @@ class AppStarted extends AuthenticationEvent {}
 
 class LoggedIn extends AuthenticationEvent {
   final User user;
+  final HomeBloc homeBloc;
 
-  const LoggedIn({required this.user});
+  const LoggedIn({required this.user, required this.homeBloc});
 
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [user, homeBloc];
 }
 
-class LoggedOut extends AuthenticationEvent {}
+
+class LoggedOut extends AuthenticationEvent {
+  final HomeBloc homeBloc;
+
+  const LoggedOut({required this.homeBloc});
+}
 
 class RequireLoginClient extends AuthenticationEvent {
   final String requiredFrom;

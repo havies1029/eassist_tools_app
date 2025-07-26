@@ -7,6 +7,8 @@ import 'package:eassist_tools_app/widgets/google_signin_button_stub.dart'
 if (dart.library.js_interop) 'package:eassist_tools_app/widgets/google_signin_button_web.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../../../blocs/home/home_bloc.dart';
+
 const List<String> scopes = <String>[
   'email',
 ];
@@ -101,7 +103,10 @@ class _LogoutPopupState extends State<LogoutPopup>
       }
 
       // 2. Emit logout ke AuthenticationBloc
-      context.read<AuthenticationBloc>().add(LoggedOut());
+      context.read<AuthenticationBloc>().add(
+        LoggedOut(homeBloc: context.read<HomeBloc>()),
+      );
+
     });
 
     // 3. Baru tutup popup

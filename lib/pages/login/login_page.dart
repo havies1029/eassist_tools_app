@@ -7,6 +7,8 @@ import 'package:eassist_tools_app/blocs/login/login_bloc.dart';
 import 'package:eassist_tools_app/pages/login/login_form.dart';
 import 'package:eassist_tools_app/widgets//splash_screen.dart';
 
+import '../../blocs/home/home_bloc.dart';
+
 class LoginPage extends StatefulWidget {
   final UserRepository userRepository;
 
@@ -41,7 +43,9 @@ class _LoginPageState extends State<LoginPage> {
             return LoginBloc(
               authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
               userRepository: widget.userRepository,
+              homeBloc: BlocProvider.of<HomeBloc>(context), // ✅ tambahkan ini!
             );
+
           },
           child: const LoginForm(),
         ),
