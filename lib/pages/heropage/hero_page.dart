@@ -81,6 +81,20 @@ class _HeroPageState extends State<HeroPage> {
     return FloatingButtons(constraints: constraints);
   }
 
+  Widget _buildMenuAction(AuthenticationState state, BoxConstraints constraints) {
+    if (state is AuthenticationAuthenticated) {
+      final from = state.authenticatedFrom;
+      final custType = state.user.custType;
+
+      if (from == "login_client") return   MenuActionSection(constraints: constraints);
+      if (from == "login_token" && custType == "C") return   MenuActionSection(constraints: constraints);
+    }
+    return MenuActionSection(
+      constraints: constraints,
+      enabledLabels: ['Cari Asuransi', 'Lapor Klaim'],
+    );
+  }
+
   Widget _buildHeroMainContent(AuthenticationState authState, BoxConstraints constraints) {
     final sectionType = _getHeroSectionType(authState);
     final floatingButtonWidget = _buildFloatingButtons(authState, constraints);
@@ -128,7 +142,7 @@ class _HeroPageState extends State<HeroPage> {
                   ],
                 ),
                 const SizedBox(height: 0),
-                MenuActionSection(constraints: constraints),
+                _buildMenuAction(authState, constraints),
                 CarouselSection(constraints: constraints),
                 ClientSection(constraints: constraints),
                 FooterSection(constraints: constraints),

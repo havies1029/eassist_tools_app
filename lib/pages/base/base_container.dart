@@ -478,6 +478,8 @@ import '../loading/loading_user2_page.dart';
 import '../qontak/floating_chat_wrapper.dart';
 import '../loading/loading_client_page.dart';
 import '../loading/loading_user_page.dart';
+import '../simulmv/simulmvcrud_main.dart';
+import '../simulpar/simulparcrud_main.dart';
 import '../splash/splash_page.dart';
 import '../management_asset/management_asset_main.dart';
 import '../management_polis/management_polis_main.dart';
@@ -602,9 +604,7 @@ class PageContainer extends StatelessWidget {
 
     final child = BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
-        final activePageType = state.isLoading
-            ? bloc.pendingPageType ?? pageType
-            : pageType;
+        final activePageType = pageType;
 
         final body = WillPopScope(
           onWillPop: () async {
@@ -617,18 +617,7 @@ class PageContainer extends StatelessWidget {
           child: _buildBodyFor(context, activePageType),
         );
 
-        return Stack(
-          children: [
-            body,
-            if (state.isLoading)
-              Positioned.fill(
-                child: Container(
-                  color: Colors.white,
-                  child: const Center(child: CircularProgressIndicator()),
-                ),
-              ),
-          ],
-        );
+        return body;
       },
     );
 
@@ -808,6 +797,10 @@ class PageContainer extends StatelessWidget {
         return const ReviewCariMainPage();
       case PageType.berita:
         return const BeritaMainPage(jenis: 1);
+      case PageType.simulmv:
+        return const SimulmvCrudMainPage();
+      case PageType.simulpar:
+        return const SimulparCrudMainPage();
       default:
         return const SizedBox();
     }

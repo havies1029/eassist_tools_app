@@ -89,28 +89,27 @@ class OtpHpDialogState extends BaseDialogState<OtpHpDialog> {
                       padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                       child: Row(
                         children: [
-                          if (isLoggedIn)
-                            GestureDetector(
-                              onTap: () => Navigator.of(context).pop(),
-                              child: Container(
-                                width: 44,
-                                height: 44,
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.15),
-                                  borderRadius: BorderRadius.circular(14),
-                                  border: Border.all(
-                                    color: Colors.white.withOpacity(0.2),
-                                    width: 1,
-                                  ),
-                                ),
-                                child: const Icon(
-                                  Icons.arrow_back_ios_new,
-                                  size: 20,
-                                  color: Colors.white,
+                          GestureDetector(
+                            onTap: () => Navigator.of(context).pop(),
+                            child: Container(
+                              width: 44,
+                              height: 44,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.15),
+                                borderRadius: BorderRadius.circular(14),
+                                border: Border.all(
+                                  color: Colors.white.withOpacity(0.2),
+                                  width: 1,
                                 ),
                               ),
+                              child: const Icon(
+                                Icons.arrow_back_ios_new,
+                                size: 20,
+                                color: Colors.white,
+                              ),
                             ),
-                          if (isLoggedIn) const SizedBox(width: 16),
+                          ),
+                          const SizedBox(width: 16),
                           const Text(
                             'Verifikasi OTP',
                             style: TextStyle(
@@ -122,6 +121,7 @@ class OtpHpDialogState extends BaseDialogState<OtpHpDialog> {
                         ],
                       ),
                     ),
+
 
                     // ✅ Content
                     Container(
@@ -280,28 +280,27 @@ class OtpHpDialogState extends BaseDialogState<OtpHpDialog> {
                     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 15),
                     child: Row(
                       children: [
-                        if (isLoggedIn)
-                          GestureDetector(
-                            onTap: () => Navigator.of(context).pop(),
-                            child: Container(
-                              width: 32,
-                              height: 32,
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.15),
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                  color: Colors.white.withOpacity(0.2),
-                                  width: 1,
-                                ),
-                              ),
-                              child: const Icon(
-                                Icons.close,
-                                size: 18,
-                                color: Colors.white,
+                        GestureDetector(
+                          onTap: () => Navigator.of(context).pop(),
+                          child: Container(
+                            width: 32,
+                            height: 32,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.15),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: Colors.white.withOpacity(0.2),
+                                width: 1,
                               ),
                             ),
+                            child: const Icon(
+                              Icons.arrow_back_ios_new,
+                              size: 18,
+                              color: Colors.white,
+                            ),
                           ),
-                        if (isLoggedIn) const SizedBox(width: 16),
+                        ),
+                        const SizedBox(width: 16),
                         const Text(
                           'Verifikasi OTP',
                           style: TextStyle(

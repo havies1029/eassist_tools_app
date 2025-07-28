@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../blocs/authentication/authentication_bloc.dart';
+import '../../../common/app_data.dart';
+import '../../../main.dart';
+import '../../account/login/login_gmail/popup_dialog_login.dart';
 
 class OtpEmailDialog extends BaseDialog {
   final String email;
@@ -47,12 +50,12 @@ class OtpEmailDialogState extends BaseDialogState<OtpEmailDialog> {
                 return Navigator.of(context).canPop();
               },
               child: GestureDetector(
-                onTap: () {
-                  // Tutup dialog ini saja
-                  if (Navigator.of(context).canPop()) {
-                    Navigator.of(context).pop();
-                  }
-                },
+                // onTap: () {
+                //   // Tutup dialog ini saja
+                //   if (Navigator.of(context).canPop()) {
+                //     Navigator.of(context).pop();
+                //   }
+                // },
                 child: Scaffold(
                   backgroundColor: isMobile ? Colors.white : Colors.black.withOpacity(0.5),
                   body: GestureDetector(
@@ -115,7 +118,19 @@ class OtpEmailDialogState extends BaseDialogState<OtpEmailDialog> {
                         children: [
                           if (isLoggedIn)
                             GestureDetector(
-                              onTap: () => Navigator.of(context).pop(),
+                              onTap: () async {
+                                debugPrint("🔙 Tombol < ditekan, akan kembali ke LoginUserDialog");
+                                Navigator.of(context).pop();
+                                AppData.isInOtpProcess = false;
+                                debugPrint("💡 isInOtpProcess = ${AppData.isInOtpProcess}, memanggil showLoginUserDialog");
+                                await Future.delayed(const Duration(milliseconds: 200));
+                                WidgetsBinding.instance.addPostFrameCallback((_) {
+                                  AppData.isInOtpProcess = false;
+                                  CustomPopupsLoginUser.showLoginUserDialog(
+                                    navigatorKey.currentContext ?? context,
+                                  );
+                                });
+                              },
                               child: Container(
                                 width: 44,
                                 height: 44,
@@ -331,7 +346,20 @@ class OtpEmailDialogState extends BaseDialogState<OtpEmailDialog> {
                       children: [
                         if (isLoggedIn)
                           GestureDetector(
-                            onTap: () => Navigator.of(context).pop(),
+                            onTap: () async {
+                              debugPrint("🔙 Tombol < ditekan, akan kembali ke LoginUserDialog");
+                              Navigator.of(context).pop();
+                              AppData.isInOtpProcess = false;
+                              await Future.delayed(const Duration(milliseconds: 200));
+                              debugPrint("💡 isInOtpProcess = ${AppData.isInOtpProcess}, memanggil showLoginUserDialog");
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                AppData.isInOtpProcess = false;
+                                CustomPopupsLoginUser.showLoginUserDialog(
+                                  navigatorKey.currentContext ?? context,
+                                );
+                              });
+
+                            },
                             child: Container(
                               width: 32,
                               height: 32,

@@ -186,6 +186,9 @@
               SubMenuItem(icon: Icons.business_outlined, title: 'Berita1', onTap: () {}),
               SubMenuItem(icon: Icons.business_outlined, title: 'Berita2', onTap: () {}),
               SubMenuItem(icon: Icons.business_outlined, title: 'Berita3', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'mv', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'par', onTap: () {}),
+
             ],
           },
           {

@@ -49,6 +49,8 @@ import 'package:eassist_tools_app/repositories/profile/rekangeneral_repository.d
 import 'package:eassist_tools_app/repositories/profile/rekanpajak_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/userfoto_repository.dart';
 import 'package:eassist_tools_app/repositories/reguser/reguser_repository.dart';
+import 'package:eassist_tools_app/repositories/simulmv/simulmvcrud_repository.dart';
+import 'package:eassist_tools_app/repositories/simulpar/simulparcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/user/user_repository.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
@@ -83,6 +85,9 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:mobile_chat_flutter/mobile_chat_flutter.dart';
 import 'package:path_provider/path_provider.dart';
+
+import 'blocs/simulmv/simulmvcrud_bloc.dart';
+import 'blocs/simulpar/simulparcrud_bloc.dart';
 
 // NONAKTIFKAN DEBUG PRINT & ERROR MERAH
 
@@ -278,6 +283,12 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => Berita3CariBloc()),
         BlocProvider(create: (context) => BeritaKecilCariBloc()),
         BlocProvider(create: (context) => BeritaLainCariBloc()),
+        BlocProvider<SimulmvCrudBloc>(
+            create: (context) =>
+                SimulmvCrudBloc(repository: SimulmvCrudRepository())),
+        BlocProvider<SimulparCrudBloc>(
+            create: (context) =>
+                SimulparCrudBloc(repository: SimulparCrudRepository())),
       ],
       child: MaterialApp(
         navigatorKey: navigatorKey,

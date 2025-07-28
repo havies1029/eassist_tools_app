@@ -76,6 +76,12 @@ class CustomPopupsLoginUser {
     AppData.isInOtpProcess = false;
   }
 
+  static Future<void> closeOtpAndShowLogin(BuildContext context) async {
+    Navigator.of(context).pop();
+    AppData.isInOtpProcess = false;
+    await Future.delayed(Duration(milliseconds: 200));
+    await showLoginUserDialog(context);
+  }
 
   // Popup untuk Request OTP Email
   static Future<void> showRequestOTPHPDialog(BuildContext context, String hpno) async {

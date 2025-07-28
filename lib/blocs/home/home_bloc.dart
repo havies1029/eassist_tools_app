@@ -184,7 +184,6 @@
 //     return null;
 //   }
 // }
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -199,17 +198,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final List<PageType> _pageStack;
   bool _hasStartupPush = false;
   bool get hasStartupPush => _hasStartupPush;
-  PageType? _pendingPageType;
 
-  PageType? get pendingPageType => _pendingPageType;
-  final Set<PageType> _excludedFromLoading = {
-    PageType.home,
-    PageType.splash,
-    PageType.cs,
-    PageType.userjps,
-    PageType.usernonjps,
-    PageType.testprofile,
-  };
   void markStartupPush() => _hasStartupPush = true;
 
   PageType get currentPage => _pageStack.last;
@@ -243,16 +232,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<ProfileIndividuPageActiveEvent>((event, emit) => emit(ProfileIndividuPageActive()));
     on<ProfilePerusahaanPageActiveEvent>((event, emit) => emit(ProfilePerusahaanPageActive()));
     on<Article1PageActiveEvent>((event, emit) {
-      debugPrint("📝 Event Article1PageActiveEvent diterima, emit state: Article1PageActive");
+      debugPrint("🖍 Event Article1PageActiveEvent diterima, emit state: Article1PageActive");
       emit(Article1PageActive());
     });
     on<TestProfilePageActiveEvent>((event, emit) => emit(TestProfilePageActive()));
     on<AboutPageActiveEvent>((event, emit) {
       if (state is! AboutPageActive) {
-        // debugPrint("[BLOC] AboutPageActiveEvent triggered");
         emit(AboutPageActive());
-      } else {
-        // debugPrint("[BLOC] AboutPageActiveEvent skipped — already in AboutPageActive state");
       }
     });
     on<ActiveAssetsPageActiveEvent>((event, emit) => emit(ActiveAssetsPageActive()));
@@ -263,8 +249,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<AssetsManagementPageActiveEvent>((event, emit) => emit(AssetsManagementPageActive()));
     on<PolisManagementPageActiveEvent>((event, emit) => emit(PolisManagementPageActive()));
     on<FindInsurancePageActiveEvent>((event, emit) => emit(FindInsurancePageActive()));
-    // on<HeroUserPageActiveEvent>((event, emit) => emit(HeroUserPageActive()));
-    // on<HeroPageActiveEvent>((event, emit) => emit(HeroPageActive()));
     on<TestimonyPageActiveEvent>((event, emit) => emit(TestimonyPageActive()));
     on<CsPageActiveEvent>((event, emit) => emit(CsPageActive()));
     on<UserNonJPSPageActiveEvent>((event, emit) => emit(UserNonJPSPageActive()));
@@ -290,38 +274,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     on<PushPageEvent>((event, emit) async {
       if (_pageStack.isNotEmpty && _pageStack.last == event.pageType) {
-        debugPrint("⏩ PushPageEvent dilewati karena sudah di stack terakhir: ${event.pageType}");
+        debugPrint("⏩ PushPageEvent dilewati karena sudah di stack terakhir: \${event.pageType}");
         return;
       }
 
-      final shouldShowLoading = !_excludedFromLoading.contains(event.pageType);
-
-      if (shouldShowLoading) {
-        _pendingPageType = event.pageType;
-
-        // ✅ Tambahkan page ke stack dan langsung emit page barunya tapi dengan isLoading: true
-        _pageStack.add(event.pageType);
-
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('lastPageType', event.pageType.name);
-
-        final loadingState = _mapPageTypeToState(event.pageType, isLoading: true);
-        emit(loadingState); // ini akan langsung build widget baru, tapi tertutup loading
-
-        // ✅ Tunggu biar widget barunya sempat build + fetch data
-        await Future.delayed(const Duration(seconds: 3));
-
-        // ✅ Hilangkan loading
-        final newState = _mapPageTypeToState(event.pageType);
-        emit(newState);
-
-        _dispatchInitEventForPage(event.pageType);
-        _pendingPageType = null;
-        markStartupPush();
-        return;
-      }
-
-      // Normal flow tanpa loading
       _pageStack.add(event.pageType);
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('lastPageType', event.pageType.name);
@@ -332,7 +288,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       markStartupPush();
     });
 
-
     on<PopPageEvent>((event, emit) {
       if (canGoBack) {
         _pageStack.removeLast();
@@ -340,6 +295,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       }
     });
   }
+
   final Map<PageType, HomeEvent> _pageTypeToEventMap = {
     PageType.home: HomePageActiveEvent(),
     PageType.groupchat: StartChatPageActiveEvent(),
@@ -375,6 +331,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     PageType.berita: BeritaPageActiveEvent(),
     PageType.beritasampingan: BeritaSampinganPageActiveEvent(),
     PageType.beritaartikel: BeritaArtikelPageActiveEvent(),
+    PageType.simulmv: SimulMVPageActiveEvent(),
+    PageType.simulpar: SimulPARPageActiveEvent(),
+
   };
 
   void _dispatchInitEventForPage(PageType pageType) {
@@ -382,56 +341,57 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     if (event != null) {
       add(event);
     } else {
-      debugPrint("⚠️ Tidak ada event lanjut untuk: $pageType");
+      debugPrint("⚠️ Tidak ada event lanjut untuk: \$pageType");
     }
   }
 
+  static final Map<PageType, HomeState Function()> _pageTypeToStateMap = {
+    PageType.home: () => HomePageActive(),
+    PageType.groupchat: () => StartChatPageActive(),
+    PageType.roomchat: () => RoomCariPageActive(),
+    PageType.changepswd: () => ChangePasswordPageActive(),
+    PageType.klaimtrack: () => TrackKlaimPageActive(),
+    PageType.splash: () => SplashPageActive(),
+    PageType.profileindividu: () => ProfileIndividuPageActive(),
+    PageType.profileperusahaan: () => ProfilePerusahaanPageActive(),
+    PageType.article1: () => Article1PageActive(),
+    PageType.testprofile: () => TestProfilePageActive(),
+    PageType.about: () => AboutPageActive(),
+    PageType.article: () => ArticlePageActive(),
+    PageType.assetsmanagement: () => AssetsManagementPageActive(),
+    PageType.polismanagement: () => PolisManagementPageActive(),
+    PageType.findinsurance: () => FindInsurancePageActive(),
+    PageType.testimony: () => TestimonyPageActive(),
+    PageType.cs: () => CsPageActive(),
+    PageType.usernonjps: () => UserNonJPSPageActive(),
+    PageType.userjps: () => UserJPSPageActive(),
+    PageType.loadinghero: () => LoadingHeroPageActive(),
+    PageType.loadinghero2: () => LoadingHero2PageActive(),
+    PageType.loadingherouser: () => LoadingHeroUserPageActive(),
+    PageType.cobcari: () => CobCariPageActive(),
+    PageType.asetdashboard: () => AsetDashboardPageActive(),
+    PageType.asetpar: () => AsetParPageActive(),
+    PageType.asetmv: () => AsetMVPageActive(),
+    PageType.asetringkasan: () => AsetRingkasanPageActive(),
+    PageType.asethealth: () => AsetHealthPageActive(),
+    PageType.asetstatus: () => AsetStatusPageActive(),
+    PageType.aset: () => AsetPageActive(),
+    PageType.review: () => ReviewCariPageActive(),
+    PageType.berita: () => BeritaPageActive(),
+    PageType.beritasampingan: () => BeritaSampinganPageActive(),
+    PageType.beritaartikel: () => BeritaArtikelPageActive(),
+    PageType.simulmv: () => SimulMVPageActive(),
+    PageType.simulpar: () => SimulPARPageActive(),
 
-  static final Map<PageType, HomeState Function({bool isLoading})> _pageTypeToStateMap = {
-    PageType.home: ({isLoading = false}) => HomePageActive(isLoading: isLoading),
-    PageType.groupchat: ({isLoading = false}) => StartChatPageActive(isLoading: isLoading),
-    PageType.roomchat: ({isLoading = false}) => RoomCariPageActive(isLoading: isLoading),
-    PageType.changepswd: ({isLoading = false}) => ChangePasswordPageActive(isLoading: isLoading),
-    PageType.klaimtrack: ({isLoading = false}) => TrackKlaimPageActive(isLoading: isLoading),
-    PageType.splash: ({isLoading = false}) => SplashPageActive(isLoading: isLoading),
-    PageType.profileindividu: ({isLoading = false}) => ProfileIndividuPageActive(isLoading: isLoading),
-    PageType.profileperusahaan: ({isLoading = false}) => ProfilePerusahaanPageActive(isLoading: isLoading),
-    PageType.article1: ({isLoading = false}) => Article1PageActive(isLoading: isLoading),
-    PageType.testprofile: ({isLoading = false}) => TestProfilePageActive(isLoading: isLoading),
-    PageType.about: ({isLoading = false}) => AboutPageActive(isLoading: isLoading),
-    PageType.article: ({isLoading = false}) => ArticlePageActive(isLoading: isLoading),
-    PageType.assetsmanagement: ({isLoading = false}) => AssetsManagementPageActive(isLoading: isLoading),
-    PageType.polismanagement: ({isLoading = false}) => PolisManagementPageActive(isLoading: isLoading),
-    PageType.findinsurance: ({isLoading = false}) => FindInsurancePageActive(isLoading: isLoading),
-    PageType.testimony: ({isLoading = false}) => TestimonyPageActive(isLoading: isLoading),
-    PageType.cs: ({isLoading = false}) => CsPageActive(isLoading: isLoading),
-    PageType.usernonjps: ({isLoading = false}) => UserNonJPSPageActive(isLoading: isLoading),
-    PageType.userjps: ({isLoading = false}) => UserJPSPageActive(isLoading: isLoading),
-    PageType.loadinghero: ({isLoading = false}) => LoadingHeroPageActive(isLoading: isLoading),
-    PageType.loadinghero2: ({isLoading = false}) => LoadingHero2PageActive(isLoading: isLoading),
-    PageType.loadingherouser: ({isLoading = false}) => LoadingHeroUserPageActive(isLoading: isLoading),
-    PageType.cobcari: ({isLoading = false}) => CobCariPageActive(isLoading: isLoading),
-    PageType.asetdashboard: ({isLoading = false}) => AsetDashboardPageActive(isLoading: isLoading),
-    PageType.asetpar: ({isLoading = false}) => AsetParPageActive(isLoading: isLoading),
-    PageType.asetmv: ({isLoading = false}) => AsetMVPageActive(isLoading: isLoading),
-    PageType.asetringkasan: ({isLoading = false}) => AsetRingkasanPageActive(isLoading: isLoading),
-    PageType.asethealth: ({isLoading = false}) => AsetHealthPageActive(isLoading: isLoading),
-    PageType.asetstatus: ({isLoading = false}) => AsetStatusPageActive(isLoading: isLoading),
-    PageType.aset: ({isLoading = false}) => AsetPageActive(isLoading: isLoading),
-    PageType.review: ({isLoading = false}) => ReviewCariPageActive(isLoading: isLoading),
-    PageType.berita: ({isLoading = false}) => BeritaPageActive(isLoading: isLoading),
-    PageType.beritasampingan: ({isLoading = false}) => BeritaSampinganPageActive(isLoading: isLoading),
-    PageType.beritaartikel: ({isLoading = false}) => BeritaArtikelPageActive(isLoading: isLoading),
+
   };
 
-  static HomeState _mapPageTypeToState(PageType pageType, {bool isLoading = false}) {
-    return _pageTypeToStateMap[pageType]?.call(isLoading: isLoading) ?? HomePageActive(isLoading: isLoading);
+  static HomeState _mapPageTypeToState(PageType pageType) {
+    return _pageTypeToStateMap[pageType]?.call() ?? HomePageActive();
   }
-
 
   void resetStack() {
     _pageStack.clear();
     _pageStack.add(PageType.home);
   }
-
 }
