@@ -282,18 +282,19 @@ class HeroSection extends StatelessWidget {
         }
 
         return {
-          'bold': 'Selamat Datang, $name !\n',
+          // 'bold': 'Selamat Datang, $name !\n',
+          'bold': '$name !\n',
           'normal': 'Berikut ringkasan polis Anda',
         };
       case SectionType.about:
         return {
-          'bold': 'Mengenal JPS: ',
-          'normal': 'Klaim mudah, perlindungan \naman',
+          'bold': 'Mengenal JPS\n',
+          'normal': 'Klaim mudah, perlindungan aman',
         };
       case SectionType.article:
         return {
           'bold': 'Selamat datang ',
-          'normal': 'di pusat informasi literasi JPS!',
+          'normal': 'di pusat informasi \nliterasi JPS!',
         };
       case SectionType.testimony:
         return {
@@ -302,7 +303,7 @@ class HeroSection extends StatelessWidget {
         };
       case SectionType.management_asset:
         return {
-          'bold': 'Kelola Aset Aktif dan Non-Aktif \necara Efisien',
+          'bold': 'Kelola Aset Aktif dan Non-Aktif \nSecara Efisien',
         };
       case SectionType.management_polis:
         return {

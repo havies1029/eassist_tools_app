@@ -831,45 +831,99 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
     );
   }
 
+  // Versi yang lebih sederhana menggunakan MediaQuery
   Widget buildLinkBelumPunyaUser(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 40,
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            'Belum menjadi klien? ',
-            style: TextStyle(
-              color: Colors.grey.shade600,
-              fontSize: 12,
-            ),
-          ),
-          MouseRegion(
-            onEnter: (_) => setState(() => _isHoveringRegister = true),
-            onExit: (_) => setState(() => _isHoveringRegister = false),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.of(context).pop();
-                context.read<AuthenticationBloc>().add(RequireLoginUser());
-              },
-              child:
-              Text(
-                'Masuk Sebagai Pengguna',
-                style: TextStyle(
-                  color: _isHoveringRegister ? const Color(0xFF91C050) : Colors.blue.shade600,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          // Gunakan breakpoint sederhana - jika lebar kurang dari 280px, gunakan layout vertikal
+          final shouldWrap = constraints.maxWidth < 280;
+
+          if (shouldWrap) {
+            // Layout vertikal (atas-bawah)
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Belum menjadi klien?',
+                  style: TextStyle(
+                    color: Colors.grey.shade600,
+                    fontSize: 12,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
+                const SizedBox(height: 4),
+                MouseRegion(
+                  onEnter: (_) => setState(() => _isHoveringRegister = true),
+                  onExit: (_) => setState(() => _isHoveringRegister = false),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      context.read<AuthenticationBloc>().add(RequireLoginUser());
+                    },
+                    child: Text(
+                      'Masuk Sebagai Pengguna',
+                      style: TextStyle(
+                        color: _isHoveringRegister ? const Color(0xFF91C050) : Colors.blue.shade600,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          } else {
+            // Layout horizontal (samping)
+            return Container(
+              height: 40,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Flexible(
+                    child: Text(
+                      'Belum menjadi klien? ',
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                        fontSize: 12,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  MouseRegion(
+                    onEnter: (_) => setState(() => _isHoveringRegister = true),
+                    onExit: (_) => setState(() => _isHoveringRegister = false),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        context.read<AuthenticationBloc>().add(RequireLoginUser());
+                      },
+                      child: Flexible(
+                        child: Text(
+                          'Masuk Sebagai Pengguna',
+                          style: TextStyle(
+                            color: _isHoveringRegister ? const Color(0xFF91C050) : Colors.blue.shade600,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ),
-        ],
+            );
+          }
+        },
       ),
     );
   }
-
   void _handleLogin() {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();

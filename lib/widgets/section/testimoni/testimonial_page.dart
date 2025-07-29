@@ -83,78 +83,74 @@ class ActionSectionState extends State<ActionSection> with SingleTickerProviderS
           child: Center(
             child: Container(
               width: maxWidth,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 30),
-                  _buildHeader(isMobile),
-                  SizedBox(height: isMobile ? 10.0 : 15.0),
-                  _buildRatingSection(isMobile),
-                  SizedBox(height: isMobile ? 5.0 : 10.0),
-                  BlocBuilder<ReviewCariBloc, ReviewCariState>(
-                    builder: (context, state) {
-                      if (state.status == ListStatus.initial) {
-                        return const Center(child: CircularProgressIndicator());
-                      } else if (state.status == ListStatus.failure) {
-                        return const Center(child: Text('Failed to load reviews'));
-                      } else if (state.items.isEmpty) {
-                        return const Center(child: Text('No reviews available'));
-                      }
+              child: BlocBuilder<ReviewCariBloc, ReviewCariState>(
+                builder: (context, state) {
+                  if (state.status == ListStatus.initial) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state.status == ListStatus.failure) {
+                    return const Center(child: Text('Failed to load reviews'));
+                  } else if (state.items.isEmpty) {
+                    return const Center(child: Text('No reviews available'));
+                  }
 
-                      final allItems = state.items;
-                      final maxDisplay = widget.maxItems != null
-                          ? allItems.take(widget.maxItems!).toList()
-                          : allItems;
+                  final allItems = state.items;
+                  final maxDisplay = widget.maxItems != null
+                      ? allItems.take(widget.maxItems!).toList()
+                      : allItems;
 
-                      if (currentItemCount == 0) {
-                        currentItemCount = 9;
-                      }
+                  if (currentItemCount == 0) {
+                    currentItemCount = 9;
+                  }
 
-                      final displayedItems = maxDisplay.take(currentItemCount).toList();
-                      final hasMore = currentItemCount < maxDisplay.length;
+                  final displayedItems = maxDisplay.take(currentItemCount).toList();
+                  final hasMore = currentItemCount < maxDisplay.length;
 
-                      _fadeController.forward(from: 0);
+                  _fadeController.forward(from: 0);
 
-                      return Column(
-                        children: [
-                          AnimatedBuilder(
-                            animation: _fadeAnimation,
-                            builder: (context, child) {
-                              return Opacity(
-                                opacity: _fadeAnimation.value,
-                                child: _buildTestimonialGrid(displayedItems, isMobile, isTablet),
-                              );
-                            },
-                          ),
-                          if (hasMore) ...[
-                            const SizedBox(height: 32),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                foregroundColor: const Color(0xFF91C050),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  side: const BorderSide(color: Color(0xFF91C050)),
-                                ),
-                                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                              ),
-                              onPressed: () => _loadMore(maxDisplay.length),
-                              child: const Text(
-                                'Lihat Lebih Banyak',
-                                style: TextStyle(
-                                  fontFamily: 'Satoshi-Regular',
-                                  fontSize: 15,
-                                  color: Color(0xFF91C050),
-                                ),
-                              ),
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 30),
+                      _buildHeader(isMobile),
+                      SizedBox(height: isMobile ? 10.0 : 15.0),
+                      _buildRatingSection(isMobile, allItems),
+                      SizedBox(height: isMobile ? 5.0 : 10.0),
+                      AnimatedBuilder(
+                        animation: _fadeAnimation,
+                        builder: (context, child) {
+                          return Opacity(
+                            opacity: _fadeAnimation.value,
+                            child: _buildTestimonialGrid(displayedItems, isMobile, isTablet),
+                          );
+                        },
+                      ),
+                      if (hasMore) ...[
+                        const SizedBox(height: 32),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: const Color(0xFF91C050),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              side: const BorderSide(color: Color(0xFF91C050)),
                             ),
-                          ],
-                          const SizedBox(height: 50),
-                        ],
-                      );
-                    },
-                  ),
-                ],
+                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                          ),
+                          onPressed: () => _loadMore(maxDisplay.length),
+                          child: const Text(
+                            'Lihat Lebih Banyak',
+                            style: TextStyle(
+                              fontFamily: 'Satoshi-Regular',
+                              fontSize: 15,
+                              color: Color(0xFF91C050),
+                            ),
+                          ),
+                        ),
+                      ],
+                      const SizedBox(height: 50),
+                    ],
+                  );
+                },
               ),
             ),
           ),
@@ -162,6 +158,35 @@ class ActionSectionState extends State<ActionSection> with SingleTickerProviderS
       ),
     );
   }
+
+  Widget _buildStarRating(double rating, {double size = 20.0}) {
+    int fullStars = rating.floor();
+
+    // Cek sisa desimal
+    final decimal = rating - fullStars;
+
+    bool hasHalfStar = decimal >= 0.25 && decimal < 0.75;
+    bool roundUp = decimal >= 0.75;
+
+    if (roundUp) fullStars += 1;
+
+    int totalStars = fullStars + (hasHalfStar ? 1 : 0);
+    int emptyStars = 5 - totalStars;
+
+    return Row(
+      children: [
+        for (int i = 0; i < fullStars; i++)
+          Icon(Icons.star, color: Color(0xFFFFC728), size: size),
+
+        if (hasHalfStar)
+          Icon(Icons.star_half, color: Color(0xFFFFC728), size: size),
+
+        for (int i = 0; i < emptyStars; i++)
+          Icon(Icons.star_border, color: Color(0xFFFFC728), size: size),
+      ],
+    );
+  }
+
 
   Widget _buildHeader(bool isMobile) {
     return Column(
@@ -200,7 +225,14 @@ class ActionSectionState extends State<ActionSection> with SingleTickerProviderS
     );
   }
 
-  Widget _buildRatingSection(bool isMobile) {
+  Widget _buildRatingSection(bool isMobile, List<ReviewCariModel> items) {
+    final totalUlasan = items.length;
+    final rataRata = totalUlasan == 0
+        ? 0.0
+        : items.map((e) => e.nilai).reduce((a, b) => a + b) / totalUlasan;
+
+    final nilaiTeks = rataRata.toStringAsFixed(1).replaceAll('.', ',');
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -216,20 +248,38 @@ class ActionSectionState extends State<ActionSection> with SingleTickerProviderS
                   height: isMobile ? 76.19 : 90.39,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    gradient: RadialGradient(colors: [Color(0xFFE4FFBE), Color(0xFF91C050)], center: Alignment.center, radius: 0.8),
+                    gradient: RadialGradient(
+                      colors: [Color(0xFFE4FFBE), Color(0xFF91C050)],
+                      center: Alignment.center,
+                      radius: 0.8,
+                    ),
                   ),
                 ),
                 Container(
                   width: isMobile ? 66.03 : 80,
                   height: isMobile ? 66.03 : 80,
-                  decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                  ),
                 ),
                 Container(
                   width: isMobile ? 57 : 70,
                   height: isMobile ? 57 : 70,
-                  decoration: const BoxDecoration(shape: BoxShape.circle, color: Color(0xFFE6F3D6)),
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Color(0xFFE6F3D6),
+                  ),
                   alignment: Alignment.center,
-                  child: Text('5,0', style: TextStyle(fontFamily: 'Satoshi', fontSize: isMobile ? 25.4 : 30.13, fontWeight: FontWeight.bold, color: Color(0xFF91C050))),
+                  child: Text(
+                    nilaiTeks,
+                    style: TextStyle(
+                      fontFamily: 'Satoshi',
+                      fontSize: isMobile ? 25.4 : 30.13,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF91C050),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -237,17 +287,36 @@ class ActionSectionState extends State<ActionSection> with SingleTickerProviderS
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Terpercaya', style: TextStyle(fontFamily: 'Satoshi-Regular', fontSize: isMobile ? 25 : 30.13, fontWeight: FontWeight.bold, color: Color(0xFF91C050))),
-                Row(
-                  children: List.generate(5, (index) => Icon(Icons.star, color: Color(0xFFFFC728), size: isMobile ? 17.94 : 21.28)),
+                Text(
+                  'Terpercaya',
+                  style: TextStyle(
+                    fontFamily: 'Satoshi-Regular',
+                    fontSize: isMobile ? 25 : 30.13,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF91C050),
+                  ),
                 ),
-                Text('50 dari 50 ulasan', style: TextStyle(fontFamily: 'Satoshi-Regular', fontSize: isMobile ? 12 : 15.42, color: Colors.black54)),
+                _buildStarRating(rataRata, size: isMobile ? 17.94 : 21.28),
+                Text(
+                  '$totalUlasan dari $totalUlasan ulasan',
+                  style: TextStyle(
+                    fontFamily: 'Satoshi-Regular',
+                    fontSize: isMobile ? 12 : 15.42,
+                    color: Colors.black54,
+                  ),
+                ),
               ],
             ),
           ],
         ),
         const SizedBox(height: 16),
-        Text('Ulasan Nasabah', style: TextStyle(fontSize: isMobile ? 15 : 18, color: Colors.black54)),
+        Text(
+          'Ulasan Nasabah',
+          style: TextStyle(
+            fontSize: isMobile ? 15 : 18,
+            color: Colors.black54,
+          ),
+        ),
       ],
     );
   }
@@ -302,34 +371,38 @@ class ActionSectionState extends State<ActionSection> with SingleTickerProviderS
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-            Container(
-              height: 19,
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              decoration: BoxDecoration(
-                color: const Color(0xFFFFC728).withOpacity(0.2),
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: Center(
-                child: RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    style: TextStyle(
-                      fontFamily: 'Satoshi',
-                      fontSize: isSmall ? 8.0 : 10,
-                      fontWeight: FontWeight.bold,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Container(
+                height: 19,
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFC728).withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: Center(
+                  child: RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      style: TextStyle(
+                        fontFamily: 'Satoshi',
+                        fontSize: isSmall ? 8.0 : 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      children: [
+                        TextSpan(text: review.nilai.toStringAsFixed(1), style: const TextStyle(color: Color(0xFFFFC728))),
+                        TextSpan(text: '/${review.skala.toInt()}', style: const TextStyle(color: Color(0xFFA6A6A6))),
+                      ],
                     ),
-                    children: [
-                      TextSpan(text: review.nilai.toStringAsFixed(1), style: const TextStyle(color: Color(0xFFFFC728))),
-                      TextSpan(text: '/${review.skala.toInt()}', style: const TextStyle(color: Color(0xFFA6A6A6))),
-                    ],
                   ),
                 ),
               ),
-            ),
-            const SizedBox(width: 8.0),
-            Row(children: List.generate(5, (index) => Icon(Icons.star, color: const Color(0xFFFFD700), size: isSmall ? 15.0 : 20.37))),
-          ]),
+              const SizedBox(width: 8.0),
+              _buildStarRating(review.nilai),
+            ],
+          ),
+
           SizedBox(height: isSmall ? 10.0 : 15.0),
           Text(
             review.reviewer,

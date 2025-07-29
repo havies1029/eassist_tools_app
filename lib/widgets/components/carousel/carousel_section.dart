@@ -157,7 +157,7 @@ class _CarouselSectionState extends State<CarouselSection>
         ? 48
         : 24;
 
-    final double titleFontSize = isMobile ? 15.0 : (isTablet ? 22.0 : 25.0);
+    final double titleFontSize = isMobile ? 20 : isTablet ? 24 : 27;
 
     final carouselWidth = _getCarouselWidth();
     final carouselHeight = carouselWidth / _imageAspectRatio;
@@ -216,7 +216,7 @@ class _CarouselSectionState extends State<CarouselSection>
                 style: TextStyle(
                   fontFamily: 'Satoshi-Regular',
                   fontSize: isMobile? 12 : 15.0,
-                  color: const Color(0xFFA6A6A6),
+                  color: const Color(0xFF6B7280),
                 ),
               ),
               const SizedBox(height: 15),

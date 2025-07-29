@@ -30,7 +30,7 @@ class AppColors {
   static const Color primaryGreen = Color(0xFF91C050);
   static const Color primaryOrange = Color(0xFFFAA232);
   static const Color textColor = Colors.black;
-  static const Color colorMuted = Color(0xFFCACED8);
+  static const Color colorMuted = Color(0xFF6B7280);
 }
 
 class PeranJpsSection extends StatefulWidget {

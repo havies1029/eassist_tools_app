@@ -52,8 +52,7 @@ class PencapaianSection extends StatelessWidget {
                     'Terpercaya sebagai broker asuransi unggulan dengan pertumbuhan dan kemitraan nasional yang konsisten.',
                     style: TextStyle(
                       fontSize: _subtitleFontSize,
-                      color: Colors.black87,
-                      fontWeight: FontWeight.w400,
+                      color: const Color(0xFF6B7280),
                     ),
                     textAlign: TextAlign.center,
                   ),

@@ -31,9 +31,7 @@ class ClientSectionState extends State<ClientSection> {
         : widget.constraints.maxWidth * 0.9;
 
     // Hitung ukuran font untuk judul:
-    final double titleFontSize = isMobile
-        ? 20.0
-        : (isTablet ? 23.0 : 25.0);
+    final double titleFontSize = isMobile ? 20 : isTablet ? 24 : 27;
 
     return Container(
       width: double.infinity,

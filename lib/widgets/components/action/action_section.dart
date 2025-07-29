@@ -45,13 +45,13 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
   TextStyle get titleTextStyle => baseTextStyle.copyWith(
     fontSize: isMobile ? 25.0 : isTablet ? 32.0 : 40.0,
     fontWeight: isMobile ? FontWeight.normal : isTablet ? FontWeight.w300 : FontWeight.w200,
-    fontStyle: isMobile ? FontStyle.italic : FontStyle.normal,
+    fontStyle: FontStyle.normal,
   );
 
   TextStyle get subtitleTextStyle => baseTextStyle.copyWith(
     fontSize: isMobile ? 20.0 : isTablet ? 28.0 : 40.0,
     fontWeight: isMobile ? FontWeight.w500 : isTablet ? FontWeight.w400 : FontWeight.w100,
-    fontStyle: isMobile ? FontStyle.italic : FontStyle.normal,
+    fontStyle: FontStyle.normal,
   );
 
   TextStyle get benefitTextStyle => baseTextStyle.copyWith(

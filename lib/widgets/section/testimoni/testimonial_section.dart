@@ -34,6 +34,7 @@ class TestimonialSectionState extends State<TestimonialSection> {
   @override
   Widget build(BuildContext context) {
     final bool isMobile = widget.constraints.maxWidth < 768;
+    final bool isTablet = widget.constraints.maxWidth >= 768 && widget.constraints.maxWidth < 1024;
     final double maxWidth = widget.constraints.maxWidth > 1200 ? 1200 : widget.constraints.maxWidth * 0.9;
 
     return Container(
@@ -46,28 +47,31 @@ class TestimonialSectionState extends State<TestimonialSection> {
       child: Center(
         child: Container(
           width: maxWidth,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              _buildHeader(isMobile),
-              SizedBox(height: isMobile ? 10.0 : 15.0),
-              _buildRatingSection(isMobile),
-              SizedBox(height: isMobile ? 5.0 : 10.0),
-              BlocBuilder<ReviewCariBloc, ReviewCariState>(
-                builder: (context, state) {
-                  if (state.status == ListStatus.initial) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (state.status == ListStatus.failure) {
-                    return const Center(child: Text('Failed to load testimonials'));
-                  } else if (state.items.isEmpty) {
-                    return const Center(child: Text('No testimonials available'));
-                  }
-                  return _buildTestimonialCards(state.items, isMobile);
-                },
-              ),
-              SizedBox(height: isMobile ? 10.0 : 15.0),
-              _buildNavigationControls(isMobile),
-            ],
+          child: BlocBuilder<ReviewCariBloc, ReviewCariState>(
+            builder: (context, state) {
+              if (state.status == ListStatus.initial) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (state.status == ListStatus.failure) {
+                return const Center(child: Text('Failed to load testimonials'));
+              } else if (state.items.isEmpty) {
+                return const Center(child: Text('No testimonials available'));
+              }
+
+              final items = state.items;
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _buildHeader(isMobile),
+                  SizedBox(height: isMobile ? 10.0 : 15.0),
+                  _buildRatingSection(isMobile, isTablet, items),
+                  SizedBox(height: isMobile ? 5.0 : 10.0),
+                  _buildTestimonialCards(items, isMobile, isTablet),
+                  SizedBox(height: isMobile ? 10.0 : 15.0),
+                  _buildNavigationControls(isMobile, isTablet, items),
+                ],
+              );
+            },
           ),
         ),
       ),
@@ -111,9 +115,43 @@ class TestimonialSectionState extends State<TestimonialSection> {
     );
   }
 
-  Widget _buildRatingSection(bool isMobile) {
+  Widget _buildStarRating(double rating, double size) {
+    int fullStars = rating.floor();
+    double decimal = rating - fullStars;
+
+    bool hasHalfStar = decimal >= 0.25 && decimal < 0.75;
+    bool shouldRoundUp = decimal >= 0.75;
+
+    if (shouldRoundUp) {
+      fullStars += 1;
+      hasHalfStar = false;
+    }
+
+    int totalStars = fullStars + (hasHalfStar ? 1 : 0);
+    int emptyStars = 5 - totalStars;
+
+    return Row(
+      children: [
+        for (int i = 0; i < fullStars; i++)
+          Icon(Icons.star, color: Color(0xFFFFC728), size: size),
+        if (hasHalfStar)
+          Icon(Icons.star_half, color: Color(0xFFFFC728), size: size),
+        for (int i = 0; i < emptyStars; i++)
+          Icon(Icons.star_border, color: Color(0xFFFFC728), size: size),
+      ],
+    );
+  }
+
+  Widget _buildRatingSection(bool isMobile, bool isTablet, List<ReviewCariModel> items) {
+    final totalUlasan = items.length;
+    final rataRata = totalUlasan == 0
+        ? 0.0
+        : items.map((e) => e.nilai).reduce((a, b) => a + b) / totalUlasan;
+
+    final nilaiTeks = rataRata.toStringAsFixed(1).replaceAll('.', ',');
+
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
       children: [
         Row(
           mainAxisAlignment: isMobile ? MainAxisAlignment.center : MainAxisAlignment.start,
@@ -127,20 +165,38 @@ class TestimonialSectionState extends State<TestimonialSection> {
                   height: isMobile ? 76.19 : 90.39,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    gradient: RadialGradient(colors: [Color(0xFFE4FFBE), Color(0xFF91C050)], center: Alignment.center, radius: 0.8),
+                    gradient: RadialGradient(
+                      colors: [Color(0xFFE4FFBE), Color(0xFF91C050)],
+                      center: Alignment.center,
+                      radius: 0.8,
+                    ),
                   ),
                 ),
                 Container(
                   width: isMobile ? 66.03 : 80,
                   height: isMobile ? 66.03 : 80,
-                  decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                  ),
                 ),
                 Container(
                   width: isMobile ? 57 : 70,
                   height: isMobile ? 57 : 70,
-                  decoration: const BoxDecoration(shape: BoxShape.circle, color: Color(0xFFE6F3D6)),
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Color(0xFFE6F3D6),
+                  ),
                   alignment: Alignment.center,
-                  child: Text('5,0', style: TextStyle(fontFamily: 'Satoshi', fontSize: isMobile ? 25.4 : 30.13, fontWeight: FontWeight.bold, color: Color(0xFF91C050))),
+                  child: Text(
+                    nilaiTeks,
+                    style: TextStyle(
+                      fontFamily: 'Satoshi',
+                      fontSize: isMobile ? 25.4 : 30.13,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF91C050),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -148,23 +204,42 @@ class TestimonialSectionState extends State<TestimonialSection> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Terpercaya', style: TextStyle(fontFamily: 'Satoshi-Regular', fontSize: isMobile ? 25 : 30.13, fontWeight: FontWeight.bold, color: Color(0xFF91C050))),
-                Row(
-                  children: List.generate(5, (index) => Icon(Icons.star, color: Color(0xFFFFC728), size: isMobile ? 17.94 : 21.28)),
+                Text(
+                  'Terpercaya',
+                  style: TextStyle(
+                    fontFamily: 'Satoshi-Regular',
+                    fontSize: isMobile ? 25 : 30.13,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF91C050),
+                  ),
                 ),
-                Text('50 dari 50 ulasan', style: TextStyle(fontFamily: 'Satoshi-Regular', fontSize: isMobile ? 12 : 15.42, color: Colors.black54)),
+                _buildStarRating(rataRata, isMobile ? 17.94 : 21.28),
+                Text(
+                  '$totalUlasan dari $totalUlasan ulasan',
+                  style: TextStyle(
+                    fontFamily: 'Satoshi-Regular',
+                    fontSize: isMobile ? 12 : 15.42,
+                    color: Colors.black54,
+                  ),
+                ),
               ],
             ),
           ],
         ),
         const SizedBox(height: 16),
-        Text('Ulasan Nasabah', style: TextStyle(fontSize: isMobile ? 15 : 18, color: Colors.black54)),
+        Text(
+          'Ulasan Nasabah',
+          style: TextStyle(
+            fontSize: isMobile ? 15 : 18,
+            color: Colors.black54,
+          ),
+        ),
       ],
     );
   }
 
-  Widget _buildTestimonialCards(List<ReviewCariModel> items, bool isMobile) {
-    final itemsPerPage = isMobile ? 1 : 3;
+  Widget _buildTestimonialCards(List<ReviewCariModel> items, bool isMobile, bool isTablet) {
+    final int itemsPerPage = isMobile ? 1 : (isTablet ? 2 : 3);
     final totalPages = (items.length / itemsPerPage).ceil();
 
     return SizedBox(
@@ -183,6 +258,12 @@ class TestimonialSectionState extends State<TestimonialSection> {
                 Expanded(child: _buildTestimonialCard(items[i], isMobile)),
                 if (i < endIndex - 1) const SizedBox(width: 16),
               ],
+              // Add empty spaces for incomplete rows to maintain layout
+              if (endIndex - startIndex < itemsPerPage)
+                ...List.generate(
+                    itemsPerPage - (endIndex - startIndex),
+                        (_) => const Expanded(child: SizedBox())
+                ),
             ],
           );
         },
@@ -207,21 +288,29 @@ class TestimonialSectionState extends State<TestimonialSection> {
               Container(
                 height: 19,
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                decoration: BoxDecoration(color: const Color(0xFFFFC728).withOpacity(0.2), borderRadius: BorderRadius.circular(50)),
-                child: RichText(
-                  text: TextSpan(
-                    style: const TextStyle(fontFamily: 'Satoshi', fontSize: 10, fontWeight: FontWeight.bold),
-                    children: [
-                      TextSpan(text: item.nilai.toStringAsFixed(1), style: const TextStyle(color: Color(0xFFFFC728))),
-                      TextSpan(text: '/${item.skala.toStringAsFixed(0)}', style: const TextStyle(color: Color(0xFFA6A6A6))),
-                    ],
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFC728).withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: Center(
+                  child: RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      style: TextStyle(
+                        fontFamily: 'Satoshi',
+                        fontSize: isMobile ? 8.0 : 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      children: [
+                        TextSpan(text: item.nilai.toStringAsFixed(1), style: const TextStyle(color: Color(0xFFFFC728))),
+                        TextSpan(text: '/${item.skala.toStringAsFixed(0)}', style: const TextStyle(color: Color(0xFFA6A6A6))),
+                      ],
+                    ),
                   ),
                 ),
               ),
               const SizedBox(width: 8.0),
-              Row(
-                children: List.generate(item.nilai.round(), (index) => const Icon(Icons.star, color: Color(0xFFFFD700), size: 20.37)),
-              ),
+              _buildStarRating(item.nilai, 20.37),
             ],
           ),
           const SizedBox(height: 15.0),
@@ -251,32 +340,30 @@ class TestimonialSectionState extends State<TestimonialSection> {
     );
   }
 
-  Widget _buildNavigationControls(bool isMobile) {
-    return BlocBuilder<ReviewCariBloc, ReviewCariState>(
-      builder: (context, state) {
-        if (state.items.isEmpty) return const SizedBox.shrink();
-        final itemsPerPage = isMobile ? 1 : 3;
-        final totalPages = (state.items.length / itemsPerPage).ceil();
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            IconButton(
-              onPressed: _currentPage > 0
-                  ? () => _pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut)
-                  : null,
-              icon: const Icon(Icons.chevron_left),
-              iconSize: isMobile ? 20.0 : 24.0,
-            ),
-            IconButton(
-              onPressed: _currentPage < totalPages - 1
-                  ? () => _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut)
-                  : null,
-              icon: const Icon(Icons.chevron_right),
-              iconSize: isMobile ? 20.0 : 24.0,
-            ),
-          ],
-        );
-      },
+  Widget _buildNavigationControls(bool isMobile, bool isTablet, List<ReviewCariModel> items) {
+    if (items.isEmpty) return const SizedBox.shrink();
+
+    final int itemsPerPage = isMobile ? 1 : (isTablet ? 2 : 3);
+    final totalPages = (items.length / itemsPerPage).ceil();
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        IconButton(
+          onPressed: _currentPage > 0
+              ? () => _pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut)
+              : null,
+          icon: const Icon(Icons.chevron_left),
+          iconSize: isMobile ? 20.0 : 24.0,
+        ),
+        IconButton(
+          onPressed: _currentPage < totalPages - 1
+              ? () => _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut)
+              : null,
+          icon: const Icon(Icons.chevron_right),
+          iconSize: isMobile ? 20.0 : 24.0,
+        ),
+      ],
     );
   }
 }

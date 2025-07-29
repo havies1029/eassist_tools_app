@@ -98,62 +98,93 @@ class FooterSection extends StatelessWidget {
   }
 
   Widget _buildFooterContent(BuildContext context) {
-    return (isMobile)
-        ? Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Logo Section
         _buildLogoSection(),
-        const SizedBox(height: 20.0),
+
+        SizedBox(height: isMobile ? 20.0 : 30.0),
+
+        // Main Content Section
+        isMobile ? _buildMobileLayout(context) : _buildDesktopLayout(context),
+      ],
+    );
+  }
+
+  Widget _buildMobileLayout(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
         _buildGoogleMapsButton(),
         const SizedBox(height: 16.0),
         _buildCompanyInfo(),
-        const SizedBox(height: 10.0),
+        const SizedBox(height: 16.0),
         _buildSocialMediaSection(),
         const SizedBox(height: 30.0),
-        _buildSignatureSection(context), // ✅ context dikirim
-        const SizedBox(height: 20.0),
-        _buildMenuSection(),
+
+        // Menu Sections Row dengan alignment yang tepat
+        IntrinsicHeight( // Membuat kedua kolom memiliki tinggi yang sama
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Unggulan Section
+              Expanded(
+                child: _buildSignatureSection(context),
+              ),
+              const SizedBox(width: 24.0),
+
+              // Menu Section
+              Expanded(
+                child: _buildMenuSection(),
+              ),
+            ],
+          ),
+        ),
       ],
-    )
-        : Column(
+    );
+  }
+
+  Widget _buildDesktopLayout(BuildContext context) {
+    return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildLogoSection(),
-        const SizedBox(height: 30),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Kolom Map & Info
-            Expanded(
-              flex: 2,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildGoogleMapsButton(),
-                  const SizedBox(height: 24.0),
-                  _buildCompanyInfo(),
-                  const SizedBox(height: 16.0),
-                  _buildSocialMediaSection(),
-                ],
-              ),
-            ),
-            const SizedBox(width: 24.0),
-
-            // Kolom Unggulan
-            Expanded(
-              flex: 1,
-              child: _buildSignatureSection(context),
-            ),
-            const SizedBox(width: 24.0),
-
-            // Kolom Menu
-            Expanded(
-              flex: 1,
-              child: _buildMenuSection(),
-            ),
-          ],
+        // Left Column - Map & Company Info
+        Expanded(
+          flex: 2,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildGoogleMapsButton(),
+              const SizedBox(height: 24.0),
+              _buildCompanyInfo(),
+              const SizedBox(height: 16.0),
+              _buildSocialMediaSection(),
+            ],
+          ),
         ),
 
+        const SizedBox(width: 32.0),
+
+        // Right Column - Menu Sections
+        Expanded(
+          flex: 2,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Unggulan Section
+              Expanded(
+                child: _buildSignatureSection(context),
+              ),
+              const SizedBox(width: 24.0),
+
+              // Menu Section
+              Expanded(
+                child: _buildMenuSection(),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -349,6 +380,7 @@ class FooterSection extends StatelessWidget {
   Widget _buildSignatureSection(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min, // Menggunakan space minimum yang dibutuhkan
       children: [
         Text(
           'Unggulan',
@@ -361,23 +393,25 @@ class FooterSection extends StatelessWidget {
         ),
         SizedBox(height: isMobile ? 8.0 : 16.0),
         _buildFooterLink('Cari Asuransi', () {
-          // SchedulerBinding.instance.addPostFrameCallback((_) {
-          //   context.read<HomeBloc>().add(FindInsurancePageActiveEvent());
-          // });
-          // context.read<HomeBloc>().add(FindInsurancePageActiveEvent());
           context.read<HomeBloc>().add(PushPageEvent(PageType.findinsurance));
         }),
         _buildFooterLink('Lapor Klaim', () {
           StatusPopupHelper.show(context);
         }),
+        // Tambahan spacing untuk menyeimbangkan dengan Menu section (opsional)
+        if (!isMobile) ...[
+          const SizedBox(height: 16.0),
+          const SizedBox(height: 16.0),
+          const SizedBox(height: 16.0),
+        ],
       ],
     );
   }
 
-
   Widget _buildMenuSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min, // Menggunakan space minimum yang dibutuhkan
       children: [
         Text(
           'Menu',
@@ -477,6 +511,66 @@ class FooterSection extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildBalancedMenuSections(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Unggulan Section dengan fixed height
+        Expanded(
+          child: Container(
+            constraints: const BoxConstraints(minHeight: 200), // Set minimum height
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Unggulan',
+                  style: TextStyle(
+                    fontFamily: _fontFamily,
+                    fontSize: titleFontSize,
+                    fontWeight: FontWeight.bold,
+                    color: _primaryColor,
+                  ),
+                ),
+                SizedBox(height: isMobile ? 8.0 : 16.0),
+                _buildFooterLink('Cari Asuransi', () {
+                  context.read<HomeBloc>().add(PushPageEvent(PageType.findinsurance));
+                }),
+                _buildFooterLink('Lapor Klaim', () {
+                  StatusPopupHelper.show(context);
+                }),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(width: 24.0),
+
+        // Menu Section
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Menu',
+                style: TextStyle(
+                  fontFamily: _fontFamily,
+                  fontSize: titleFontSize,
+                  fontWeight: FontWeight.bold,
+                  color: _primaryColor,
+                ),
+              ),
+              SizedBox(height: isMobile ? 8.0 : 16.0),
+              _buildFooterLink('Aset', () {}),
+              _buildFooterLink('Polis', () {}),
+              _buildFooterLink('Klaim', () {}),
+              _buildFooterLink('Tagihan dan Pembayaran', () {}),
+              _buildFooterLink('Literasi', () {}),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

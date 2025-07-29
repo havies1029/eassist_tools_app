@@ -66,51 +66,45 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
     final double constraintWidth = widget.constraints.maxWidth;
     final bool isMobile = constraintWidth < 768;
     final bool isTablet = constraintWidth >= 768 && constraintWidth < 1024;
-    final double maxWidth = constraintWidth > 1300 ? 1200.0 : constraintWidth * 0.9;
 
-    return Center(
-      child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: maxWidth),
-        child: BlocBuilder<Berita2CariBloc, Berita2CariState>(
-          builder: (context, tocState) {
-            return BlocBuilder<Berita3CariBloc, Berita3CariState>(
-              builder: (context, contentState) {
-                final tocItems = tocState.items;
-                final sectionContents = contentState.items;
+    return BlocBuilder<Berita2CariBloc, Berita2CariState>(
+      builder: (context, tocState) {
+        return BlocBuilder<Berita3CariBloc, Berita3CariState>(
+          builder: (context, contentState) {
+            final tocItems = tocState.items;
+            final sectionContents = contentState.items;
 
-                // Initialize section keys
-                for (final toc in tocItems) {
-                  _sectionKeys[toc.berita2Id.toString()] = GlobalKey();
-                }
+            // Initialize section keys
+            for (final toc in tocItems) {
+              _sectionKeys[toc.berita2Id.toString()] = GlobalKey();
+            }
 
-                return isMobile
-                    ? SingleChildScrollView(
-                  controller: _scrollController,
-                  physics: const BouncingScrollPhysics(),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildMainArticle(tocItems, sectionContents, isMobile, isTablet),
-                    ],
+            return isMobile
+                ? SingleChildScrollView(
+              controller: _scrollController,
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildMainArticle(tocItems, sectionContents, isMobile, isTablet),
+                ],
+              ),
+            )
+                : Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 7,
+                  child: SingleChildScrollView(
+                    controller: _scrollController,
+                    child: _buildMainArticle(tocItems, sectionContents, isMobile, isTablet),
                   ),
-                )
-                    : Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 7,
-                      child: SingleChildScrollView(
-                        controller: _scrollController,
-                        child: _buildMainArticle(tocItems, sectionContents, isMobile, isTablet),
-                      ),
-                    ),
-                  ],
-                );
-              },
+                ),
+              ],
             );
           },
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -120,67 +114,83 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
       bool isMobile,
       bool isTablet,
       ) {
-    // Responsive padding
     final double horizontalPadding = isMobile ? 16 : (isTablet ? 24 : 32);
     final double verticalPadding = isMobile ? 20 : (isTablet ? 24 : 32);
+    final double contentMaxWidth = widget.constraints.maxWidth > 1300
+        ? 1200.0
+        : widget.constraints.maxWidth * 0.9;
 
     return Container(
-      margin: EdgeInsets.all(isMobile ? 8 : 16),
-      padding: EdgeInsets.symmetric(
-        horizontal: horizontalPadding,
-        vertical: verticalPadding,
-      ),
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(vertical: verticalPadding),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(isMobile ? 12 : 16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-            spreadRadius: 0,
-          )
-        ],
+        border: Border.all(
+          color: Colors.grey.shade300,
+          width: 1,
+        ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Article Header
-          _buildArticleHeader(isMobile, isTablet),
-          SizedBox(height: isMobile ? 16 : 24),
-
-          // Article Image (with proper scaling)
-          _buildArticleImage(isMobile, isTablet),
-          SizedBox(height: isMobile ? 16 : 24),
-
-          // Table of Contents
-          _buildTableOfContents(tocItems, isMobile, isTablet),
-          SizedBox(height: isMobile ? 24 : 32),
-
-          // Dynamic Content Sections
-          ...sectionContents.map((section) {
-            return Column(
-              key: _sectionKeys[section.berita3Id.toString()],
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 20),
-                _buildContentSection(
-                  section.paragraf ?? 'Untitled Section',
-                  [section.subjudul ?? 'No content available.'],
-                  isMobile,
-                  isTablet,
+      child: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: contentMaxWidth),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.08),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
                 ),
-                const SizedBox(height: 8),
               ],
-            );
-          }).toList(),
+            ),
+            child: SingleChildScrollView( // ⬅️ Tambahin ini
+              physics: const BouncingScrollPhysics(),
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: horizontalPadding,
+                  vertical: verticalPadding,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildArticleHeader(isMobile, isTablet),
+                    SizedBox(height: isMobile ? 16 : 24),
 
-          // Footer Social with Back Button
-          SizedBox(height: isMobile ? 24 : 32),
-          _buildFooterWithBackButton(isMobile, isTablet),
-          SizedBox(height: isMobile ? 16 : 24),
-          Container(height: 1, width: double.infinity, color: Colors.grey.shade300),
-        ],
+                    _buildArticleImage(isMobile, isTablet),
+                    SizedBox(height: isMobile ? 16 : 24),
+
+                    _buildTableOfContents(tocItems, isMobile, isTablet),
+                    SizedBox(height: isMobile ? 24 : 32),
+
+                    ...sectionContents.map((section) {
+                      return Column(
+                        key: _sectionKeys[section.berita3Id.toString()],
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 20),
+                          _buildContentSection(
+                            section.paragraf ?? 'Untitled Section',
+                            [section.subjudul ?? 'No content available.'],
+                            isMobile,
+                            isTablet,
+                          ),
+                          const SizedBox(height: 8),
+                        ],
+                      );
+                    }).toList(),
+
+                    SizedBox(height: isMobile ? 24 : 32),
+                    _buildFooterWithBackButton(isMobile, isTablet),
+                    SizedBox(height: isMobile ? 16 : 24),
+                    Container(height: 1, width: double.infinity, color: Colors.grey.shade300),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -493,15 +503,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
                 ? const Color(0xFF79AB43)
                 : Colors.transparent,
             shape: BoxShape.circle,
-            boxShadow: hoveredSocialIndex == index
-                ? [
-              BoxShadow(
-                color: const Color(0xFF79AB43).withOpacity(0.4),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              )
-            ]
-                : [],
+            // boxShadow dihapus dari sini - tidak ada shadow lagi pada social icons
           ),
           child: Icon(
             icon,
@@ -537,15 +539,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
               color: const Color(0xFF79AB43),
               width: 1,
             ),
-            boxShadow: hoveredBackButton
-                ? [
-              BoxShadow(
-                color: const Color(0xFF79AB43).withOpacity(0.4),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              )
-            ]
-                : [],
+            // boxShadow dihapus dari sini - tidak ada shadow lagi pada back button
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,

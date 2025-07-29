@@ -100,11 +100,11 @@ class ArticlePage extends StatelessWidget {
               // Layer 2: Konten scroll
               Positioned.fill(
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.only(top: isMobile ? 65 : 88),
+                  padding: EdgeInsets.only(top: isMobile ? 52 : 62),
                   child: Column(
                     children: [
-                      HeroSection(constraints: constraints, sectionType: SectionType.article),
-                      FloatingButtons(constraints: constraints),
+                      // HeroSection(constraints: constraints, sectionType: SectionType.article),
+                      // FloatingButtons(constraints: constraints),
                       ActionSection2(constraints: constraints),
                       // ArticleDetailPage( // ⬅️ KIRIM berita1Id ke sini
                       //   constraints: constraints,
