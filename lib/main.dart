@@ -23,6 +23,8 @@ import 'package:eassist_tools_app/blocs/gen_promo/promo2cari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_review/reviewcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_sppamv/sppamvcrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_sppamv/sppamvlist_bloc.dart';
+import 'package:eassist_tools_app/blocs/gen_sppapar/sppaparcrud_bloc.dart';
+import 'package:eassist_tools_app/blocs/gen_sppapar/sppaparlist_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_status_aset/statusasetcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaim/klaim1list_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaim/klaim2list_bloc.dart';
@@ -56,6 +58,7 @@ import 'package:eassist_tools_app/repositories/gen_profile/mrekangeneralcmpcrud_
 import 'package:eassist_tools_app/repositories/gen_profile/mrekangeneralidvcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/gen_profile/mrekanpiccrud_repository.dart';
 import 'package:eassist_tools_app/repositories/gen_sppamv/sppamvcrud_repository.dart';
+import 'package:eassist_tools_app/repositories/gen_sppapar/sppaparcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/login/change_password_repository.dart';
 import 'package:eassist_tools_app/repositories/login/emailverification_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/profile_ktp_repository.dart';
@@ -238,6 +241,8 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => Promo2CariBloc()),
         BlocProvider(create:(context) => SppamvListBloc()),
         BlocProvider(create: (context) => SppamvCrudBloc(repository: SppamvCrudRepository())),
+        BlocProvider(create: (context) => SppaparListBloc()),
+        BlocProvider(create: (context) => SppaparCrudBloc(repository: SppaparCrudRepository())),
 
       ],
       child: MaterialApp(

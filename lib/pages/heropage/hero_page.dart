@@ -15,6 +15,7 @@ import 'package:eassist_tools_app/pages/gen_profile/test_profile_page.dart';
 import 'package:eassist_tools_app/pages/gen_promo/promo1cari_main.dart';
 import 'package:eassist_tools_app/pages/gen_review/reviewcari_main.dart';
 import 'package:eassist_tools_app/pages/gen_sppamv/sppamvlist_main.dart';
+import 'package:eassist_tools_app/pages/gen_sppapar/sppaparlist_main.dart';
 import 'package:eassist_tools_app/pages/gen_status_aset/statusasetcari_main.dart';
 import 'package:eassist_tools_app/pages/heropage/fixed_nambar_overlay.dart';
 import 'package:eassist_tools_app/widgets/section/carousel_section.dart';
@@ -274,7 +275,18 @@ class _HeroPageState extends State<HeroPage> {
                                               const SppamvListMainPage()),
                                     );
                                   },
-                                  child: Text("List PPAM MV"),
+                                  child: Text("List SPPA MV"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const SppaparListMainPage()),
+                                    );
+                                  },
+                                  child: Text("List SPPA PAR"),
                                 ),
                               ],
                             );

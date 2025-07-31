@@ -68,7 +68,10 @@ Widget itemBuilderComboRKodepos(
 			),
 		child: ListTile(
 			selected: isSelected,
-			title: Text(item.kodeposNo),
+			title: Text("${item.kodeposNo} - ${item.wilayah}",
+        style: TextStyle(
+          color: isSelected ? Theme.of(context).primaryColor : Colors.black,
+          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal),),
 		),
 	);
 }
