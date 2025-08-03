@@ -188,7 +188,16 @@
               SubMenuItem(icon: Icons.business_outlined, title: 'Berita3', onTap: () {}),
               SubMenuItem(icon: Icons.business_outlined, title: 'mv', onTap: () {}),
               SubMenuItem(icon: Icons.business_outlined, title: 'par', onTap: () {}),
-
+            ],
+          },
+          {
+            'icon': Icons.inventory_2,
+            'title': 'par & mv',
+            'subs': [
+              SubMenuItem(icon: Icons.business_outlined, title: 'sppamv', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'sppapar', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'simul mv', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'simul par', onTap: () {}),
             ],
           },
           {
@@ -252,9 +261,13 @@
     @override
     Widget build(BuildContext context) {
       final filteredMenus = _filterMenusBasedOnLogin();
+      final screenWidth = MediaQuery.of(context).size.width;
+      final isMobile = screenWidth < 768;
+
+      final double contentWidth = isMobile ? 320 : 500;
 
       return Container(
-        width: 320,
+        width: contentWidth,
         height: 500,
         decoration: BoxDecoration(
           color: Colors.white,
@@ -285,8 +298,8 @@
               ),
               child: Row(
                 children: [
-                  Image.asset('assets/images/jps_logo.png', height: 30),
-                  const SizedBox(width: 10),
+                  // Image.asset('assets/images/jps_logo.png', height: 30),
+                  // const SizedBox(width: 10),
                   const Text(
                     'Menu JPS',
                     style: TextStyle(

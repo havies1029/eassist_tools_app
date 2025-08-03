@@ -21,9 +21,10 @@ class ProfileDropdownContent extends StatelessWidget {
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _refreshRekanIfNeeded(context);
+      _loadFotoIfNeeded(context);
     });
     return Container(
-      width: 280,
+      width: 320,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -221,6 +222,16 @@ class ProfileDropdownContent extends StatelessWidget {
     );
   }
 
+  void _loadFotoIfNeeded(BuildContext context) {
+    final fotoState = context.read<ProfileDownloadFotoBloc>().state;
+
+    if (fotoState is! ProfileDownloadFotoLoaded &&
+        fotoState is! ProfileDownloadFotoLoading) {
+      debugPrint("🖼️ LoadSecureImage triggered by dropdown");
+      context.read<ProfileDownloadFotoBloc>().add(LoadSecureImage());
+    }
+  }
+
   void _refreshRekanIfNeeded(BuildContext context) {
     final rekanState = context.read<MRekan1CrudBloc>().state;
     final authState = context.read<AuthenticationBloc>().state;
@@ -239,3 +250,4 @@ class ProfileDropdownContent extends StatelessWidget {
     child: const Icon(Icons.person, color: Colors.white, size: 20),
   );
 }
+

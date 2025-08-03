@@ -48,6 +48,9 @@ class BeritaPageActiveEvent extends HomeEvent {}
 class BeritaSampinganPageActiveEvent extends HomeEvent {}
 class BeritaArtikelPageActiveEvent extends HomeEvent {}
 
+class SppamvPageActiveEvent extends HomeEvent {}
+class SppaparPageActiveEvent extends HomeEvent {}
+
 class SplashPageActiveEvent extends HomeEvent {}
 class ProfileIndividuPageActiveEvent extends HomeEvent {}
 class ProfilePerusahaanPageActiveEvent extends HomeEvent {}
@@ -71,6 +74,7 @@ class LoadingHeroPageActiveEvent extends HomeEvent {}
 class LoadingHero2PageActiveEvent extends HomeEvent {}
 class LoadingHeroUserPageActiveEvent extends HomeEvent {}
 
+class PromoPageActiveEvent extends HomeEvent {}
 // ───────────────────────
 // Stack Management
 // ───────────────────────

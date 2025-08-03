@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'article_list_page.dart';
 
@@ -20,10 +19,6 @@ class ActionSection extends StatelessWidget {
           topLeft: Radius.circular(50.0),
           topRight: Radius.circular(50.0),
         ),
-      ),
-      padding: EdgeInsets.symmetric(
-        vertical: isMobile ? 40.0 : 60.0,
-        horizontal: isMobile ? 16.0 : 20.0,
       ),
       child: ArticleListPage(constraints: constraints,),
     );

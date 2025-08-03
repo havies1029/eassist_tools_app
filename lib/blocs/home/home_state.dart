@@ -1,4 +1,4 @@
-part of 'home_bloc.dart';
+  part of 'home_bloc.dart';
 
 abstract class HomeState extends Equatable {
   const HomeState();
@@ -42,6 +42,8 @@ class BeritaPageActive extends HomeState {}
 class BeritaSampinganPageActive extends HomeState {}
 class BeritaArtikelPageActive extends HomeState {}
 
+class SppamvPageActive extends HomeState {}
+class SppaparPageActive extends HomeState {}
 // ────────────────────────────────────
 // Secondary Pages
 // ────────────────────────────────────
@@ -67,3 +69,5 @@ class UserJPSPageActive extends HomeState {}
 class LoadingHeroPageActive extends HomeState {}
 class LoadingHero2PageActive extends HomeState {}
 class LoadingHeroUserPageActive extends HomeState {}
+
+class PromoPageActive extends HomeState {}

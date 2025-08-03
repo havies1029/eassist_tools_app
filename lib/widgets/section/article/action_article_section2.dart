@@ -8,7 +8,7 @@ class ActionSection2 extends StatelessWidget {
   const ActionSection2({
     super.key,
     required this.constraints,
- // ✅ pastikan ini masuk ke konstruktor
+    // ✅ pastikan ini masuk ke konstruktor
   });
 
   @override
@@ -18,17 +18,13 @@ class ActionSection2 extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      // decoration: const BoxDecoration(
-      //   color: Colors.white,
-      //   borderRadius: BorderRadius.only(
-      //     topLeft: Radius.circular(50.0),
-      //     topRight: Radius.circular(50.0),
-      //   ),
-      // ),
-      // padding: EdgeInsets.symmetric(
-      //   vertical: isMobile ? 40.0 : 60.0,
-      //   horizontal: isMobile ? 16.0 : 20.0,
-      // ),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(50.0),
+          topRight: Radius.circular(50.0),
+        ),
+      ),
       // ✅ kirim parameter berita1Id ke ArticleDetailPage
       child: ArticleDetailPage(
         constraints: constraints,

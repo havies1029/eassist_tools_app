@@ -30,135 +30,112 @@ class _ProfileSectionState extends State<ProfileSection> {
     // Pastikan refresh dipanggil sekali setelah build pertama selesai
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _refreshRekanIfNeeded(context);
+      _loadFotoIfNeeded(context);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MRekan1CrudBloc, MRekan1CrudState>(
-      buildWhen: (prev, curr) => prev.record?.rekanNama != curr.record?.rekanNama,
-      builder: (context, state) {
-        String displayName = "(belum diupdate di profile)";
-        final authState = context.select<AuthenticationBloc, AuthenticationState>(
-              (bloc) => bloc.state,
-        );
-        final isMobile = MediaQuery.of(context).size.width < 768;
+    debugPrint('[DEBUG] 👤 ProfileSection dibuild ulang');
 
-        if (authState is AuthenticationAuthenticated) {
-          displayName = authState.user.nama?.trim() ?? displayName;
-          debugPrint('[DEBUG] Display name from authState: $displayName');
-        }
+    final authState = context.select<AuthenticationBloc, AuthenticationState>((bloc) => bloc.state);
+    final isMobile = MediaQuery.of(context).size.width < 768;
 
+    final rekanState = context.watch<MRekan1CrudBloc>().state;
+    final fotoState = context.watch<ProfileDownloadFotoBloc>().state;
 
-        final rekanNama = state.record?.rekanNama?.trim();
-        if (state.isLoaded && rekanNama != null && rekanNama.isNotEmpty) {
-          displayName = rekanNama;
-          debugPrint('[DEBUG] Display name from MRekan1CrudBloc: $displayName');
-        } else if (AppData.googleDisplayName != null && AppData.googleDisplayName!.isNotEmpty) {
-          displayName = AppData.googleDisplayName!;
-          debugPrint('[DEBUG] Display name from Google Account: $displayName');
-        } else if (AppData.lastLoginEmail != null && AppData.lastLoginEmail!.isNotEmpty) {
-          displayName = AppData.lastLoginEmail!;
-          debugPrint('[DEBUG] Display name from Last Login Email: $displayName');
-        }
-        // debugPrint('[DEBUG] FULL RECORD: ${state.record}');
-        // debugPrint('[DEBUG] rekanNama value: $rekanNama');
-        return Container(
-          key: widget.profileButtonKey,
-          decoration: BoxDecoration(
-            color: widget.isProfileMenuOpen
-                ? const Color(0xFF79AB43).withOpacity(0.1)
-                : Colors.transparent,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: InkWell(
-            onTap: widget.onToggleProfileMenu,
-            borderRadius: BorderRadius.circular(8),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  BlocBuilder<ProfileDownloadFotoBloc, ProfileDownloadFotoState>(
-                    builder: (context, imageState) {
-                      Uint8List? imageBytes;
-                      if (imageState is ProfileDownloadFotoLoaded) {
-                        imageBytes = imageState.imageBytes;
-                      }
+    final isRekanLoaded = rekanState.isLoaded;
+    final isFotoLoaded = fotoState is ProfileDownloadFotoLoaded;
 
-                      return Stack(
-                        children: [
-                          Container(
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: const Color(0xFF79AB43),
-                                width: 2,
-                              ),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: imageBytes != null
-                                  ? Image.memory(
-                                imageBytes,
-                                fit: BoxFit.cover,
-                                errorBuilder: (c, e, st) => _defaultIcon(),
-                              )
-                                  : Image.asset(
-                                'assets/images/profile_placeholder.jpg',
-                                fit: BoxFit.cover,
-                                errorBuilder: (c, e, st) => _defaultIcon(),
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            bottom: 2,
-                            right: 2,
-                            child: Container(
-                              width: 12,
-                              height: 12,
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF4CAF50),
-                                shape: BoxShape.circle,
-                                border: Border.all(color: Colors.white, width: 2),
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-                    },
+    if (!isRekanLoaded || !isFotoLoaded) {
+      debugPrint('[DEBUG] ⏳ Data belum siap (Rekan: $isRekanLoaded, Foto: $isFotoLoaded)');
+      return const SizedBox(); // atau loader shimmer
+    }
+
+    final displayName = rekanState.record?.rekanNama?.trim() ?? "(belum diupdate di profile)";
+    final imageBytes = (fotoState as ProfileDownloadFotoLoaded).imageBytes;
+
+    return Container(
+      key: widget.profileButtonKey,
+      decoration: BoxDecoration(
+        color: widget.isProfileMenuOpen
+            ? const Color(0xFF79AB43).withOpacity(0.1)
+            : Colors.transparent,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: InkWell(
+        onTap: widget.onToggleProfileMenu,
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildAvatar(imageBytes),
+              const SizedBox(width: 12),
+              if (!isMobile)
+                Text(
+                  displayName,
+                  style: const TextStyle(
+                    color: Color(0xFF2D5016),
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Satoshi-Regular',
                   ),
-                  const SizedBox(width: 12),
-                  if (!isMobile)
-                    Text(
-                      displayName,
-                      style: const TextStyle(
-                        color: Color(0xFF2D5016),
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Satoshi-Regular',
-                      ),
-                    ),
-                  if (!isMobile) const SizedBox(width: 8),
-                  AnimatedRotation(
-                    turns: widget.isProfileMenuOpen ? 0.5 : 0,
-                    duration: const Duration(milliseconds: 200),
-                    child: const Icon(
-                      Icons.keyboard_arrow_down,
-                      color: Color(0xFF79AB43),
-                      size: 20,
-                    ),
-                  ),
-                ],
+                ),
+              if (!isMobile) const SizedBox(width: 8),
+              AnimatedRotation(
+                turns: widget.isProfileMenuOpen ? 0.5 : 0,
+                duration: const Duration(milliseconds: 200),
+                child: const Icon(
+                  Icons.keyboard_arrow_down,
+                  color: Color(0xFF79AB43),
+                  size: 20,
+                ),
               ),
-            ),
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
+  Widget _buildAvatar(Uint8List imageBytes) {
+    return Stack(
+      children: [
+        Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: const Color(0xFF79AB43), width: 2),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Image.memory(
+              imageBytes,
+              fit: BoxFit.cover,
+              errorBuilder: (c, e, st) => _defaultIcon(),
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: 2,
+          right: 2,
+          child: Container(
+            width: 12,
+            height: 12,
+            decoration: BoxDecoration(
+              color: const Color(0xFF4CAF50),
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.white, width: 2),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+
 
   // void _refreshRekanIfNeeded(BuildContext context) {
   //   final rekanState = context.read<MRekan1CrudBloc>().state;
@@ -185,6 +162,13 @@ class _ProfileSectionState extends State<ProfileSection> {
     }
   }
 
+  void _loadFotoIfNeeded(BuildContext context) {
+    final fotoState = context.read<ProfileDownloadFotoBloc>().state;
+    if (fotoState is! ProfileDownloadFotoLoaded && fotoState is! ProfileDownloadFotoLoading) {
+      debugPrint("🖼️ LoadSecureImage triggered");
+      context.read<ProfileDownloadFotoBloc>().add(LoadSecureImage());
+    }
+  }
 
   Widget _defaultIcon() => Container(
     color: const Color(0xFF79AB43).withOpacity(0.2),

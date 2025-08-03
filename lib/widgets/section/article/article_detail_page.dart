@@ -66,45 +66,51 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
     final double constraintWidth = widget.constraints.maxWidth;
     final bool isMobile = constraintWidth < 768;
     final bool isTablet = constraintWidth >= 768 && constraintWidth < 1024;
+    final double maxWidth = constraintWidth > 1300 ? 1200.0 : constraintWidth * 0.9;
 
-    return BlocBuilder<Berita2CariBloc, Berita2CariState>(
-      builder: (context, tocState) {
-        return BlocBuilder<Berita3CariBloc, Berita3CariState>(
-          builder: (context, contentState) {
-            final tocItems = tocState.items;
-            final sectionContents = contentState.items;
+    return Center(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: maxWidth),
+        child: BlocBuilder<Berita2CariBloc, Berita2CariState>(
+          builder: (context, tocState) {
+            return BlocBuilder<Berita3CariBloc, Berita3CariState>(
+              builder: (context, contentState) {
+                final tocItems = tocState.items;
+                final sectionContents = contentState.items;
 
-            // Initialize section keys
-            for (final toc in tocItems) {
-              _sectionKeys[toc.berita2Id.toString()] = GlobalKey();
-            }
+                // Initialize section keys
+                for (final toc in tocItems) {
+                  _sectionKeys[toc.berita2Id.toString()] = GlobalKey();
+                }
 
-            return isMobile
-                ? SingleChildScrollView(
-              controller: _scrollController,
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildMainArticle(tocItems, sectionContents, isMobile, isTablet),
-                ],
-              ),
-            )
-                : Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 7,
-                  child: SingleChildScrollView(
-                    controller: _scrollController,
-                    child: _buildMainArticle(tocItems, sectionContents, isMobile, isTablet),
+                return isMobile
+                    ? SingleChildScrollView(
+                  controller: _scrollController,
+                  physics: const BouncingScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildMainArticle(tocItems, sectionContents, isMobile, isTablet),
+                    ],
                   ),
-                ),
-              ],
+                )
+                    : Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 7,
+                      child: SingleChildScrollView(
+                        controller: _scrollController,
+                        child: _buildMainArticle(tocItems, sectionContents, isMobile, isTablet),
+                      ),
+                    ),
+                  ],
+                );
+              },
             );
           },
-        );
-      },
+        ),
+      ),
     );
   }
 
@@ -114,83 +120,54 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
       bool isMobile,
       bool isTablet,
       ) {
-    final double horizontalPadding = isMobile ? 16 : (isTablet ? 24 : 32);
-    final double verticalPadding = isMobile ? 20 : (isTablet ? 24 : 32);
-    final double contentMaxWidth = widget.constraints.maxWidth > 1300
-        ? 1200.0
-        : widget.constraints.maxWidth * 0.9;
 
     return Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(vertical: verticalPadding),
+      margin: EdgeInsets.all(isMobile ? 8 : 16),
+      padding: EdgeInsets.symmetric(
+        vertical: isMobile ? 60 : isTablet? 70 : 80,
+        horizontal: isMobile ? 10 : isTablet? 10 : 30,
+      ),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(
-          color: Colors.grey.shade300,
-          width: 1,
-        ),
+        borderRadius: BorderRadius.circular(5),
       ),
-      child: Center(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: contentMaxWidth),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.08),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Article Header
+          _buildArticleHeader(isMobile, isTablet),
+          SizedBox(height: isMobile ? 16 : 24),
+
+          // Article Image (with proper scaling)
+          _buildArticleImage(isMobile, isTablet),
+          SizedBox(height: isMobile ? 16 : 24),
+
+          // Table of Contents
+          _buildTableOfContents(tocItems, isMobile, isTablet),
+          SizedBox(height: isMobile ? 0 : 8),
+
+          // Dynamic Content Sections
+          ...sectionContents.map((section) {
+            return Column(
+              key: _sectionKeys[section.berita3Id.toString()],
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 20),
+                _buildContentSection(
+                  section.paragraf ?? 'Untitled Section',
+                  [section.subjudul ?? 'No content available.'],
+                  isMobile,
+                  isTablet,
                 ),
+                const SizedBox(height: 8),
               ],
-            ),
-            child: SingleChildScrollView( // ⬅️ Tambahin ini
-              physics: const BouncingScrollPhysics(),
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: horizontalPadding,
-                  vertical: verticalPadding,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildArticleHeader(isMobile, isTablet),
-                    SizedBox(height: isMobile ? 16 : 24),
+            );
+          }).toList(),
 
-                    _buildArticleImage(isMobile, isTablet),
-                    SizedBox(height: isMobile ? 16 : 24),
-
-                    _buildTableOfContents(tocItems, isMobile, isTablet),
-                    SizedBox(height: isMobile ? 24 : 32),
-
-                    ...sectionContents.map((section) {
-                      return Column(
-                        key: _sectionKeys[section.berita3Id.toString()],
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 20),
-                          _buildContentSection(
-                            section.paragraf ?? 'Untitled Section',
-                            [section.subjudul ?? 'No content available.'],
-                            isMobile,
-                            isTablet,
-                          ),
-                          const SizedBox(height: 8),
-                        ],
-                      );
-                    }).toList(),
-
-                    SizedBox(height: isMobile ? 24 : 32),
-                    _buildFooterWithBackButton(isMobile, isTablet),
-                    SizedBox(height: isMobile ? 16 : 24),
-                    Container(height: 1, width: double.infinity, color: Colors.grey.shade300),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
+          // Footer Social with Back Button
+          SizedBox(height: isMobile ? 24 : 32),
+          _buildFooterWithBackButton(isMobile, isTablet),
+        ],
       ),
     );
   }
@@ -204,10 +181,9 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
           AppData.JudulArtikel ?? 'Judul tidak tersedia',
           style: TextStyle(
             fontFamily: 'Satoshi-Regular',
-            fontSize: isMobile ? 22 : (isTablet ? 26 : 28),
-            fontWeight: FontWeight.w700,
+            fontSize: isMobile ? 25 : (isTablet ? 32 : 40),
+            fontWeight: FontWeight.bold,
             color: Colors.black87,
-            height: 1.3,
           ),
         ),
 
@@ -232,7 +208,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
                     'Admin · ${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}',
                     style: TextStyle(
                       fontFamily: 'Satoshi-Regular',
-                      fontSize: 12,
+                      fontSize: 14,
                       color: Colors.grey.shade600,
                     ),
                   ),
@@ -268,7 +244,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
                   'Admin · ${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}',
                   style: TextStyle(
                     fontFamily: 'Satoshi-Regular',
-                    fontSize: isTablet ? 13 : 14,
+                    fontSize: isTablet ? 15 : 16.97,
                     color: Colors.grey.shade600,
                   ),
                 ),
@@ -294,7 +270,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
   Widget _buildArticleImage(bool isMobile, bool isTablet) {
     final imageUrl = AppData.gambarArtikel;
     final double imageHeight = isMobile ? 200 : (isTablet ? 260 : 300);
-    final borderRadius = BorderRadius.circular(isMobile ? 8 : 12);
+    final borderRadius = BorderRadius.circular(5);
 
     return Row(
       children: [
@@ -336,13 +312,13 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            const Color(0xFF79AB43).withOpacity(0.1),
-            const Color(0xFF79AB43).withOpacity(0.3),
+            const Color(0xFF91C050).withOpacity(0.1),
+            const Color(0xFF91C050).withOpacity(0.3),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.all(Radius.circular(30)), // <— tambahkan ini
+        borderRadius: BorderRadius.all(Radius.circular(5)), // <— tambahkan ini
       ),
       padding: const EdgeInsets.all(12),
       child: Row(
@@ -351,7 +327,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
           Icon(
             Icons.article,
             size: isMobile ? 48 : (isTablet ? 56 : 64),
-            color: const Color(0xFF79AB43),
+            color: const Color(0xFF91C050),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -363,7 +339,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
                   'Article Image Placeholder',
                   style: TextStyle(
                     fontSize: isMobile ? 14 : 16,
-                    color: const Color(0xFF79AB43),
+                    color: const Color(0xFF91C050),
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -391,10 +367,9 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
           title,
           style: TextStyle(
             fontFamily: 'Satoshi-Regular',
-            fontSize: isMobile ? 13 : (isTablet ? 15 : 16),
+            fontSize: (isMobile || isTablet) ? 15 : 16,
             fontWeight: FontWeight.w500,
             color: Colors.black87,
-            height: 1.3,
           ),
         ),
       ],
@@ -409,7 +384,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
       padding: EdgeInsets.all(isMobile ? 16 : 20),
       decoration: BoxDecoration(
         color: const Color(0xFFF8F9FA),
-        borderRadius: BorderRadius.circular(isMobile ? 8 : 12),
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(color: Colors.grey.shade200),
       ),
       child: Column(
@@ -419,7 +394,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
             'Daftar Isi',
             style: TextStyle(
               fontFamily: 'Satoshi-Regular',
-              fontSize: isMobile ? 12 : (isTablet ? 14 : 16),
+              fontSize: isMobile ? 12 : (isTablet ? 15 : 16),
               fontWeight: FontWeight.w600,
               color: Colors.black87,
             ),
@@ -429,17 +404,10 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
             int index = entry.key;
             final item = entry.value;
             return MouseRegion(
-              onEnter: (_) => setState(() => hoveredMenuIndex = index),
-              onExit: (_) => setState(() => hoveredMenuIndex = -1),
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
                 onTap: () => _scrollToSection(item.berita2Id.toString()),
                 child: Container(
-                  margin: const EdgeInsets.only(bottom: 4),
-                  padding: EdgeInsets.symmetric(
-                      vertical: isMobile ? 8 : 6,
-                      horizontal: isMobile ? 8 : 12
-                  ),
                   decoration: BoxDecoration(
                     color: hoveredMenuIndex == index
                         ? Colors.white.withOpacity(0.7)
@@ -452,8 +420,8 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
                         '${index + 1}.',
                         style: TextStyle(
                           fontFamily: 'Satoshi-Regular',
-                          fontSize: isMobile ? 11 : 12,
-                          color: Colors.black,
+                          fontSize: 15,
+                          color: Colors.grey.shade700,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -463,14 +431,9 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
                           item.subjudul ?? 'Untitled',
                           style: TextStyle(
                             fontFamily: 'Satoshi-Regular',
-                            fontSize: isMobile ? 11 : 12,
-                            color: hoveredMenuIndex == index
-                                ? const Color(0xFF79AB43)
-                                : Colors.grey.shade700,
-                            fontWeight: hoveredMenuIndex == index
-                                ? FontWeight.w500
-                                : FontWeight.w400,
-                            height: 1.3,
+                            fontSize: 15,
+                            color: Colors.grey.shade700,
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
                       ),
@@ -486,7 +449,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
   }
 
   Widget _buildSocialIcon(IconData icon, int index, bool isMobile, bool isTablet) {
-    final double iconSize = isMobile ? 16 : (isTablet ? 17 : 18);
+    final double iconSize = 20;
     final double padding = isMobile ? 8 : 10;
 
     return MouseRegion(
@@ -500,17 +463,25 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
           padding: EdgeInsets.all(padding),
           decoration: BoxDecoration(
             color: hoveredSocialIndex == index
-                ? const Color(0xFF79AB43)
+                ? const Color(0xFF91C050)
                 : Colors.transparent,
             shape: BoxShape.circle,
-            // boxShadow dihapus dari sini - tidak ada shadow lagi pada social icons
+            boxShadow: hoveredSocialIndex == index
+                ? [
+              BoxShadow(
+                color: const Color(0xFF91C050).withOpacity(0.4),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              )
+            ]
+                : [],
           ),
           child: Icon(
             icon,
             size: iconSize,
             color: hoveredSocialIndex == index
                 ? Colors.white
-                : const Color(0xFF79AB43),
+                : const Color(0xFF91C050),
           ),
         ),
       ),
@@ -532,14 +503,22 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
           ),
           decoration: BoxDecoration(
             color: hoveredBackButton
-                ? const Color(0xFF79AB43)
+                ? const Color(0xFF91C050)
                 : Colors.transparent,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: const Color(0xFF79AB43),
+              color: const Color(0xFF91C050),
               width: 1,
             ),
-            // boxShadow dihapus dari sini - tidak ada shadow lagi pada back button
+            boxShadow: hoveredBackButton
+                ? [
+              BoxShadow(
+                color: const Color(0xFF91C050).withOpacity(0.4),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              )
+            ]
+                : [],
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -549,19 +528,19 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
                 size: isMobile ? 16 : 18,
                 color: hoveredBackButton
                     ? Colors.white
-                    : const Color(0xFF79AB43),
+                    : const Color(0xFF91C050),
               ),
               SizedBox(width: isMobile ? 6 : 8),
               Flexible(
                 child: Text(
-                  isMobile ? 'Kembali' : 'Kembali ke Halaman Literasi',
+                  'Kembali',
                   style: TextStyle(
                     fontFamily: 'Satoshi-Regular',
                     fontSize: isMobile ? 12 : 14,
                     fontWeight: FontWeight.w500,
                     color: hoveredBackButton
                         ? Colors.white
-                        : const Color(0xFF79AB43),
+                        : const Color(0xFF91C050),
                   ),
                 ),
               ),

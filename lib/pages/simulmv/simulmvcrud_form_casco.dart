@@ -217,6 +217,7 @@ class SimulmvCrudFormPageFormCascoState
       comboKey: comboMMvgrupOjkKey,
       labelText: 'Jenis Kendaraan',
       initItem: fieldComboMMvgrupOjk,
+
       onChangedCallback: (value) {
         if (value != null) {
           //removeError(error: "Field ComboMMvgrupOjk tidak boleh kosong.");
@@ -299,7 +300,7 @@ class SimulmvCrudFormPageFormCascoState
       onChanged: (value) {
         simulmvCrudBloc
             .add(FieldLamaCoverChangedEvent(lama: int.tryParse(value) ?? 0));
-      },      
+      },
       textAlign: TextAlign.center,
     );
   }

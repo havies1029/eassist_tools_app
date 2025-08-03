@@ -109,6 +109,7 @@ class _CategoryTabBarState extends State<CategoryTabBar> {
           ),
           child: Center(
             child: Container(
+              alignment: Alignment.center,
               width: isMobile ? 332.2 : 882,
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.black12),
@@ -192,22 +193,22 @@ class _DragScrollBehavior extends MaterialScrollBehavior {
 
 IconData getIconForCobKode(String? kode) {
   switch (kode) {
-    case '04':
-      return Icons.description_outlined;
-    case '03':
-      return Icons.inventory_2_outlined;
-    case '01':
+    case '10001':
+      return Icons.dashboard_outlined;
+    case '10002':
+      return Icons.home_work_outlined;
+    case '10003':
       return Icons.directions_car_outlined;
-    case '02':
+    case '10004':
+      return Icons.local_shipping_outlined;
+    case '10005':
       return Icons.favorite_border;
-    case '05':
-      return Icons.directions_boat_outlined;
-    case '06':
-      return Icons.person_outline;
-    case '07':
-      return Icons.more_horiz_outlined;
+    case '10006':
+      return Icons.people_alt_outlined;
+    case '10007':
+      return Icons.more_horiz;
     default:
-      return Icons.category;
+      return Icons.category_outlined;
   }
 }
 

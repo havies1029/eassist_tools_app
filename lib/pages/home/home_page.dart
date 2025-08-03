@@ -360,6 +360,8 @@ class _HomePageState extends State<HomePage> {
     if (state is BeritaPageActive) return PageType.berita;
     if (state is BeritaSampinganPageActive) return PageType.beritasampingan;
     if (state is BeritaArtikelPageActive) return PageType.beritaartikel;
+    if (state is SppamvPageActive) return PageType.sppamv;
+    if (state is SppaparPageActive) return PageType.sppapar;
     return null;
   }
 }

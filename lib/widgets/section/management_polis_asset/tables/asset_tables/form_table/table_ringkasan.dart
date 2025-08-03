@@ -117,12 +117,12 @@ class _TableRingkasanState extends State<TableRingkasan> {
                       gridBorderColor: Colors.grey[300]!,
                       cellTextStyle: TextStyle(
                         fontFamily: 'Satoshi',
-                        fontSize: isMobile ? 10 : 14,
+                        fontSize: 14,
                       ),
                       columnTextStyle: TextStyle(
                         fontFamily: 'Satoshi',
                         fontWeight: FontWeight.bold,
-                        fontSize: isMobile ? 11 : 15,
+                        fontSize: 15,
                       ),
                     ),
                   ),
@@ -166,23 +166,32 @@ class _TableRingkasanState extends State<TableRingkasan> {
         minWidth: 60,
         frozen: TrinaColumnFrozen.start,
       ),
-      _textCol('No', 'no', 60),
-      _textCol('Aset', 'aset', maxW * 0.2),
-      _textCol('Jumlah Aset', 'jumlah', maxW * 0.2),
-      _textCol('Harga Pasar', 'hargaPasar', maxW * 0.2, isCurrency: true),
-      _textCol('Harga Pertanggungan', 'hargaPertanggungan', maxW * 0.2, isCurrency: true),
+      _textCol('No', 'no', 1.0, minWidth: 60, useMinWidth: false),
+      _textCol('Aset', 'aset', 2.0),
+      _textCol('Jumlah Aset', 'jumlah', 2.0),
+      _textCol('Harga Pasar', 'hargaPasar', 2.5, isCurrency: true),
+      _textCol('Harga Pertanggungan', 'hargaPertanggungan', 2.5, isCurrency: true),
     ];
   }
 
-  TrinaColumn _textCol(String title, String field, double width, {bool isCurrency = false}) {
+  TrinaColumn _textCol(
+      String title,
+      String field,
+      double widthFactor, {
+        bool isCurrency = false,
+        double minWidth = 100,
+        bool useMinWidth = true,
+      }) {
+    final double computedWidth = minWidth * widthFactor;
+
     return TrinaColumn(
       title: title,
       field: field,
       type: isCurrency
           ? TrinaColumnType.currency(locale: 'id_ID', symbol: 'Rp', decimalDigits: 0)
           : TrinaColumnType.text(),
-      width: width,
-      minWidth: width,
+      width: computedWidth,
+      minWidth: useMinWidth ? minWidth : 0,
       renderer: (context) {
         final value = context.cell.value.toString();
         final display = isCurrency ? currencyFormat.format(double.tryParse(value) ?? 0) : value;
@@ -192,7 +201,7 @@ class _TableRingkasanState extends State<TableRingkasan> {
             display,
             style: TextStyle(
               fontFamily: 'Satoshi',
-              fontSize: isMobile ? 10 : 14,
+              fontSize: 14,
               fontWeight: isCurrency ? FontWeight.w500 : FontWeight.normal,
             ),
           ),

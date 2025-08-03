@@ -23,7 +23,7 @@ class ArticleDetailMain extends StatelessWidget {
       title: 'JPS Insurance',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: const Color(0xFF79AB43),
+        primaryColor: const Color(0xFF91C050),
         scaffoldBackgroundColor: const Color(0xFFD5F4B4),
         fontFamily: 'Satoshi-Regular',
         textTheme: const TextTheme(
@@ -38,7 +38,7 @@ class ArticleDetailMain extends StatelessWidget {
           ),
         ),
         buttonTheme: const ButtonThemeData(
-          buttonColor: Color(0xFF79AB43),
+          buttonColor: Color(0xFF91C050),
           textTheme: ButtonTextTheme.primary,
         ),
       ),
@@ -58,7 +58,7 @@ class ArticlePage extends StatelessWidget {
       body: LayoutBuilder(
         builder: (context, constraints) {
           final isMobile = MediaQuery.of(context).size.width < 768;
-
+          final isTablet = MediaQuery.of(context).size.width >= 600 && MediaQuery.of(context).size.width < 1024;
           return Stack(
             children: [
               // Layer 1: Background
@@ -100,11 +100,11 @@ class ArticlePage extends StatelessWidget {
               // Layer 2: Konten scroll
               Positioned.fill(
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.only(top: isMobile ? 52 : 62),
+                  padding: EdgeInsets.only(top: isMobile ? 65 : isTablet? 35 : 88),
                   child: Column(
                     children: [
-                      // HeroSection(constraints: constraints, sectionType: SectionType.article),
-                      // FloatingButtons(constraints: constraints),
+                      HeroSection(constraints: constraints, sectionType: SectionType.article),
+                      FloatingButtons(constraints: constraints),
                       ActionSection2(constraints: constraints),
                       // ArticleDetailPage( // ⬅️ KIRIM berita1Id ke sini
                       //   constraints: constraints,

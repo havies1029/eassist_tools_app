@@ -117,7 +117,8 @@ class _NavbarWidgetState extends State<NavbarWidget> {
           ),
           // Menu dropdown
           Positioned(
-            top: offset.dy + size.height + 8,
+            top: offset.dy, // ⬅️ MUNCUL pas nutup tombol (tanpa + size.height)
+
             right: MediaQuery.of(context).size.width - offset.dx - size.width,
             child: Material(
               elevation: 16,
@@ -125,7 +126,7 @@ class _NavbarWidgetState extends State<NavbarWidget> {
               shadowColor: Colors.black.withOpacity(0.2),
               child: ConstrainedBox(
                 constraints: BoxConstraints(
-                  maxWidth: 340,
+                  maxWidth: 360,
                   maxHeight: MediaQuery.of(context).size.height * 0.8,
                 ),
                 child: HamburgerDropdownContent(
@@ -170,7 +171,8 @@ class _NavbarWidgetState extends State<NavbarWidget> {
           ),
           // 🔽 Ini dropdown-nya
           Positioned(
-            top: offset.dy + size.height + 8,
+            top: offset.dy, // ⬅️ MUNCUL pas nutup tombol (tanpa + size.height)
+
             right: MediaQuery.of(context).size.width - offset.dx - size.width,
             child: Material(
               elevation: 16,
@@ -504,7 +506,7 @@ class _NavbarWidgetState extends State<NavbarWidget> {
         // context.go('/assets_management');
         break;
 
-      case 'mv':
+      case 'simul mv':
         SchedulerBinding.instance.addPostFrameCallback((_) {
           context.read<HomeBloc>().add(PushPageEvent(PageType.simulmv));
           // context.read<HomeBloc>().add(AsetHealthPageActiveEvent());
@@ -512,9 +514,25 @@ class _NavbarWidgetState extends State<NavbarWidget> {
         // context.go('/assets_management');
         break;
 
-      case 'par':
+      case 'simul par':
         SchedulerBinding.instance.addPostFrameCallback((_) {
           context.read<HomeBloc>().add(PushPageEvent(PageType.simulpar));
+          // context.read<HomeBloc>().add(AsetHealthPageActiveEvent());
+        });
+        // context.go('/assets_management');
+        break;
+
+      case 'sppamv':
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(PushPageEvent(PageType.sppamv));
+          // context.read<HomeBloc>().add(AsetHealthPageActiveEvent());
+        });
+        // context.go('/assets_management');
+        break;
+
+      case 'sppapar':
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(PushPageEvent(PageType.sppapar));
           // context.read<HomeBloc>().add(AsetHealthPageActiveEvent());
         });
         // context.go('/assets_management');

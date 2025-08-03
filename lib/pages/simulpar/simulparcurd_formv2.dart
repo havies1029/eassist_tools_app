@@ -1,6 +1,8 @@
 import 'package:eassist_tools_app/pages/simulpar/simulparcrud_form_bangunan.dart';
-import 'package:eassist_tools_app/pages/simulpar/simulparcrud_form_coverv2.dart';
 import 'package:eassist_tools_app/pages/simulpar/simulparcrud_form_premi.dart';
+import 'package:eassist_tools_app/widgets/section/polis/simul_polis/simul_par/simul_form/simulparcrud_form_bangunan.dart';
+import 'package:eassist_tools_app/pages/simulpar/simulparcrud_form_coverv2.dart';
+import 'package:eassist_tools_app/widgets/section/polis/simul_polis/simul_par/simul_form/simulparcrud_form_premi.dart';
 import 'package:eassist_tools_app/pages/simulpar/simulparcrud_form_si.dart';
 import 'package:eassist_tools_app/widgets/my_text.dart';
 import 'package:flutter/material.dart';

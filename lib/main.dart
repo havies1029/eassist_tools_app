@@ -41,6 +41,8 @@ import 'package:eassist_tools_app/repositories/gen_profile/mrekangeneralidvcrud_
 import 'package:eassist_tools_app/repositories/gen_profile/mrekanpajakcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/gen_profile/mrekanpiccrud_repository.dart';
 import 'package:eassist_tools_app/repositories/gen_profile/mrekanpiclist_repository.dart';
+import 'package:eassist_tools_app/repositories/gen_sppamv/sppamvcrud_repository.dart';
+import 'package:eassist_tools_app/repositories/gen_sppapar/sppaparcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/login/change_password_repository.dart';
 import 'package:eassist_tools_app/repositories/login/emailverification_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/rekanbank_repository.dart';
@@ -72,7 +74,13 @@ import 'blocs/gen_profile/mrekan1crud_bloc.dart';
 import 'blocs/gen_profile/mrekancontactcrud_bloc.dart';
 import 'blocs/gen_profile/mrekangeneralidvcrud_bloc.dart';
 import 'blocs/gen_profile/mrekanpiccrud_bloc.dart';
+import 'blocs/gen_promo/promo1cari_bloc.dart';
+import 'blocs/gen_promo/promo2cari_bloc.dart';
 import 'blocs/gen_review/reviewcari_bloc.dart';
+import 'blocs/gen_sppamv/sppamvcrud_bloc.dart';
+import 'blocs/gen_sppamv/sppamvlist_bloc.dart';
+import 'blocs/gen_sppapar/sppaparcrud_bloc.dart';
+import 'blocs/gen_sppapar/sppaparlist_bloc.dart';
 import 'blocs/gen_status_aset/statusasetcari_bloc.dart';
 import 'blocs/home/home_bloc.dart';
 import 'blocs/profile/profile_download_foto_bloc.dart';
@@ -283,12 +291,18 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => Berita3CariBloc()),
         BlocProvider(create: (context) => BeritaKecilCariBloc()),
         BlocProvider(create: (context) => BeritaLainCariBloc()),
+        BlocProvider(create: (context) => Promo1CariBloc()),
+        BlocProvider(create: (context) => Promo2CariBloc()),
         BlocProvider<SimulmvCrudBloc>(
             create: (context) =>
                 SimulmvCrudBloc(repository: SimulmvCrudRepository())),
         BlocProvider<SimulparCrudBloc>(
             create: (context) =>
                 SimulparCrudBloc(repository: SimulparCrudRepository())),
+        BlocProvider(create:(context) => SppamvListBloc()),
+        BlocProvider(create: (context) => SppamvCrudBloc(repository: SppamvCrudRepository())),
+        BlocProvider(create: (context) => SppaparListBloc()),
+        BlocProvider(create: (context) => SppaparCrudBloc(repository: SppaparCrudRepository())),
       ],
       child: MaterialApp(
         navigatorKey: navigatorKey,

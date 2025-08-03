@@ -80,8 +80,8 @@ class _ArticleListPageState extends State<ArticleListPage> {
                     constraints: BoxConstraints(maxWidth: maxWidth),
                     child: SingleChildScrollView(
                       padding: EdgeInsets.symmetric(
-                        vertical: isMobile ? 40.0 : 60.0,
-                        horizontal: isMobile ? 16.0 : 0,
+                        vertical: isMobile ? 60 : isTablet? 70 : 80,
+                        horizontal: isMobile ? 10 : isTablet? 10 : 30,
                       ),
                       physics: const BouncingScrollPhysics(),
                       child: isMobile
@@ -102,36 +102,37 @@ class _ArticleListPageState extends State<ArticleListPage> {
 
 
 
-  Widget buildMainArticleCard(Berita1CariModel article, int index) {
+  Widget buildMainArticleCard(Berita1CariModel article, int index)  {
     final bool isHovered = hoveredMainIndex == index;
+    final isMobile = MediaQuery.of(context).size.width < 600;
 
     return MouseRegion(
       onEnter: (_) => setState(() => hoveredMainIndex = index),
       onExit: (_) => setState(() => hoveredMainIndex = -1),
       child: GestureDetector(
-          onTap: () {
-            debugPrint('Klik buildMainArticleCard utama: ${article.judul ?? '-'}');
-            final berita1Id = article.berita1Id;
-            final gambar = article.gambar;
-            final judul = article.judul;
+        onTap: () {
+          debugPrint('Klik buildMainArticleCard utama: ${article.judul ?? '-'}');
+          final berita1Id = article.berita1Id;
+          final gambar = article.gambar;
+          final judul = article.judul;
 
-            AppData.berita1Id = berita1Id;
-            AppData.gambarArtikel = gambar;
-            AppData.JudulArtikel = judul;
+          AppData.berita1Id = berita1Id;
+          AppData.gambarArtikel = gambar;
+          AppData.JudulArtikel = judul;
 
-            debugPrint('🎯 Gambar Artikel: ${article.gambar}');
+          debugPrint('🎯 Gambar Artikel: ${article.gambar}');
 
-            if (berita1Id != null) {
-              context.read<Berita2CariBloc>().add(RefreshBerita2CariEvent(berita1Id: berita1Id));
-              context.read<Berita3CariBloc>().add(RefreshBerita3CariEvent(berita1Id: berita1Id));
+          if (berita1Id != null) {
+            context.read<Berita2CariBloc>().add(RefreshBerita2CariEvent(berita1Id: berita1Id));
+            context.read<Berita3CariBloc>().add(RefreshBerita3CariEvent(berita1Id: berita1Id));
 
-              context.read<HomeBloc>().add(PushPageEvent(PageType.article1));
-            }
-          },
+            context.read<HomeBloc>().add(PushPageEvent(PageType.article1));
+          }
+        },
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(5),
             boxShadow: [
               BoxShadow(
                 color: isHovered
@@ -143,7 +144,7 @@ class _ArticleListPageState extends State<ArticleListPage> {
             ],
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(5),
             child: Stack(
               fit: StackFit.expand,
               children: [
@@ -158,8 +159,8 @@ class _ArticleListPageState extends State<ArticleListPage> {
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            const Color(0xFF79AB43).withOpacity(0.8),
-                            const Color(0xFF79AB43),
+                            const Color(0xFF91C050).withOpacity(0.8),
+                            const Color(0xFF91C050),
                           ],
                         ),
                       ),
@@ -190,7 +191,7 @@ class _ArticleListPageState extends State<ArticleListPage> {
                     decoration: BoxDecoration(
                       color: Colors.black.withOpacity(0.4),
                       borderRadius: const BorderRadius.vertical(
-                        bottom: Radius.circular(16),
+                        bottom: Radius.circular(5),
                       ),
                     ),
                     child: Column(
@@ -199,22 +200,21 @@ class _ArticleListPageState extends State<ArticleListPage> {
                       children: [
                         Text(
                           article.judul ?? '-',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontFamily: 'Satoshi-Regular',
-                            fontSize: 14,
+                            fontSize: isMobile? 15.0 : 17.53,
                             fontWeight: FontWeight.w700,
                             color: Colors.white,
-                            height: 1.3,
                           ),
                           maxLines: 3,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 3),
                         Text(
                           article.sumber,
                           style: TextStyle(
                             fontFamily: 'Satoshi-Regular',
-                            fontSize: 11,
+                            fontSize: 12,
                             color: Colors.white.withOpacity(0.8),
                             fontWeight: FontWeight.w500,
                           ),
@@ -228,8 +228,8 @@ class _ArticleListPageState extends State<ArticleListPage> {
                 if (isHovered)
                   Container(
                     decoration: BoxDecoration(
-                      color: const Color(0xFF79AB43).withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(16),
+                      color: const Color(0xFF91C050).withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(5),
                     ),
                   ),
               ],
@@ -268,14 +268,13 @@ class _ArticleListPageState extends State<ArticleListPage> {
         },
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 150),
-          margin: const EdgeInsets.only(bottom: 16),
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: isHovered ? const Color(0xFF79AB43).withOpacity(0.05) : Colors.transparent,
+            color: isHovered ? const Color(0xFF91C050).withOpacity(0.05) : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: isHovered
-                  ? const Color(0xFF79AB43).withOpacity(0.2)
+                  ? const Color(0xFF91C050).withOpacity(0.2)
                   : Colors.transparent,
             ),
           ),
@@ -286,8 +285,8 @@ class _ArticleListPageState extends State<ArticleListPage> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Container(
-                  width: 60,
-                  height: 60,
+                  width: 100,
+                  height: 100,
                   child:
                   Image.network(
                     article.gambar ?? '',
@@ -299,8 +298,8 @@ class _ArticleListPageState extends State<ArticleListPage> {
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
-                              const Color(0xFF79AB43).withOpacity(0.6),
-                              const Color(0xFF79AB43),
+                              const Color(0xFF91C050).withOpacity(0.6),
+                              const Color(0xFF91C050),
                             ],
                           ),
                         ),
@@ -328,10 +327,9 @@ class _ArticleListPageState extends State<ArticleListPage> {
                       article.judul ?? '-'!,
                       style: const TextStyle(
                         fontFamily: 'Satoshi-Regular',
-                        fontSize: 13,
+                        fontSize: 15,
                         fontWeight: FontWeight.w600,
                         color: Colors.black87,
-                        height: 1.3,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -341,7 +339,7 @@ class _ArticleListPageState extends State<ArticleListPage> {
                       'Sumber: ${article.sumber ?? ''}',
                       style: TextStyle(
                         fontFamily: 'Satoshi-Regular',
-                        fontSize: 11,
+                        fontSize: 12,
                         color: Colors.grey.shade600,
                         fontStyle: FontStyle.italic,
                       ),
@@ -384,14 +382,14 @@ class _ArticleListPageState extends State<ArticleListPage> {
           }
         },
         child: Container(
-          margin: const EdgeInsets.only(bottom: 16),
+          // margin: const EdgeInsets.only(bottom: 16),
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: isHovered ? const Color(0xFF79AB43).withOpacity(0.05) : Colors.transparent,
-            borderRadius: BorderRadius.circular(12),
+            color: isHovered ? const Color(0xFF91C050).withOpacity(0.05) : Colors.transparent,
+            borderRadius: BorderRadius.circular(16.65),
             border: Border.all(
               color: isHovered
-                  ? const Color(0xFF79AB43).withOpacity(0.2)
+                  ? const Color(0xFF91C050).withOpacity(0.2)
                   : Colors.grey.shade200,
               width: 1,
             ),
@@ -405,7 +403,6 @@ class _ArticleListPageState extends State<ArticleListPage> {
                   fontFamily: 'Satoshi-Regular',
                   fontSize: 16,
                   color: Colors.black87,
-                  height: 1.4,
                   fontWeight: FontWeight.w600,
                 ),
                 maxLines: 2,
@@ -417,8 +414,8 @@ class _ArticleListPageState extends State<ArticleListPage> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF79AB43),
-                      borderRadius: BorderRadius.circular(50),
+                      color: const Color(0xFF91C050),
+                      borderRadius: BorderRadius.circular(16.65),
                     ),
                     child: Text(
                       article.tema ?? '',
@@ -454,7 +451,26 @@ class _ArticleListPageState extends State<ArticleListPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Cerita Besar', style: TextStyle(fontFamily: 'Satoshi-Regular', fontSize: 20, fontWeight: FontWeight.w700, color: Colors.black87)),
+        Container(
+          decoration: BoxDecoration(
+            border: Border(
+              left: BorderSide(
+                color: Color(0xFF91C050),
+                width: 2,
+              ),
+            ),
+          ),
+          padding: EdgeInsets.only(left: 8),
+          child: Text(
+            'Cerita Besar',
+            style: TextStyle(
+              fontFamily: 'Satoshi-Regular',
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Colors.black87,
+            ),
+          ),
+        ),
         const SizedBox(height: 20),
         ListView.separated(
           shrinkWrap: true,
@@ -464,7 +480,26 @@ class _ArticleListPageState extends State<ArticleListPage> {
           itemBuilder: (context, index) => SizedBox(height: 200, child: buildMainArticleCard(mainArticles[index], index)),
         ),
         const SizedBox(height: 40),
-        const Text('Cerita Lainnya', style: TextStyle(fontFamily: 'Satoshi-Regular', fontSize: 20, fontWeight: FontWeight.w700, color: Colors.black87)),
+        Container(
+          decoration: BoxDecoration(
+            border: Border(
+              left: BorderSide(
+                color: Color(0xFF91C050),
+                width: 2,
+              ),
+            ),
+          ),
+          padding: EdgeInsets.only(left: 8),
+          child: Text(
+            'Cerita lainnya',
+            style: TextStyle(
+              fontFamily: 'Satoshi-Regular',
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Colors.black87,
+            ),
+          ),
+        ),
         const SizedBox(height: 20),
         constraintWidth < 500
             ? ListView.builder(
@@ -486,7 +521,7 @@ class _ArticleListPageState extends State<ArticleListPage> {
           itemBuilder: (context, index) => buildSideArticleItem(sideArticles[index], index),
         ),
         const SizedBox(height: 40),
-        const Text('Artikel Lainnya', style: TextStyle(fontFamily: 'Satoshi-Regular', fontSize: 20, fontWeight: FontWeight.w700, color: Colors.black87)),
+        const Text('Artikel Lainnya', style: TextStyle(fontFamily: 'Satoshi-Regular', fontSize: 16, fontWeight: FontWeight.w700, color: Colors.black87)),
         const SizedBox(height: 20),
         ListView.builder(
           shrinkWrap: true,
@@ -502,7 +537,26 @@ class _ArticleListPageState extends State<ArticleListPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Cerita Besar', style: TextStyle(fontFamily: 'Satoshi-Regular', fontSize: 24, fontWeight: FontWeight.w700, color: Colors.black87)),
+        Container(
+          decoration: BoxDecoration(
+            border: Border(
+              left: BorderSide(
+                color: Color(0xFF91C050),
+                width: 2.0,
+              ),
+            ),
+          ),
+          padding: EdgeInsets.only(left: 8.0),
+          child: Text(
+            'Cerita Besar',
+            style: TextStyle(
+              fontFamily: 'Satoshi-Regular',
+              fontSize: 30,
+              fontWeight: FontWeight.w600,
+              color: Colors.black87,
+            ),
+          ),
+        ),
         const SizedBox(height: 20),
         GridView.builder(
           shrinkWrap: true,
@@ -517,7 +571,26 @@ class _ArticleListPageState extends State<ArticleListPage> {
           itemBuilder: (context, index) => buildMainArticleCard(mainArticles[index], index),
         ),
         const SizedBox(height: 40),
-        const Text('Cerita Lainnya', style: TextStyle(fontFamily: 'Satoshi-Regular', fontSize: 24, fontWeight: FontWeight.w700, color: Colors.black87)),
+        Container(
+          decoration: BoxDecoration(
+            border: Border(
+              left: BorderSide(
+                color: Color(0xFF91C050),
+                width: 2.0,
+              ),
+            ),
+          ),
+          padding: EdgeInsets.only(left: 8.0),
+          child: Text(
+            'Cerita Lainnya',
+            style: TextStyle(
+              fontFamily: 'Satoshi-Regular',
+              fontSize: 30,
+              fontWeight: FontWeight.w600,
+              color: Colors.black87,
+            ),
+          ),
+        ),
         const SizedBox(height: 20),
         GridView.builder(
           shrinkWrap: true,
@@ -532,7 +605,7 @@ class _ArticleListPageState extends State<ArticleListPage> {
           itemBuilder: (context, index) => buildSideArticleItem(sideArticles[index], index),
         ),
         const SizedBox(height: 40),
-        const Text('Artikel Lainnya', style: TextStyle(fontFamily: 'Satoshi-Regular', fontSize: 24, fontWeight: FontWeight.w700, color: Colors.black87)),
+        const Text('Artikel Lainnya', style: TextStyle(fontFamily: 'Satoshi-Regular', fontSize: 16, fontWeight: FontWeight.w700, color: Colors.black87)),
         const SizedBox(height: 20),
         GridView.builder(
           shrinkWrap: true,
@@ -559,7 +632,26 @@ class _ArticleListPageState extends State<ArticleListPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Cerita Besar', style: TextStyle(fontFamily: 'Satoshi-Regular', fontSize: 24, fontWeight: FontWeight.w700, color: Colors.black87)),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    left: BorderSide(
+                      color: Color(0xFF91C050),
+                      width: 2.0,
+                    ),
+                  ),
+                ),
+                padding: EdgeInsets.only(left: 8.0),
+                child: Text(
+                  'Cerita Besar',
+                  style: TextStyle(
+                    fontFamily: 'Satoshi-Regular',
+                    fontSize: 30,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                  ),
+                ),
+              ),
               const SizedBox(height: 20),
               GridView.builder(
                 shrinkWrap: true,
@@ -574,8 +666,26 @@ class _ArticleListPageState extends State<ArticleListPage> {
                 itemBuilder: (context, index) => buildMainArticleCard(mainArticles[index], index),
               ),
               const SizedBox(height: 40),
-              const Text('Cerita Lainnya', style: TextStyle(fontFamily: 'Satoshi-Regular', fontSize: 24, fontWeight: FontWeight.w700, color: Colors.black87)),
-              const SizedBox(height: 20),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    left: BorderSide(
+                      color: Color(0xFF91C050),
+                      width: 2.0,
+                    ),
+                  ),
+                ),
+                padding: EdgeInsets.only(left: 8.0),
+                child: Text(
+                  'Cerita Lainnya',
+                  style: TextStyle(
+                    fontFamily: 'Satoshi-Regular',
+                    fontSize: 30,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                  ),
+                ),
+              ),const SizedBox(height: 20),
               GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -597,8 +707,8 @@ class _ArticleListPageState extends State<ArticleListPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Artikel Lainnya', style: TextStyle(fontFamily: 'Satoshi-Regular', fontSize: 20, fontWeight: FontWeight.w700, color: Colors.black87)),
-              const SizedBox(height: 20),
+              const Text('Artikel Lainnya', style: TextStyle(fontFamily: 'Satoshi-Regular', fontSize: 16, fontWeight: FontWeight.w700, color: Colors.black87)),
+              const SizedBox(height: 10),
               ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),

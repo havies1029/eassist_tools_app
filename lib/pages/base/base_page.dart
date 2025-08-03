@@ -59,6 +59,9 @@ enum PageType {
   berita,
   beritasampingan,
   beritaartikel,
+  sppamv,
+  sppapar,
+  promo,
 }
 
 abstract class PageContainerBase extends StatefulWidget {

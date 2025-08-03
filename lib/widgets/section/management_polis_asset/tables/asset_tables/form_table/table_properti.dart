@@ -123,12 +123,12 @@ class _TablePropertiState extends State<TableProperti> {
                       gridBorderColor: Colors.grey[300]!,
                       cellTextStyle: TextStyle(
                         fontFamily: 'Satoshi',
-                        fontSize: isMobile ? 10 : 14,
+                        fontSize: 14,
                       ),
                       columnTextStyle: TextStyle(
                         fontFamily: 'Satoshi',
                         fontWeight: FontWeight.bold,
-                        fontSize: isMobile ? 11 : 15,
+                        fontSize: 15,
                       ),
                     ),
                   ),
@@ -163,6 +163,8 @@ class _TablePropertiState extends State<TableProperti> {
   }
 
   List<TrinaColumn> _buildColumns() {
+    const baseMinWidth = 100.0;
+
     return [
       TrinaColumn(
         title: '',
@@ -173,16 +175,26 @@ class _TablePropertiState extends State<TableProperti> {
         minWidth: 60,
         frozen: TrinaColumnFrozen.start,
       ),
-      _textCol('No', 'no', 60),
-      _textCol('Alamat', 'alamat', maxW * 0.2),
-      _textCol('Harga Pertanggungan', 'tsi', maxW * 0.15, isCurrency: true),
-      _textCol('Premi', 'premi', maxW * 0.1, isCurrency: true),
-      _textCol('Klausa Bank', 'klausa', maxW * 0.15),
-      _textCol('Status', 'status', maxW * 0.11, isStatus: true),
+      _textCol('No', 'no', 1.0, minWidth: 60, useMinWidth: false),
+      _textCol('Alamat', 'alamat', 2.2, minWidth: baseMinWidth),
+      _textCol('Harga Pertanggungan', 'tsi', 2.0, minWidth: baseMinWidth, isCurrency: true),
+      _textCol('Premi', 'premi', 1.5, minWidth: baseMinWidth, isCurrency: true),
+      _textCol('Klausa Bank', 'klausa', 2.0, minWidth: baseMinWidth),
+      _textCol('Status', 'status', 1.4, minWidth: baseMinWidth, isStatus: true),
     ];
   }
 
-  TrinaColumn _textCol(String title, String field, double width, {bool isCurrency = false, bool isStatus = false}) {
+  TrinaColumn _textCol(
+      String title,
+      String field,
+      double widthFactor, {
+        bool isCurrency = false,
+        bool isStatus = false,
+        double minWidth = 100,
+        bool useMinWidth = true,
+      }) {
+    final double width = minWidth * widthFactor;
+
     return TrinaColumn(
       title: title,
       field: field,
@@ -190,7 +202,7 @@ class _TablePropertiState extends State<TableProperti> {
           ? TrinaColumnType.currency(locale: 'id_ID', symbol: 'Rp', decimalDigits: 0)
           : TrinaColumnType.text(),
       width: width,
-      minWidth: width,
+      minWidth: useMinWidth ? minWidth : 0,
       renderer: (context) {
         final value = context.cell.value.toString();
 
@@ -226,7 +238,7 @@ class _TablePropertiState extends State<TableProperti> {
               style: TextStyle(
                 color: textColor,
                 fontWeight: FontWeight.w600,
-                fontSize: isMobile ? 10 : 13,
+                fontSize: 13, // ✅ konsisten, gak perlu beda untuk mobile
               ),
             ),
           );
@@ -239,9 +251,9 @@ class _TablePropertiState extends State<TableProperti> {
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             child: Text(
               formattedValue,
-              style: TextStyle(
+              style: const TextStyle(
                 fontFamily: 'Satoshi',
-                fontSize: isMobile ? 10 : 14,
+                fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -252,9 +264,9 @@ class _TablePropertiState extends State<TableProperti> {
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           child: Text(
             value,
-            style: TextStyle(
+            style: const TextStyle(
               fontFamily: 'Satoshi',
-              fontSize: isMobile ? 10 : 14,
+              fontSize: 14,
             ),
           ),
         );

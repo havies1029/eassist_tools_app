@@ -271,6 +271,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<BeritaPageActiveEvent>((event, emit) => emit(BeritaPageActive()));
     on<BeritaSampinganPageActiveEvent>((event, emit) => emit(BeritaSampinganPageActive()));
     on<BeritaArtikelPageActiveEvent>((event, emit) => emit(BeritaArtikelPageActive()));
+    on<SppamvPageActiveEvent>((event, emit) => emit(SppamvPageActive()));
+    on<SppaparPageActiveEvent>((event, emit) => emit(SppaparPageActive()));
 
     on<PushPageEvent>((event, emit) async {
       if (_pageStack.isNotEmpty && _pageStack.last == event.pageType) {
@@ -333,7 +335,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     PageType.beritaartikel: BeritaArtikelPageActiveEvent(),
     PageType.simulmv: SimulMVPageActiveEvent(),
     PageType.simulpar: SimulPARPageActiveEvent(),
-
+    PageType.sppamv: SppamvPageActiveEvent(),
+    PageType.sppapar: SppaparPageActiveEvent(),
+    PageType.promo: PromoPageActiveEvent(),
   };
 
   void _dispatchInitEventForPage(PageType pageType) {
@@ -382,8 +386,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     PageType.beritaartikel: () => BeritaArtikelPageActive(),
     PageType.simulmv: () => SimulMVPageActive(),
     PageType.simulpar: () => SimulPARPageActive(),
-
-
+    PageType.sppamv: () => SppamvPageActive(),
+    PageType.sppapar: () => SppaparPageActive(),
+    PageType.promo: () => PromoPageActive(),
   };
 
   static HomeState _mapPageTypeToState(PageType pageType) {
