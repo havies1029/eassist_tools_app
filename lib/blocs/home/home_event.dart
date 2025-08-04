@@ -6,7 +6,7 @@ abstract class HomeEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
-
+class ResetToHomeEvent extends HomeEvent {}
 // ───────────────────────
 // Active Page Events
 // ───────────────────────

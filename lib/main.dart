@@ -54,6 +54,7 @@ import 'package:eassist_tools_app/repositories/reguser/reguser_repository.dart';
 import 'package:eassist_tools_app/repositories/simulmv/simulmvcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/simulpar/simulparcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/user/user_repository.dart';
+import 'package:eassist_tools_app/widgets/account/login/login_gmail/popup_dialog_login.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -98,6 +99,158 @@ import 'blocs/simulmv/simulmvcrud_bloc.dart';
 import 'blocs/simulpar/simulparcrud_bloc.dart';
 
 // NONAKTIFKAN DEBUG PRINT & ERROR MERAH
+
+// auth_handler.dart
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+bool _loginDialogOpen = false;                 // cegah dialog dobel
+AuthenticationState? _lastAuthStateGlobal;     // last state global
+bool _sudahTerdaftarSebagaiClient = false;     // jadikan flag global (bukan setState)
+
+Future<void> handleAuthenticationStateGlobal({
+  required NavigatorState? rootNav,  // navigatorKey.currentState
+  required BuildContext context,     // fallback jika rootNav null
+  required AuthenticationState state,
+}) async {
+  final nav = rootNav ?? Navigator.of(context, rootNavigator: true);
+
+  // Helper: pop ke root (tanpa mem-pop listener sendiri)
+  void popToRoot() {
+    if (nav.canPop()) {
+      nav.popUntil((r) => r.isFirst);
+    }
+  }
+
+  // ========== UNA UTH ==========
+  if (state is AuthenticationUnauthenticated) {
+    // Skip kalau masih di step verifikasi/OTP
+    if (_lastAuthStateGlobal is AuthenticationRequirePinEmailVerification ||
+        _lastAuthStateGlobal is AuthenticationRequirePinHPVerification ||
+        _lastAuthStateGlobal is AuthenticationRequireRegisterClient ||
+        AppData.isInOtpProcess == true) {
+      _lastAuthStateGlobal = state;
+      return;
+    }
+
+    popToRoot();
+
+    // Guard agar tidak munculin dialog dua kali
+    if (_loginDialogOpen) {
+      _lastAuthStateGlobal = state;
+      return;
+    }
+    _loginDialogOpen = true;
+
+    // Tunda ke frame berikutnya agar tree stabil
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      if (!context.mounted) { _loginDialogOpen = false; return; }
+      await Future.delayed(const Duration(milliseconds: 50));
+      await CustomPopupsLoginUser.showLoginUserDialog(
+        nav.context, // pastikan showDialog() pakai useRootNavigator: true
+      );
+    });
+
+    _lastAuthStateGlobal = state;
+    return;
+  }
+
+  // ========== REQUIRE LOGIN CLIENT ==========
+  if (state is AuthenticationRequireLoginClient) {
+    popToRoot();
+
+    if (state.requiredFrom == "bloc_email_verification") {
+      _sudahTerdaftarSebagaiClient = true; // ganti setState → flag global
+      await Future.delayed(const Duration(milliseconds: 150));
+    }
+
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      if (!context.mounted) return;
+      CustomPopupsLoginUser.showLoginClientDialog(nav.context);
+    });
+
+    _lastAuthStateGlobal = state;
+    return;
+  }
+
+  // ========== FORGOT PASSWORD ==========
+  if (state is AuthenticationForgotPassword) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      if (!context.mounted) return;
+      CustomPopupsLoginUser.showForgotPasswordDialog(nav.context);
+    });
+    _lastAuthStateGlobal = state;
+    return;
+  }
+
+  // ========== REGISTER CLIENT ==========
+  if (state is AuthenticationRequireRegisterClient) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      if (!context.mounted) return;
+      CustomPopupsLoginUser.showRegisterClientDialog(nav.context);
+    });
+    _lastAuthStateGlobal = state;
+    return;
+  }
+
+  // ========== OTP HP ==========
+  if (state is AuthenticationRequirePinHPVerification) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      if (!context.mounted) return;
+      CustomPopupsLoginUser.showRequestOTPHPDialog(nav.context, state.hpno);
+    });
+    _lastAuthStateGlobal = state;
+    return;
+  }
+
+  // ========== OTP EMAIL ==========
+  if (state is AuthenticationRequirePinEmailVerification) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      if (!context.mounted) return;
+      CustomPopupsLoginUser.showRequestOTPEmailDialog(nav.context, state.email);
+    });
+    _lastAuthStateGlobal = state;
+    return;
+  }
+
+  // ========== PHONE PIN VERIFIED → LOGOUT MANDATORY ==========
+  if (state is AuthenticationPhonePinVerified) {
+    context.read<AuthenticationBloc>().add(
+      LoggedOut(homeBloc: context.read<HomeBloc>()),
+    );
+    _lastAuthStateGlobal = state;
+    return;
+  }
+
+  // ========== AUTHENTICATED ==========
+  if (state is AuthenticationAuthenticated) {
+    // Tutup dialog jika masih terbuka
+    popToRoot();
+    _loginDialogOpen = false;
+
+    // Muat data client bila perlu
+    if (state.user.custType == "C") {
+      context.read<MRekan1CrudBloc>().add(MRekan1CrudLihatEvent());
+    }
+
+    // Opsional: sinkron ke home bila bukan home
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      if (!context.mounted) return;
+      final homeBloc = context.read<HomeBloc>();
+      if (homeBloc.currentPage != PageType.home) {
+        homeBloc.add(PushPageEvent(PageType.home));
+      }
+    });
+
+    _lastAuthStateGlobal = state;
+    return;
+  }
+
+  // Simpan last state
+  _lastAuthStateGlobal = state;
+}
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -153,30 +306,26 @@ Future<void> main() async {
     if (context != null) {
       final homeBloc = BlocProvider.of<HomeBloc>(context);
       if (initialPageType != PageType.home) {
-        debugPrint("🧠 PostFrame: Push page from SharedPreferences: $initialPageType");
+        // debugPrint("🧠 PostFrame: Push page from SharedPreferences: $initialPageType");
         homeBloc.add(PushPageEvent(initialPageType));
       }
     }
   });
 }
-
-
-
 class App extends StatelessWidget {
   final UserRepository userRepository;
-  final GlobalKey<NavigatorState> navigatorKey; // ⬅️ TAMBAHKAN INI
+  final GlobalKey<NavigatorState> navigatorKey;
 
   const App({
-    required super.key,
+    super.key,
     required this.userRepository,
-    required this.navigatorKey, // ⬅️ JANGAN LUPA INI JUGA
+    required this.navigatorKey,
   });
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-
         BlocProvider<LoginBloc>(
           create: (context) => LoginBloc(
             authenticationBloc: context.read<AuthenticationBloc>(),
@@ -304,44 +453,41 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => SppaparListBloc()),
         BlocProvider(create: (context) => SppaparCrudBloc(repository: SppaparCrudRepository())),
       ],
-      child: MaterialApp(
-        navigatorKey: navigatorKey,
-        debugShowCheckedModeBanner: false,
-        title: 'JPS Insurance',
-        theme: FlexThemeData.light(scheme: FlexScheme.mandyRed),
-        darkTheme: FlexThemeData.dark(scheme: FlexScheme.mandyRed),
-        themeMode: ThemeMode.light,
-        navigatorObservers: [routeObserver],
-        onGenerateRoute: (settings) {
-          switch (settings.name) {
-            case 'chat':
-              return MaterialPageRoute(
-                builder: (_) => const MobileChatScreen(),
-              );
-            default:
-              return MaterialPageRoute(
-                builder: (_) => HomePage(
-                  userRepository: userRepository,
-                  userid: 0,
-                  key: null,
-                ),
-              );
-
-          }
+      child: BlocListener<AuthenticationBloc, AuthenticationState>(
+        listenWhen: (prev, curr) => prev.runtimeType != curr.runtimeType,
+        listener: (context, state) {
+          handleAuthenticationStateGlobal(
+            rootNav: navigatorKey.currentState,
+            context: context,
+            state: state,
+          );
         },
+        child: MaterialApp(
+          navigatorKey: navigatorKey,
+          debugShowCheckedModeBanner: false,
+          title: 'JPS Insurance',
+          theme: FlexThemeData.light(scheme: FlexScheme.mandyRed),
+          darkTheme: FlexThemeData.dark(scheme: FlexScheme.mandyRed),
+          themeMode: ThemeMode.light,
+          navigatorObservers: [routeObserver],
+          onGenerateRoute: (settings) {
+            switch (settings.name) {
+              case 'chat':
+                return MaterialPageRoute(builder: (_) => const MobileChatScreen());
+              default:
+                return MaterialPageRoute(
+                  builder: (_) => HomePage(
+                    userRepository: userRepository,
+                    userid: 0, key: null,
+                  ),
+                );
+            }
+          },
+        ),
       ),
-      // child: MaterialApp.router(
-      //   debugShowCheckedModeBanner: false,
-      //   title: 'JPS Insurance',
-      //   theme: FlexThemeData.light(scheme: FlexScheme.mandyRed),
-      //   darkTheme: FlexThemeData.dark(scheme: FlexScheme.mandyRed),
-      //   themeMode: ThemeMode.light,
-      //   routerConfig: buildRouter(context), // <--- INI INTINYA
-      // ),
     );
   }
 }
-
 
 
 // void disableAllLogs() {

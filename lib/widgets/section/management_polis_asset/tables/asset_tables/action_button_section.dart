@@ -27,12 +27,13 @@ enum ActionButtonType {
   unduh,
   share,
   hapus,
+  perbarui
 }
 
 class ActionButtonSection extends StatefulWidget {
   final BoxConstraints constraints;
   final CategoryType? selectedCategory;
-  final List<Map<String, dynamic>>? tableData; // Data dari TableMain
+  final List<Map<String, dynamic>>? tableData;
   final Function(List<Map<String, dynamic>>)? onDataFiltered; // Callback untuk mengirim data yang sudah difilter
   final List<ActionButtonType> visibleButtons;
   final bool showSearchBox;
@@ -47,7 +48,7 @@ class ActionButtonSection extends StatefulWidget {
     this.selectedCategory,
     this.tableData,
     this.onDataFiltered,
-    this.visibleButtons = ActionButtonType.values, // ✅ semua tombol default aktif
+    this.visibleButtons = ActionButtonType.values,
     this.showSearchBox = true,
     this.showStatusFilter = true,
     this.onAddAsset,
@@ -92,9 +93,14 @@ class ActionButtonSectionState extends State<ActionButtonSection> {
       'color': Color(0xFF007AFF),
     },
     ActionButtonType.refresh: {
-      'icon': 'assets/icons/refresh.png',
-      'label': 'Perbarui',
+      'icon': 'assets/icons/refresh.svg',
+      'label': 'Refresh',
       'color': Color(0xFF00BFEF),
+    },
+    ActionButtonType.perbarui: {
+      'icon': 'assets/icons/edit.svg',
+      'label': 'Perbarui',
+      'color': Color(0xFFFFC728),
     },
     ActionButtonType.unduh: {
       'icon': 'assets/icons/unduh.svg',
@@ -319,6 +325,9 @@ class ActionButtonSectionState extends State<ActionButtonSection> {
       case ActionButtonType.hapus:
         _handleDelete(filteredData);
         break;
+      case ActionButtonType.perbarui:
+        _handlePerbarui(filteredData);
+        break;
       case ActionButtonType.tambahAset:
         _handleAddAsset();
         break;
@@ -364,6 +373,11 @@ class ActionButtonSectionState extends State<ActionButtonSection> {
     debugPrint('Deleting ${data.length} items');
     debugPrint('Data to delete: ${data.map((e) => e['noPolis']).join(', ')}');
     // Implement delete logic here
+  }
+
+  void _handlePerbarui(List<Map<String, dynamic>> data) {
+    debugPrint('Perbarui ${data.length} items');
+    debugPrint('Data to Perbarui: ${data.map((e) => e['noPolis']).join(', ')}');
   }
 
   void _handleAddAsset() {
@@ -497,8 +511,9 @@ class ActionButtonSectionState extends State<ActionButtonSection> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             _buildButtonsGroup([
+              ActionButtonType.hapus,
               ActionButtonType.tambahAset,
-              ActionButtonType.refresh,
+              ActionButtonType.perbarui,
             ]),
             Wrap(
               spacing: 8,
@@ -523,7 +538,7 @@ class ActionButtonSectionState extends State<ActionButtonSection> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildButton(ActionButtonType.hapus),
+            _buildButton(ActionButtonType.refresh),
             if (shouldShowFilter)
               Expanded(
                 child: Align(
@@ -574,19 +589,21 @@ class ActionButtonSectionState extends State<ActionButtonSection> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             _buildButtonsGroup([
+              ActionButtonType.hapus,
               ActionButtonType.tambahAset,
-              ActionButtonType.refresh
+              ActionButtonType.perbarui
             ]),
             _buildButtonsGroup([
               ActionButtonType.unduh,
-              ActionButtonType.share
+              ActionButtonType.share,
+
             ]),
           ],
         ),
         const SizedBox(height: 12),
         Align(
           alignment: Alignment.centerLeft,
-          child: _buildButton(ActionButtonType.hapus),
+          child: _buildButton(ActionButtonType.refresh),
         ),
       ],
     );
@@ -685,7 +702,7 @@ class _SearchBoxState extends State<_SearchBox> {
   final FocusNode _focusNode = FocusNode();
 
   // Consolidated search box dimensions
-  double get _width => widget.isMobile ? double.infinity : 500.0;
+  double get _width => widget.isMobile ? double.infinity : 300;
   double get _height => widget.isMobile ? 32.0 : 40.0;
   double get _padding => widget.isMobile ? 5.0 : 8.0;
   double get _borderRadius => widget.isMobile ? 8.0 : 10.0;
@@ -753,16 +770,24 @@ class _StatusFilterChips extends StatelessWidget {
       children: options.map((status) {
         final isSelected = active == status;
         return ChoiceChip(
-          label: Text(status),
+          label: Text(
+            status,
+            style: TextStyle(
+                color: isSelected ? Colors.white : Colors.blue,
+                fontWeight: FontWeight.w600,
+                fontSize: 15
+            ),
+          ),
           selected: isSelected,
           onSelected: (_) => onChanged(status),
           selectedColor: Colors.blue,
-          labelStyle: TextStyle(
-            color: isSelected ? Colors.white : Colors.blue,
-            fontWeight: FontWeight.w500,
+          backgroundColor: Colors.white,
+          shape: StadiumBorder(
+            side: BorderSide(
+              color: Colors.blue,
+            ),
           ),
-          shape: const StadiumBorder(side: BorderSide(color: Colors.blue)),
-          backgroundColor: Colors.transparent,
+          showCheckmark: false,
         );
       }).toList(),
     );

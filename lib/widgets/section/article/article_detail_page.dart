@@ -37,8 +37,6 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
     super.initState();
 
     final berita1Id = AppData.berita1Id;
-    debugPrint('🎯 Ambil dari AppData: $berita1Id');
-
     if (berita1Id != null) {
       context.read<Berita2CariBloc>().add(RefreshBerita2CariEvent(berita1Id: berita1Id));
       context.read<Berita3CariBloc>().add(RefreshBerita3CariEvent(berita1Id: berita1Id));
@@ -46,12 +44,10 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
       // Langsung reset biar gak nyangkut
       SchedulerBinding.instance.addPostFrameCallback((_) {
         AppData.berita1Id = null;
-        // AppData.gambarArtikel = null;
-        debugPrint('🧹 AppData di-reset setelah frame');
+
       });
-      debugPrint('🧹 AppData.berita1Id sudah di-reset ke null');
     } else {
-      debugPrint("⚠️ berita1Id null di initState");
+
     }
   }
 

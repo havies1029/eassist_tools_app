@@ -163,7 +163,7 @@ class PageContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<HomeBloc>();
-    final currentPage = bloc.currentPage;
+    final currentPage = context.select((HomeBloc b) => b.currentPage);
 
     final isInitialStackOnly = bloc.pageStack.length == 1 &&
         bloc.pageStack.first == pageType;
@@ -198,8 +198,6 @@ class PageContainer extends StatelessWidget {
         ? child
         : FloatingChatWrapper(child: child);
   }
-
-
 
   String get _pageTitle {
     switch (pageType) {

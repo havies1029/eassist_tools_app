@@ -25,8 +25,9 @@ class TableRingkasan extends StatefulWidget {
 
 class _TableRingkasanState extends State<TableRingkasan> {
   final GlobalKey<ActionButtonSectionState> _actionKey = GlobalKey();
-  late final ActionButtonSection _actionButton;
   List<Map<String, dynamic>> _originalItems = [];
+  late final ActionButtonSection _actionButton;
+
   TrinaGridStateManager? _stateManager;
 
   bool get isMobile => widget.constraints.maxWidth < 768;
@@ -34,25 +35,21 @@ class _TableRingkasanState extends State<TableRingkasan> {
   @override
   void initState() {
     super.initState();
-
     _actionButton = ActionButtonSection(
-      key: _actionKey,
       constraints: widget.constraints,
       selectedCategory: CategoryType.ringkasan,
       tableData: _originalItems,
-      showStatusFilter: false,
-      showSearchBox: true,
+      onDataFiltered: (filteredData) {
+        setState(() {
+          _originalItems = filteredData;
+        });
+      },
       visibleButtons: const [
-        ActionButtonType.tambahAset,
         ActionButtonType.refresh,
         ActionButtonType.unduh,
         ActionButtonType.share,
       ],
-      onAddAsset: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('🎯 Tambah Aset Ringkasan dijalankan')),
-        );
-      },
+      showSearchBox: true,
       onExportSelected: (format) async {
         final messenger = ScaffoldMessenger.of(context);
         if (kIsWeb || Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
@@ -76,6 +73,7 @@ class _TableRingkasanState extends State<TableRingkasan> {
       },
     );
 
+    // Initial data load
     Future.delayed(Duration.zero, () {
       context.read<AsetRingkasanCariBloc>().add(
         RefreshAsetRingkasanCariEvent(searchText: '', statusId: '10001'),
@@ -117,7 +115,7 @@ class _TableRingkasanState extends State<TableRingkasan> {
             }
           },
         ),
-      ],
+      ]
     );
   }
 }

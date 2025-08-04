@@ -43,7 +43,7 @@ class _NavBarState extends State<NavBar> {
               current is AuthenticationAuthenticated,
           listener: (context, state) {
             if (state is AuthenticationAuthenticated) {
-              debugPrint("✅ BlocListener triggered: user authenticated");
+
               context.read<MRekan1CrudBloc>().add(MRekan1CrudLihatEvent());
             }
           },
@@ -52,7 +52,7 @@ class _NavBarState extends State<NavBar> {
           listenWhen: (prev, curr) => prev.isLoaded != curr.isLoaded,
           listener: (context, state) {
             if (state.isLoaded) {
-              debugPrint("🎯 MRekan1CrudBloc loaded, triggering UI update");
+
               setState(() {}); // ✅ now valid inside StatefulWidget
             }
           },

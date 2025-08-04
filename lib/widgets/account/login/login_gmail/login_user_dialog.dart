@@ -84,9 +84,9 @@ class LoginUserDialogState extends BaseDialogState<LoginUserDialog> {
 
     _googleSignIn.onCurrentUserChanged
         .listen((GoogleSignInAccount? account) async {
-
-      debugPrint('User email: ${account?.email}');
-      debugPrint('User display name: ${account?.displayName}');
+      //
+      // debugPrint('User email: ${account?.email}');
+      // debugPrint('User display name: ${account?.displayName}');
       AppData.googleDisplayName = account?.displayName;
       if (! context.mounted) return;
       // ignore: use_build_context_synchronously
@@ -938,7 +938,7 @@ class LoginUserDialogState extends BaseDialogState<LoginUserDialog> {
         user ??= await _googleSignIn.signIn();
       }
 
-      debugPrint('[GMAIL] Google Sign-In result: ${user?.email}');
+      // debugPrint('[GMAIL] Google Sign-In result: ${user?.email}');
 
       if (user != null && context.mounted) {
         // 🔒 Simpan email seperti login manual

@@ -660,7 +660,6 @@ class _RegisterClientDialogState extends BaseDialogState<RegisterClientDialog> {
         if (value != null) {
           //fieldComboJnsClient = value;
           _selectedChoice = value.mjnsclientId;
-          debugPrint("fieldComboJnsClient: $_selectedChoice}");
         }
       },
       onSaveCallback: (value) {},
@@ -670,10 +669,6 @@ class _RegisterClientDialogState extends BaseDialogState<RegisterClientDialog> {
   // Fungsi yang akan disambungkan ke API
   // Fungsi yang akan disambungkan ke API
   void _handleRegister() {
-
-    debugPrint("AppData.userToken.token : ${AppData.userToken}");
-
-
     if (_formKey.currentState!.validate()) {
       if (pswdController.text != confirmPswdController.text) {
         ScaffoldMessenger.of(context).showSnackBar(

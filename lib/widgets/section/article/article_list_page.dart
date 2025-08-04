@@ -32,15 +32,8 @@ class _ArticleListPageState extends State<ArticleListPage> {
   @override
   void initState() {
     super.initState();
-
-    // Kirim refresh untuk masing-masing bloc
-    debugPrint('🔥 Refresh Berita jenis 1');
     context.read<Berita1CariBloc>().add(const RefreshBerita1CariEvent(1));
-
-    debugPrint('🔥 Refresh Berita jenis 2');
     context.read<BeritaKecilCariBloc>().add(const RefreshBeritaKecilCariEvent(2));
-
-    debugPrint('🔥 Refresh Berita jenis 3');
     context.read<BeritaLainCariBloc>().add(const RefreshBeritaLainCariEvent(3));
   }
 
@@ -111,7 +104,6 @@ class _ArticleListPageState extends State<ArticleListPage> {
       onExit: (_) => setState(() => hoveredMainIndex = -1),
       child: GestureDetector(
         onTap: () {
-          debugPrint('Klik buildMainArticleCard utama: ${article.judul ?? '-'}');
           final berita1Id = article.berita1Id;
           final gambar = article.gambar;
           final judul = article.judul;
@@ -119,8 +111,6 @@ class _ArticleListPageState extends State<ArticleListPage> {
           AppData.berita1Id = berita1Id;
           AppData.gambarArtikel = gambar;
           AppData.JudulArtikel = judul;
-
-          debugPrint('🎯 Gambar Artikel: ${article.gambar}');
 
           if (berita1Id != null) {
             context.read<Berita2CariBloc>().add(RefreshBerita2CariEvent(berita1Id: berita1Id));
@@ -248,7 +238,6 @@ class _ArticleListPageState extends State<ArticleListPage> {
       onExit: (_) => setState(() => hoveredSideIndex = -1),
       child: GestureDetector(
         onTap: () {
-          debugPrint('Klik Sidebar utama: ${article.judul ?? '-'}');
           final berita1Id = article.berita1Id;
           final gambar = article.gambar;
           final judul = article.judul;
@@ -256,8 +245,6 @@ class _ArticleListPageState extends State<ArticleListPage> {
           AppData.berita1Id = berita1Id;
           AppData.gambarArtikel = gambar;
           AppData.JudulArtikel = judul;
-
-          debugPrint('🎯 Gambar Artikel: ${article.gambar}');
 
           if (berita1Id != null) {
             context.read<Berita2CariBloc>().add(RefreshBerita2CariEvent(berita1Id: berita1Id));
@@ -363,7 +350,6 @@ class _ArticleListPageState extends State<ArticleListPage> {
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () {
-          debugPrint('Klik Sidebar utama: ${article.judul ?? '-'}');
           final berita1Id = article.berita1Id;
           final gambar = article.gambar;
           final judul = article.judul;
@@ -371,8 +357,6 @@ class _ArticleListPageState extends State<ArticleListPage> {
           AppData.berita1Id = berita1Id;
           AppData.gambarArtikel = gambar;
           AppData.JudulArtikel = judul;
-
-          debugPrint('🎯 Gambar Artikel: ${article.gambar}');
 
           if (berita1Id != null) {
             context.read<Berita2CariBloc>().add(RefreshBerita2CariEvent(berita1Id: berita1Id));

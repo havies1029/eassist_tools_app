@@ -128,12 +128,12 @@ class _CategoryTabBarState extends State<CategoryTabBar> {
                       final category = CategoryTypeExtension.fromCobKode(item.mCobApp1Id);
                       final isSelected = widget.selectedCategory == category;
 
-                      debugPrint('[DEBUG] Mapping COB "${item.mCobApp1Id}" ("${item.cobNama}") → CategoryType: $category');
+                      // debugPrint('[DEBUG] Mapping COB "${item.mCobApp1Id}" ("${item.cobNama}") → CategoryType: $category');
 
                       return InkWell(
                         onTap: () {
                           widget.onCategorySelected(category);
-                          debugPrint('[TAB SELECTED] Category: $category, COB Kode: ${category.cobKode}, Nama: ${item.cobNama}');
+                          // debugPrint('[TAB SELECTED] Category: $category, COB Kode: ${category.cobKode}, Nama: ${item.cobNama}');
                           context.read<AsetDashboardCariBloc>().add(
                             RefreshAsetDashboardCariEvent(cobAppId: category.cobKode),
                           );

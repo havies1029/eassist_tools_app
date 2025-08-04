@@ -124,16 +124,13 @@ class ProfileDropdownContent extends StatelessWidget {
                               if (AppData.googleDisplayName != null &&
                                   AppData.googleDisplayName!.trim().isNotEmpty) {
                                 displayName = AppData.googleDisplayName!.trim();
-                                debugPrint('[DEBUG] Display name from Google Account: $displayName');
                               }
                               // Jika masih kosong, fallback ke AppData.lastLoginEmail
                               else if (AppData.lastLoginEmail != null &&
                                   AppData.lastLoginEmail!.trim().isNotEmpty) {
                                 displayName = AppData.lastLoginEmail!.trim();
-                                debugPrint('[DEBUG] Display name from Last Login Email: $displayName');
                               }
                             } else {
-                              debugPrint('[DEBUG] Display name from authState.user.nama: $displayName');
                             }
                           }
 
@@ -227,7 +224,6 @@ class ProfileDropdownContent extends StatelessWidget {
 
     if (fotoState is! ProfileDownloadFotoLoaded &&
         fotoState is! ProfileDownloadFotoLoading) {
-      debugPrint("🖼️ LoadSecureImage triggered by dropdown");
       context.read<ProfileDownloadFotoBloc>().add(LoadSecureImage());
     }
   }
@@ -240,7 +236,6 @@ class ProfileDropdownContent extends StatelessWidget {
         authState.user.custType == 'C';
 
     if (isClient && !rekanState.isLoaded) {
-      debugPrint("🔁 Refreshing data rekan dari _refreshRekanIfNeeded()");
       context.read<MRekan1CrudBloc>().add(MRekan1CrudLihatEvent());
     }
   }

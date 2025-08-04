@@ -1,5 +1,5 @@
+import 'package:eassist_tools_app/widgets/section/management_polis_asset/tables/polis_tables/form_table/table_ringkasan.dart';
 import 'package:flutter/material.dart';
-import 'table_ringkasan.dart';
 import 'table_kategori.dart';
 import '../../category_type.dart';
 
@@ -32,7 +32,7 @@ class TableMain extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('Selected Category: $selectedCategory');
+    // debugPrint('Selected Category: $selectedCategory');
 
     return Container(
       color: Colors.white,
@@ -50,12 +50,6 @@ class TableMain extends StatelessWidget {
   }
 
   Widget _buildTableWidget() {
-    debugPrint('Building table widget for: $selectedCategory');
-
-    if (selectedCategory == CategoryType.ringkasan) {
-      return RingkasanPolisTable(constraints: constraints);
-    }
-
     return KategoriPolisTable(
       key: ValueKey('table_${selectedCategory.name}'),
       constraints: constraints,

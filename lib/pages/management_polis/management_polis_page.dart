@@ -24,7 +24,6 @@ class PolisManagementPage extends StatefulWidget {
 
 class _PolisManagementPageState extends State<PolisManagementPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  bool isLoadingUI = false;
   CategoryType selectedCategory = CategoryType.ringkasan;
 
   @override
@@ -49,7 +48,7 @@ class _PolisManagementPageState extends State<PolisManagementPage> {
               // Layer 2: Scrollable content
               Positioned.fill(
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.only(top: isMobile? 65 : 88),
+                  padding: EdgeInsets.only(top: isMobile ? 65 : 88),
                   child: Column(
                     children: [
                       HeroSection(
@@ -61,65 +60,50 @@ class _PolisManagementPageState extends State<PolisManagementPage> {
                       CategoryTabBar(
                         constraints: constraints,
                         selectedCategory: selectedCategory,
-                        onCategorySelected: (value) async {
+                        onCategorySelected: (value) {
                           setState(() {
                             selectedCategory = value;
-                            isLoadingUI = true; // ⏳ Loading aktif
                           });
 
                           context.read<AsetDashboardCariBloc>().add(
-                            RefreshAsetDashboardCariEvent(cobAppId: value.cobKode),
+                            RefreshAsetDashboardCariEvent(
+                              cobAppId: value.cobKode,
+                            ),
                           );
-
-                          await Future.delayed(const Duration(milliseconds: 1500)); // ⏱️ Delay animasi
-                          setState(() => isLoadingUI = false);
                         },
                       ),
 
-                      AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 300),
-                        switchInCurve: Curves.easeOut,
-                        switchOutCurve: Curves.easeIn,
-                        transitionBuilder: (child, animation) => FadeTransition(
-                          opacity: animation,
-                          child: child,
-                        ),
-                        child: isLoadingUI
-                            ? const Padding(
-                          key: ValueKey('loading'),
-                          padding: EdgeInsets.symmetric(vertical: 80),
-                          child: Center(child: CircularProgressIndicator()),
-                        )
-                            : Column(
-                          key: ValueKey('content'),
-                          children: [
-                            BlocBuilder<AsetDashboardCariBloc, AsetDashboardCariState>(
-                              builder: (context, state) {
-                                if (state.status == ListStatus.success &&
-                                    state.items.isNotEmpty) {
-                                  final summary = state.items.first;
-                                  debugPrint(
-                                      '[SUMMARY DEBUG] Aktif: ${summary.aktifQty}, NonAktif: ${summary.nonAktifQty}, Berakhir: ${summary.berakhirQty}, OnProgress: ${summary.onProgressQty}');
+                      // ⬇️ Langsung tampilkan konten
+                      Column(
+                        key: const ValueKey('content'),
+                        children: [
+                          BlocBuilder<AsetDashboardCariBloc,
+                              AsetDashboardCariState>(
+                            builder: (context, state) {
+                              if (state.status == ListStatus.success &&
+                                  state.items.isNotEmpty) {
+                                final summary = state.items.first;
+                                debugPrint(
+                                    '[SUMMARY DEBUG] Aktif: ${summary.aktifQty}, NonAktif: ${summary.nonAktifQty}, Berakhir: ${summary.berakhirQty}, OnProgress: ${summary.onProgressQty}');
 
-                                  return PolisSummarySection(
-                                    constraints: constraints,
-                                    aktifQty: summary.aktifQty,
-                                    nonAktifQty: summary.nonAktifQty,
-                                    onProgressQty: summary.onProgressQty,
-                                    berakhirQty: summary.berakhirQty,
-                                  );
-                                }
+                                return PolisSummarySection(
+                                  constraints: constraints,
+                                  aktifQty: summary.aktifQty,
+                                  nonAktifQty: summary.nonAktifQty,
+                                  onProgressQty: summary.onProgressQty,
+                                  berakhirQty: summary.berakhirQty,
+                                );
+                              }
 
-                                return const SizedBox.shrink(); // atau “Data tidak tersedia”
-                              },
-                            ),
-                            ActionButtonSection(constraints: constraints),
-                            TableMain(
-                              constraints: constraints,
-                              selectedCategory: selectedCategory,
-                            ),
-                          ],
-                        ),
+                              return const SizedBox
+                                  .shrink(); // atau tampilkan pesan "Data tidak tersedia"
+                            },
+                          ),
+                          TableMain(
+                            constraints: constraints,
+                            selectedCategory: selectedCategory,
+                          ),
+                        ],
                       ),
                       FooterSection(constraints: constraints),
                     ],
@@ -136,7 +120,6 @@ class _PolisManagementPageState extends State<PolisManagementPage> {
     );
   }
 }
-
 
 class _FixedNavbarOverlay extends StatelessWidget {
   const _FixedNavbarOverlay();
@@ -156,7 +139,8 @@ class _FixedNavbarOverlay extends StatelessWidget {
             child: NavbarWidget(
               constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width,
-              ), pageType: PageType.polismanagement,
+              ),
+              pageType: PageType.polismanagement,
             ),
           ),
         ],

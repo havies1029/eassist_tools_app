@@ -27,7 +27,6 @@ class AssetManagementPage extends StatefulWidget {
 
 class _AssetManagementPageState extends State<AssetManagementPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  bool isLoadingUI = false;
 
   CategoryType selectedCategory = CategoryType.ringkasan;
 
@@ -53,7 +52,7 @@ class _AssetManagementPageState extends State<AssetManagementPage> {
               // Layer 2: Scrollable content
               Positioned.fill(
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.only(top: isMobile? 65 : 88),
+                  padding: EdgeInsets.only(top: isMobile ? 65 : 88),
                   child: Column(
                     children: [
                       HeroSection(
@@ -68,81 +67,43 @@ class _AssetManagementPageState extends State<AssetManagementPage> {
                         onCategorySelected: (value) async {
                           setState(() {
                             selectedCategory = value;
-                            isLoadingUI = true; // ⏳ Loading aktif
                           });
 
                           context.read<AsetDashboardCariBloc>().add(
                             RefreshAsetDashboardCariEvent(cobAppId: value.cobKode),
                           );
-
-                          // context.read<AsetMvCariBloc>().add(
-                          //   FetchAsetMvCariEvent(), // 🔥 penting!
-                          // );
-                          //
-                          // context.read<AsetParCariBloc>().add(
-                          //   FetchAsetParCariEvent(), // 🔥 penting!
-                          // );
-                          //
-                          // context.read<AsetRingkasanCariBloc>().add(
-                          //   FetchAsetRingkasanCariEvent(), // 🔥 penting!
-                          // );
-                          //
-                          // context.read<AsetRingkasanCariBloc>().add(
-                          //   FetchAsetRingkasanCariEvent(), // 🔥 penting!
-                          // );
-
-                          await Future.delayed(const Duration(milliseconds: 1000)); // ⏱️ Delay animasi
-                          setState(() => isLoadingUI = false);
                         },
                       ),
 
-                      AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 300),
-                        switchInCurve: Curves.easeOut,
-                        switchOutCurve: Curves.easeIn,
-                        transitionBuilder: (child, animation) => FadeTransition(
-                          opacity: animation,
-                          child: child,
-                        ),
-                        child: isLoadingUI
-                            ? const Padding(
-                          key: ValueKey('loading'),
-                          padding: EdgeInsets.symmetric(vertical: 80),
-                          child: Center(child: CircularProgressIndicator()),
-                        )
-                            : Column(
-                          key: ValueKey('content'),
-                          children: [
-                            BlocBuilder<AsetDashboardCariBloc, AsetDashboardCariState>(
-                              builder: (context, state) {
-                                if (state.status == ListStatus.success &&
-                                    state.items.isNotEmpty) {
-                                  final summary = state.items.first;
-                                  debugPrint(
-                                      '[SUMMARY DEBUG] Aktif: ${summary.aktifQty}, NonAktif: ${summary.nonAktifQty}, Berakhir: ${summary.berakhirQty}, OnProgress: ${summary.onProgressQty}');
+                      // ⬇️ Langsung tampilkan konten tanpa loading UI
+                      Column(
+                        key: const ValueKey('content'),
+                        children: [
+                          BlocBuilder<AsetDashboardCariBloc, AsetDashboardCariState>(
+                            builder: (context, state) {
+                              if (state.status == ListStatus.success &&
+                                  state.items.isNotEmpty) {
+                                final summary = state.items.first;
+                                debugPrint(
+                                    '[SUMMARY DEBUG] Aktif: ${summary.aktifQty}, NonAktif: ${summary.nonAktifQty}, Berakhir: ${summary.berakhirQty}, OnProgress: ${summary.onProgressQty}');
 
-                                  return PolisSummarySection(
-                                    constraints: constraints,
-                                    aktifQty: summary.aktifQty,
-                                    nonAktifQty: summary.nonAktifQty,
-                                    onProgressQty: summary.onProgressQty,
-                                    berakhirQty: summary.berakhirQty,
-                                  );
-                                }
+                                return PolisSummarySection(
+                                  constraints: constraints,
+                                  aktifQty: summary.aktifQty,
+                                  nonAktifQty: summary.nonAktifQty,
+                                  onProgressQty: summary.onProgressQty,
+                                  berakhirQty: summary.berakhirQty,
+                                );
+                              }
 
-                                return const SizedBox.shrink(); // atau “Data tidak tersedia”
-                              },
-                            ),
-                            // ActionButtonSection(
-                            //     constraints: constraints,
-                            //     selectedCategory: selectedCategory
-                            // ),
-                            TableMain(
-                              constraints: constraints,
-                              selectedCategory: selectedCategory,
-                            ),
-                          ],
-                        ),
+                              return const SizedBox.shrink(); // atau “Data tidak tersedia”
+                            },
+                          ),
+                          TableMain(
+                            constraints: constraints,
+                            selectedCategory: selectedCategory,
+                          ),
+                        ],
                       ),
                       FooterSection(constraints: constraints),
                     ],
@@ -159,7 +120,6 @@ class _AssetManagementPageState extends State<AssetManagementPage> {
     );
   }
 }
-
 
 class _FixedNavbarOverlay extends StatelessWidget {
   const _FixedNavbarOverlay();

@@ -11,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../pages/base/base_page.dart';
 import '../home/home_bloc.dart';
 
 part 'authentication_event.dart';
@@ -97,24 +98,40 @@ class AuthenticationBloc
       authenticatedFrom: "login_client",
     ));
   }
-
-
   Future<void> _onLoggedOut(
-      LoggedOut event, Emitter<AuthenticationState> emit) async {
+      LoggedOut event,
+      Emitter<AuthenticationState> emit,
+      ) async {
     emit(AuthenticationLoading());
-
-    // Hapus token login
     await userRepository.deleteToken(id: 0);
 
-    // ❗ RESET STACK DAN LAST PAGE
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('lastPageType');
+    await prefs.setString('lastPageType', PageType.home.name);
 
-    // ❗ Akses dan reset HomeBloc
-    event.homeBloc.resetStack();
+    // Tunggu HomeBloc ke HomePageActive, tapi kasih timeout agar tidak deadlock
+    final completer = Completer<void>();
+    late final StreamSubscription sub;
+    sub = event.homeBloc.stream.listen((s) {
+      if (s is HomePageActive) {
+        sub.cancel();
+        if (!completer.isCompleted) completer.complete();
+      }
+    });
+    event.homeBloc.add(ResetToHomeEvent());
 
+    // Timeout 500ms supaya tetap jalan kalau event telat
+    await Future.any([
+      completer.future,
+      Future.delayed(const Duration(milliseconds: 500)),
+    ]).whenComplete(() {
+      sub.cancel();
+    });
+
+    // Setelah tree stabil → emit Unauthenticated
     emit(AuthenticationUnauthenticated());
   }
+
+
 
 
   Future<void> _onRequirePinEmailVerification(

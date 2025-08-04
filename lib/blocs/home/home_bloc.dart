@@ -273,6 +273,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<BeritaArtikelPageActiveEvent>((event, emit) => emit(BeritaArtikelPageActive()));
     on<SppamvPageActiveEvent>((event, emit) => emit(SppamvPageActive()));
     on<SppaparPageActiveEvent>((event, emit) => emit(SppaparPageActive()));
+    on<ResetToHomeEvent>((event, emit) async {
+      _pageStack
+        ..clear()
+        ..add(PageType.home);
+
+      emit(_mapPageTypeToState(PageType.home));
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('lastPageType', PageType.home.name);
+    });
 
     on<PushPageEvent>((event, emit) async {
       if (_pageStack.isNotEmpty && _pageStack.last == event.pageType) {
@@ -290,10 +300,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       markStartupPush();
     });
 
-    on<PopPageEvent>((event, emit) {
+    on<PopPageEvent>((event, emit) async {
       if (canGoBack) {
         _pageStack.removeLast();
-        emit(_mapPageTypeToState(currentPage));
+        final now = currentPage;
+        emit(_mapPageTypeToState(now));
+
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('lastPageType', now.name);
       }
     });
   }

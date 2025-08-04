@@ -36,7 +36,6 @@ class _ProfileSectionState extends State<ProfileSection> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('[DEBUG] 👤 ProfileSection dibuild ulang');
 
     final authState = context.select<AuthenticationBloc, AuthenticationState>((bloc) => bloc.state);
     final isMobile = MediaQuery.of(context).size.width < 768;
@@ -48,7 +47,6 @@ class _ProfileSectionState extends State<ProfileSection> {
     final isFotoLoaded = fotoState is ProfileDownloadFotoLoaded;
 
     if (!isRekanLoaded || !isFotoLoaded) {
-      debugPrint('[DEBUG] ⏳ Data belum siap (Rekan: $isRekanLoaded, Foto: $isFotoLoaded)');
       return const SizedBox(); // atau loader shimmer
     }
 
@@ -157,7 +155,6 @@ class _ProfileSectionState extends State<ProfileSection> {
     final isAuthenticated = authState is AuthenticationAuthenticated;
 
     if (isAuthenticated && !rekanState.isLoaded) {
-      debugPrint("🔁 Refreshing MRekan1CrudBloc (profile header)");
       context.read<MRekan1CrudBloc>().add(MRekan1CrudLihatEvent());
     }
   }
@@ -165,7 +162,6 @@ class _ProfileSectionState extends State<ProfileSection> {
   void _loadFotoIfNeeded(BuildContext context) {
     final fotoState = context.read<ProfileDownloadFotoBloc>().state;
     if (fotoState is! ProfileDownloadFotoLoaded && fotoState is! ProfileDownloadFotoLoading) {
-      debugPrint("🖼️ LoadSecureImage triggered");
       context.read<ProfileDownloadFotoBloc>().add(LoadSecureImage());
     }
   }
