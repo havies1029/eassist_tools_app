@@ -65,68 +65,89 @@ class SimulmvCrudFormPageFormCascoState
     return BlocConsumer<SimulmvCrudBloc, SimulmvCrudState>(
       builder: (context, state) {
         return SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Form(
-                key: _formKey,
-                child: Column(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+
+                // Row 1: Jenis Kendaraan & Tahun Pembuatan
+                Row(
                   children: [
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: buildFieldComboTahun()),
-                        ),
-                        Flexible(
-                          flex: 1,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: buildFieldHarga(),
-                          ),
-                        ),
-                      ],
+                    Flexible(
+                      flex: 1,
+                      child: buildFieldJenisKendaraan(),
                     ),
-                    const SizedBox(height: 10),
-                    buildFieldJenisKendaraan(),
-                    const SizedBox(height: 10),
-                    buildFieldWilayah(),
-                    const SizedBox(height: 10),
-                    buildFieldJenisCover(),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: buildFieldLamaCover()),
-                        ),
-                        Flexible(
-                          flex: 3,
-                          child: Container(),
-                        ),
-                      ],
+                    const SizedBox(width: 8),
+                    Flexible(
+                      flex: 1,
+                      child: buildFieldComboTahun(),
                     ),
-                    const SizedBox(height: 10),
                   ],
-                )),
+                ),
+
+                const SizedBox(height: 10),
+
+                // Row 2: Jenis Cover & Harga Kendaraan
+                Row(
+                  children: [
+                    Flexible(
+                      flex: 1,
+                      child: buildFieldJenisCover(),
+                    ),
+                    const SizedBox(width: 8),
+                    Flexible(
+                      flex: 1,
+                      child: buildFieldHarga(),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 10),
+
+                // Wilayah & Lama Cover responsif tanpa padding
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    final isMobile = constraints.maxWidth < 600;
+
+                    final left = Flexible(flex: 1, child: buildFieldWilayah());
+                    final right = Flexible(flex: 1, child: buildFieldLamaCover());
+
+                    if (isMobile) {
+                      // tumpuk vertikal di layar sempit
+                      return Column(
+                        children: [
+                          left.child as Widget,
+                          const SizedBox(height: 10),
+                          right.child as Widget,
+                        ],
+                      );
+                    }
+
+                    // berdampingan di layar lebar
+                    return Row(
+                      children: [
+                        left,
+                        const SizedBox(width: 8),
+                        right,
+                      ],
+                    );
+                  },
+                ),
+
+                const SizedBox(height: 10),
+              ],
+            ),
           ),
         );
       },
       listener: (context, state) {
-        if (state.isLoaded)  {
+        if (state.isLoaded) {
           debugPrint("listener #X01");
           if (state.record != null) {
-            fieldCoverBulanController.text =
-                state.record!.coverBulan.toString();
-            fieldHargaController.text =
-                NumberFormat("#,###").format(state.record!.harga);
+            fieldCoverBulanController.text = state.record!.coverBulan.toString();
+            fieldHargaController.text = NumberFormat("#,###").format(state.record!.harga);
             fieldThnBuatController.text = state.record!.thnBuat.toString();
-            fieldCoverBulanController.text =
-                state.record!.coverBulan.toString();
           }
           fieldComboMMvgrupOjk = state.comboMMvgrupOjk;
           fieldComboMMvjnscover = state.comboMMvjnscover;

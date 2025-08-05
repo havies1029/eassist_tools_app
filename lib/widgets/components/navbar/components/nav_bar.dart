@@ -33,6 +33,8 @@ class NavBar extends StatefulWidget {
 }
 
 class _NavBarState extends State<NavBar> {
+  bool get isMobile => widget.constraints.maxWidth < 768;
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocListener(
@@ -63,11 +65,12 @@ class _NavBarState extends State<NavBar> {
           final double maxWidth =
           widget.constraints.maxWidth > 1200 ? 1200 : widget.constraints.maxWidth;
           final authState = context.watch<AuthenticationBloc>().state;
+          final showHamburger = authState is AuthenticationAuthenticated;
 
-          final showHamburger = authState is AuthenticationAuthenticated &&
-              (authState.authenticatedFrom == 'login_user' ||
-                  authState.authenticatedFrom == 'login_client' ||
-                  authState.authenticatedFrom == 'login_token');
+          // final showHamburger = authState is AuthenticationAuthenticated &&
+          //     (authState.authenticatedFrom == 'login_user' ||
+          //         authState.authenticatedFrom == 'login_client' ||
+          //         authState.authenticatedFrom == 'login_token');
 
           final blocState = context.read<MRekan1CrudBloc>().state;
           final mjnsclientId = blocState.record?.mjnsclientId;
@@ -174,18 +177,4 @@ class _NavBarState extends State<NavBar> {
       ),
     );
   }
-
-  bool get isMobile => widget.constraints.maxWidth < 768;
-
-  bool _shouldShowProfileSection(AuthenticationState state) {
-    if (state is AuthenticationAuthenticated) {
-      final from = state.authenticatedFrom;
-      final custType = state.user.custType;
-
-      if (from == 'login_client') return true;
-      if (from == 'login_token' && custType == 'C') return true;
-    }
-    return false;
-  }
-
 }

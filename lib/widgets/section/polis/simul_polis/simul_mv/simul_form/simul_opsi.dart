@@ -41,126 +41,94 @@ class SimulmvCrudFormPageFormOpsiState extends State<SimulmvFormOpsiPage> {
     return BlocConsumer<SimulmvCrudBloc, SimulmvCrudState>(
       builder: (context, state) {
         return SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Form(
-                key: _formKey,
-                child: Column(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+
+                // 4 checkbox: EQ, Flood, SRCC, Terrorism → otomatis wrap
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    const spacing = 8.0;
+                    // Atur breakpoint & jumlah kolom sesuai kebutuhan
+                    final isMobile = constraints.maxWidth < 600;
+                    final crossAxisCount = isMobile ? 2 : 4;
+
+                    // Hitung lebar item agar pas per baris & rapi saat wrap
+                    final itemWidth =
+                        (constraints.maxWidth - (crossAxisCount - 1) * spacing) / crossAxisCount;
+
+                    return Wrap(
+                      spacing: spacing,     // jarak antar item dalam baris
+                      runSpacing: 10,       // jarak antar baris
+                      children: [
+                        SizedBox(width: itemWidth, child: buildFieldIsEQ()),
+                        SizedBox(width: itemWidth, child: buildFieldIsFlood()),
+                        SizedBox(width: itemWidth, child: buildFieldIsSRCC()),
+                        SizedBox(width: itemWidth, child: buildFieldIsTerrorism()),
+                      ],
+                    );
+                  },
+                ),
+
+                const SizedBox(height: 20),
+
+                // Row: Passenger Liability & PA Driver
+                Row(
                   children: [
-                    Row(
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: buildFieldIsEQ()),
-                        ),
-                        Flexible(
-                          flex: 1,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: buildFieldIsFlood(),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: buildFieldIsSRCC()),
-                        ),
-                        Flexible(
-                          flex: 1,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: buildFieldIsTerrorism(),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: buildFieldPLL()),
-                        ),
-                        Flexible(
-                          flex: 1,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: buildFieldPAD(),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: buildFieldTPL()),
-                        ),
-                        Flexible(
-                          flex: 1,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: buildFieldPAP(),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: buildFieldAW()),
-                        ),
-                        Flexible(
-                          flex: 1,
-                          child: Container(),
-                        ),
-                      ],
-                    ),
+                    Flexible(flex: 1, child: buildFieldPLL()),
+                    const SizedBox(width: 8),
+                    Flexible(flex: 1, child: buildFieldPAD()),
                   ],
-                )),
+                ),
+
+                const SizedBox(height: 10),
+
+                // Row: TPL & PAP
+                Row(
+                  children: [
+                    Flexible(flex: 1, child: buildFieldTPL()),
+                    const SizedBox(width: 8),
+                    Flexible(flex: 1, child: buildFieldPAP()),
+                  ],
+                ),
+
+                const SizedBox(height: 10),
+
+                // Row: Authorized Workshop (kiri saja)
+                Row(
+                  children: [
+                    Flexible(flex: 1, child: buildFieldAW()),
+                    const SizedBox(width: 8),
+                    const Flexible(flex: 1, child: SizedBox.shrink()),
+                  ],
+                ),
+
+                const SizedBox(height: 10),
+              ],
+            ),
           ),
         );
       },
       listener: (context, state) {
         if ((state.isLoaded) || (state.isFieldOpsiChanged)) {
           if (state.record != null) {
-            fieldAwController.text =
-                NumberFormat.decimalPattern().format(state.record!.aw);
+            fieldAwController.text = NumberFormat.decimalPattern().format(state.record!.aw);
             fieldIsEqController.text = state.record!.isEq.toString();
             fieldIsFloodController.text = state.record!.isFlood.toString();
             fieldIsSrccController.text = state.record!.isSrcc.toString();
-            fieldIsTerrorismController.text =
-                state.record!.isTerrorism.toString();
-            fieldPadController.text =
-                NumberFormat("#,###").format(state.record!.pad);
-            fieldPapController.text =
-                NumberFormat("#,###").format(state.record!.pap);
-            fieldPllController.text =
-                NumberFormat("#,###").format(state.record!.pll);
-            fieldTplController.text =
-                NumberFormat("#,###").format(state.record!.tpl);
+            fieldIsTerrorismController.text = state.record!.isTerrorism.toString();
+            fieldPadController.text = NumberFormat("#,###").format(state.record!.pad);
+            fieldPapController.text = NumberFormat("#,###").format(state.record!.pap);
+            fieldPllController.text = NumberFormat("#,###").format(state.record!.pll);
+            fieldTplController.text = NumberFormat("#,###").format(state.record!.tpl);
           }
         }
       },
     );
   }
+
 
 
   Widget buildFieldAW() {

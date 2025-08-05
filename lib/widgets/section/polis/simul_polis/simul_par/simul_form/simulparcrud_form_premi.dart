@@ -33,91 +33,81 @@ class SimulparFormPremiPageFormState
   String currDesc = "IDR";
 
   @override
+  void dispose() {
+    fieldPremiTotalController.dispose();
+    fieldPremiBiController.dispose();
+    fieldPremiFlexasController.dispose();
+    fieldPremiRsmdccController.dispose();
+    fieldPremiTsfwdController.dispose();
+    fieldPremiEqvetController.dispose();
+    fieldPremiOthersController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    simulparCrudBloc = BlocProvider.of<SimulparCrudBloc>(context);
+    simulparCrudBloc = context.read<SimulparCrudBloc>();
+
     return BlocConsumer<SimulparCrudBloc, SimulparCrudState>(
+      listener: (context, state) {
+        if ((state.isLoaded) || (state.isGroupFieldPremiChanged)) {
+          final r = state.record;
+          if (r != null) {
+            final f = NumberFormat.decimalPattern('id');
+            fieldPremiFlexasController.text = f.format(r.premiFlexas ?? 0);
+            fieldPremiRsmdccController.text = f.format(r.premiRsmdcc ?? 0);
+            fieldPremiTsfwdController.text  = f.format(r.premiTsfwd  ?? 0);
+            fieldPremiEqvetController.text  = f.format(r.premiEqvet  ?? 0);
+            fieldPremiOthersController.text = f.format(r.premiOthers ?? 0);
+            fieldPremiBiController.text     = f.format(r.premiBi     ?? 0);
+            fieldPremiTotalController.text  = f.format(r.premiTotal  ?? 0);
+            currDesc = r.currDesc ?? "IDR";
+          } else {
+            fieldPremiFlexasController.clear();
+            fieldPremiRsmdccController.clear();
+            fieldPremiTsfwdController.clear();
+            fieldPremiEqvetController.clear();
+            fieldPremiOthersController.clear();
+            fieldPremiBiController.clear();
+            fieldPremiTotalController.clear();
+            currDesc = "IDR";
+          }
+        }
+      },
+      buildWhen: (p, c) =>
+      p.isLoaded != c.isLoaded ||
+          p.isGroupFieldPremiChanged != c.isGroupFieldPremiChanged ||
+          p.errors != c.errors,
       builder: (context, state) {
         return SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: FloatingActionButton(
-                                onPressed: () {
-                                  simulparCrudBloc.add(HitungPremiPAREvent());
-                                },
-                                child: Icon(
-                                  Icons.calculate,
-                                  size: 55,
-                                ),
-                              )),
-                        ),
-                        Flexible(
-                          flex: 3,
-                          child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                children: [
-                                  buildFieldPremiFlexas(),
-                                  const SizedBox(height: 10),
-                                  buildFieldPremiRsmdcc(),
-                                  const SizedBox(height: 10),
-                                  buildFieldPremiTsfwd(),
-                                  const SizedBox(height: 10),
-                                  buildFieldPremiEqvet(),
-                                  const SizedBox(height: 10),
-                                  buildFieldPremiOthers(),
-                                  const SizedBox(height: 10),
-                                  buildFieldPremiBI(),
-                                  const SizedBox(height: 10),
-                                  buildFieldPremiTotal(),
-                                ],
-                              )),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 25),
-                    FormError(
-                      errors: state.errors ?? [],
-                      key: null,
-                    ),
-                  ],
-                )),
+              key: _formKey,
+              child: Column(
+                children: [
+                  // ✅ TANPA tombol, hanya field hasil
+                  buildFieldPremiFlexas(),
+                  const SizedBox(height: 10),
+                  buildFieldPremiRsmdcc(),
+                  const SizedBox(height: 10),
+                  buildFieldPremiTsfwd(),
+                  const SizedBox(height: 10),
+                  buildFieldPremiEqvet(),
+                  const SizedBox(height: 10),
+                  buildFieldPremiOthers(),
+                  const SizedBox(height: 10),
+                  buildFieldPremiBI(),
+                  const SizedBox(height: 10),
+                  buildFieldPremiTotal(),
+
+                  const SizedBox(height: 16),
+                  FormError(errors: state.errors ?? [], key: null,),
+                ],
+              ),
+            ),
           ),
         );
-      },
-      listener: (context, state) {
-        if ((state.isLoaded) || (state.isGroupFieldPremiChanged)) {
-          if (state.record != null) {
-            fieldPremiFlexasController.text =
-                NumberFormat("#,###").format(state.record!.premiFlexas);
-            fieldPremiRsmdccController.text =
-                NumberFormat("#,###").format(state.record!.premiRsmdcc);
-            fieldPremiTsfwdController.text =
-                NumberFormat("#,###").format(state.record!.premiTsfwd);
-            fieldPremiEqvetController.text =
-                NumberFormat("#,###").format(state.record!.premiEqvet);
-            fieldPremiOthersController.text =
-                NumberFormat("#,###").format(state.record!.premiOthers);
-            fieldPremiBiController.text =
-                NumberFormat("#,###").format(state.record!.premiBi);
-            fieldPremiTotalController.text =
-                NumberFormat("#,###").format(state.record!.premiTotal);
-            currDesc = state.record!.currDesc ?? "IDR";
-          }
-        }
-      },
-      buildWhen: (previous, current) {
-        return (current.hasFailure || current.isGroupFieldPremiChanged);
       },
     );
   }

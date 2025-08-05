@@ -27,73 +27,48 @@ class SimulmvCrudFormPageFormPremiState
 
   @override
   Widget build(BuildContext context) {
-    simulmvCrudBloc = BlocProvider.of<SimulmvCrudBloc>(context);
+    final bloc = context.read<SimulmvCrudBloc>();
 
     return BlocConsumer<SimulmvCrudBloc, SimulmvCrudState>(
-      builder: (context, state) {
-        return SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: FloatingActionButton(
-                                onPressed: () {
-                                  simulmvCrudBloc.add(HitungPremiEvent());
-                                },
-                                child: Icon(
-                                  Icons.calculate,
-                                  size: 55,
-                                ),
-                              )),
-                        ),
-                        Flexible(
-                          flex: 3,
-                          child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                children: [
-                                  buildFieldPremiCasco(),
-                                  buildFieldPremiAdd(),
-                                  buildFieldPremiTotal(),
-                                ],
-                              )),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 25),
-                    FormError(
-                      errors: state.errors ?? [],
-                      key: null,
-                    ),
-                  ],
-                )),
-          ),
-        );
-      },
       listener: (context, state) {
-        if ((state.isLoaded) || (state.isCalculated)) {
-          if (state.record != null) {
-            fieldPremiAddController.text =
-                NumberFormat("#,###").format(state.record!.premiAdd);
-            fieldPremiCascoController.text =
-                NumberFormat("#,###").format(state.record!.premiCasco);
-            fieldPremiTotalController.text =
-                NumberFormat("#,###").format(state.record!.premiTotal);
-          }
+        if ((state.isLoaded || state.isCalculated) && state.record != null) {
+          final f = NumberFormat.decimalPattern('id');
+          fieldPremiAddController.text   = f.format(state.record!.premiAdd ?? 0);
+          fieldPremiCascoController.text = f.format(state.record!.premiCasco ?? 0);
+          fieldPremiTotalController.text = f.format(state.record!.premiTotal ?? 0);
         }
       },
-      buildWhen: (previous, current) {
-        return current.isCalculated;
+      buildWhen: (p, c) =>
+      p.isCalculated != c.isCalculated ||
+          p.isLoaded != c.isLoaded ||
+          p.errors != c.errors,
+      builder: (context, state) {
+        return Column(
+          children: [
+            // ✅ TANPA tombol
+            _buildReadOnlyField('Premi Casco', fieldPremiCascoController),
+            const SizedBox(height: 8),
+            _buildReadOnlyField('Premi Tambahan', fieldPremiAddController),
+            const SizedBox(height: 8),
+            _buildReadOnlyField('Premi Total', fieldPremiTotalController),
+            const SizedBox(height: 16),
+            FormError(errors: state.errors ?? [], key: null,),
+          ],
+        );
       },
+    );
+  }
+
+  Widget _buildReadOnlyField(String label, TextEditingController c) {
+    return TextFormField(
+      readOnly: true,
+      textAlign: TextAlign.right,
+      controller: c,
+      keyboardType: TextInputType.number,
+      decoration: InputDecoration(
+        labelText: label,
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+      ),
     );
   }
 

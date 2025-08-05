@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../blocs/authentication/authentication_bloc.dart';
 import '../../../blocs/home/home_bloc.dart';
 import '../../../pages/base/base_page.dart';
 import '../../dialog/popup/status_popup.dart';
@@ -28,13 +29,16 @@ class FooterSection extends StatelessWidget {
   // ─── Layout Properties ────────────────────────────────────
   bool get isMobile => constraints.maxWidth < 768;
   bool get isTablet => constraints.maxWidth >= 768 && constraints.maxWidth < 992;
+  double get desktopGapOuter =>
+      constraints.maxWidth >= 1200 ? 50.0 : 24.0; // Map ↔︎ Menu
+  double get desktopGapInner =>
+      constraints.maxWidth >= 1200 ? 46.0 : 20.0; // Signature ↔︎ Menu
 
   double get horizontalPadding => constraints.maxWidth > 1200
       ? 95
       : isTablet
       ? 36 // padding tablet (sedikit lebih lebar dari mobile)
       : 24;
-
 
   double get maxWidth => constraints.maxWidth > 1200
       ? 1200
@@ -44,7 +48,6 @@ class FooterSection extends StatelessWidget {
 
   // ─── Responsive Font Sizes ───────────────────────────────
   double get titleFontSize => 18.0;
-
   double get linkFontSize => 16.0;
 
   @override
@@ -116,79 +119,93 @@ class FooterSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildGoogleMapsButton(),
-        const SizedBox(height: 16.0),
+        // Company Info
         _buildCompanyInfo(),
         const SizedBox(height: 16.0),
+
+        // Social Media
         _buildSocialMediaSection(),
-        const SizedBox(height: 30.0),
+        const SizedBox(height: 20.0),
 
-        // Menu Sections Row dengan alignment yang tepat
-        IntrinsicHeight( // Membuat kedua kolom memiliki tinggi yang sama
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Unggulan Section
-              Expanded(
-                child: _buildSignatureSection(context),
-              ),
-              const SizedBox(width: 24.0),
+        // Map (full width)
+        _buildGoogleMapsButton(),
+        const SizedBox(height: 16.0),
 
-              // Menu Section
-              Expanded(
-                child: _buildMenuSection(),
-              ),
-            ],
-          ),
-        ),
+        // Unggulan (full width)
+        _buildSignatureSection(context),
+        const SizedBox(height: 12.0),
+
+        // Menu (full width)
+        _buildMenuSection(context),
       ],
     );
   }
+
 
   Widget _buildDesktopLayout(BuildContext context) {
-    return Row(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Left Column - Map & Company Info
-        Expanded(
-          flex: 2,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildGoogleMapsButton(),
-              const SizedBox(height: 24.0),
-              _buildCompanyInfo(),
-              const SizedBox(height: 16.0),
-              _buildSocialMediaSection(),
-            ],
-          ),
+        // Company Info and Social Media in a row
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Left Column - Company Info & Social Media
+            Expanded(
+              flex: 3,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildCompanyInfo(),
+                  const SizedBox(height: 16.0),
+                  _buildSocialMediaSection(),
+                ],
+              ),
+            ),
+            const SizedBox(width: 32.0),
+            // Right side spacer
+            Expanded(flex: 2, child: Container()),
+          ],
         ),
 
-        const SizedBox(width: 32.0),
+        const SizedBox(height: 24.0),
 
-        // Right Column - Menu Sections
-        Expanded(
-          flex: 2,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Unggulan Section
-              Expanded(
-                child: _buildSignatureSection(context),
-              ),
-              const SizedBox(width: 24.0),
+        // Map and Menu sections
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // MAP
+            Expanded(
+              flex: 2,
+              child: _buildGoogleMapsButton(),
+            ),
 
-              // Menu Section
-              Expanded(
-                child: _buildMenuSection(),
+            // GAP: Map → (Signature+Menu)
+            SizedBox(width: desktopGapOuter),
+
+            // (Signature + Menu)
+            Expanded(
+              flex: 3,
+              child: Wrap(
+                spacing: desktopGapInner,   // GAP: Signature ↔︎ Menu
+                runSpacing: 12,
+                children: [
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 260),
+                    child: _buildSignatureSection(context),
+                  ),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 260),
+                    child: _buildMenuSection(context),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ],
     );
   }
-
 
   Widget _buildLogoSection() {
     return Row(
@@ -268,7 +285,6 @@ class FooterSection extends StatelessWidget {
     }
   }
 
-
   Widget _buildCopyrightContent() {
     if (isMobile) {
       return Column(
@@ -309,7 +325,6 @@ class FooterSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-
             Flexible(
               child: Text(
                 'Claim is Simple.',
@@ -369,8 +384,8 @@ class FooterSection extends StatelessWidget {
             fontSize: linkFontSize,
             color: _linkColor,
             decoration: TextDecoration.underline,
-            decorationColor: _linkColor,     // ✅ garis bawah biru
-            decorationThickness: 1.5,         // opsional, biar lebih tegas
+            decorationColor: _linkColor,
+            decorationThickness: 1.5,
           ),
         ),
       ),
@@ -380,7 +395,7 @@ class FooterSection extends StatelessWidget {
   Widget _buildSignatureSection(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min, // Menggunakan space minimum yang dibutuhkan
+      mainAxisSize: MainAxisSize.min,
       children: [
         Text(
           'Unggulan',
@@ -398,20 +413,25 @@ class FooterSection extends StatelessWidget {
         _buildFooterLink('Lapor Klaim', () {
           StatusPopupHelper.show(context);
         }),
-        // Tambahan spacing untuk menyeimbangkan dengan Menu section (opsional)
-        if (!isMobile) ...[
-          const SizedBox(height: 16.0),
-          const SizedBox(height: 16.0),
-          const SizedBox(height: 16.0),
-        ],
       ],
     );
   }
 
-  Widget _buildMenuSection() {
+  Widget _buildMenuSection(BuildContext context) {
+    // true jika login_client, atau login_token dengan custType 'C'
+    final showClientMenus = context.select<AuthenticationBloc, bool>((bloc) {
+      final s = bloc.state;
+      if (s is AuthenticationAuthenticated) {
+        final from = s.authenticatedFrom ?? '';
+        final cust = s.user.custType ?? '';
+        return from == 'login_client' || (from == 'login_token' && cust == 'C');
+      }
+      return false;
+    });
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min, // Menggunakan space minimum yang dibutuhkan
+      mainAxisSize: MainAxisSize.min,
       children: [
         Text(
           'Menu',
@@ -423,33 +443,21 @@ class FooterSection extends StatelessWidget {
           ),
         ),
         SizedBox(height: isMobile ? 8.0 : 16.0),
-        _buildFooterLink('Aset', () {}),
-        _buildFooterLink('Polis', () {}),
-        _buildFooterLink('Klaim', () {}),
-        _buildFooterLink('Tagihan dan Pembayaran', () {}),
-        _buildFooterLink('Literasi', () {}),
+
+        // HANYA tampil saat client-context
+        if (showClientMenus) _buildFooterLink('Aset', () {}),
+        if (showClientMenus) _buildFooterLink('Polis', () {}),
+        if (showClientMenus) _buildFooterLink('Klaim', () {}),
+        if (showClientMenus) _buildFooterLink('Tagihan dan Pembayaran', () {}),
+
+        // Selalu tersedia
+        _buildFooterLink('Literasi', () {
+          context.read<HomeBloc>().add(PushPageEvent(PageType.about));
+        }),
       ],
     );
   }
 
-  // Widget _buildSupportSection() {
-  //   return Column(
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     children: [
-  //       Text(
-  //         'Support',
-  //         style: TextStyle(
-  //           fontFamily: _fontFamily,
-  //           fontSize: titleFontSize,
-  //           fontWeight: FontWeight.bold,
-  //           color: _primaryColor,
-  //         ),
-  //       ),
-  //       SizedBox(height: isMobile ? 8.0 : 16.0),
-  //       _buildFooterLink('Customer Services', () {}),
-  //     ],
-  //   );
-  // }
 
   Widget _buildFooterLink(String text, VoidCallback onPressed) {
     return Padding(
@@ -476,11 +484,11 @@ class FooterSection extends StatelessWidget {
         return InkWell(
           onTap: _launchMaps,
           child: Container(
-            width: constraints.maxWidth, // Menggunakan lebar penuh dari parent
+            width: constraints.maxWidth,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: AspectRatio(
-                aspectRatio: 16 / 9, // Rasio aspek yang wajar untuk gambar maps
+                aspectRatio: 16 / 9,
                 child: Image.asset(
                   'assets/images/google_maps_location.png',
                   fit: BoxFit.cover,
@@ -511,66 +519,6 @@ class FooterSection extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildBalancedMenuSections(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Unggulan Section dengan fixed height
-        Expanded(
-          child: Container(
-            constraints: const BoxConstraints(minHeight: 200), // Set minimum height
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Unggulan',
-                  style: TextStyle(
-                    fontFamily: _fontFamily,
-                    fontSize: titleFontSize,
-                    fontWeight: FontWeight.bold,
-                    color: _primaryColor,
-                  ),
-                ),
-                SizedBox(height: isMobile ? 8.0 : 16.0),
-                _buildFooterLink('Cari Asuransi', () {
-                  context.read<HomeBloc>().add(PushPageEvent(PageType.findinsurance));
-                }),
-                _buildFooterLink('Lapor Klaim', () {
-                  StatusPopupHelper.show(context);
-                }),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(width: 24.0),
-
-        // Menu Section
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Menu',
-                style: TextStyle(
-                  fontFamily: _fontFamily,
-                  fontSize: titleFontSize,
-                  fontWeight: FontWeight.bold,
-                  color: _primaryColor,
-                ),
-              ),
-              SizedBox(height: isMobile ? 8.0 : 16.0),
-              _buildFooterLink('Aset', () {}),
-              _buildFooterLink('Polis', () {}),
-              _buildFooterLink('Klaim', () {}),
-              _buildFooterLink('Tagihan dan Pembayaran', () {}),
-              _buildFooterLink('Literasi', () {}),
-            ],
-          ),
-        ),
-      ],
     );
   }
 }
@@ -667,7 +615,6 @@ class _AnimatedButtonState extends State<_AnimatedButton>
           builder: (context, child) {
             Widget content = widget.child;
 
-            // Jika ini adalah text button dan sedang hover, ubah warna teks
             if (widget.isTextButton && _isHovered) {
               content = DefaultTextStyle.merge(
                 style: const TextStyle(color: Colors.blue),

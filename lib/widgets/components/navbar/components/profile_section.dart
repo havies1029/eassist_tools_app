@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../../blocs/authentication/authentication_bloc.dart';
 import '../../../../blocs/profile/profile_download_foto_bloc.dart';
 import '../../../../blocs/gen_profile/mrekan1crud_bloc.dart';
@@ -26,32 +27,42 @@ class _ProfileSectionState extends State<ProfileSection> {
   @override
   void initState() {
     super.initState();
-
-    // Pastikan refresh dipanggil sekali setelah build pertama selesai
+    // Pastikan request load jalan setelah frame pertama
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _refreshRekanIfNeeded(context);
-      _loadFotoIfNeeded(context);
+      _ensureRekanLoaded(context);
+      _ensureFotoLoaded(context);
     });
   }
 
   @override
   Widget build(BuildContext context) {
 
-    final authState = context.select<AuthenticationBloc, AuthenticationState>((bloc) => bloc.state);
+    final authState = context.select<AuthenticationBloc, AuthenticationState>((b) => b.state);
     final isMobile = MediaQuery.of(context).size.width < 768;
 
     final rekanState = context.watch<MRekan1CrudBloc>().state;
-    final fotoState = context.watch<ProfileDownloadFotoBloc>().state;
+    final fotoState  = context.watch<ProfileDownloadFotoBloc>().state;
 
-    final isRekanLoaded = rekanState.isLoaded;
-    final isFotoLoaded = fotoState is ProfileDownloadFotoLoaded;
+    final rekanLoaded = rekanState.isLoaded;
+    final fotoLoaded  = fotoState is ProfileDownloadFotoLoaded;
+    final Uint8List? imageBytes = fotoLoaded ? (fotoState as ProfileDownloadFotoLoaded).imageBytes : null;
 
-    if (!isRekanLoaded || !isFotoLoaded) {
-      return const SizedBox(); // atau loader shimmer
+    // Display name
+    final isLoginUser = authState is AuthenticationAuthenticated &&
+        ((authState.authenticatedFrom ?? '') == 'login_user');
+
+    String displayName = (rekanState.record?.rekanNama ?? '').trim();
+    if (displayName.isEmpty) {
+      if (isLoginUser && (AppData.lastLoginEmail ?? '').trim().isNotEmpty) {
+        displayName = AppData.lastLoginEmail!.trim();
+      } else {
+        displayName = "(memuat profil...)";
+      }
     }
 
-    final displayName = rekanState.record?.rekanNama?.trim() ?? "(belum diupdate di profile)";
-    final imageBytes = (fotoState as ProfileDownloadFotoLoaded).imageBytes;
+    debugPrint('[PS] isLoaded=${rekanState.isLoaded} '
+        'nama="${(rekanState.record?.rekanNama ?? '').trim()}" '
+        'fotoLoaded=${fotoState is ProfileDownloadFotoLoaded}');
 
     return Container(
       key: widget.profileButtonKey,
@@ -72,13 +83,17 @@ class _ProfileSectionState extends State<ProfileSection> {
               _buildAvatar(imageBytes),
               const SizedBox(width: 12),
               if (!isMobile)
-                Text(
-                  displayName,
-                  style: const TextStyle(
-                    color: Color(0xFF2D5016),
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Satoshi-Regular',
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 150),
+                  child: Text(
+                    displayName,
+                    key: ValueKey(displayName),
+                    style: const TextStyle(
+                      color: Color(0xFF2D5016),
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Satoshi-Regular',
+                    ),
                   ),
                 ),
               if (!isMobile) const SizedBox(width: 8),
@@ -97,7 +112,28 @@ class _ProfileSectionState extends State<ProfileSection> {
       ),
     );
   }
-  Widget _buildAvatar(Uint8List imageBytes) {
+
+  // --- Helpers ---
+
+  void _ensureRekanLoaded(BuildContext context) {
+    final auth = context.read<AuthenticationBloc>().state;
+    if (auth is! AuthenticationAuthenticated) return; // hanya bila sudah login
+
+    final rekanState = context.read<MRekan1CrudBloc>().state;
+    if (!rekanState.isLoaded) {
+      context.read<MRekan1CrudBloc>().add(MRekan1CrudLihatEvent());
+    }
+  }
+
+  void _ensureFotoLoaded(BuildContext context) {
+    final fotoState = context.read<ProfileDownloadFotoBloc>().state;
+    if (fotoState is! ProfileDownloadFotoLoaded &&
+        fotoState is! ProfileDownloadFotoLoading) {
+      context.read<ProfileDownloadFotoBloc>().add(LoadSecureImage());
+    }
+  }
+
+  Widget _buildAvatar(Uint8List? imageBytes) {
     return Stack(
       children: [
         Container(
@@ -109,11 +145,13 @@ class _ProfileSectionState extends State<ProfileSection> {
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(20),
-            child: Image.memory(
+            child: imageBytes != null
+                ? Image.memory(
               imageBytes,
               fit: BoxFit.cover,
               errorBuilder: (c, e, st) => _defaultIcon(),
-            ),
+            )
+                : _defaultIcon(), // ← pakai default saat foto belum ready
           ),
         ),
         Positioned(
@@ -131,39 +169,6 @@ class _ProfileSectionState extends State<ProfileSection> {
         ),
       ],
     );
-  }
-
-
-
-  // void _refreshRekanIfNeeded(BuildContext context) {
-  //   final rekanState = context.read<MRekan1CrudBloc>().state;
-  //   final authState = context.read<AuthenticationBloc>().state;
-  //
-  //   final isClient = authState is AuthenticationAuthenticated &&
-  //       authState.user.custType == 'C';
-  //
-  //   if (isClient && !rekanState.isLoaded) {
-  //     debugPrint("🔁 Refreshing MRekan1CrudBloc (profile header)");
-  //     context.read<MRekan1CrudBloc>().add(MRekan1CrudLihatEvent());
-  //   }
-  // }
-
-  void _refreshRekanIfNeeded(BuildContext context) {
-    final rekanState = context.read<MRekan1CrudBloc>().state;
-    final authState = context.read<AuthenticationBloc>().state;
-
-    final isAuthenticated = authState is AuthenticationAuthenticated;
-
-    if (isAuthenticated && !rekanState.isLoaded) {
-      context.read<MRekan1CrudBloc>().add(MRekan1CrudLihatEvent());
-    }
-  }
-
-  void _loadFotoIfNeeded(BuildContext context) {
-    final fotoState = context.read<ProfileDownloadFotoBloc>().state;
-    if (fotoState is! ProfileDownloadFotoLoaded && fotoState is! ProfileDownloadFotoLoading) {
-      context.read<ProfileDownloadFotoBloc>().add(LoadSecureImage());
-    }
   }
 
   Widget _defaultIcon() => Container(

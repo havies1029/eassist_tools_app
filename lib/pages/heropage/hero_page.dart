@@ -70,6 +70,16 @@ class _HeroPageState extends State<HeroPage> {
     return SectionType.home;
   }
 
+  bool _useUserButtons(AuthenticationState state) {
+    if (state is AuthenticationAuthenticated) {
+      final from = state.authenticatedFrom;
+      final custType = state.user.custType;
+      if (from == "login_client") return true;
+      if (from == "login_token" && custType == "C") return true;
+    }
+    return false;
+  }
+
   Widget _buildFloatingButtons(AuthenticationState state, BoxConstraints constraints) {
     if (state is AuthenticationAuthenticated) {
       final from = state.authenticatedFrom;
@@ -99,7 +109,7 @@ class _HeroPageState extends State<HeroPage> {
     final sectionType = _getHeroSectionType(authState);
     final floatingButtonWidget = _buildFloatingButtons(authState, constraints);
     final isMobile = constraints.maxWidth < 768;
-
+    final isUserButtons = _useUserButtons(authState);
     return Stack(
       children: [
         // Background
@@ -128,7 +138,8 @@ class _HeroPageState extends State<HeroPage> {
                     HeroSection(constraints: constraints, sectionType: sectionType),
                     Positioned(
                       top: 0,
-                      bottom: -235,
+                      // ⬇️ Khusus FloatingButtonsUser pakai -200, selain itu -235
+                      bottom: isUserButtons ? -200 : -235,
                       left: 0,
                       right: 0,
                       child: floatingButtonWidget,

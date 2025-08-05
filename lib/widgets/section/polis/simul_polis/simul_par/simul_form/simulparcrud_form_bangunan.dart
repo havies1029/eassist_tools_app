@@ -28,7 +28,7 @@ class SimulparFormBangunanPageState
   var fieldCoverBulanController = TextEditingController();
   ComboRKonstruksiojkModel? fieldComboRKonstruksiojk;
   final comboRKonstruksiojkKey =
-      GlobalKey<DropdownSearchState<ComboRKonstruksiojkModel>>();
+  GlobalKey<DropdownSearchState<ComboRKonstruksiojkModel>>();
   ComboROkupasiModel? fieldComboROkupasi;
   final comboROkupasiKey = GlobalKey<DropdownSearchState<ComboROkupasiModel>>();
 
@@ -43,39 +43,22 @@ class SimulparFormBangunanPageState
   @override
   Widget build(BuildContext context) {
     simulparCrudBloc = BlocProvider.of<SimulparCrudBloc>(context);
+
     return BlocConsumer<SimulparCrudBloc, SimulparCrudState>(
       builder: (context, state) {
-        return SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Form(
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            // Tentukan apakah menggunakan layout 2 kolom atau 1 kolom
+            final bool useDoubleColumn = constraints.maxWidth > 600;
+            final double verticalSpacing = useDoubleColumn ? 16.0 : 12.0;
+
+            return SingleChildScrollView(
+              child: Form(
                 key: _formKey,
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: buildFieldCoverBulan()),
-                        ),
-                        Flexible(
-                          flex: 1,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    buildFieldOkupasi(),
-                    const SizedBox(height: 10),
-                    buildFieldKelasKonstruksi(),
-                  ],
-                )),
-          ),
+                child: _buildResponsiveLayout(useDoubleColumn, verticalSpacing),
+              ),
+            );
+          },
         );
       },
       listener: (context, state) {
@@ -92,6 +75,65 @@ class SimulparFormBangunanPageState
     );
   }
 
+
+  Widget _buildResponsiveLayout(bool useDoubleColumn, double spacing) {
+    if (useDoubleColumn) {
+      // Layout 2 kolom untuk desktop/tablet - sesuai gambar
+      return Column(
+        children: [
+          // Row 1: Lama Cover (kiri) & Konstruksi (kanan)
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 1,
+                child: Padding(
+                  padding: EdgeInsets.only(right: spacing / 2),
+                  child: buildFieldCoverBulan(),
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Padding(
+                  padding: EdgeInsets.only(left: spacing / 2),
+                  child: buildFieldKelasKonstruksi(),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: spacing),
+          // Row 2: Okupasi (full width, kiri saja)
+          Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: Padding(
+                  padding: EdgeInsets.only(right: spacing / 2),
+                  child: buildFieldOkupasi(),
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Container(), // Space kosong di kanan
+              ),
+            ],
+          ),
+        ],
+      );
+    } else {
+      // Layout 1 kolom untuk mobile
+      return Column(
+        children: [
+          buildFieldCoverBulan(),
+          SizedBox(height: spacing),
+          buildFieldKelasKonstruksi(),
+          SizedBox(height: spacing),
+          buildFieldOkupasi(),
+        ],
+      );
+    }
+  }
+
   void loadData() {
     if (widget.viewMode == "ubah") {
       simulparCrudBloc.add(SimulparCrudLihatEvent(recordId: widget.recordId));
@@ -105,15 +147,19 @@ class SimulparFormBangunanPageState
       keyboardType: TextInputType.number,
       inputFormatters: [ThousandsSeparatorInputFormatter()],
       controller: fieldCoverBulanController,
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
         labelText: "Lama Cover",
         floatingLabelBehavior: FloatingLabelBehavior.always,
-        suffixText: " bulan",
+        suffixText: "Bulan",
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),
       onChanged: (value) {
         simulparCrudBloc.add(FieldBulanChangedEvent(bulan: int.tryParse(value) ?? 0));
       },
-      textAlign: TextAlign.center,
+      textAlign: TextAlign.left,
     );
   }
 

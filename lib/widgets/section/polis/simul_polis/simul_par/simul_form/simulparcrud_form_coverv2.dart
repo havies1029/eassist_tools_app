@@ -25,8 +25,7 @@ class SimulparFormCoverV2Page extends StatefulWidget {
       SimulparFormCoverV2PageFormState();
 }
 
-class SimulparFormCoverV2PageFormState
-    extends State<SimulparFormCoverV2Page> {
+class SimulparFormCoverV2PageFormState extends State<SimulparFormCoverV2Page> {
   late SimulparCrudBloc simulparCrudBloc;
   final _formKey = GlobalKey<FormState>();
   final List<String> errors = [];
@@ -36,11 +35,11 @@ class SimulparFormCoverV2PageFormState
 
   ComboMKabZonaGempaModel? fieldComboMKabZonaGempa;
   final comboMKabZonaGempaKey =
-      GlobalKey<DropdownSearchState<ComboMKabZonaGempaModel>>();
+  GlobalKey<DropdownSearchState<ComboMKabZonaGempaModel>>();
 
   ComboMBiindemnityOjkModel? fieldComboMBiindemnityOjk;
   final comboMBiindemnityOjkKey =
-      GlobalKey<DropdownSearchState<ComboMBiindemnityOjkModel>>();
+  GlobalKey<DropdownSearchState<ComboMBiindemnityOjkModel>>();
 
   var fieldRateTsfwdController = TextEditingController();
   var fieldRateParController = TextEditingController();
@@ -50,204 +49,38 @@ class SimulparFormCoverV2PageFormState
   var fieldRateTotalController = TextEditingController();
   var fieldBiIndexRateController = TextEditingController();
 
+  // Controllers untuk field baru sesuai gambar
+  var fieldMataUangController = TextEditingController();
+  var fieldMesinController = TextEditingController();
+  var fieldBangunanController = TextEditingController();
+  var fieldStokYangDapatDisesuaikanController = TextEditingController();
+  var fieldStokController = TextEditingController();
+  var fieldLainLainController = TextEditingController();
+  var fieldTotalController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     simulparCrudBloc = BlocProvider.of<SimulparCrudBloc>(context);
+
     return BlocConsumer<SimulparCrudBloc, SimulparCrudState>(
       builder: (context, state) {
-        return SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Padding(
-                              padding: const EdgeInsets.all(1.0),
-                              child: SizedBox(
-                                child: InputDecorator(
-                                    decoration: InputDecoration(
-                                      labelText: 'FLEXAS',
-                                      border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                    ),
-                                    child: buildFieldRatePAR()),
-                              )),
-                        ),
-                        SizedBox(
-                          width: 5.0,
-                        ),
-                        Flexible(
-                          flex: 1,
-                          child: Padding(
-                            padding: const EdgeInsets.all(1.0),
-                            child: SizedBox(
-                              child: InputDecorator(
-                                  decoration: InputDecoration(
-                                    labelText: 'RSMDCC',
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    ),
-                                  ),
-                                  child: buildFieldRateRSMDCC()),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    SizedBox(
-                      child: InputDecorator(
-                        decoration: InputDecoration(
-                          labelText: 'TSFWD',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            buildFieldWilayah(),
-                            const SizedBox(height: 10),
-                            Row(
-                              children: [
-                                Flexible(
-                                  flex: 1,
-                                  child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: buildFieldRateTSFWD()),
-                                ),
-                                Flexible(
-                                  flex: 1,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    SizedBox(
-                      child: InputDecorator(
-                        decoration: InputDecoration(
-                          labelText: 'EQVET',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            buildFieldKabupaten(),
-                            const SizedBox(height: 10),                            
-                            Row(
-                              children: [
-                                Flexible(
-                                  flex: 1,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: buildFieldRateEQVET(),
-                                  ),
-                                ),
-                                Flexible(
-                                  flex: 1,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    SizedBox(
-                      child: InputDecorator(
-                        decoration: InputDecoration(
-                          labelText: 'BI',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            buildFieldBiIndemnity(),
-                            const SizedBox(height: 10),
-                            Row(
-                              children: [
-                                Flexible(
-                                  flex: 1,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: buildFieldBiIndexRate(),
-                                  ),
-                                ),
-                                Flexible(
-                                  flex: 1,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Padding(
-                              padding: const EdgeInsets.all(1.0),
-                              child: SizedBox(
-                                child: InputDecorator(
-                                    decoration: InputDecoration(
-                                      labelText: 'OTHERS',
-                                      border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                    ),
-                                    child: buildFieldRateOther()),
-                              )),
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Flexible(
-                          flex: 1,
-                          child: Padding(
-                            padding: const EdgeInsets.all(1.0),
-                            child: SizedBox(
-                              child: InputDecorator(
-                                  decoration: InputDecoration(
-                                    labelText: 'TOTAL',
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    ),
-                                  ),
-                                  child: buildFieldRateTotal()),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                )),
-          ),
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            // Tentukan apakah menggunakan layout 2 kolom atau 1 kolom
+            final bool useDoubleColumn = constraints.maxWidth > 600;
+            final double horizontalPadding = useDoubleColumn ? 16.0 : 8.0;
+            final double verticalSpacing = useDoubleColumn ? 16.0 : 12.0;
+
+            return SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.all(horizontalPadding),
+                child: Form(
+                  key: _formKey,
+                  child: _buildResponsiveLayout(useDoubleColumn, verticalSpacing),
+                ),
+              ),
+            );
+          },
         );
       },
       listener: (context, state) {
@@ -276,6 +109,224 @@ class SimulparFormCoverV2PageFormState
     );
   }
 
+  Widget _buildResponsiveLayout(bool useDoubleColumn, double spacing) {
+    if (useDoubleColumn) {
+      // Layout 2 kolom untuk desktop/tablet - sesuai gambar
+      return Column(
+        children: [
+          // Row 1: Mata Uang & Mesin
+          _buildFieldRow([
+            _buildMataUangField(),
+            _buildMesinField(),
+          ], spacing),
+          SizedBox(height: spacing),
+
+          // Row 2: Bangunan & Stok yang Dapat Disesuaikan
+          _buildFieldRow([
+            _buildBangunanField(),
+            _buildStokYangDapatDisesuaikanField(),
+          ], spacing),
+          SizedBox(height: spacing),
+
+          // Row 3: Stok & Lain-lain
+          _buildFieldRow([
+            _buildStokField(),
+            _buildLainLainField(),
+          ], spacing),
+          SizedBox(height: spacing),
+
+          // Row 4: Total (hanya di kiri)
+          _buildFieldRow([
+            _buildTotalField(),
+            Container(), // Space kosong di kanan
+          ], spacing),
+        ],
+      );
+    } else {
+      // Layout 1 kolom untuk mobile
+      return Column(
+        children: [
+          _buildMataUangField(),
+          SizedBox(height: spacing),
+          _buildMesinField(),
+          SizedBox(height: spacing),
+          _buildBangunanField(),
+          SizedBox(height: spacing),
+          _buildStokYangDapatDisesuaikanField(),
+          SizedBox(height: spacing),
+          _buildStokField(),
+          SizedBox(height: spacing),
+          _buildLainLainField(),
+          SizedBox(height: spacing),
+          _buildTotalField(),
+        ],
+      );
+    }
+  }
+
+  Widget _buildFieldRow(List<Widget> children, double spacing) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          flex: 1,
+          child: Padding(
+            padding: EdgeInsets.only(right: spacing / 2),
+            child: children[0],
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: Padding(
+            padding: EdgeInsets.only(left: spacing / 2),
+            child: children[1],
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Field builders sesuai dengan gambar
+  Widget _buildMataUangField() {
+    return DropdownButtonFormField<String>(
+      decoration: InputDecoration(
+        labelText: "Mata Uang",
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      ),
+      hint: const Text("-- Pilih Mata Uang --"),
+      items: const [
+        DropdownMenuItem(value: "IDR", child: Text("IDR")),
+        DropdownMenuItem(value: "USD", child: Text("USD")),
+        DropdownMenuItem(value: "EUR", child: Text("EUR")),
+      ],
+      onChanged: (value) {
+        // Handle dropdown change
+      },
+    );
+  }
+
+  Widget _buildMesinField() {
+    return TextFormField(
+      keyboardType: TextInputType.number,
+      inputFormatters: [ThousandsSeparatorInputFormatter()],
+      decoration: InputDecoration(
+        labelText: "Mesin",
+        prefixText: "IDR ",
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      ),
+      textAlign: TextAlign.right,
+      onChanged: (value) {
+        // Handle field change
+      },
+    );
+  }
+
+  Widget _buildBangunanField() {
+    return TextFormField(
+      keyboardType: TextInputType.number,
+      inputFormatters: [ThousandsSeparatorInputFormatter()],
+      decoration: InputDecoration(
+        labelText: "Bangunan",
+        prefixText: "IDR ",
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      ),
+      textAlign: TextAlign.right,
+      onChanged: (value) {
+        // Handle field change
+      },
+    );
+  }
+
+  Widget _buildStokYangDapatDisesuaikanField() {
+    return TextFormField(
+      keyboardType: TextInputType.number,
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly, DecimalTextInputFormatter(2)],
+      decoration: InputDecoration(
+        labelText: "Stok yang Dapat Disesuaikan",
+        suffixText: "%",
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      ),
+      textAlign: TextAlign.right,
+      onChanged: (value) {
+        // Handle field change
+      },
+    );
+  }
+
+  Widget _buildStokField() {
+    return TextFormField(
+      keyboardType: TextInputType.number,
+      inputFormatters: [ThousandsSeparatorInputFormatter()],
+      decoration: InputDecoration(
+        labelText: "Stok",
+        prefixText: "IDR ",
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      ),
+      textAlign: TextAlign.right,
+      onChanged: (value) {
+        // Handle field change
+      },
+    );
+  }
+
+  Widget _buildLainLainField() {
+    return TextFormField(
+      keyboardType: TextInputType.number,
+      inputFormatters: [ThousandsSeparatorInputFormatter()],
+      decoration: InputDecoration(
+        labelText: "Lain-lain",
+        prefixText: "IDR ",
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      ),
+      textAlign: TextAlign.right,
+      onChanged: (value) {
+        // Handle field change
+      },
+    );
+  }
+
+  Widget _buildTotalField() {
+    return TextFormField(
+      enabled: false,
+      keyboardType: TextInputType.number,
+      controller: fieldTotalController,
+      decoration: InputDecoration(
+        labelText: "Total",
+        prefixText: "IDR ",
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        filled: true,
+        fillColor: Colors.grey[100],
+      ),
+      textAlign: TextAlign.right,
+      style: const TextStyle(
+        fontWeight: FontWeight.bold,
+        color: Colors.black87,
+      ),
+    );
+  }
+
+  // Methods dari kode asli yang tetap dipertahankan untuk kompatibilitas
   Widget buildFieldRatePAR() {
     return TextFormField(
       enabled: false,
@@ -380,9 +431,7 @@ class SimulparFormCoverV2PageFormState
         floatingLabelBehavior: FloatingLabelBehavior.always,
         suffixText: " %",
       ),
-      onChanged: (value) {
-        
-      },
+      onChanged: (value) {},
       textAlign: TextAlign.right,
     );
   }
@@ -447,7 +496,6 @@ class SimulparFormCoverV2PageFormState
       onChangedCallback: (value) {
         simulparCrudBloc.add(
             ComboMBiindemnityOjkChangedEvent(comboMBiindemnityOjk: value));
-  
       },
       onSaveCallback: (value) {},
     );

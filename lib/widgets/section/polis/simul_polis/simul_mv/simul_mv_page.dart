@@ -30,9 +30,9 @@ class _SimulMvPageState extends State<SimulMvPage> {
         final responsive = ResponsiveHelper(constraints);
 
         return Container(
-          color: Colors.white, // ✅ tetap putih tanpa Scaffold
+          color: Colors.white,
           child: SingleChildScrollView(
-            physics: const NeverScrollableScrollPhysics(), // ✅ biar gak konflik dengan ScrollView utama
+            physics: const NeverScrollableScrollPhysics(),
             child: Center(
               child: Container(
                 width: responsive.maxWidth,
@@ -56,9 +56,41 @@ class _SimulMvPageState extends State<SimulMvPage> {
                       SimulmvFormOpsiPage(viewMode: "tambah", recordId: ""),
                       SizedBox(height: responsive.sectionSpacing),
 
-                      _buildSectionHeader('Premi', responsive),
-                      SimulmvFormPremiPage(viewMode: "tambah", recordId: ""),
+                      // 🔘 Tombol Hitung (trigger)
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: ElevatedButton.icon(
+                          icon: const Icon(Icons.calculate),
+                          label: const Text('Hitung Premi'),
+                          onPressed: () {
+                            context.read<SimulmvCrudBloc>().add(HitungPremiEvent());
+                          },
+                        ),
+                      ),
+
                       SizedBox(height: responsive.sectionSpacing),
+
+                      // 🔽 Tampilkan section "Premi" hanya setelah perhitungan selesai
+                      BlocBuilder<SimulmvCrudBloc, SimulmvCrudState>(
+                        buildWhen: (p, c) =>
+                        p.isCalculated != c.isCalculated ||
+                            p.isLoaded != c.isLoaded ||
+                            p.errors != c.errors,
+                        builder: (context, state) {
+                          final showPremi = state.isCalculated || state.isLoaded;
+                          if (!showPremi) return const SizedBox.shrink();
+
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildSectionHeader('Premi', responsive),
+                              // 👉 versi tanpa tombol di dalamnya (lihat Opsi refactor child di bawah)
+                              SimulmvFormPremiPage(viewMode: "tambah", recordId: ""),
+                              SizedBox(height: responsive.sectionSpacing),
+                            ],
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -170,31 +202,25 @@ class _SimulMvPageState extends State<SimulMvPage> {
   }
 
   Widget _buildSectionHeader(String title, ResponsiveHelper responsive) {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: responsive.horizontalPadding,
-        vertical: 8,
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 4,
-            height: responsive.sectionHeaderSize + 4,
-            margin: const EdgeInsets.only(right: 10),
-            decoration: BoxDecoration(
-              color: const Color(0xFF8BC34A),
-              borderRadius: BorderRadius.circular(2),
-            ),
+    return Row(
+      children: [
+        Container(
+          width: 4,
+          height: responsive.sectionHeaderSize + 4,
+          margin: const EdgeInsets.only(right: 10),
+          decoration: BoxDecoration(
+            color: const Color(0xFF8BC34A),
+            borderRadius: BorderRadius.circular(2),
           ),
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: responsive.sectionHeaderSize,
-              fontWeight: FontWeight.w600,
-            ),
+        ),
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: responsive.sectionHeaderSize,
+            fontWeight: FontWeight.w600,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
