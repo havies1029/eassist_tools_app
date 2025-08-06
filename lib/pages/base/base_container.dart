@@ -39,6 +39,7 @@ import '../gen_profile/test_profile_main.dart';
 import '../gen_review/reviewcari_main.dart';
 import '../gen_sppamv/sppamvcrud_main.dart';
 import '../gen_sppamv/sppamvlist_main.dart';
+import '../gen_sppapar/sppaparcrud_main.dart';
 import '../gen_status_aset/statusasetcari_main.dart';
 import '../hero_client_page/hero_user_main.dart';
 import '../heropage/hero_main.dart';
@@ -378,10 +379,12 @@ class PageContainer extends StatelessWidget {
         return const SimulPolisMvMain();
       case PageType.simulpar:
         return const SimulPolisParMain();
+        // return const SimulparCrudMainPage();
       case PageType.sppamv:
         return const SppaPolisMvMain();
       case PageType.sppapar:
         return const SppaPolisParMain();
+        // return const SppaparCrudMainPage(viewMode: 'tambah', recordId: '');
       case PageType.promo:
         // return const InsuranceProductWrapper(promo1List: [],);
         return const PolisMVPage();

@@ -1,11 +1,20 @@
 import 'package:eassist_tools_app/widgets/section/polis/simul_polis/simul_par/simul_form/simulparcrud_form_coverv2.dart';
 import 'package:eassist_tools_app/widgets/section/polis/simul_polis/simul_par/simul_form/simulparcrud_form_si.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:eassist_tools_app/blocs/simulpar/simulparcrud_bloc.dart';
 import 'package:eassist_tools_app/widgets/section/polis/simul_polis/simul_par/simul_form/simulparcrud_form_bangunan.dart';
 import 'package:eassist_tools_app/widgets/section/polis/simul_polis/simul_par/simul_form/simulparcrud_form_premi.dart';
+
+import '../../../../../blocs/home/home_bloc.dart';
+import '../../../../../blocs/local_prefs/simulasi_par_local_cubit.dart';
+import '../../../../../models/combobox/combomkabzonagempa_model.dart';
+import '../../../../../models/combobox/combomwilayah_model.dart';
+import '../../../../../models/combobox/comborkonstruksiojk_model.dart';
+import '../../../../../models/combobox/comborokupasi_model.dart';
+import '../../../../../pages/base/base_page.dart';
 
 
 class SimulParPage extends StatefulWidget {
@@ -24,6 +33,7 @@ class _SimulParPageState extends State<SimulParPage> {
     super.initState();
     context.read<SimulparCrudBloc>().add(SimulPARCrudInitValueEvent());
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +71,7 @@ class _SimulParPageState extends State<SimulParPage> {
                           const SimulparFormCoverV2Page(viewMode: 'tambah', recordId: ''),
                           SizedBox(height: responsive.sectionSpacing),
 
-                          // 🔘 Tombol Hitung (trigger kalkulasi)
+                          // 🔘 TOMBOL HITUNG
                           Align(
                             alignment: Alignment.centerLeft,
                             child: ElevatedButton.icon(
@@ -75,7 +85,7 @@ class _SimulParPageState extends State<SimulParPage> {
 
                           SizedBox(height: responsive.sectionSpacing),
 
-                          // 🔽 Tampilkan "Perhitungan Premi" hanya setelah kalkulasi/loaded
+                          // 🔽 TAMPILKAN PREMI & LANJUT BUTTON
                           BlocBuilder<SimulparCrudBloc, SimulparCrudState>(
                             buildWhen: (p, c) =>
                             p.isLoaded != c.isLoaded ||
@@ -85,12 +95,80 @@ class _SimulParPageState extends State<SimulParPage> {
                               final showPremi = s.isGroupFieldPremiChanged || s.isLoaded;
                               if (!showPremi) return const SizedBox.shrink();
 
+                              final record = s.record;
+                              if (record == null) return const SizedBox.shrink();
+
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   _buildSectionHeader('Perhitungan Premi', responsive),
                                   const SimulparFormPremiPage(viewMode: 'tambah', recordId: ''),
-                                  SizedBox(height: responsive.bottomPadding),
+                                  SizedBox(height: responsive.sectionSpacing),
+
+                                  // 🔘 TOMBOL LANJUT
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: ElevatedButton.icon(
+                                      icon: const Icon(Icons.arrow_forward),
+                                      label: const Text('Lanjut Isi SPPA'),
+                                      onPressed: () {
+                                        context.read<SimulasiParLocalCubit>().setFromSimulasi(
+                                          siBuilding: record.siBuilding ?? 0,
+                                          siContent: record.siContent ?? 0,
+                                          siMachinery: record.siMachinery ?? 0,
+                                          siStock: record.siStock ?? 0,
+                                          siOther: record.siOther ?? 0,
+                                          stockAdjustable: record.stockAdjustable ?? 0,
+                                          ratePar: record.ratePar ?? 0,
+                                          rateEqvet: record.rateEqvet ?? 0,
+                                          rateRsmdcc: record.rateRsmdcc ?? 0,
+                                          rateTsfwd: record.rateTsfwd ?? 0,
+                                          rateOther: record.rateOther ?? 0,
+                                          rateTotal: record.rateTotal ?? 0,
+                                          premiEqvet: record.premiEqvet ?? 0,
+                                          premiRsmdcc: record.premiRsmdcc ?? 0,
+                                          premiTsfwd: record.premiTsfwd ?? 0,
+                                          premiOther: record.premiOthers ?? 0,
+                                          premiTotal: record.premiTotal ?? 0,
+                                          wilayah: record.comboMWilayah ?? const ComboMWilayahModel(),
+                                          zonaGempa: record.comboMKabZonaGempa ?? const ComboMKabZonaGempaModel(),
+                                          konstruksi: record.comboRKonstruksiojk ?? const ComboRKonstruksiojkModel(),
+                                          okupasi: record.comboROkupasi ?? const ComboROkupasiModel(),
+                                        );
+                                        // context.read<SimulasiParLocalCubit>().setFromSimulasi(
+                                        //   siBuilding: (record.siBuilding ?? 0) * 1000000,
+                                        //   siContent: (record.siContent ?? 0) * 1000000,
+                                        //   siMachinery: (record.siMachinery ?? 0) * 1000000,
+                                        //   siStock: (record.siStock ?? 0) * 1000000,
+                                        //   siOther: (record.siOther ?? 0) * 1000000,
+                                        //   stockAdjustable: record.stockAdjustable ?? 0,
+                                        //
+                                        //   ratePar: record.ratePar ?? 0,
+                                        //   rateEqvet: record.rateEqvet ?? 0,
+                                        //   rateRsmdcc: record.rateRsmdcc ?? 0,
+                                        //   rateTsfwd: record.rateTsfwd ?? 0,
+                                        //   rateOther: record.rateOther ?? 0,
+                                        //   rateTotal: record.rateTotal ?? 0,
+                                        //
+                                        //   premiEqvet: record.premiEqvet ?? 0,
+                                        //   premiRsmdcc: record.premiRsmdcc ?? 0,
+                                        //   premiTsfwd: record.premiTsfwd ?? 0,
+                                        //   premiOther: record.premiOthers ?? 0,
+                                        //   premiTotal: record.premiTotal ?? 0,
+                                        //
+                                        //   wilayah: record.comboMWilayah ?? const ComboMWilayahModel(),
+                                        //   zonaGempa: record.comboMKabZonaGempa ?? const ComboMKabZonaGempaModel(),
+                                        //   konstruksi: record.comboRKonstruksiojk ?? const ComboRKonstruksiojkModel(),
+                                        //   okupasi: record.comboROkupasi ?? const ComboROkupasiModel(),
+                                        // );
+                                        SchedulerBinding.instance.addPostFrameCallback((_) {
+                                          context.read<HomeBloc>().add(PushPageEvent(PageType.sppapar));
+                                        });
+                                      },
+                                    ),
+                                  ),
+
+                                  SizedBox(height: responsive.sectionSpacing),
                                 ],
                               );
                             },
@@ -137,7 +215,7 @@ class _SimulParPageState extends State<SimulParPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Simulasi Polis Properti',
+                    'Beli Polis',
                     style: TextStyle(
                       fontSize: responsive.headerTitleSize,
                       fontWeight: FontWeight.bold,
@@ -147,7 +225,7 @@ class _SimulParPageState extends State<SimulParPage> {
                   ),
                   SizedBox(height: responsive.headerSubtitleSpacing),
                   Text(
-                    'Isi data bangunan, perlindungan, dan cek hasil preminya.',
+                    'Sebelum lanjut, pastikan data kamu sudah lengkap, ya!',
                     style: TextStyle(
                       fontSize: responsive.headerSubtitleSize,
                       color: Colors.white.withOpacity(0.9),

@@ -7,6 +7,7 @@ import 'package:mobile_chat_flutter/presentation/mobile_chat_initialization.dart
 
 import '../../blocs/authentication/authentication_bloc.dart';
 import '../../blocs/gen_profile/mrekan1crud_bloc.dart';
+import '../../blocs/local_prefs/auth_local_cubit.dart';
 import '../../common/app_data.dart';
 
 class FloatingChatWrapper extends StatefulWidget {
@@ -102,10 +103,14 @@ class _FloatingChatWrapperState extends State<FloatingChatWrapper> {
     if (authState is AuthenticationAuthenticated) {
       displayName = authState.user.nama?.trim() ?? displayName;
 
+      final authLocal = context.read<AuthLocalCubit>().state;
+      final googleName = authLocal.googleDisplayName?.trim();
+      final lastEmail = authLocal.lastLoginEmail?.trim();
+
       if (displayName.isEmpty || displayName == "Guest") {
-        displayName = AppData.googleDisplayName?.trim().isNotEmpty == true
-            ? AppData.googleDisplayName!.trim()
-            : AppData.lastLoginEmail?.trim() ?? displayName;
+        displayName = (googleName?.isNotEmpty == true)
+            ? googleName!
+            : lastEmail ?? displayName;
       }
     }
 

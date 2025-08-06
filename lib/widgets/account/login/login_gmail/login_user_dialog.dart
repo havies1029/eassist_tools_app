@@ -1,17 +1,19 @@
 import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
 import 'package:eassist_tools_app/blocs/login/emailverification_bloc.dart';
 import 'package:eassist_tools_app/models/login/emailverification_model.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../../../../blocs/local_prefs/auth_local_cubit.dart';
 import 'Base_Dialog.dart';
 // Pastikan AuthService.loginWithGmail menerima idToken
 import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:eassist_tools_app/widgets/google_signin_button_stub.dart'
 if (dart.library.js_interop) 'package:eassist_tools_app/widgets/google_signin_button_web.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
+import 'package:eassist_tools_app/widgets/account/login/login_gmail/popup_dialog_login.dart';
 const List<String> scopes = <String>[
   'email',
 ];
@@ -84,20 +86,21 @@ class LoginUserDialogState extends BaseDialogState<LoginUserDialog> {
 
     _googleSignIn.onCurrentUserChanged
         .listen((GoogleSignInAccount? account) async {
-      //
-      // debugPrint('User email: ${account?.email}');
-      // debugPrint('User display name: ${account?.displayName}');
-      AppData.googleDisplayName = account?.displayName;
-      if (! context.mounted) return;
-      // ignore: use_build_context_synchronously
-      context.read<EmailVerificationBloc>().add(
-        EmailVerificationTambahEvent(
-          record: EmailVerificationModel(email: account?.email ?? '', requestFrom: 'google'),
-        ),
-      );
+      if (account != null && context.mounted) {
+        final authLocalCubit = context.read<AuthLocalCubit>();
+        await authLocalCubit.setGoogleDisplayName(account.displayName);
+        await authLocalCubit.setLastLoginEmail(account.email);
 
+        context.read<EmailVerificationBloc>().add(
+          EmailVerificationTambahEvent(
+            record: EmailVerificationModel(
+              email: account.email,
+              requestFrom: 'google',
+            ),
+          ),
+        );
+      }
     });
-
     // _googleSignIn.signInSilently();
 
   }
@@ -586,6 +589,7 @@ class LoginUserDialogState extends BaseDialogState<LoginUserDialog> {
           maxLines: 1,
           scrollPadding: EdgeInsets.zero,
           textAlign: TextAlign.left,
+          cursorColor: const Color(0xFF91C050),
           textInputAction: TextInputAction.done,
           decoration: InputDecoration(
             hintText: 'Email',
@@ -874,10 +878,14 @@ class LoginUserDialogState extends BaseDialogState<LoginUserDialog> {
                   child: GestureDetector(
                     onTap: () {
                       Navigator.of(context).pop();
-                      context.read<AuthenticationBloc>().add(
-                        RequireLoginClient(
-                            requiredFrom: "login_user", errorMsg: ""),
-                      );
+                      // context.read<AuthenticationBloc>().add(
+                      //   RequireLoginClient(
+                      //       requiredFrom: "login_user", errorMsg: ""),
+                      // );
+                      SchedulerBinding.instance.addPostFrameCallback((_) {
+                        if (!context.mounted) return;
+                        CustomPopupsLoginUser.showLoginClientDialog(context);
+                      });
                     },
                     child: Text(
                       'Masuk Sebagai Klien',
@@ -916,7 +924,7 @@ class LoginUserDialogState extends BaseDialogState<LoginUserDialog> {
     }
 
     setState(() => _emailError = null); // Bersihkan error jika valid
-    AppData.lastLoginEmail = email;
+    context.read<AuthLocalCubit>().setLastLoginEmail(email);
     final record = EmailVerificationModel(
       email: email,
       requestFrom: 'email',
@@ -941,9 +949,11 @@ class LoginUserDialogState extends BaseDialogState<LoginUserDialog> {
       // debugPrint('[GMAIL] Google Sign-In result: ${user?.email}');
 
       if (user != null && context.mounted) {
-        // 🔒 Simpan email seperti login manual
-        AppData.lastLoginEmail = user.email;
-        AppData.googleDisplayName = user.displayName;
+        // 🔒 Simpan email & display name ke AuthLocalCubit
+        final authLocalCubit = context.read<AuthLocalCubit>();
+        authLocalCubit.setLastLoginEmail(user.email);
+        authLocalCubit.setGoogleDisplayName(user.displayName);
+
         // ⛳ Kirim ke EmailVerificationBloc
         context.read<EmailVerificationBloc>().add(
           EmailVerificationTambahEvent(
@@ -954,6 +964,7 @@ class LoginUserDialogState extends BaseDialogState<LoginUserDialog> {
           ),
         );
       }
+
     } catch (e) {
       debugPrint('[GMAIL] ERROR: $e');
       if (context.mounted) {

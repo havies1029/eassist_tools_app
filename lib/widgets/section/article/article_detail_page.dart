@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../blocs/gen_berita/berita2cari_bloc.dart';
 import '../../../blocs/gen_berita/berita3cari_bloc.dart';
 import '../../../blocs/home/home_bloc.dart';
+import '../../../blocs/local_prefs/article_selection_cubit.dart';
 import '../../../common/app_data.dart';
 import '../../../models/gen_berita/berita2cari_model.dart';
 import '../../../models/gen_berita/berita3cari_model.dart';
@@ -36,20 +37,18 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
   void initState() {
     super.initState();
 
-    final berita1Id = AppData.berita1Id;
+    final articleState = context.read<ArticleSelectionCubit>().state;
+    final berita1Id = articleState.berita1Id;
+
     if (berita1Id != null) {
       context.read<Berita2CariBloc>().add(RefreshBerita2CariEvent(berita1Id: berita1Id));
       context.read<Berita3CariBloc>().add(RefreshBerita3CariEvent(berita1Id: berita1Id));
 
-      // Langsung reset biar gak nyangkut
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        AppData.berita1Id = null;
-
-      });
-    } else {
+      // Reset state dan SharedPreferences
 
     }
   }
+
 
   @override
   void dispose() {
@@ -169,12 +168,13 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
   }
 
   Widget _buildArticleHeader(bool isMobile, bool isTablet) {
+    final judul = context.watch<ArticleSelectionCubit>().state.judulArtikel;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Article Title with responsive font size
         Text(
-          AppData.JudulArtikel ?? 'Judul tidak tersedia',
+          judul ?? 'Judul tidak tersedia',
           style: TextStyle(
             fontFamily: 'Satoshi-Regular',
             fontSize: isMobile ? 25 : (isTablet ? 32 : 40),
@@ -264,10 +264,9 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
   }
 
   Widget _buildArticleImage(bool isMobile, bool isTablet) {
-    final imageUrl = AppData.gambarArtikel;
+    final imageUrl = context.watch<ArticleSelectionCubit>().state.gambarArtikel;
     final double imageHeight = isMobile ? 200 : (isTablet ? 260 : 300);
     final borderRadius = BorderRadius.circular(5);
-
     return Row(
       children: [
         if (isMobile)
@@ -279,13 +278,13 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
                 color: Colors.white,
                 child: imageUrl != null && imageUrl.isNotEmpty
                     ? Image.network(imageUrl, fit: BoxFit.cover)
-                    : _buildImageFallback(isMobile, isTablet),
+                    : _buildImageFallback(isMobile, isTablet, imageUrl),
               ),
             ),
           )
         else
           Flexible(
-            flex: isTablet ? 3 : 1, // Tablet 60%, Desktop 50%
+            flex: isTablet ? 3 : 1,
             child: ClipRRect(
               borderRadius: borderRadius,
               child: Container(
@@ -293,7 +292,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
                 color: Colors.white,
                 child: imageUrl != null && imageUrl.isNotEmpty
                     ? Image.network(imageUrl, fit: BoxFit.contain)
-                    : _buildImageFallback(isMobile, isTablet),
+                    : _buildImageFallback(isMobile, isTablet, imageUrl),
               ),
             ),
           ),
@@ -303,7 +302,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
   }
 
 
-  Widget _buildImageFallback(bool isMobile, bool isTablet) {
+  Widget _buildImageFallback(bool isMobile, bool isTablet, String? imageUrl) {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -314,7 +313,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.all(Radius.circular(5)), // <— tambahkan ini
+        borderRadius: const BorderRadius.all(Radius.circular(5)),
       ),
       padding: const EdgeInsets.all(12),
       child: Row(
@@ -341,7 +340,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '🔗 ${AppData.gambarArtikel ?? "URL kosong"}',
+                  '🔗 ${imageUrl ?? "URL kosong"}',
                   style: TextStyle(
                     fontSize: isMobile ? 10 : 12,
                     color: Colors.grey,
@@ -354,6 +353,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> with TickerProvid
       ),
     );
   }
+
 
   Widget _buildContentSection(String title, List<String> paragraphs, bool isMobile, bool isTablet) {
     return Column(

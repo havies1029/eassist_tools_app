@@ -735,6 +735,7 @@ class _SearchBoxState extends State<_SearchBox> {
             child: TextField(
               controller: widget.controller,
               focusNode: _focusNode,
+              cursorColor: const Color(0xFF91C050),
               onChanged: widget.onChanged,
               decoration: InputDecoration(
                 hintText: widget.hintText,

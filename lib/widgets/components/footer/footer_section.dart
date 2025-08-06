@@ -146,29 +146,7 @@ class FooterSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Company Info and Social Media in a row
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Left Column - Company Info & Social Media
-            Expanded(
-              flex: 3,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildCompanyInfo(),
-                  const SizedBox(height: 16.0),
-                  _buildSocialMediaSection(),
-                ],
-              ),
-            ),
-            const SizedBox(width: 32.0),
-            // Right side spacer
-            Expanded(flex: 2, child: Container()),
-          ],
-        ),
 
-        const SizedBox(height: 24.0),
 
         // Map and Menu sections
         Row(
@@ -203,6 +181,31 @@ class FooterSection extends StatelessWidget {
             ),
           ],
         ),
+
+        const SizedBox(height: 24.0),
+        // Company Info and Social Media in a row
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Left Column - Company Info & Social Media
+            Expanded(
+              flex: 3,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildCompanyInfo(),
+                  const SizedBox(height: 16.0),
+                  _buildSocialMediaSection(),
+                ],
+              ),
+            ),
+            const SizedBox(width: 32.0),
+            // Right side spacer
+            Expanded(flex: 2, child: Container()),
+          ],
+        ),
+
+        const SizedBox(height: 24.0),
       ],
     );
   }

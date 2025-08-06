@@ -23,6 +23,8 @@ import 'package:string_validator/string_validator.dart';
 import 'package:eassist_tools_app/widgets/checkbox_widget.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
+import '../../../../../../blocs/local_prefs/simulasi_mv_local_cubit.dart';
+
 class SppamvFormPage extends StatefulWidget {
 	final String viewMode;
 	final String recordId;
@@ -76,10 +78,10 @@ class SppamvFormPageState extends State<SppamvFormPage> {
 	var fieldPeriodeAkhirController = TextEditingController(text: DateTime.now().toIso8601String());
 
 	// Boolean Controllers for Checkboxes
-	var fieldIsEqController = TextEditingController();
-	var fieldIsFloodController = TextEditingController();
-	var fieldIsSrccController = TextEditingController();
-	var fieldIsTerrorismController = TextEditingController();
+	bool _isTerrorism = false;
+	bool _isEq = false;
+	bool _isFlood = false;
+	bool _isSrcc = false;
 
 	// Combo Box Models and Keys
 	ComboMMvgrupOjkModel? fieldComboMMvgrupOjk;
@@ -103,9 +105,52 @@ class SppamvFormPageState extends State<SppamvFormPage> {
 	@override
 	void initState() {
 		super.initState();
+
+		Future.delayed(Duration.zero, () {
+			final simul = context.read<SimulasiMvLocalCubit>().state;
+
+			// Text
+			fieldThnBuatController.text = simul.thnBuat?.toString() ?? '';
+			fieldHargaController.text = simul.harga?.toString() ?? '';
+			fieldAwController.text = simul.aw?.toString() ?? '';
+			fieldPadController.text = simul.pad?.toString() ?? '';
+			fieldPapController.text = simul.pap?.toString() ?? '';
+			fieldPllController.text = simul.pll?.toString() ?? '';
+			fieldTplController.text = simul.tpl?.toString() ?? '';
+
+			// Checkbox values
+			_isEq = simul.isEq ?? false;
+			_isFlood = simul.isFlood ?? false;
+			_isSrcc = simul.isSrcc ?? false;
+			_isTerrorism = simul.isTerrorism ?? false;
+
+			// Combo model assignment
+			if (simul.mvgrupOjk != null) {
+				comboMMvgrupOjkKey.currentState?.changeSelectedItem(simul.mvgrupOjk!); // langsung String
+			}
+			if (simul.mvjnscover != null) {
+				comboMMvjnscoverKey.currentState?.changeSelectedItem(simul.mvjnscover!); // langsung String
+			}
+			if (simul.wilayah != null) {
+				comboMWilayahKey.currentState?.changeSelectedItem(simul.wilayah!); // langsung String
+			}
+		});
+
 		Future.delayed(const Duration(milliseconds: 500), () {
 			loadData();
 		});
+	}
+
+	@override
+	void dispose() {
+		fieldThnBuatController.dispose();
+		fieldHargaController.dispose();
+		fieldAwController.dispose();
+		fieldPadController.dispose();
+		fieldPapController.dispose();
+		fieldPllController.dispose();
+		fieldTplController.dispose();
+		super.dispose();
 	}
 
 	@override
@@ -285,10 +330,10 @@ class SppamvFormPageState extends State<SppamvFormPage> {
 						fieldSppaTglController.text = state.record!.sppaTgl.toIso8601String();
 						fieldPeriodeMulaiController.text = state.record!.periodeMulai.toIso8601String();
 						fieldPeriodeAkhirController.text = state.record!.periodeAkhir.toIso8601String();
-						fieldIsEqController.text = state.record!.isEq.toString();
-						fieldIsFloodController.text = state.record!.isFlood.toString();
-						fieldIsSrccController.text = state.record!.isSrcc.toString();
-						fieldIsTerrorismController.text = state.record!.isTerrorism.toString();
+						_isEq = state.record!.isEq;
+						_isFlood = state.record!.isFlood;
+						_isSrcc = state.record!.isSrcc;
+						_isTerrorism = state.record!.isTerrorism;
 					}
 					fieldComboMMvgrupOjk = state.comboMMvgrupOjk;
 					fieldComboMMvjnscover = state.comboMMvjnscover;
@@ -2314,10 +2359,10 @@ class SppamvFormPageState extends State<SppamvFormPage> {
 						color: Color(0xFF1C1C1C),
 					),
 				),
-				value: toBoolean(fieldIsEqController.text),
+				value: _isEq,
 				onChanged: (value) {
 					setState(() {
-						fieldIsEqController.text = value.toString();
+						_isEq = value ?? false;
 					});
 				},
 				activeColor: const Color(0xff91C050),
@@ -2327,7 +2372,6 @@ class SppamvFormPageState extends State<SppamvFormPage> {
 			),
 		);
 	}
-
 
 	Widget buildFieldIsFlood() {
 		return Container(
@@ -2346,10 +2390,10 @@ class SppamvFormPageState extends State<SppamvFormPage> {
 						color: Color(0xFF1C1C1C),
 					),
 				),
-				value: toBoolean(fieldIsFloodController.text),
+				value: _isFlood,
 				onChanged: (value) {
 					setState(() {
-						fieldIsFloodController.text = value.toString();
+						_isFlood = value ?? false;
 					});
 				},
 				activeColor: const Color(0xff91C050),
@@ -2377,10 +2421,10 @@ class SppamvFormPageState extends State<SppamvFormPage> {
 						color: Color(0xFF1C1C1C),
 					),
 				),
-				value: toBoolean(fieldIsSrccController.text),
+				value: _isSrcc,
 				onChanged: (value) {
 					setState(() {
-						fieldIsSrccController.text = value.toString();
+						_isSrcc = value ?? false;
 					});
 				},
 				activeColor: const Color(0xff91C050),
@@ -2408,10 +2452,10 @@ class SppamvFormPageState extends State<SppamvFormPage> {
 						color: Color(0xFF1C1C1C),
 					),
 				),
-				value: toBoolean(fieldIsTerrorismController.text),
+				value: _isTerrorism,
 				onChanged: (value) {
 					setState(() {
-						fieldIsTerrorismController.text = value.toString();
+						_isTerrorism = value ?? false;
 					});
 				},
 				activeColor: const Color(0xff91C050),
@@ -2421,6 +2465,7 @@ class SppamvFormPageState extends State<SppamvFormPage> {
 			),
 		);
 	}
+
 
 	void onSaveForm() {
 		if (_formKey.currentState!.validate()) {
@@ -2432,10 +2477,10 @@ class SppamvFormPageState extends State<SppamvFormPage> {
 				insuredAlamat1: fieldInsuredAlamat1Controller.text,
 				insuredAlamat2: fieldInsuredAlamat2Controller.text,
 				insuredNama: fieldInsuredNamaController.text,
-				isEq: toBoolean(fieldIsEqController.text),
-				isFlood: toBoolean(fieldIsFloodController.text),
-				isSrcc: toBoolean(fieldIsSrccController.text),
-				isTerrorism: toBoolean(fieldIsTerrorismController.text),
+				isEq: _isEq,
+				isFlood: _isFlood,
+				isSrcc: _isSrcc,
+				isTerrorism: _isTerrorism,
 				materai: double.parse(fieldMateraiController.text.replaceAll(',', '')),
 				mesinNo: fieldMesinNoController.text,
 				mmvgrupojkId: fieldComboMMvgrupOjk?.mmvgrupojkId,

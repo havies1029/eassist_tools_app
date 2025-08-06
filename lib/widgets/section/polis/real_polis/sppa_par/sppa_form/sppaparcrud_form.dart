@@ -25,73 +25,178 @@ import 'package:eassist_tools_app/common/thousand_separator_input_formatter.dart
 import 'package:date_field/date_field.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
-import '../../repositories/combobox/comborkonstruksiojk_repository.dart';
-import '../../repositories/combobox/comborokupasi_repository.dart';
+import '../../../../../../blocs/local_prefs/simulasi_par_local_cubit.dart';
+import '../../../../../../repositories/combobox/comborkonstruksiojk_repository.dart';
+import '../../../../../../repositories/combobox/comborokupasi_repository.dart';
 
-
-class SppaparCrudFormPage extends StatefulWidget {
+class SppaparFormPage extends StatefulWidget {
 	final String viewMode;
 	final String recordId;
 
-	const SppaparCrudFormPage({super.key, required this.viewMode, required this.recordId});
+	const SppaparFormPage({
+		super.key,
+		required this.viewMode,
+		required this.recordId
+	});
 
 	@override
-	SppaparCrudFormPageFormState createState() => SppaparCrudFormPageFormState();
+	SppaparFormPageState createState() => SppaparFormPageState();
 }
 
-class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
+class SppaparFormPageState extends State<SppaparFormPage> {
 	late SppaparCrudBloc sppaparCrudBloc;
 	final _formKey = GlobalKey<FormState>();
 	final List<String> errors = [];
-	var fieldBuildingDescController = TextEditingController();
-	var fieldContentDescController = TextEditingController();
+
+	// Text Controllers - Basic Info
+	var fieldInsuredNamaController = TextEditingController();
 	var fieldInsuredAlamat1Controller = TextEditingController();
 	var fieldInsuredAlamat2Controller = TextEditingController();
-	var fieldInsuredNamaController = TextEditingController();
-	ComboMKabZonaGempaModel? fieldComboMKabZonaGempa;
-	final comboMKabZonaGempaKey = GlobalKey<DropdownSearchState<ComboMKabZonaGempaModel>>();
 	var fieldLokasi1Controller = TextEditingController();
 	var fieldLokasi2Controller = TextEditingController();
-	var fieldMachineryDescController = TextEditingController();
-	ComboMWilayahModel? fieldComboMWilayah;
-	final comboMWilayahKey = GlobalKey<DropdownSearchState<ComboMWilayahModel>>();
-	var fieldOtherDescController = TextEditingController();
-	var fieldPeriodeAkhirController = TextEditingController(text: DateTime.now().toIso8601String());
+
+	// Date Controllers
+	var fieldSppaTglController = TextEditingController(text: DateTime.now().toIso8601String());
 	var fieldPeriodeMulaiController = TextEditingController(text: DateTime.now().toIso8601String());
-	var fieldPremiEqvetController = TextEditingController();
-	var fieldPremiOtherController = TextEditingController();
-	var fieldPremiParController = TextEditingController();
-	var fieldPremiRsmdccController = TextEditingController();
-	var fieldPremiTotalController = TextEditingController();
-	var fieldPremiTsfwdController = TextEditingController();
-	var fieldRateEqvetController = TextEditingController();
-	var fieldRateOtherController = TextEditingController();
-	var fieldRateParController = TextEditingController();
-	var fieldRateRsmdccController = TextEditingController();
-	var fieldRateTotalController = TextEditingController();
-	var fieldRateTsfwdController = TextEditingController();
-	ComboRKodeposModel? fieldComboRKodepos;
-	final comboRKodeposKey = GlobalKey<DropdownSearchState<ComboRKodeposModel>>();
-	ComboRKonstruksiojkModel? fieldComboRKonstruksiojk;
-	final comboRKonstruksiojkKey = GlobalKey<DropdownSearchState<ComboRKonstruksiojkModel>>();
-	ComboROkupasiModel? fieldComboROkupasi;
-	final comboROkupasiKey = GlobalKey<DropdownSearchState<ComboROkupasiModel>>();
+	var fieldPeriodeAkhirController = TextEditingController(text: DateTime.now().toIso8601String());
+
+	// Coverage Controllers
+	var fieldBuildingDescController = TextEditingController();
+	var fieldContentDescController = TextEditingController();
+	var fieldMachineryDescController = TextEditingController();
+	var fieldStockDescController = TextEditingController();
+	var fieldOtherDescController = TextEditingController();
+
+	// Sum Insured Controllers
 	var fieldSiBuildingController = TextEditingController();
 	var fieldSiContentController = TextEditingController();
 	var fieldSiMachineryController = TextEditingController();
-	var fieldSiOtherController = TextEditingController();
 	var fieldSiStockController = TextEditingController();
-	var fieldSppaTglController = TextEditingController(text: DateTime.now().toIso8601String());
-	var fieldStockAdjustableController = TextEditingController();
-	var fieldStockDescController = TextEditingController();
+	var fieldSiOtherController = TextEditingController();
 	var fieldTsiController = TextEditingController();
+	var fieldStockAdjustableController = TextEditingController();
+
+	// Rate Controllers
+	var fieldRateParController = TextEditingController();
+	var fieldRateEqvetController = TextEditingController();
+	var fieldRateRsmdccController = TextEditingController();
+	var fieldRateTsfwdController = TextEditingController();
+	var fieldRateOtherController = TextEditingController();
+	var fieldRateTotalController = TextEditingController();
+
+	// Premium Controllers
+	var fieldPremiParController = TextEditingController();
+	var fieldPremiEqvetController = TextEditingController();
+	var fieldPremiRsmdccController = TextEditingController();
+	var fieldPremiTsfwdController = TextEditingController();
+	var fieldPremiOtherController = TextEditingController();
+	var fieldPremiTotalController = TextEditingController();
+
+	// Combo Fields
+	ComboMWilayahModel? fieldComboMWilayah;
+	final comboMWilayahKey = GlobalKey<DropdownSearchState<ComboMWilayahModel>>();
+
+	ComboRKodeposModel? fieldComboRKodepos;
+	final comboRKodeposKey = GlobalKey<DropdownSearchState<ComboRKodeposModel>>();
+
+	ComboMKabZonaGempaModel? fieldComboMKabZonaGempa;
+	final comboMKabZonaGempaKey = GlobalKey<DropdownSearchState<ComboMKabZonaGempaModel>>();
+
+	ComboRKonstruksiojkModel? fieldComboRKonstruksiojk;
+	final comboRKonstruksiojkKey = GlobalKey<DropdownSearchState<ComboRKonstruksiojkModel>>();
+
+	ComboROkupasiModel? fieldComboROkupasi;
+	final comboROkupasiKey = GlobalKey<DropdownSearchState<ComboROkupasiModel>>();
 
 	@override
 	void initState() {
 		super.initState();
+
+		// 🔥 Ambil isi dari SimulasiParLocalCubit dan set controller + dropdown
+		Future.delayed(Duration.zero, () {
+			final simul = context.read<SimulasiParLocalCubit>().state;
+
+			// === Text Field (SI) ===
+			fieldSiBuildingController.text = simul.siBuilding?.toString() ?? '';
+			fieldSiContentController.text = simul.siContent?.toString() ?? '';
+			fieldSiMachineryController.text = simul.siMachinery?.toString() ?? '';
+			fieldSiStockController.text = simul.siStock?.toString() ?? '';
+			fieldSiOtherController.text = simul.siOther?.toString() ?? '';
+			fieldStockAdjustableController.text = simul.stockAdjustable?.toString() ?? '';
+
+			// === Rate Field ===
+			fieldRateParController.text = simul.ratePar?.toString() ?? '';
+			fieldRateEqvetController.text = simul.rateEqvet?.toString() ?? '';
+			fieldRateRsmdccController.text = simul.rateRsmdcc?.toString() ?? '';
+			fieldRateTsfwdController.text = simul.rateTsfwd?.toString() ?? '';
+			fieldRateOtherController.text = simul.rateOther?.toString() ?? '';
+			fieldRateTotalController.text = simul.rateTotal?.toString() ?? '';
+
+			// === Premi Field ===
+			fieldPremiEqvetController.text = simul.premiEqvet?.toString() ?? '';
+			fieldPremiRsmdccController.text = simul.premiRsmdcc?.toString() ?? '';
+			fieldPremiTsfwdController.text = simul.premiTsfwd?.toString() ?? '';
+			fieldPremiOtherController.text = simul.premiOther?.toString() ?? '';
+			fieldPremiTotalController.text = simul.premiTotal?.toString() ?? '';
+
+			// === Combo Fields ===
+			if (simul.wilayah != null) {
+				comboMWilayahKey.currentState?.changeSelectedItem(simul.wilayah!);
+			}
+			if (simul.zonaGempa != null) {
+				comboMKabZonaGempaKey.currentState?.changeSelectedItem(simul.zonaGempa!);
+			}
+			if (simul.konstruksi != null) {
+				comboRKonstruksiojkKey.currentState?.changeSelectedItem(simul.konstruksi!);
+			}
+			if (simul.okupasi != null) {
+				comboROkupasiKey.currentState?.changeSelectedItem(simul.okupasi!);
+			}
+		});
+
+		// 🌀 Load Data SPPA PAR seperti biasa
 		Future.delayed(const Duration(milliseconds: 500), () {
 			loadData();
 		});
+	}
+
+
+	@override
+	void dispose() {
+		// Dispose all text controllers
+		fieldInsuredNamaController.dispose();
+		fieldInsuredAlamat1Controller.dispose();
+		fieldInsuredAlamat2Controller.dispose();
+		fieldLokasi1Controller.dispose();
+		fieldLokasi2Controller.dispose();
+		fieldSppaTglController.dispose();
+		fieldPeriodeMulaiController.dispose();
+		fieldPeriodeAkhirController.dispose();
+		fieldBuildingDescController.dispose();
+		fieldContentDescController.dispose();
+		fieldMachineryDescController.dispose();
+		fieldStockDescController.dispose();
+		fieldOtherDescController.dispose();
+		fieldSiBuildingController.dispose();
+		fieldSiContentController.dispose();
+		fieldSiMachineryController.dispose();
+		fieldSiStockController.dispose();
+		fieldSiOtherController.dispose();
+		fieldTsiController.dispose();
+		fieldStockAdjustableController.dispose();
+		fieldRateParController.dispose();
+		fieldRateEqvetController.dispose();
+		fieldRateRsmdccController.dispose();
+		fieldRateTsfwdController.dispose();
+		fieldRateOtherController.dispose();
+		fieldRateTotalController.dispose();
+		fieldPremiParController.dispose();
+		fieldPremiEqvetController.dispose();
+		fieldPremiRsmdccController.dispose();
+		fieldPremiTsfwdController.dispose();
+		fieldPremiOtherController.dispose();
+		fieldPremiTotalController.dispose();
+		super.dispose();
 	}
 
 	@override
@@ -100,163 +205,162 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 		return BlocConsumer<SppaparCrudBloc, SppaparCrudState>(
 			builder: (context, state) {
 				return Dialog(
-					shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-					child: SingleChildScrollView(
-						child: Padding(
-							padding: const EdgeInsets.all(8.0),
-							child: Form(
-								key: _formKey,
-								child: Column(
-									children: [
-										const SizedBox(height: 10),
-										Text(
-											"${widget.viewMode == "tambah" ? "Tambah" : "Ubah"} SPPA PAR",
-											style: const TextStyle(
-												fontSize: 20.0,
-												color: Color(0xffff6101),
-												fontWeight: FontWeight.w600,
-												fontFamily: 'Hind',
-												fontStyle: FontStyle.italic,
-												decoration: TextDecoration.underline,
-											),
-										),
-										const SizedBox(height: 25),
-										buildFieldBuildingDesc(),
-										buildFieldContentDesc(),
-										buildFieldInsuredAlamat1(),
-										buildFieldInsuredAlamat2(),
-										buildFieldInsuredNama(),
-										buildFieldKab2zonagempaId(),
-										buildFieldLokasi1(),
-										buildFieldLokasi2(),
-										buildFieldMachineryDesc(),
-										buildFieldMwilayahId(),
-										buildFieldOtherDesc(),
-										buildFieldPeriodeAkhir(),
-										buildFieldPeriodeMulai(),
-										buildFieldPremiEqvet(),
-										buildFieldPremiOther(),
-										buildFieldPremiPar(),
-										buildFieldPremiRsmdcc(),
-										buildFieldPremiTotal(),
-										buildFieldPremiTsfwd(),
-										buildFieldRateEqvet(),
-										buildFieldRateOther(),
-										buildFieldRatePar(),
-										buildFieldRateRsmdcc(),
-										buildFieldRateTotal(),
-										buildFieldRateTsfwd(),
-										buildFieldRkodeposId(),
-										buildFieldRkonstruksiojkId(),
-										buildFieldRokupasiId(),
-										buildFieldSiBuilding(),
-										buildFieldSiContent(),
-										buildFieldSiMachinery(),
-										buildFieldSiOther(),
-										buildFieldSiStock(),
-										buildFieldSppaTgl(),
-										buildFieldStockAdjustable(),
-										buildFieldStockDesc(),
-										buildFieldTsi(),
-										const SizedBox(height: 25),
-										FormError(
-											errors: errors,
-											key: null,
-										),
-										Row(
-											mainAxisAlignment: MainAxisAlignment.spaceAround,
+						shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+						child: SingleChildScrollView(
+							child: Padding(
+								padding: const EdgeInsets.all(8.0),
+								child: Form(
+										key: _formKey,
+										child: Column(
 											children: [
-												SizedBox(
-													width: MediaQuery.of(context).size.width * 0.3,
-													height: 60,
-													child: Padding(
-														padding: const EdgeInsets.only(top: 30.0),
-														child: ElevatedButton(
-															onPressed: () {
-																_dismissDialog();
-															},
-															child: const Text(
-																'Close',
-																style: TextStyle(fontSize: 13.0),
-															),
-														),
+												const SizedBox(height: 10),
+												Text(
+													"${widget.viewMode == "tambah" ? "Tambah" : "Ubah"} SPPA PAR",
+													style: const TextStyle(
+														fontSize: 20.0,
+														color: Color(0xffff6101),
+														fontWeight: FontWeight.w600,
+														fontFamily: 'Hind',
+														fontStyle: FontStyle.italic,
+														decoration: TextDecoration.underline,
 													),
 												),
-												SizedBox(
-													width: MediaQuery.of(context).size.width * 0.3,
-													height: 60,
-													child: Padding(
-														padding: const EdgeInsets.only(top: 30.0),
-														child: ElevatedButton(
-															onPressed: () {
-																onSaveForm();
-															},
-															child: const Text(
-																'Save',
-																style: TextStyle(fontSize: 13.0),
+												const SizedBox(height: 25),
+												buildFieldBuildingDesc(),
+												buildFieldContentDesc(),
+												buildFieldInsuredAlamat1(),
+												buildFieldInsuredAlamat2(),
+												buildFieldInsuredNama(),
+												buildFieldKab2zonagempaId(),
+												buildFieldLokasi1(),
+												buildFieldLokasi2(),
+												buildFieldMachineryDesc(),
+												buildFieldMwilayahId(),
+												buildFieldOtherDesc(),
+												buildFieldPeriodeAkhir(),
+												buildFieldPeriodeMulai(),
+												buildFieldPremiEqvet(),
+												buildFieldPremiOther(),
+												buildFieldPremiPar(),
+												buildFieldPremiRsmdcc(),
+												buildFieldPremiTotal(),
+												buildFieldPremiTsfwd(),
+												buildFieldRateEqvet(),
+												buildFieldRateOther(),
+												buildFieldRatePar(),
+												buildFieldRateRsmdcc(),
+												buildFieldRateTotal(),
+												buildFieldRateTsfwd(),
+												buildFieldRkodeposId(),
+												buildFieldRkonstruksiojkId(),
+												buildFieldRokupasiId(),
+												buildFieldSiBuilding(),
+												buildFieldSiContent(),
+												buildFieldSiMachinery(),
+												buildFieldSiOther(),
+												buildFieldSiStock(),
+												buildFieldSppaTgl(),
+												buildFieldStockAdjustable(),
+												buildFieldStockDesc(),
+												buildFieldTsi(),
+												const SizedBox(height: 25),
+												FormError(
+													errors: errors,
+													key: null,
+												),
+												Row(
+													mainAxisAlignment: MainAxisAlignment.spaceAround,
+													children: [
+														SizedBox(
+															width: MediaQuery.of(context).size.width * 0.3,
+															height: 60,
+															child: Padding(
+																padding: const EdgeInsets.only(top: 30.0),
+																child: ElevatedButton(
+																	onPressed: () {
+																		_dismissDialog();
+																	},
+																	child: const Text(
+																		'Close',
+																		style: TextStyle(fontSize: 13.0),
+																	),
+																),
 															),
 														),
-													),
+														SizedBox(
+															width: MediaQuery.of(context).size.width * 0.3,
+															height: 60,
+															child: Padding(
+																padding: const EdgeInsets.only(top: 30.0),
+																child: ElevatedButton(
+																	onPressed: () {
+																		onSaveForm();
+																	},
+																	child: const Text(
+																		'Save',
+																		style: TextStyle(fontSize: 13.0),
+																	),
+																),
+															),
+														),
+													],
 												),
 											],
-										),
-									],
-								)),
-						),
-					));
-				},
-				listener: (context, state) {
-					if (state.isLoaded) {
-						if (state.record != null){
-							fieldBuildingDescController.text = state.record!.buildingDesc;
-							fieldContentDescController.text = state.record!.contentDesc;
-							fieldInsuredAlamat1Controller.text = state.record!.insuredAlamat1;
-							fieldInsuredAlamat2Controller.text = state.record!.insuredAlamat2;
-							fieldInsuredNamaController.text = state.record!.insuredNama;
-							fieldLokasi1Controller.text = state.record!.lokasi1;
-							fieldLokasi2Controller.text = state.record!.lokasi2;
-							fieldMachineryDescController.text = state.record!.machineryDesc;
-							fieldOtherDescController.text = state.record!.otherDesc;
-							fieldPeriodeAkhirController.text = state.record!.periodeAkhir.toIso8601String();
-							fieldPeriodeMulaiController.text = state.record!.periodeMulai.toIso8601String();
-							fieldPremiEqvetController.text = NumberFormat("#,###").format(state.record!.premiEqvet);
-							fieldPremiOtherController.text = NumberFormat("#,###").format(state.record!.premiOther);
-							fieldPremiParController.text = NumberFormat("#,###").format(state.record!.premiPar);
-							fieldPremiRsmdccController.text = NumberFormat("#,###").format(state.record!.premiRsmdcc);
-							fieldPremiTotalController.text = NumberFormat("#,###").format(state.record!.premiTotal);
-							fieldPremiTsfwdController.text = NumberFormat("#,###").format(state.record!.premiTsfwd);
-							fieldRateEqvetController.text = NumberFormat("#,###").format(state.record!.rateEqvet);
-							fieldRateOtherController.text = NumberFormat("#,###").format(state.record!.rateOther);
-							fieldRateParController.text = NumberFormat("#,###").format(state.record!.ratePar);
-							fieldRateRsmdccController.text = NumberFormat("#,###").format(state.record!.rateRsmdcc);
-							fieldRateTotalController.text = NumberFormat("#,###").format(state.record!.rateTotal);
-							fieldRateTsfwdController.text = NumberFormat("#,###").format(state.record!.rateTsfwd);
-							fieldSiBuildingController.text = NumberFormat("#,###").format(state.record!.siBuilding);
-							fieldSiContentController.text = NumberFormat("#,###").format(state.record!.siContent);
-							fieldSiMachineryController.text = NumberFormat("#,###").format(state.record!.siMachinery);
-							fieldSiOtherController.text = NumberFormat("#,###").format(state.record!.siOther);
-							fieldSiStockController.text = NumberFormat("#,###").format(state.record!.siStock);
-							fieldSppaTglController.text = state.record!.sppaTgl.toIso8601String();
-							fieldStockAdjustableController.text = NumberFormat("#,###").format(state.record!.stockAdjustable);
-							fieldStockDescController.text = state.record!.stockDesc;
-							fieldTsiController.text = NumberFormat("#,###").format(state.record!.tsi);
-						}
-						fieldComboMKabZonaGempa = state.comboMKabZonaGempa;
-						fieldComboMWilayah = state.comboMWilayah;
-						fieldComboRKodepos = state.comboRKodepos;
-						fieldComboRKonstruksiojk = state.comboRKonstruksiojk;
-						fieldComboROkupasi = state.comboROkupasi;
+										)),
+							),
+						));
+			},
+			listener: (context, state) {
+				if (state.isLoaded) {
+					if (state.record != null){
+						fieldBuildingDescController.text = state.record!.buildingDesc;
+						fieldContentDescController.text = state.record!.contentDesc;
+						fieldInsuredAlamat1Controller.text = state.record!.insuredAlamat1;
+						fieldInsuredAlamat2Controller.text = state.record!.insuredAlamat2;
+						fieldInsuredNamaController.text = state.record!.insuredNama;
+						fieldLokasi1Controller.text = state.record!.lokasi1;
+						fieldLokasi2Controller.text = state.record!.lokasi2;
+						fieldMachineryDescController.text = state.record!.machineryDesc;
+						fieldOtherDescController.text = state.record!.otherDesc;
+						fieldPeriodeAkhirController.text = state.record!.periodeAkhir.toIso8601String();
+						fieldPeriodeMulaiController.text = state.record!.periodeMulai.toIso8601String();
+						fieldPremiEqvetController.text = NumberFormat("#,###").format(state.record!.premiEqvet);
+						fieldPremiOtherController.text = NumberFormat("#,###").format(state.record!.premiOther);
+						fieldPremiParController.text = NumberFormat("#,###").format(state.record!.premiPar);
+						fieldPremiRsmdccController.text = NumberFormat("#,###").format(state.record!.premiRsmdcc);
+						fieldPremiTotalController.text = NumberFormat("#,###").format(state.record!.premiTotal);
+						fieldPremiTsfwdController.text = NumberFormat("#,###").format(state.record!.premiTsfwd);
+						fieldRateEqvetController.text = NumberFormat("#,###").format(state.record!.rateEqvet);
+						fieldRateOtherController.text = NumberFormat("#,###").format(state.record!.rateOther);
+						fieldRateParController.text = NumberFormat("#,###").format(state.record!.ratePar);
+						fieldRateRsmdccController.text = NumberFormat("#,###").format(state.record!.rateRsmdcc);
+						fieldRateTotalController.text = NumberFormat("#,###").format(state.record!.rateTotal);
+						fieldRateTsfwdController.text = NumberFormat("#,###").format(state.record!.rateTsfwd);
+						fieldSiBuildingController.text = NumberFormat("#,###").format(state.record!.siBuilding);
+						fieldSiContentController.text = NumberFormat("#,###").format(state.record!.siContent);
+						fieldSiMachineryController.text = NumberFormat("#,###").format(state.record!.siMachinery);
+						fieldSiOtherController.text = NumberFormat("#,###").format(state.record!.siOther);
+						fieldSiStockController.text = NumberFormat("#,###").format(state.record!.siStock);
+						fieldSppaTglController.text = state.record!.sppaTgl.toIso8601String();
+						fieldStockAdjustableController.text = NumberFormat("#,###").format(state.record!.stockAdjustable);
+						fieldStockDescController.text = state.record!.stockDesc;
+						fieldTsiController.text = NumberFormat("#,###").format(state.record!.tsi);
 					}
-				},
-			);
-		}
+					fieldComboMKabZonaGempa = state.comboMKabZonaGempa;
+					fieldComboMWilayah = state.comboMWilayah;
+					fieldComboRKodepos = state.comboRKodepos;
+					fieldComboRKonstruksiojk = state.comboRKonstruksiojk;
+					fieldComboROkupasi = state.comboROkupasi;
+				}
+			},
+		);
+	}
 	void loadData() {
 		if (widget.viewMode == "ubah") {
-		sppaparCrudBloc.add(
-			SppaparCrudLihatEvent(recordId: widget.recordId));
+			sppaparCrudBloc.add(
+					SppaparCrudLihatEvent(recordId: widget.recordId));
 		}
 	}
-
 
 	Widget buildFieldBuildingDesc(){
 		return TextFormField(
@@ -270,7 +374,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			),
 			onChanged: (value) {
 				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
+					removeError(error: kStringNullError);
 				}
 			},
 			validator: (value) {
@@ -296,7 +400,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			),
 			onChanged: (value) {
 				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
+					removeError(error: kStringNullError);
 				}
 			},
 			validator: (value) {
@@ -322,7 +426,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			),
 			onChanged: (value) {
 				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
+					removeError(error: kStringNullError);
 				}
 			},
 			validator: (value) {
@@ -347,7 +451,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			),
 			onChanged: (value) {
 				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
+					removeError(error: kStringNullError);
 				}
 			},
 			validator: (value) {
@@ -372,7 +476,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			),
 			onChanged: (value) {
 				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
+					removeError(error: kStringNullError);
 				}
 			},
 			validator: (value) {
@@ -393,7 +497,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			onChangedCallback: (value) {
 				if (value != null) {
 					removeError(
-						error: "Field ComboMKabZonaGempa tidak boleh kosong.");
+							error: "Field ComboMKabZonaGempa tidak boleh kosong.");
 					sppaparCrudBloc.add(ComboMKabZonaGempaChangedEvent(comboMKabZonaGempa: value));
 				}
 			},
@@ -405,7 +509,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			validatorCallback: (value) {
 				if (value == null) {
 					addError(
-						error: "Field ComboMKabZonaGempa tidak boleh kosong.");
+							error: "Field ComboMKabZonaGempa tidak boleh kosong.");
 				}
 			},
 		);
@@ -423,7 +527,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			),
 			onChanged: (value) {
 				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
+					removeError(error: kStringNullError);
 				}
 			},
 			validator: (value) {
@@ -448,7 +552,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			),
 			onChanged: (value) {
 				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
+					removeError(error: kStringNullError);
 				}
 			},
 			validator: (value) {
@@ -473,7 +577,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			),
 			onChanged: (value) {
 				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
+					removeError(error: kStringNullError);
 				}
 			},
 			validator: (value) {
@@ -494,7 +598,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			onChangedCallback: (value) {
 				if (value != null) {
 					removeError(
-						error: "Field ComboMWilayah tidak boleh kosong.");
+							error: "Field ComboMWilayah tidak boleh kosong.");
 					sppaparCrudBloc.add(ComboMWilayahChangedEvent(comboMWilayah: value));
 				}
 			},
@@ -506,7 +610,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			validatorCallback: (value) {
 				if (value == null) {
 					addError(
-						error: "Field ComboMWilayah tidak boleh kosong.");
+							error: "Field ComboMWilayah tidak boleh kosong.");
 				}
 			},
 		);
@@ -524,7 +628,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			),
 			onChanged: (value) {
 				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
+					removeError(error: kStringNullError);
 				}
 			},
 			validator: (value) {
@@ -548,7 +652,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			),
 			onChanged: (value) {
 				if (value != null) {
-				removeError(error: kStringNullError);
+					removeError(error: kStringNullError);
 					fieldPeriodeAkhirController.text = value.toIso8601String();
 				}
 			},
@@ -573,7 +677,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			),
 			onChanged: (value) {
 				if (value != null) {
-				removeError(error: kStringNullError);
+					removeError(error: kStringNullError);
 					fieldPeriodeMulaiController.text = value.toIso8601String();
 				}
 			},
@@ -599,7 +703,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			),
 			onChanged: (value) {
 				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
+					removeError(error: kStringNullError);
 				}
 			},
 			validator: (value) {
@@ -625,7 +729,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			),
 			onChanged: (value) {
 				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
+					removeError(error: kStringNullError);
 				}
 			},
 			validator: (value) {
@@ -650,7 +754,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			),
 			onChanged: (value) {
 				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
+					removeError(error: kStringNullError);
 				}
 			},
 			validator: (value) {
@@ -675,7 +779,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			),
 			onChanged: (value) {
 				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
+					removeError(error: kStringNullError);
 				}
 			},
 			validator: (value) {
@@ -700,7 +804,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			),
 			onChanged: (value) {
 				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
+					removeError(error: kStringNullError);
 				}
 			},
 			validator: (value) {
@@ -725,7 +829,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			),
 			onChanged: (value) {
 				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
+					removeError(error: kStringNullError);
 				}
 			},
 			validator: (value) {
@@ -750,7 +854,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			),
 			onChanged: (value) {
 				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
+					removeError(error: kStringNullError);
 				}
 			},
 			validator: (value) {
@@ -775,7 +879,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			),
 			onChanged: (value) {
 				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
+					removeError(error: kStringNullError);
 				}
 			},
 			validator: (value) {
@@ -800,7 +904,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			),
 			onChanged: (value) {
 				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
+					removeError(error: kStringNullError);
 				}
 			},
 			validator: (value) {
@@ -825,7 +929,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			),
 			onChanged: (value) {
 				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
+					removeError(error: kStringNullError);
 				}
 			},
 			validator: (value) {
@@ -850,7 +954,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			),
 			onChanged: (value) {
 				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
+					removeError(error: kStringNullError);
 				}
 			},
 			validator: (value) {
@@ -875,7 +979,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			),
 			onChanged: (value) {
 				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
+					removeError(error: kStringNullError);
 				}
 			},
 			validator: (value) {
@@ -893,12 +997,12 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 		return buildFieldComboRKodepos(
 			comboKey: comboRKodeposKey,
 			labelText: 'rkodeposId',
-      kotaId: "",
+			kotaId: "",
 			initItem: fieldComboRKodepos,
 			onChangedCallback: (value) {
 				if (value != null) {
 					removeError(
-						error: "Field ComboRKodepos tidak boleh kosong.");
+							error: "Field ComboRKodepos tidak boleh kosong.");
 					sppaparCrudBloc.add(ComboRKodeposChangedEvent(comboRKodepos: value));
 				}
 			},
@@ -910,11 +1014,12 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			validatorCallback: (value) {
 				if (value == null) {
 					addError(
-						error: "Field ComboRKodepos tidak boleh kosong.");
+							error: "Field ComboRKodepos tidak boleh kosong.");
 				}
 			},
 		);
 	}
+
 	Widget buildFieldRkonstruksiojkId() {
 		return Column(
 			crossAxisAlignment: CrossAxisAlignment.start,
@@ -1132,7 +1237,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			),
 			onChanged: (value) {
 				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
+					removeError(error: kStringNullError);
 				}
 			},
 			validator: (value) {
@@ -1157,7 +1262,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			),
 			onChanged: (value) {
 				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
+					removeError(error: kStringNullError);
 				}
 			},
 			validator: (value) {
@@ -1182,7 +1287,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			),
 			onChanged: (value) {
 				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
+					removeError(error: kStringNullError);
 				}
 			},
 			validator: (value) {
@@ -1207,7 +1312,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			),
 			onChanged: (value) {
 				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
+					removeError(error: kStringNullError);
 				}
 			},
 			validator: (value) {
@@ -1232,7 +1337,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			),
 			onChanged: (value) {
 				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
+					removeError(error: kStringNullError);
 				}
 			},
 			validator: (value) {
@@ -1257,7 +1362,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			),
 			onChanged: (value) {
 				if (value != null) {
-				removeError(error: kStringNullError);
+					removeError(error: kStringNullError);
 					fieldSppaTglController.text = value.toIso8601String();
 				}
 			},
@@ -1282,7 +1387,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			),
 			onChanged: (value) {
 				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
+					removeError(error: kStringNullError);
 				}
 			},
 			validator: (value) {
@@ -1308,7 +1413,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			),
 			onChanged: (value) {
 				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
+					removeError(error: kStringNullError);
 				}
 			},
 			validator: (value) {
@@ -1332,7 +1437,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			),
 			onChanged: (value) {
 				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
+					removeError(error: kStringNullError);
 				}
 			},
 			validator: (value) {
@@ -1355,7 +1460,7 @@ class SppaparCrudFormPageFormState extends State<SppaparCrudFormPage> {
 			_formKey.currentState!.save();
 			SppaparCrudModel record = SppaparCrudModel(
 				buildingDesc: fieldBuildingDescController.text,
-				contentDesc: fieldContentDescController.text,				
+				contentDesc: fieldContentDescController.text,
 				insuredAlamat1: fieldInsuredAlamat1Controller.text,
 				insuredAlamat2: fieldInsuredAlamat2Controller.text,
 				insuredNama: fieldInsuredNamaController.text,

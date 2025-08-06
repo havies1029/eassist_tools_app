@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../blocs/authentication/authentication_bloc.dart';
 import '../../../../blocs/gen_profile/mrekan1crud_bloc.dart';
+import '../../../../blocs/local_prefs/auth_local_cubit.dart';
 import '../../../../blocs/profile/profile_download_foto_bloc.dart';
 import '../../../../common/app_data.dart';
 import 'profile_menu_item.dart';
@@ -119,19 +120,18 @@ class ProfileDropdownContent extends StatelessWidget {
                             // Coba dari user.nama terlebih dahulu
                             displayName = authState.user.nama?.trim() ?? "(belum diupdate di profile)";
 
+                            final authLocal = context.read<AuthLocalCubit>().state;
+                            final googleName = authLocal.googleDisplayName?.trim();
+                            final lastEmail = authLocal.lastLoginEmail?.trim();
+
                             if (displayName.isEmpty || displayName == "(belum diupdate di profile)") {
-                              // Jika kosong, coba dari AppData.googleDisplayName
-                              if (AppData.googleDisplayName != null &&
-                                  AppData.googleDisplayName!.trim().isNotEmpty) {
-                                displayName = AppData.googleDisplayName!.trim();
+                              if (googleName?.isNotEmpty == true) {
+                                displayName = googleName!;
+                              } else if (lastEmail?.isNotEmpty == true) {
+                                displayName = lastEmail!;
                               }
-                              // Jika masih kosong, fallback ke AppData.lastLoginEmail
-                              else if (AppData.lastLoginEmail != null &&
-                                  AppData.lastLoginEmail!.trim().isNotEmpty) {
-                                displayName = AppData.lastLoginEmail!.trim();
-                              }
-                            } else {
                             }
+
                           }
 
                           // Jika rekanNama tersedia, override semuanya

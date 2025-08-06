@@ -800,6 +800,7 @@ class _SearchBoxState extends State<_SearchBox> {
           Flexible(
             child: TextField(
               controller: widget.controller,
+              cursorColor: const Color(0xFF91C050),
               focusNode: _focusNode,
               onChanged: widget.onChanged,
               decoration: InputDecoration(

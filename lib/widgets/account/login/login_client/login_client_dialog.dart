@@ -1,5 +1,6 @@
 import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
 import 'package:eassist_tools_app/widgets/account/login/login_gmail/Base_Dialog.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:eassist_tools_app/blocs/login/login_bloc.dart';
@@ -8,7 +9,10 @@ import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:eassist_tools_app/widgets/google_signin_button_stub.dart'
 if (dart.library.js_interop) 'package:eassist_tools_app/widgets/google_signin_button_web.dart';
 
+import '../../../../blocs/local_prefs/auth_local_cubit.dart';
+import '../../../../main.dart' as HeroMainState;
 import '../../../../pages/hero_client_page/hero_user_main.dart';
+import '../login_gmail/popup_dialog_login.dart';
 
 class LoginClientDialog extends BaseDialog {
   const LoginClientDialog({super.key});
@@ -34,19 +38,41 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
   void initState() {
     super.initState();
 
-    if (AppData.lastLoginEmail != null) {
-      _emailController.text = AppData.lastLoginEmail!;
+    final authLocal = context.read<AuthLocalCubit>().state;
+
+    debugPrint('🟡 initState LoginClientDialog');
+    debugPrint('↪️ isRedirectedFromLoginUser = ${HeroMainState.isRedirectedFromLoginUser}');
+    debugPrint('📧 lastLoginEmail = ${authLocal.lastLoginEmail}');
+
+    if (HeroMainState.isRedirectedFromLoginUser) {
+      // 🔥 Isi field email hanya saat redirect
+      final email = authLocal.lastLoginEmail?.trim();
+      if (email != null && email.isNotEmpty) {
+        _emailController.text = email;
+        debugPrint('✅ Email diisi otomatis: $email');
+      }
+
+      // 🧹 Reset flag agar tidak bocor ke sesi berikutnya
+      HeroMainState.isRedirectedFromLoginUser = false;
+      debugPrint('🧹 isRedirectedFromLoginUser di-reset ke false');
+    } else {
+      // 🚫 Bukan dari redirect, kosongkan saja
+      _emailController.text = '';
+      debugPrint('🚫 Email tidak diisi otomatis');
     }
   }
+
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-    AppData.lastLoginEmail = null;
+
+    context.read<AuthLocalCubit>().clearLastLoginEmail(); // GANTI INI
 
     super.dispose();
   }
+
 
   // @override
   // Widget build(BuildContext context) {
@@ -547,6 +573,7 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
           maxLines: 1,
           scrollPadding: EdgeInsets.zero,
           textAlign: TextAlign.left,
+          cursorColor: const Color(0xFF91C050),
           textInputAction: TextInputAction.done,
           decoration: InputDecoration(
             hintText: 'Email',
@@ -678,7 +705,10 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
           borderRadius: BorderRadius.circular(5),
           child: InkWell(
             borderRadius: BorderRadius.circular(5),
-            onTap: _handleLogin,
+            onTap: () {
+              context.read<AuthLocalCubit>().clearLastLoginEmail(); // ⬅️ tambah ini
+              _handleLogin(); // ⬅️ panggil logika login
+            },
             splashColor: const Color(0xFF91C050).withOpacity(0.3), // warna gelombang
             highlightColor: Colors.transparent, // hilangkan highlight solid
             child: AnimatedContainer(
@@ -864,6 +894,10 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
                     onTap: () {
                       Navigator.of(context).pop();
                       context.read<AuthenticationBloc>().add(RequireLoginUser());
+                      // SchedulerBinding.instance.addPostFrameCallback((_) {
+                      //   if (!context.mounted) return;
+                      //   CustomPopupsLoginUser.showLoginClientDialog(context);
+                      // });
                     },
                     child: Text(
                       'Masuk Sebagai Pengguna',
@@ -927,7 +961,9 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
   void _handleLogin() {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
-    AppData.lastLoginEmail = null;
+    final authLocalCubit = context.read<AuthLocalCubit>();
+    // authLocalCubit.clearLastLoginEmail();
+    // authLocalCubit.clearGoogleDisplayName();
 
     setState(() {
       _emailError = null;

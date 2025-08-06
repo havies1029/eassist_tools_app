@@ -13,28 +13,18 @@ class AppData {
   static User user = User();
   static var uriHtpp = useSSL ? Uri.https : Uri.http;
   static String version = "1.0.2";
-  static String? lastLoginEmail;
-  static String? googleDisplayName;
   static bool isInOtpProcess = false;
-  static String? berita1Id;
-  static String? gambarArtikel;
-  static String? JudulArtikel;
-
 
   // static bool useSSL = false;
   // static String apiDomain = "http://localhost/eAssistToolsAPI/";
   // static String prefixEndPoint = "/eAssistToolsAPI";
   // static String httpAuthority = "localhost";
 
-
-
   static bool useSSL = true;
   static String apiDomain =
       "http${useSSL ? "s" : ""}://eassisttoolsapi.smartsoft-id.com/";
   static String prefixEndPoint = "";
   static String httpAuthority = "eassisttoolsapi.smartsoft-id.com";
-
-
 
   // static bool useSSL = false;
   // static String apiDomain =

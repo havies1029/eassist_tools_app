@@ -165,80 +165,280 @@ class SimulmvCrudFormPageFormCascoState
     }
   }
 
+// Revisi buildFieldComboTahun dengan desain yang sama
   Widget buildFieldComboTahun() {
-    return DropdownSearch<String>(
-      key: dropDownKeyTahun,
-      selectedItem: selectedYear,
-      items: (filter, infiniteScrollProps) => _yearList,
-      decoratorProps: DropDownDecoratorProps(
-        decoration: InputDecoration(
-          labelText: 'Tahun Pembuatan',
-          border: OutlineInputBorder(),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Label di atas field
+        const Text(
+          'Tahun Pembuatan',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
         ),
-      ),
-      popupProps: PopupPropsMultiSelection.modalBottomSheet(
-        disableFilter: false,
-        showSelectedItems: true,
-        showSearchBox: false,
-        itemBuilder: itemBuilderComboTahun,
-      ),
-      onChanged: (value) {
-        simulmvCrudBloc
-            .add(FieldTahunChangedEvent(tahun: int.parse(value ?? "0")));
-      },
+        const SizedBox(height: 8),
+
+        // DropdownSearch dengan custom decoration
+        DropdownSearch<String>(
+          key: dropDownKeyTahun,
+          selectedItem: selectedYear,
+          items: (filter, infiniteScrollProps) => _yearList,
+          decoratorProps: DropDownDecoratorProps(
+            decoration: InputDecoration(
+              hintText: '-- Pilih Tahun Pembuatan --',
+              hintStyle: const TextStyle(
+                color: Colors.grey,
+                fontSize: 14,
+              ),
+              // Custom border dengan warna hijau
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(
+                  color: Color(0xFF91C050),
+                  width: 1.5,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(
+                  color: Color(0xFF91C050),
+                  width: 1.5,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(
+                  color: Color(0xFF91C050),
+                  width: 2.0,
+                ),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(
+                  color: Colors.red,
+                  width: 1.5,
+                ),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(
+                  color: Colors.red,
+                  width: 2.0,
+                ),
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 12,
+              ),
+              // Hilangkan label text karena sudah ada di atas
+              labelText: null,
+            ),
+          ),
+          suffixProps: const DropdownSuffixProps(
+            clearButtonProps: ClearButtonProps(isVisible: false),
+            dropdownButtonProps: DropdownButtonProps(
+              iconClosed: Icon(Icons.keyboard_arrow_down, color: Colors.grey),
+              iconOpened: Icon(Icons.keyboard_arrow_up, color: Color(0xFF91C050)),
+            ),
+          ),
+          popupProps: PopupProps.modalBottomSheet(
+            disableFilter: false,
+            showSelectedItems: true,
+            showSearchBox: false,
+            itemBuilder: itemBuilderComboTahun,
+            // Custom modal design
+            modalBottomSheetProps: const ModalBottomSheetProps(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+              ),
+            ),
+            containerBuilder: (context, popupWidget) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Header modal
+                    Container(
+                      width: 50,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'Pilih Tahun Pembuatan',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Flexible(child: popupWidget),
+                  ],
+                ),
+              );
+            },
+          ),
+          onChanged: (value) {
+            simulmvCrudBloc
+                .add(FieldTahunChangedEvent(tahun: int.parse(value ?? "0")));
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return "Field Tahun Pembuatan tidak boleh kosong";
+            }
+            return null;
+          },
+        ),
+      ],
     );
   }
 
   Widget itemBuilderComboTahun(
       BuildContext context, String item, bool isSelected, bool isDisabled) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8),
-      decoration: !isSelected
-          ? null
-          : BoxDecoration(
-        border: Border.all(color: Theme.of(context).primaryColor),
-        borderRadius: BorderRadius.circular(5),
-        color: Colors.white,
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: isSelected ? const Color(0xFF91C050) : Colors.grey[300]!,
+          width: isSelected ? 2 : 1,
+        ),
+        borderRadius: BorderRadius.circular(8),
+        color: isSelected ? const Color(0xFF91C050).withOpacity(0.1) : Colors.white,
       ),
       child: ListTile(
         selected: isSelected,
-        title: Text(item),
+        title: Text(
+          item,
+          style: TextStyle(
+            color: isSelected ? const Color(0xFF91C050) : Colors.black87,
+            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+          ),
+        ),
+        trailing: isSelected
+            ? const Icon(
+          Icons.check_circle,
+          color: Color(0xFF91C050),
+          size: 20,
+        )
+            : null,
       ),
     );
   }
 
-  TextFormField buildFieldHarga() {
-    return TextFormField(
-      keyboardType: TextInputType.number,
-      inputFormatters: [ThousandsSeparatorInputFormatter()],
-      controller: fieldHargaController,
-      decoration: const InputDecoration(
-        labelText: "Harga Kendaraan",
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        suffixText: ",000,000,-",
-      ),
-      onChanged: (value) {
-        value = value.replaceAll(",", "");
-        simulmvCrudBloc
-            .add(FieldHargaChangedEvent(harga: double.tryParse(value) ?? 0) );
-      },
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          //addError(error: kStringNullError);
-          return "";
-        }
-        return null;
-      },
-      textAlign: TextAlign.right,
+
+// Revisi buildFieldHarga dengan desain yang konsisten
+  Widget buildFieldHarga() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Label di atas field
+        const Text(
+          'Harga Kendaraan',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
+        ),
+        const SizedBox(height: 8),
+
+        // TextFormField dengan custom decoration
+        TextFormField(
+          keyboardType: TextInputType.number,
+          inputFormatters: [ThousandsSeparatorInputFormatter()],
+          controller: fieldHargaController,
+          textAlign: TextAlign.right,
+          decoration: InputDecoration(
+            hintText: '0',
+            hintStyle: const TextStyle(
+              color: Colors.grey,
+              fontSize: 14,
+            ),
+            suffixText: ",000,000,-",
+            suffixStyle: const TextStyle(
+              color: Colors.grey,
+              fontSize: 14,
+            ),
+            // Custom border dengan warna hijau (sama seperti dropdown)
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color(0xFF91C050),
+                width: 1.5,
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color(0xFF91C050),
+                width: 1.5,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color(0xFF91C050),
+                width: 2.0,
+              ),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Colors.red,
+                width: 1.5,
+              ),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Colors.red,
+                width: 2.0,
+              ),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 12,
+            ),
+            // Hilangkan floating label karena sudah ada label di atas
+            labelText: null,
+            floatingLabelBehavior: FloatingLabelBehavior.never,
+          ),
+          onChanged: (value) {
+            value = value.replaceAll(",", "");
+            simulmvCrudBloc
+                .add(FieldHargaChangedEvent(harga: double.tryParse(value) ?? 0));
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return "Field Harga Kendaraan tidak boleh kosong";
+            }
+            // Validasi tambahan untuk memastikan harga > 0
+            String cleanValue = value.replaceAll(",", "");
+            double? harga = double.tryParse(cleanValue);
+            if (harga == null || harga <= 0) {
+              return "Harga harus lebih dari 0";
+            }
+            return null;
+          },
+        ),
+      ],
     );
   }
 
+
+  // Fungsi buildFieldJenisKendaraan yang sudah direvisi
   Widget buildFieldJenisKendaraan() {
     return buildFieldComboMMvgrupOjk(
       comboKey: comboMMvgrupOjkKey,
       labelText: 'Jenis Kendaraan',
       initItem: fieldComboMMvgrupOjk,
-
       onChangedCallback: (value) {
         if (value != null) {
           //removeError(error: "Field ComboMMvgrupOjk tidak boleh kosong.");
@@ -309,20 +509,102 @@ class SimulmvCrudFormPageFormCascoState
   }
 
   Widget buildFieldLamaCover() {
-    return TextFormField(
-      keyboardType: TextInputType.number,
-      inputFormatters: [ThousandsSeparatorInputFormatter()],
-      controller: fieldCoverBulanController,
-      decoration: const InputDecoration(
-        labelText: "Lama Cover",
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        suffixText: " bulan",
-      ),
-      onChanged: (value) {
-        simulmvCrudBloc
-            .add(FieldLamaCoverChangedEvent(lama: int.tryParse(value) ?? 0));
-      },
-      textAlign: TextAlign.center,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Label di atas field
+        const Text(
+          'Lama Cover',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
+        ),
+        const SizedBox(height: 8),
+
+        // TextFormField dengan custom decoration
+        TextFormField(
+          keyboardType: TextInputType.number,
+          inputFormatters: [ThousandsSeparatorInputFormatter()],
+          controller: fieldCoverBulanController,
+          textAlign: TextAlign.center,
+          decoration: InputDecoration(
+            hintText: '0',
+            hintStyle: const TextStyle(
+              color: Colors.grey,
+              fontSize: 14,
+            ),
+            suffixText: " bulan",
+            suffixStyle: const TextStyle(
+              color: Colors.grey,
+              fontSize: 14,
+            ),
+            // Custom border dengan warna hijau (sama seperti field lainnya)
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color(0xFF91C050),
+                width: 1.5,
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color(0xFF91C050),
+                width: 1.5,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color(0xFF91C050),
+                width: 2.0,
+              ),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Colors.red,
+                width: 1.5,
+              ),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Colors.red,
+                width: 2.0,
+              ),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 12,
+            ),
+            // Hilangkan floating label karena sudah ada label di atas
+            labelText: null,
+            floatingLabelBehavior: FloatingLabelBehavior.never,
+          ),
+          onChanged: (value) {
+            simulmvCrudBloc
+                .add(FieldLamaCoverChangedEvent(lama: int.tryParse(value) ?? 0));
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return "Field Lama Cover tidak boleh kosong";
+            }
+            // Validasi tambahan untuk memastikan lama cover > 0
+            int? lama = int.tryParse(value);
+            if (lama == null || lama <= 0) {
+              return "Lama cover harus lebih dari 0 bulan";
+            }
+            // Validasi maksimal (opsional, sesuaikan dengan business rule)
+            if (lama > 120) { // contoh: maksimal 10 tahun
+              return "Lama cover maksimal 120 bulan";
+            }
+            return null;
+          },
+        ),
+      ],
     );
   }
 }

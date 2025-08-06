@@ -15,6 +15,7 @@ import 'package:eassist_tools_app/blocs/gen_profile/mrekanpajakcrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekanpiclist_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaim/klaim1list_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaim/klaim2list_bloc.dart';
+import 'package:eassist_tools_app/blocs/local_prefs/article_selection_cubit.dart';
 import 'package:eassist_tools_app/blocs/login/change_password_bloc.dart';
 import 'package:eassist_tools_app/blocs/login/emailverification_bloc.dart';
 import 'package:eassist_tools_app/blocs/login/login_bloc.dart';
@@ -84,6 +85,9 @@ import 'blocs/gen_sppapar/sppaparcrud_bloc.dart';
 import 'blocs/gen_sppapar/sppaparlist_bloc.dart';
 import 'blocs/gen_status_aset/statusasetcari_bloc.dart';
 import 'blocs/home/home_bloc.dart';
+import 'blocs/local_prefs/auth_local_cubit.dart';
+import 'blocs/local_prefs/simulasi_mv_local_cubit.dart';
+import 'blocs/local_prefs/simulasi_par_local_cubit.dart';
 import 'blocs/profile/profile_download_foto_bloc.dart';
 import 'blocs/profile/profile_upload_foto_bloc.dart';
 import 'blocs/profile/rekanbank_bloc.dart';
@@ -94,21 +98,16 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:mobile_chat_flutter/mobile_chat_flutter.dart';
 import 'package:path_provider/path_provider.dart';
-
 import 'blocs/simulmv/simulmvcrud_bloc.dart';
 import 'blocs/simulpar/simulparcrud_bloc.dart';
-
-// NONAKTIFKAN DEBUG PRINT & ERROR MERAH
-
-// auth_handler.dart
-import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'helper/app_prefs.dart';
 
 bool _loginDialogOpen = false;                 // cegah dialog dobel
 AuthenticationState? _lastAuthStateGlobal;     // last state global
 bool _sudahTerdaftarSebagaiClient = false;     // jadikan flag global (bukan setState)
+bool isRedirectedFromLoginUser = false;
 
 Future<void> handleAuthenticationStateGlobal({
   required NavigatorState? rootNav,  // navigatorKey.currentState
@@ -160,6 +159,7 @@ Future<void> handleAuthenticationStateGlobal({
   // ========== REQUIRE LOGIN CLIENT ==========
   if (state is AuthenticationRequireLoginClient) {
     popToRoot();
+    isRedirectedFromLoginUser = true;
 
     if (state.requiredFrom == "bloc_email_verification") {
       _sudahTerdaftarSebagaiClient = true; // ganti setState → flag global
@@ -235,6 +235,9 @@ Future<void> handleAuthenticationStateGlobal({
       context.read<MRekan1CrudBloc>().add(MRekan1CrudLihatEvent());
     }
 
+    final isClientLogin = state.user.custType == 'C';
+    final fromClient = state.authenticatedFrom == 'login_client';
+
     // Opsional: sinkron ke home bila bukan home
     SchedulerBinding.instance.addPostFrameCallback((_) {
       if (!context.mounted) return;
@@ -275,6 +278,7 @@ Future<void> main() async {
 
   // Ambil lastPage dari SharedPreferences
   final prefs = await SharedPreferences.getInstance();
+  final appPrefs = AppPrefs(prefs);
   final lastPage = prefs.getString('lastPageType');
   final initialPageType = PageType.values.firstWhere(
         (e) => e.name == lastPage,
@@ -290,6 +294,18 @@ Future<void> main() async {
         ),
         BlocProvider<HomeBloc>(
           create: (_) => HomeBloc(initialPage: PageType.home), // ← jangan emit langsung di sini
+        ),
+        BlocProvider<AuthLocalCubit>(
+          create: (_) => AuthLocalCubit(appPrefs), // ⬅️ ini dia
+        ),
+        BlocProvider<ArticleSelectionCubit>(
+          create: (_) => ArticleSelectionCubit(appPrefs), // ⬅️ ini dia
+        ),
+        BlocProvider<SimulasiMvLocalCubit>(
+          create: (_) => SimulasiMvLocalCubit(appPrefs), // ⬅️ ini dia
+        ),
+        BlocProvider<SimulasiParLocalCubit>(
+          create: (_) => SimulasiParLocalCubit(appPrefs), // ⬅️ ini dia
         ),
       ],
       child: App(
@@ -312,6 +328,7 @@ Future<void> main() async {
     }
   });
 }
+
 class App extends StatelessWidget {
   final UserRepository userRepository;
   final GlobalKey<NavigatorState> navigatorKey;

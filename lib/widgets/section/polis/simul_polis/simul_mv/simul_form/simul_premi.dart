@@ -58,92 +58,322 @@ class SimulmvCrudFormPageFormPremiState
       },
     );
   }
-
   Widget _buildReadOnlyField(String label, TextEditingController c) {
-    return TextFormField(
-      readOnly: true,
-      textAlign: TextAlign.right,
-      controller: c,
-      keyboardType: TextInputType.number,
-      decoration: InputDecoration(
-        labelText: label,
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Label di atas field
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
+        ),
+        const SizedBox(height: 8),
+
+        // TextFormField dengan custom decoration
+        TextFormField(
+          readOnly: true,
+          textAlign: TextAlign.right,
+          controller: c,
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(
+            hintText: '0',
+            hintStyle: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+            ),
+            // Custom border dengan warna hijau (sama seperti field lainnya)
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color(0xFF91C050),
+                width: 1.5,
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color(0xFF91C050),
+                width: 1.5,
+              ),
+            ),
+            disabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color(0xFF91C050),
+                width: 1.5,
+              ),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 12,
+            ),
+            // Background abu-abu muda untuk menunjukkan read-only
+            fillColor: Colors.white,
+            filled: true,
+            labelText: null,
+            floatingLabelBehavior: FloatingLabelBehavior.never,
+          ),
+        ),
+      ],
     );
   }
 
+// Revisi buildFieldPremiAdd dengan desain yang konsisten
   Widget buildFieldPremiAdd() {
-    return TextFormField(
-      keyboardType: TextInputType.number,
-      inputFormatters: [ThousandsSeparatorInputFormatter()],
-      controller: fieldPremiAddController,
-      decoration: const InputDecoration(
-        labelText: "Premi Tambahan",
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-      ),
-      onChanged: (value) {
-        if (value.isNotEmpty) {
-          //removeError(error: kStringNullError);
-        }
-      },
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          //addError(error: kStringNullError);
-          return "";
-        }
-        return null;
-      },
-      textAlign: TextAlign.right,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Label di atas field
+        const Text(
+          'Premi Tambahan',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
+        ),
+        const SizedBox(height: 8),
+
+        // TextFormField dengan custom decoration
+        TextFormField(
+          keyboardType: TextInputType.number,
+          inputFormatters: [ThousandsSeparatorInputFormatter()],
+          controller: fieldPremiAddController,
+          textAlign: TextAlign.right,
+          decoration: InputDecoration(
+            hintText: '0',
+            hintStyle: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+            ),
+            suffixText: ",-",
+            suffixStyle: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+            ),
+            // Custom border dengan warna hijau
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color(0xFF91C050),
+                width: 1.5,
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color(0xFF91C050),
+                width: 1.5,
+              ),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Colors.red,
+                width: 1.5,
+              ),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Colors.red,
+                width: 2.0,
+              ),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 12,
+            ),
+            labelText: null,
+            floatingLabelBehavior: FloatingLabelBehavior.never,
+          ),
+          onChanged: (value) {
+            if (value.isNotEmpty) {
+              //removeError(error: kStringNullError);
+            }
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return "Field Premi Tambahan tidak boleh kosong";
+            }
+            return null;
+          },
+        ),
+      ],
     );
   }
 
+// Revisi buildFieldPremiCasco dengan desain yang konsisten
   Widget buildFieldPremiCasco() {
-    return TextFormField(
-      keyboardType: TextInputType.number,
-      inputFormatters: [ThousandsSeparatorInputFormatter()],
-      controller: fieldPremiCascoController,
-      decoration: const InputDecoration(
-        labelText: "Premi Casco",
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-      ),
-      onChanged: (value) {
-        if (value.isNotEmpty) {
-          //removeError(error: kStringNullError);
-        }
-      },
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          //addError(error: kStringNullError);
-          return "";
-        }
-        return null;
-      },
-      textAlign: TextAlign.right,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Label di atas field
+        const Text(
+          'Premi Casco',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
+        ),
+        const SizedBox(height: 8),
+
+        // TextFormField dengan custom decoration
+        TextFormField(
+          keyboardType: TextInputType.number,
+          inputFormatters: [ThousandsSeparatorInputFormatter()],
+          controller: fieldPremiCascoController,
+          textAlign: TextAlign.right,
+          decoration: InputDecoration(
+            hintText: '0',
+            hintStyle: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+            ),
+            suffixText: ",-",
+            suffixStyle: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+            ),
+            // Custom border dengan warna hijau
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color(0xFF91C050),
+                width: 1.5,
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color(0xFF91C050),
+                width: 1.5,
+              ),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Colors.red,
+                width: 1.5,
+              ),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Colors.red,
+                width: 2.0,
+              ),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 12,
+            ),
+            labelText: null,
+            floatingLabelBehavior: FloatingLabelBehavior.never,
+          ),
+          onChanged: (value) {
+            if (value.isNotEmpty) {
+              //removeError(error: kStringNullError);
+            }
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return "Field Premi Casco tidak boleh kosong";
+            }
+            return null;
+          },
+        ),
+      ],
     );
   }
 
+// Revisi buildFieldPremiTotal dengan desain yang konsisten
   Widget buildFieldPremiTotal() {
-    return TextFormField(
-      keyboardType: TextInputType.number,
-      inputFormatters: [ThousandsSeparatorInputFormatter()],
-      controller: fieldPremiTotalController,
-      decoration: const InputDecoration(
-        labelText: "Premi Total",
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-      ),
-      onChanged: (value) {
-        if (value.isNotEmpty) {
-          //removeError(error: kStringNullError);
-        }
-      },
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          //addError(error: kStringNullError);
-          return "";
-        }
-        return null;
-      },
-      textAlign: TextAlign.right,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Label di atas field
+        const Text(
+          'Premi Total',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
+        ),
+        const SizedBox(height: 8),
+
+        // TextFormField dengan custom decoration
+        TextFormField(
+          keyboardType: TextInputType.number,
+          inputFormatters: [ThousandsSeparatorInputFormatter()],
+          controller: fieldPremiTotalController,
+          textAlign: TextAlign.right,
+          decoration: InputDecoration(
+            hintText: '0',
+            hintStyle: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+            ),
+            suffixText: ",-",
+            suffixStyle: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+            ),
+            // Custom border dengan warna hijau
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color(0xFF91C050),
+                width: 1.5,
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color(0xFF91C050),
+                width: 1.5,
+              ),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Colors.red,
+                width: 1.5,
+              ),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Colors.red,
+                width: 2.0,
+              ),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 12,
+            ),
+            labelText: null,
+            floatingLabelBehavior: FloatingLabelBehavior.never,
+          ),
+          onChanged: (value) {
+            if (value.isNotEmpty) {
+              //removeError(error: kStringNullError);
+            }
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return "Field Premi Total tidak boleh kosong";
+            }
+            return null;
+          },
+        ),
+      ],
     );
   }
 }

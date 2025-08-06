@@ -2,11 +2,18 @@ import 'package:eassist_tools_app/widgets/section/polis/simul_polis/simul_mv/sim
 import 'package:eassist_tools_app/widgets/section/polis/simul_polis/simul_mv/simul_form/simul_opsi.dart';
 import 'package:eassist_tools_app/widgets/section/polis/simul_polis/simul_mv/simul_form/simul_premi.dart';
 import 'package:flutter/material.dart';// asumsi responsive helper dipisah
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/blocs/simulmv/simulmvcrud_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../../../../../blocs/home/home_bloc.dart';
+import '../../../../../blocs/local_prefs/simulasi_mv_local_cubit.dart';
+import '../../../../../models/combobox/combommvgrupojk_model.dart';
+import '../../../../../models/combobox/combommvjnscover_model.dart';
+import '../../../../../models/combobox/combomwilayah_model.dart';
+import '../../../../../pages/base/base_page.dart';
 import '../../../../../pages/simulmv/simulmvcrud_form_casco.dart';
 import '../../../../../pages/simulmv/simulmvcrud_form_opsi.dart';
 import '../../../../../pages/simulmv/simulmvcrud_form_premi.dart';
@@ -80,12 +87,49 @@ class _SimulMvPageState extends State<SimulMvPage> {
                           final showPremi = state.isCalculated || state.isLoaded;
                           if (!showPremi) return const SizedBox.shrink();
 
+                          final record = state.record;
+
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               _buildSectionHeader('Premi', responsive),
-                              // 👉 versi tanpa tombol di dalamnya (lihat Opsi refactor child di bawah)
                               SimulmvFormPremiPage(viewMode: "tambah", recordId: ""),
+                              SizedBox(height: responsive.sectionSpacing),
+
+                              // 🔘 TOMBOL LANJUT SPPA
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: ElevatedButton.icon(
+                                  icon: const Icon(Icons.arrow_forward),
+                                  label: const Text('Lanjut Isi SPPA'),
+                                  onPressed: () {
+                                    if (record == null) return;
+
+                                    context.read<SimulasiMvLocalCubit>().setFromSimulasi(
+                                      mvgrupOjk: record.comboMMvgrupOjk ?? const ComboMMvgrupOjkModel(),
+                                      mvjnscover: record.comboMMvjnscover ?? const ComboMMvjnscoverModel(),
+                                      wilayah: record.comboMWilayah ?? const ComboMWilayahModel(),
+                                      thnBuat: record.thnBuat ?? 0,
+                                      harga: record.harga?.round() ?? 0,
+                                      lamaCoverBulan: record.coverBulan ?? 0,
+                                      isFlood: record.isFlood ?? false,
+                                      isEq: record.isEq ?? false,
+                                      isSrcc: record.isSrcc ?? false,
+                                      isTerrorism: record.isTerrorism ?? false,
+                                      pad: record.pad?.round() ?? 0,
+                                      pap: record.pap?.round() ?? 0,
+                                      pll: record.pll?.round() ?? 0,
+                                      tpl: record.tpl?.round() ?? 0,
+                                      aw: record.aw?.round() ?? 0,
+                                    );
+
+                                    SchedulerBinding.instance.addPostFrameCallback((_) {
+                                      context.read<HomeBloc>().add(PushPageEvent(PageType.sppamv));
+                                    });
+                                  },
+                                ),
+                              ),
+
                               SizedBox(height: responsive.sectionSpacing),
                             ],
                           );

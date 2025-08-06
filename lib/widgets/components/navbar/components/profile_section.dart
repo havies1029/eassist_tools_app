@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../blocs/authentication/authentication_bloc.dart';
+import '../../../../blocs/local_prefs/auth_local_cubit.dart';
 import '../../../../blocs/profile/profile_download_foto_bloc.dart';
 import '../../../../blocs/gen_profile/mrekan1crud_bloc.dart';
 import '../../../../common/app_data.dart';
@@ -39,26 +40,43 @@ class _ProfileSectionState extends State<ProfileSection> {
 
     final authState = context.select<AuthenticationBloc, AuthenticationState>((b) => b.state);
     final isMobile = MediaQuery.of(context).size.width < 768;
-
+    final authLocal = context.read<AuthLocalCubit>().state;
+    final lastEmail = authLocal.lastLoginEmail?.trim();
     final rekanState = context.watch<MRekan1CrudBloc>().state;
     final fotoState  = context.watch<ProfileDownloadFotoBloc>().state;
-
-    final rekanLoaded = rekanState.isLoaded;
     final fotoLoaded  = fotoState is ProfileDownloadFotoLoaded;
     final Uint8List? imageBytes = fotoLoaded ? (fotoState as ProfileDownloadFotoLoaded).imageBytes : null;
 
-    // Display name
-    final isLoginUser = authState is AuthenticationAuthenticated &&
-        ((authState.authenticatedFrom ?? '') == 'login_user');
+    String displayName = "(memuat profil...)";
 
-    String displayName = (rekanState.record?.rekanNama ?? '').trim();
-    if (displayName.isEmpty) {
-      if (isLoginUser && (AppData.lastLoginEmail ?? '').trim().isNotEmpty) {
-        displayName = AppData.lastLoginEmail!.trim();
-      } else {
-        displayName = "(memuat profil...)";
+// Fallback prioritas pengambilan nama
+    if (rekanState.isLoaded) {
+      final rekanNama = rekanState.record?.rekanNama?.trim();
+      if (rekanNama != null && rekanNama.isNotEmpty) {
+        displayName = rekanNama;
       }
     }
+
+    if (displayName == "(memuat profil...)" && authState is AuthenticationAuthenticated) {
+      final namaUser = authState.user.nama?.trim();
+      if (namaUser != null && namaUser.isNotEmpty) {
+        displayName = namaUser;
+      }
+
+      if (displayName == "(memuat profil...)") {
+        final googleName = authLocal.googleDisplayName?.trim();
+        if (googleName != null && googleName.isNotEmpty) {
+          displayName = googleName;
+        } else if (lastEmail != null && lastEmail.isNotEmpty) {
+          displayName = lastEmail;
+        }
+      }
+    }
+
+    debugPrint('📛 Display Name: $displayName');
+
+
+    debugPrint('📧 Last Login Email: $lastEmail');
 
     debugPrint('[PS] isLoaded=${rekanState.isLoaded} '
         'nama="${(rekanState.record?.rekanNama ?? '').trim()}" '

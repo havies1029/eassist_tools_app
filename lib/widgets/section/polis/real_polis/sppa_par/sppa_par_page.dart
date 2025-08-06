@@ -1,4 +1,4 @@
-import 'package:eassist_tools_app/widgets/section/polis/real_polis/sppa_par/simul_form/sppaparcrud_form.dart';
+import 'package:eassist_tools_app/widgets/section/polis/real_polis/sppa_par/sppa_form/sppaparcrud_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';

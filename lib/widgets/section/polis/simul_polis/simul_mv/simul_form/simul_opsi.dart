@@ -132,25 +132,106 @@ class SimulmvCrudFormPageFormOpsiState extends State<SimulmvFormOpsiPage> {
 
 
   Widget buildFieldAW() {
-    return TextFormField(
-      keyboardType: TextInputType.numberWithOptions(
-        decimal: true,
-      ),
-      controller: fieldAwController,
-      decoration: const InputDecoration(
-        labelText: "Authorized Workshop",
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        suffixText: " %",
-      ),
-      inputFormatters: [
-        FilteringTextInputFormatter.digitsOnly,
-        DecimalTextInputFormatter(2)
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Label di atas field
+        const Text(
+          'Authorized Workshop',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
+        ),
+        const SizedBox(height: 8),
+
+        // TextFormField dengan custom decoration
+        TextFormField(
+          keyboardType: const TextInputType.numberWithOptions(
+            decimal: true,
+          ),
+          inputFormatters: [
+            FilteringTextInputFormatter.digitsOnly,
+            DecimalTextInputFormatter(2)
+          ],
+          controller: fieldAwController,
+          textAlign: TextAlign.right,
+          decoration: InputDecoration(
+            hintText: '0.00',
+            hintStyle: const TextStyle(
+              color: Colors.grey,
+              fontSize: 14,
+            ),
+            suffixText: " %",
+            suffixStyle: const TextStyle(
+              color: Colors.grey,
+              fontSize: 14,
+            ),
+            // Custom border dengan warna hijau (sama seperti field lainnya)
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color(0xFF91C050),
+                width: 1.5,
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color(0xFF91C050),
+                width: 1.5,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color(0xFF91C050),
+                width: 2.0,
+              ),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Colors.red,
+                width: 1.5,
+              ),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Colors.red,
+                width: 2.0,
+              ),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 12,
+            ),
+            // Hilangkan floating label karena sudah ada label di atas
+            labelText: null,
+            floatingLabelBehavior: FloatingLabelBehavior.never,
+          ),
+          onChanged: (value) {
+            simulmvCrudBloc
+                .add(FieldAWChangedEvent(awRate: double.tryParse(value) ?? 0));
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return "Field Authorized Workshop tidak boleh kosong";
+            }
+            // Validasi tambahan untuk memastikan AW Rate valid
+            double? awRate = double.tryParse(value);
+            if (awRate == null || awRate < 0) {
+              return "Authorized Workshop harus 0 atau lebih";
+            }
+            if (awRate > 100) {
+              return "Authorized Workshop tidak boleh lebih dari 100%";
+            }
+            return null;
+          },
+        ),
       ],
-      onChanged: (value) {
-        simulmvCrudBloc
-            .add(FieldAWChangedEvent(awRate: double.tryParse(value) ?? 0));
-      },
-      textAlign: TextAlign.right,
     );
   }
 
@@ -196,74 +277,397 @@ class SimulmvCrudFormPageFormOpsiState extends State<SimulmvFormOpsiPage> {
   }
 
   Widget buildFieldPAD() {
-    return TextFormField(
-      keyboardType: TextInputType.number,
-      inputFormatters: [ThousandsSeparatorInputFormatter()],
-      controller: fieldPadController,
-      decoration: const InputDecoration(
-        labelText: "PA Driver",
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        suffixText: ",000,000,-",
-      ),
-      onChanged: (value) {
-        simulmvCrudBloc
-            .add(FieldPADChangedEvent(pad: double.tryParse(value) ?? 0));
-      },
-      textAlign: TextAlign.right,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Label di atas field
+        const Text(
+          'PA Driver',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
+        ),
+        const SizedBox(height: 8),
+
+        // TextFormField dengan custom decoration
+        TextFormField(
+          keyboardType: TextInputType.number,
+          inputFormatters: [ThousandsSeparatorInputFormatter()],
+          controller: fieldPadController,
+          textAlign: TextAlign.right,
+          decoration: InputDecoration(
+            hintText: '0',
+            hintStyle: const TextStyle(
+              color: Colors.grey,
+              fontSize: 14,
+            ),
+            suffixText: ",000,000,-",
+            suffixStyle: const TextStyle(
+              color: Colors.grey,
+              fontSize: 14,
+            ),
+            // Custom border dengan warna hijau (sama seperti field lainnya)
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color(0xFF91C050),
+                width: 1.5,
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color(0xFF91C050),
+                width: 1.5,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color(0xFF91C050),
+                width: 2.0,
+              ),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Colors.red,
+                width: 1.5,
+              ),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Colors.red,
+                width: 2.0,
+              ),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 12,
+            ),
+            // Hilangkan floating label karena sudah ada label di atas
+            labelText: null,
+            floatingLabelBehavior: FloatingLabelBehavior.never,
+          ),
+          onChanged: (value) {
+            value = value.replaceAll(",", "");
+            simulmvCrudBloc
+                .add(FieldPADChangedEvent(pad: double.tryParse(value) ?? 0));
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return "Field PA Driver tidak boleh kosong";
+            }
+            // Validasi tambahan untuk memastikan PA Driver > 0
+            String cleanValue = value.replaceAll(",", "");
+            double? pad = double.tryParse(cleanValue);
+            if (pad == null || pad <= 0) {
+              return "PA Driver harus lebih dari 0";
+            }
+            return null;
+          },
+        ),
+      ],
     );
   }
 
+  // Revisi buildFieldPAP dengan desain yang sama seperti buildFieldHarga
   Widget buildFieldPAP() {
-    return TextFormField(
-      keyboardType: TextInputType.number,
-      inputFormatters: [ThousandsSeparatorInputFormatter()],
-      controller: fieldPapController,
-      decoration: const InputDecoration(
-        labelText: "PA Passenger",
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        suffixText: ",000,000,-",
-      ),
-      onChanged: (value) {
-        simulmvCrudBloc
-            .add(FieldPAPChangedEvent(pap: double.tryParse(value) ?? 0));
-      },
-      textAlign: TextAlign.right,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Label di atas field
+        const Text(
+          'PA Passenger',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
+        ),
+        const SizedBox(height: 8),
+
+        // TextFormField dengan custom decoration
+        TextFormField(
+          keyboardType: TextInputType.number,
+          inputFormatters: [ThousandsSeparatorInputFormatter()],
+          controller: fieldPapController,
+          textAlign: TextAlign.right,
+          decoration: InputDecoration(
+            hintText: '0',
+            hintStyle: const TextStyle(
+              color: Colors.grey,
+              fontSize: 14,
+            ),
+            suffixText: ",000,000,-",
+            suffixStyle: const TextStyle(
+              color: Colors.grey,
+              fontSize: 14,
+            ),
+            // Custom border dengan warna hijau (sama seperti field lainnya)
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color(0xFF91C050),
+                width: 1.5,
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color(0xFF91C050),
+                width: 1.5,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color(0xFF91C050),
+                width: 2.0,
+              ),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Colors.red,
+                width: 1.5,
+              ),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Colors.red,
+                width: 2.0,
+              ),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 12,
+            ),
+            // Hilangkan floating label karena sudah ada label di atas
+            labelText: null,
+            floatingLabelBehavior: FloatingLabelBehavior.never,
+          ),
+          onChanged: (value) {
+            value = value.replaceAll(",", "");
+            simulmvCrudBloc
+                .add(FieldPAPChangedEvent(pap: double.tryParse(value) ?? 0));
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return "Field PA Passenger tidak boleh kosong";
+            }
+            // Validasi tambahan untuk memastikan PA Passenger > 0
+            String cleanValue = value.replaceAll(",", "");
+            double? pap = double.tryParse(cleanValue);
+            if (pap == null || pap <= 0) {
+              return "PA Passenger harus lebih dari 0";
+            }
+            return null;
+          },
+        ),
+      ],
     );
   }
 
+  // Revisi buildFieldPLL dengan desain yang sama seperti buildFieldHarga
   Widget buildFieldPLL() {
-    return TextFormField(
-      keyboardType: TextInputType.number,
-      inputFormatters: [ThousandsSeparatorInputFormatter()],
-      controller: fieldPllController,
-      decoration: const InputDecoration(
-        labelText: "Passenger Liability",
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        suffixText: ",000,000,-",
-      ),
-      onChanged: (value) {
-        simulmvCrudBloc
-            .add(FieldPLLChangedEvent(pll: double.tryParse(value) ?? 0));
-      },
-      textAlign: TextAlign.right,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Label di atas field
+        const Text(
+          'Passenger Liability',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
+        ),
+        const SizedBox(height: 8),
+
+        // TextFormField dengan custom decoration
+        TextFormField(
+          keyboardType: TextInputType.number,
+          inputFormatters: [ThousandsSeparatorInputFormatter()],
+          controller: fieldPllController,
+          textAlign: TextAlign.right,
+          decoration: InputDecoration(
+            hintText: '0',
+            hintStyle: const TextStyle(
+              color: Colors.grey,
+              fontSize: 14,
+            ),
+            suffixText: ",000,000,-",
+            suffixStyle: const TextStyle(
+              color: Colors.grey,
+              fontSize: 14,
+            ),
+            // Custom border dengan warna hijau (sama seperti field lainnya)
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color(0xFF91C050),
+                width: 1.5,
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color(0xFF91C050),
+                width: 1.5,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color(0xFF91C050),
+                width: 2.0,
+              ),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Colors.red,
+                width: 1.5,
+              ),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Colors.red,
+                width: 2.0,
+              ),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 12,
+            ),
+            // Hilangkan floating label karena sudah ada label di atas
+            labelText: null,
+            floatingLabelBehavior: FloatingLabelBehavior.never,
+          ),
+          onChanged: (value) {
+            value = value.replaceAll(",", "");
+            simulmvCrudBloc
+                .add(FieldPLLChangedEvent(pll: double.tryParse(value) ?? 0));
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return "Field Passenger Liability tidak boleh kosong";
+            }
+            // Validasi tambahan untuk memastikan Passenger Liability > 0
+            String cleanValue = value.replaceAll(",", "");
+            double? pll = double.tryParse(cleanValue);
+            if (pll == null || pll <= 0) {
+              return "Passenger Liability harus lebih dari 0";
+            }
+            return null;
+          },
+        ),
+      ],
     );
   }
 
+// Revisi buildFieldTPL dengan desain yang sama seperti buildFieldHarga
   Widget buildFieldTPL() {
-    return TextFormField(
-      keyboardType: TextInputType.number,
-      inputFormatters: [ThousandsSeparatorInputFormatter()],
-      controller: fieldTplController,
-      decoration: const InputDecoration(
-        labelText: "TPL",
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        suffixText: ",000,000,-",
-      ),
-      onChanged: (value) {
-        simulmvCrudBloc
-            .add(FieldTPLChangedEvent(tpl: double.tryParse(value) ?? 0));
-      },
-      textAlign: TextAlign.right,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Label di atas field
+        const Text(
+          'TPL',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
+        ),
+        const SizedBox(height: 8),
+
+        // TextFormField dengan custom decoration
+        TextFormField(
+          keyboardType: TextInputType.number,
+          inputFormatters: [ThousandsSeparatorInputFormatter()],
+          controller: fieldTplController,
+          textAlign: TextAlign.right,
+          decoration: InputDecoration(
+            hintText: '0',
+            hintStyle: const TextStyle(
+              color: Colors.grey,
+              fontSize: 14,
+            ),
+            suffixText: ",000,000,-",
+            suffixStyle: const TextStyle(
+              color: Colors.grey,
+              fontSize: 14,
+            ),
+            // Custom border dengan warna hijau (sama seperti field lainnya)
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color(0xFF91C050),
+                width: 1.5,
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color(0xFF91C050),
+                width: 1.5,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color(0xFF91C050),
+                width: 2.0,
+              ),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Colors.red,
+                width: 1.5,
+              ),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Colors.red,
+                width: 2.0,
+              ),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 12,
+            ),
+            // Hilangkan floating label karena sudah ada label di atas
+            labelText: null,
+            floatingLabelBehavior: FloatingLabelBehavior.never,
+          ),
+          onChanged: (value) {
+            value = value.replaceAll(",", "");
+            simulmvCrudBloc
+                .add(FieldTPLChangedEvent(tpl: double.tryParse(value) ?? 0));
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return "Field TPL tidak boleh kosong";
+            }
+            // Validasi tambahan untuk memastikan TPL > 0
+            String cleanValue = value.replaceAll(",", "");
+            double? tpl = double.tryParse(cleanValue);
+            if (tpl == null || tpl <= 0) {
+              return "TPL harus lebih dari 0";
+            }
+            return null;
+          },
+        ),
+      ],
     );
   }
 }
