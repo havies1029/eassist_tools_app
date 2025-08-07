@@ -28,6 +28,7 @@ class _TableMvState extends State<TableMv> {
   List<Map<String, dynamic>> _originalItems = [];
   TrinaGridStateManager? _stateManager;
   ActionButtonSection? _actionButton;
+  bool _isAddMode = false;
 
   @override
   void initState() {
@@ -52,23 +53,20 @@ class _TableMvState extends State<TableMv> {
             if (state.status == ListStatus.success) {
               _originalItems = state.items.map(TrinaTableMapper.fromMv).toList();
 
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                _actionKey.currentState?.updateTableData(_originalItems);
-              });
-
               return GenericTrinaTable(
                 columns: TrinaColumnBuilder.build(
-                  columns: [
-                    ColumnMeta(title: 'Jenis Kendaraan', field: 'jenis', widthFactor: 2.0),
-                    ColumnMeta(title: 'Merk', field: 'merk', widthFactor: 1.5),
-                    ColumnMeta(title: 'Type', field: 'type', widthFactor: 1.5),
-                    ColumnMeta(title: 'Tahun', field: 'tahun', widthFactor: 1.2),
-                    ColumnMeta(title: 'No Polisi', field: 'nopol', widthFactor: 1.8),
-                    ColumnMeta(title: 'Harga Pertanggungan', field: 'tsi', widthFactor: 2.0, isCurrency: true),
-                    ColumnMeta(title: 'Premi', field: 'premi', widthFactor: 1.8, isCurrency: true),
-                    ColumnMeta(title: 'Status', field: 'status', widthFactor: 1.5, isStatus: true),
-                  ],
-                ),
+                    columns: [
+                      ColumnMeta(title: 'Jenis Kendaraan', field: 'jenis', widthFactor: 2.0),
+                      ColumnMeta(title: 'Merk', field: 'merk', widthFactor: 1.5),
+                      ColumnMeta(title: 'Type', field: 'type', widthFactor: 1.5),
+                      ColumnMeta(title: 'Tahun', field: 'tahun', widthFactor: 1.2),
+                      ColumnMeta(title: 'No Polisi', field: 'nopol', widthFactor: 1.8),
+                      ColumnMeta(title: 'Harga Pertanggungan', field: 'tsi', widthFactor: 2.0, isCurrency: true),
+                      ColumnMeta(title: 'Premi', field: 'premi', widthFactor: 1.8, isCurrency: true),
+                      ColumnMeta(title: 'Status', field: 'status', widthFactor: 1.5, isStatus: true),
+                    ],
+                    showActionColumn: _isAddMode,
+                  ),
                 rows: TrinaRowBuilder.build(
                   _originalItems,
                   ['jenis', 'merk', 'type', 'tahun', 'nopol', 'tsi', 'premi', 'status'],
@@ -82,6 +80,12 @@ class _TableMvState extends State<TableMv> {
                       constraints: widget.constraints,
                       stateManager: _stateManager,
                       selectedCategory: CategoryType.kendaraan,
+                      onEnterAddMode: () {
+                        setState(() => _isAddMode = true);
+                      },
+                      onExitAddMode: () {
+                        setState(() => _isAddMode = false);
+                      },
                       tableData: _originalItems,
                       onExportSelected: (format) async {
                         final messenger = ScaffoldMessenger.of(context);

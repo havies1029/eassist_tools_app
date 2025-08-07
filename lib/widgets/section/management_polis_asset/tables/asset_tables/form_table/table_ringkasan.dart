@@ -13,7 +13,7 @@ import '../action_button_section.dart';
 import '../table.dart';
 
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'dart:io' show Platform;
+import 'dart:io' as io;
 
 class TableRingkasan extends StatefulWidget {
   final BoxConstraints constraints;
@@ -25,8 +25,8 @@ class TableRingkasan extends StatefulWidget {
 
 class _TableRingkasanState extends State<TableRingkasan> {
   final GlobalKey<ActionButtonSectionState> _actionKey = GlobalKey();
-  late final ActionButtonSection _actionButton;
   List<Map<String, dynamic>> _originalItems = [];
+  late final ActionButtonSection _actionButton;
   TrinaGridStateManager? _stateManager;
 
   bool get isMobile => widget.constraints.maxWidth < 768;
@@ -34,28 +34,24 @@ class _TableRingkasanState extends State<TableRingkasan> {
   @override
   void initState() {
     super.initState();
-
     _actionButton = ActionButtonSection(
-      key: _actionKey,
       constraints: widget.constraints,
       selectedCategory: CategoryType.ringkasan,
       tableData: _originalItems,
-      showStatusFilter: false,
-      showSearchBox: true,
+      onDataFiltered: (filteredData) {
+        setState(() {
+          _originalItems = filteredData;
+        });
+      },
       visibleButtons: const [
-        ActionButtonType.tambahAset,
         ActionButtonType.refresh,
         ActionButtonType.unduh,
         ActionButtonType.share,
       ],
-      onAddAsset: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('🎯 Tambah Aset Ringkasan dijalankan')),
-        );
-      },
+      showSearchBox: true,
       onExportSelected: (format) async {
         final messenger = ScaffoldMessenger.of(context);
-        if (kIsWeb || Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+        if (kIsWeb || io.Platform.isWindows || io.Platform.isMacOS || io.Platform.isLinux) {
           await ExportHelper.export(format, _originalItems, CategoryType.ringkasan);
           messenger.showSnackBar(const SnackBar(content: Text('✅ File berhasil diunduh ke perangkat Web/Desktop')));
         } else {
@@ -76,6 +72,7 @@ class _TableRingkasanState extends State<TableRingkasan> {
       },
     );
 
+    // Initial data load
     Future.delayed(Duration.zero, () {
       context.read<AsetRingkasanCariBloc>().add(
         RefreshAsetRingkasanCariEvent(searchText: '', statusId: '10001'),
@@ -86,38 +83,35 @@ class _TableRingkasanState extends State<TableRingkasan> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [
-        _actionButton,
-        const SizedBox(height: 16),
-        BlocBuilder<AsetRingkasanCariBloc, AsetRingkasanCariState>(
-          builder: (context, state) {
-            if (state.status == ListStatus.success) {
-              _originalItems = state.items.map(TrinaTableMapper.fromRingkasan).toList();
+        children: [
+          _actionButton,
+          const SizedBox(height: 16),
+          BlocBuilder<AsetRingkasanCariBloc, AsetRingkasanCariState>(
+            builder: (context, state) {
+              if (state.status == ListStatus.success) {
+                _originalItems = state.items.map(TrinaTableMapper.fromRingkasan).toList();
 
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                _actionKey.currentState?.updateTableData(_originalItems);
-              });
-
-              return GenericTrinaTable(
-                columns: TrinaColumnBuilder.build(
-                  columns: [
-                    ColumnMeta(title: 'Aset', field: 'aset', widthFactor: 2.0),
-                    ColumnMeta(title: 'Jumlah Aset', field: 'jumlah', widthFactor: 2.0),
-                    ColumnMeta(title: 'Harga Pasar', field: 'hargaPasar', widthFactor: 2.5, isCurrency: true),
-                    ColumnMeta(title: 'Harga Pertanggungan', field: 'hargaPertanggungan', widthFactor: 2.5, isCurrency: true),
-                  ],
-                ),
-                rows: TrinaRowBuilder.build(_originalItems, ['aset', 'jumlah', 'hargaPasar', 'hargaPertanggungan']),
-                onGridLoaded: (manager) => _stateManager = manager,
-              );
-            } else if (state.status == ListStatus.loading) {
-              return const Center(child: CircularProgressIndicator());
-            } else {
-              return const Center(child: CircularProgressIndicator());
-            }
-          },
-        ),
-      ],
+                return GenericTrinaTable(
+                  columns: TrinaColumnBuilder.build(
+                    columns: [
+                      ColumnMeta(title: 'Aset', field: 'aset', widthFactor: 2.0),
+                      ColumnMeta(title: 'Jumlah Aset', field: 'jumlah', widthFactor: 2.0),
+                      ColumnMeta(title: 'Harga Pasar', field: 'hargaPasar', widthFactor: 2.5, isCurrency: true),
+                      ColumnMeta(title: 'Harga Pertanggungan', field: 'hargaPertanggungan', widthFactor: 2.5, isCurrency: true),
+                    ],
+                    showActionColumn: false,
+                  ),
+                  rows: TrinaRowBuilder.build(_originalItems, ['aset', 'jumlah', 'hargaPasar', 'hargaPertanggungan'], showActionColumn: false),
+                  onGridLoaded: (manager) => _stateManager = manager,
+                );
+              } else if (state.status == ListStatus.loading) {
+                return const Center(child: CircularProgressIndicator());
+              } else {
+                return const Center(child: CircularProgressIndicator());
+              }
+            },
+          ),
+        ]
     );
   }
 }

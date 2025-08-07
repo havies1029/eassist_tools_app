@@ -13,7 +13,7 @@ import '../action_button_section.dart';
 import '../table.dart';
 
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'dart:io' show Platform;
+import 'dart:io' as io;
 
 class TableKesehatan extends StatefulWidget {
   final BoxConstraints constraints;
@@ -25,50 +25,16 @@ class TableKesehatan extends StatefulWidget {
 
 class _TableKesehatanState extends State<TableKesehatan> {
   final GlobalKey<ActionButtonSectionState> _actionKey = GlobalKey();
-  late final ActionButtonSection _actionButton;
   List<Map<String, dynamic>> _originalItems = [];
   TrinaGridStateManager? _stateManager;
+  ActionButtonSection? _actionButton;
+  bool _isAddMode = false;
 
   bool get isMobile => widget.constraints.maxWidth < 768;
-  final dateFormat = DateFormat('dd MMM yyyy');
 
   @override
   void initState() {
     super.initState();
-
-    _actionButton = ActionButtonSection(
-      key: _actionKey,
-      constraints: widget.constraints,
-      selectedCategory: CategoryType.kesehatan,
-      tableData: _originalItems,
-      onAddAsset: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('🩺 Tambah Aset Kesehatan dijalankan')),
-        );
-      },
-      onExportSelected: (format) async {
-        final messenger = ScaffoldMessenger.of(context);
-        if (kIsWeb || Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-          await ExportHelper.export(format, _originalItems, CategoryType.kesehatan);
-          messenger.showSnackBar(const SnackBar(content: Text('✅ File berhasil diunduh ke perangkat Web/Desktop')));
-        } else {
-          final extension = format.toLowerCase() == 'pdf' ? 'pdf' : 'xlsx';
-          final fileName = 'laporan_kesehatan.$extension';
-          await MobileDownloadHelper.download(
-            context: context,
-            fileName: fileName,
-            data: _originalItems,
-            format: format,
-          );
-        }
-      },
-      onRefresh: (searchText, statusId) {
-        context.read<AsetHealthCariBloc>().add(
-          RefreshAsetHealthCariEvent(searchText: searchText, statusId: statusId),
-        );
-      },
-    );
-
     Future.delayed(Duration.zero, () {
       context.read<AsetHealthCariBloc>().add(
         RefreshAsetHealthCariEvent(statusId: '10001', searchText: ''),
@@ -76,20 +42,22 @@ class _TableKesehatanState extends State<TableKesehatan> {
     });
   }
 
+  void _rebuildTable() {
+    if (_stateManager != null) {
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _actionButton,
+        if (_actionButton != null) _actionButton!,
         const SizedBox(height: 16),
         BlocBuilder<AsetHealthCariBloc, AsetHealthCariState>(
           builder: (context, state) {
             if (state.status == ListStatus.success) {
               _originalItems = state.items.map(TrinaTableMapper.fromKesehatan).toList();
-
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                _actionKey.currentState?.updateTableData(_originalItems);
-              });
 
               return GenericTrinaTable(
                 columns: TrinaColumnBuilder.build(
@@ -100,12 +68,59 @@ class _TableKesehatanState extends State<TableKesehatan> {
                     ColumnMeta(title: 'Posisi', field: 'posisi', widthFactor: 1.5),
                     ColumnMeta(title: 'Status', field: 'status', widthFactor: 1.2, isStatus: true),
                   ],
+                  showActionColumn: !_isAddMode,
                 ),
                 rows: TrinaRowBuilder.build(
                   _originalItems,
                   ['nama', 'tgl_lahir', 'jnskel', 'posisi', 'status'],
+                  showActionColumn: !_isAddMode,
                 ),
-                onGridLoaded: (manager) => _stateManager = manager,
+                onGridLoaded: (manager) {
+                  _stateManager = manager;
+
+                  setState(() {
+                    _actionButton = ActionButtonSection(
+                      key: _actionKey,
+                      constraints: widget.constraints,
+                      stateManager: _stateManager,
+                      selectedCategory: CategoryType.kesehatan,
+                      onEnterAddMode: () {
+                        setState(() {
+                          _isAddMode = true;
+                        });
+                        _rebuildTable();
+                      },
+                      onExitAddMode: () {
+                        setState(() {
+                          _isAddMode = false;
+                        });
+                        _rebuildTable();
+                      },
+                      tableData: _originalItems,
+                      onExportSelected: (format) async {
+                        final messenger = ScaffoldMessenger.of(context);
+                        if (kIsWeb || io.Platform.isWindows || io.Platform.isMacOS || io.Platform.isLinux) {
+                          await ExportHelper.export(format, _originalItems, CategoryType.kesehatan);
+                          messenger.showSnackBar(const SnackBar(content: Text('✅ File berhasil diunduh ke perangkat Web/Desktop')));
+                        } else {
+                          final extension = format.toLowerCase() == 'pdf' ? 'pdf' : 'xlsx';
+                          final fileName = 'laporan_kesehatan.$extension';
+                          await MobileDownloadHelper.download(
+                            context: context,
+                            fileName: fileName,
+                            data: _originalItems,
+                            format: format,
+                          );
+                        }
+                      },
+                      onRefresh: (searchText, statusId) {
+                        context.read<AsetHealthCariBloc>().add(
+                          RefreshAsetHealthCariEvent(searchText: searchText, statusId: statusId),
+                        );
+                      },
+                    );
+                  });
+                }
               );
             } else if (state.status == ListStatus.loading) {
               return const Center(child: CircularProgressIndicator());

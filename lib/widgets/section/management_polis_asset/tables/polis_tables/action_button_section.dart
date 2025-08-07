@@ -1,11 +1,60 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:trina_grid/trina_grid.dart';
+
 import '../../../../../common/constants.dart';
+import '../../../../../blocs/gen_status_aset/statusasetcari_bloc.dart';
 import '../../../../dialog/popup/donwload_popup.dart';
 import '../../category_type.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../blocs/gen_status_aset/statusasetcari_bloc.dart';
+
+enum ActionButtonType {
+  tambahPolis,
+  endorse,
+  perpanjang,
+  refresh,
+  unduh,
+  share,
+  hapus
+}
+
+const Map<ActionButtonType, Map<String, dynamic>> _buttonConfig = {
+  ActionButtonType.tambahPolis: {
+    'icon': 'assets/icons/tambah_polis.svg',
+    'label': 'Tambah',
+    'color': Color(0xFF007AFF),
+  },
+  ActionButtonType.endorse: {
+    'icon': 'assets/icons/endorse.svg',
+    'label': 'Endorse',
+    'color': Color(0xFFFFC728),
+  },
+  ActionButtonType.perpanjang: {
+    'icon': 'assets/icons/perpanjang_polis.svg',
+    'label': 'Perpanjang Polis',
+    'color': Color(0xFFFAA232),
+  },
+  ActionButtonType.refresh: {
+    'icon': 'assets/icons/refresh.svg',
+    'label': 'Refresh',
+    'color': Color(0xFF00BFEF),
+  },
+  ActionButtonType.unduh: {
+    'icon': 'assets/icons/unduh.svg',
+    'label': 'Unduh data',
+    'color': Color(0xFF00CC4B),
+  },
+  ActionButtonType.share: {
+    'icon': 'assets/icons/share.svg',
+    'label': '',
+    'color': Color(0xFF5C5FFF),
+  },
+  ActionButtonType.hapus: {
+    'icon': 'assets/icons/hapus.svg',
+    'label': '',
+    'color': Color(0xFFFF0000),
+  },
+};
 
 String _mapStatusToId(String statusLabel) {
   switch (statusLabel.toLowerCase()) {
@@ -18,25 +67,14 @@ String _mapStatusToId(String statusLabel) {
     case 'berakhir':
       return '10005';
     default:
-      return '10001'; // Semua
+      return '10001';
   }
-}
-
-enum ActionButtonType {
-  tambahPolis,
-  endorse,
-  perpanjang,
-  refresh,
-  unduh,
-  share,
-  hapus
 }
 
 class ActionButtonSection extends StatefulWidget {
   final BoxConstraints constraints;
   final CategoryType? selectedCategory;
   final List<Map<String, dynamic>>? tableData;
-  final Function(List<Map<String, dynamic>>)? onDataFiltered; // Callback untuk data yang sudah difilter
   final List<ActionButtonType> visibleButtons;
   final bool showSearchBox;
   final bool showStatusFilter;
@@ -46,13 +84,15 @@ class ActionButtonSection extends StatefulWidget {
   final void Function(String format)? onExportSelected;
   final void Function(String searchText, String statusId)? onRefresh;
   final TrinaGridStateManager? stateManager;
+  final Function(List<Map<String, dynamic>>)? onDataFiltered;
+  final VoidCallback? onEnterAddMode;
+  final VoidCallback? onExitAddMode;
 
   const ActionButtonSection({
     super.key,
     required this.constraints,
     this.selectedCategory,
     this.tableData,
-    this.onDataFiltered,
     this.visibleButtons = ActionButtonType.values,
     this.showSearchBox = true,
     this.showStatusFilter = true,
@@ -62,6 +102,9 @@ class ActionButtonSection extends StatefulWidget {
     this.onExportSelected,
     this.onRefresh,
     this.stateManager,
+    this.onDataFiltered,
+    this.onEnterAddMode,
+    this.onExitAddMode,
   });
 
   @override
@@ -69,72 +112,43 @@ class ActionButtonSection extends StatefulWidget {
 }
 
 class ActionButtonSectionState extends State<ActionButtonSection> {
-  // Consolidated responsive breakpoints
+  /// Responsives Layout Helper
   bool get isMobile => widget.constraints.maxWidth < 768;
   bool get isTablet => widget.constraints.maxWidth >= 768 && widget.constraints.maxWidth < 992;
-  bool get shouldShowFilter =>
-      widget.showStatusFilter &&
-          widget.selectedCategory != null &&
-          widget.selectedCategory != CategoryType.ringkasan;
-
-  // Consolidated layout dimensions
-  double get horizontalPadding {
-    if (widget.constraints.maxWidth > 1200) return 15.0;
-    if (widget.constraints.maxWidth > 992) return 12.0;
-    return isTablet ? 10.0 : 7.0;
-  }
-
   double get maxWidth {
     if (widget.constraints.maxWidth > 1200) return 1200.0;
     return isTablet
         ? widget.constraints.maxWidth * 0.95
         : widget.constraints.maxWidth * 0.9;
   }
+  double get horizontalPadding {
+    final w = widget.constraints.maxWidth;
+    if (w > 1200) return 15;
+    if (w > 992) return 12;
+    if (w > 768) return 10;
+    return 7;
+  }
+  bool get shouldShowFilter =>
+      widget.showStatusFilter &&
+          widget.selectedCategory != null &&
+          widget.selectedCategory != CategoryType.ringkasan;
 
-  // Consolidated button configuration
-  static const Map<ActionButtonType, Map<String, dynamic>> _buttonConfig = {
-    ActionButtonType.tambahPolis: {
-      'icon': 'assets/icons/tambah_polis.svg',
-      'label': 'Tambah Polis',
-      'color': Color(0xFF007AFF),
-    },
-    ActionButtonType.endorse: {
-      'icon': 'assets/icons/endorse.svg',
-      'label': 'Endorse',
-      'color': Color(0xFFFFC728),
-    },
-    ActionButtonType.perpanjang: {
-      'icon': 'assets/icons/perpanjang_polis.svg',
-      'label': 'Perpanjang Polis',
-      'color': Color(0xFFFAA232),
-    },
-    ActionButtonType.refresh: {
-      'icon': 'assets/icons/refresh.svg',
-      'label': 'Refresh',
-      'color': Color(0xFF00BFEF),
-    },
-    ActionButtonType.unduh: {
-      'icon': 'assets/icons/unduh.svg',
-      'label': 'Unduh data',
-      'color': Color(0xFF00CC4B),
-    },
-    ActionButtonType.share: {
-      'icon': 'assets/icons/share.svg',
-      'label': '',
-      'color': Color(0xFF5C5FFF),
-    },
-    ActionButtonType.hapus: {
-      'icon': 'assets/icons/hapus.svg',
-      'label': '',
-      'color': Color(0xFFFF0000),
-    },
-  };
-
-  // Filter state
-  String _activeStatusFilter = 'Semua';
-  String _searchText = '';
+  /// Controller, State Variables, Row Tracking
+  final TextEditingController _catatanController = TextEditingController();
   final TextEditingController _searchController = TextEditingController();
 
+  bool _isAddMode = false;
+  List<TrinaRow> _rowsBackup = [];
+  TrinaRow? _draftRow;
+  Set<String> _selectedRowIds = {};
+  String _searchText = '';
+  String _activeStatusFilter = 'Semua';
+
+  List<TrinaRow> get _checkedRows => widget.stateManager?.checkedRows ?? [];
+  final Set<String> _blockedFields = {'checkbox', 'no', 'status', 'aksi'};
+  int get _selectedCount => _checkedRows.length;
+
+  /// Lifecycle Methods
   @override
   void initState() {
     super.initState();
@@ -143,32 +157,70 @@ class ActionButtonSectionState extends State<ActionButtonSection> {
     if (bloc.state.items.isEmpty) {
       bloc.add(RefreshStatusAsetCariEvent());
     }
-    // debugPrint('🔥 Category in ActionButtonSection: ${widget.selectedCategory}');
+
+    widget.stateManager?.addListener(_onSelectionChanged);
   }
 
   @override
   void didUpdateWidget(ActionButtonSection oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    // Reset filters when table data changes significantly
-    if (oldWidget.tableData != widget.tableData &&
-        widget.tableData!.isEmpty) {
-      // debugPrint('[🔁 RESET FILTER karena data polis berubah]');
+    if (oldWidget.stateManager != widget.stateManager) {
+      oldWidget.stateManager?.removeListener(_onSelectionChanged);
+      widget.stateManager?.addListener(_onSelectionChanged);
+      _restoreSelection();
+    }
+
+    if (oldWidget.tableData != widget.tableData && widget.tableData!.isEmpty) {
       _resetFilters();
     }
 
-    // Apply filters when table data updates
     if (oldWidget.tableData != widget.tableData) {
       _applyFilters();
+      _restoreSelection();
     }
   }
 
   @override
   void dispose() {
     _searchController.dispose();
+    _catatanController.dispose();
+    widget.stateManager?.removeListener(_onSelectionChanged);
     super.dispose();
   }
 
+  /// Listener Functions
+  void _onSelectionChanged() {
+    final checked = widget.stateManager?.checkedRows ?? [];
+    _selectedRowIds
+      ..clear()
+      ..addAll(
+        checked
+            .map((row) => row.cells['id']?.value)
+            .where((id) => id != null)
+            .map((id) => id.toString()),
+      );
+
+    // print('[SELECTION CHANGED] Checked: ${checked.length} | IDs: $_selectedRowIds');
+
+    if (mounted) setState(() {});
+  }
+
+  void _restoreSelection() {
+    final manager = widget.stateManager;
+    if (manager == null) return;
+
+    for (final row in manager.refRows) {
+      final id = row.cells['id']?.value.toString();
+      if (id != null && _selectedRowIds.contains(id)) {
+        row.setChecked(true);
+      }
+    }
+
+    _onSelectionChanged();
+  }
+
+  /// Filtering Helpers
   void _resetFilters() {
     setState(() {
       _activeStatusFilter = 'Semua';
@@ -202,64 +254,6 @@ class ActionButtonSectionState extends State<ActionButtonSection> {
     widget.onDataFiltered?.call(filteredData);
   }
 
-  String _buildSearchableText(Map<String, dynamic> item) {
-    return item.entries
-        .where((e) => e.value != null)
-        .map((e) => e.value.toString())
-        .join(' ')
-        .toLowerCase();
-  }
-
-  String _mapStatusFilter(String status) {
-    switch (status.toLowerCase()) {
-      case 'active':
-      case 'aktif':
-        return 'Aktif';
-      case 'inactive':
-      case 'non aktif':
-        return 'Non Aktif';
-      case 'processing':
-      case 'diproses':
-      case 'sedang diproses':
-        return 'Diproses';
-      case 'expired':
-      case 'berakhir':
-        return 'Berakhir';
-      default:
-        return status;
-    }
-  }
-
-  void _onSearchChanged(String value) {
-    setState(() {
-      _searchText = value;
-    });
-    _filterAndSend();
-    widget.onRefresh?.call(
-      _searchText,
-      _mapStatusToId(_activeStatusFilter),
-    );
-  }
-
-  void _onFilterChanged(String value) {
-    setState(() {
-      _activeStatusFilter = value;
-    });
-    _filterAndSend();
-    widget.onRefresh?.call(
-      _searchText,
-      _mapStatusToId(_activeStatusFilter),
-    );
-  }
-
-  void updateTableData(List<Map<String, dynamic>> newData) {
-    setState(() {
-      // Optional: kalau kamu ingin menyimpan lokal
-      // _internalTableData = newData;
-    });
-    _applyFilters();
-  }
-
   void _filterAndSend() {
     final raw = widget.tableData ?? [];
     List<Map<String, dynamic>> result = List.from(raw);
@@ -280,7 +274,6 @@ class ActionButtonSectionState extends State<ActionButtonSection> {
 
     widget.onDataFiltered?.call(result);
   }
-
 
   List<Map<String, dynamic>> _getFilteredData() {
     if (widget.tableData == null) return [];
@@ -304,21 +297,81 @@ class ActionButtonSectionState extends State<ActionButtonSection> {
     return filteredData;
   }
 
-  Widget _buildButton(ActionButtonType type) {
-    if (!widget.visibleButtons.contains(type)) return const SizedBox.shrink();
+  String _mapStatusFilter(String status) {
+    switch (status.toLowerCase()) {
+      case 'active':
+      case 'aktif':
+        return 'Aktif';
+      case 'inactive':
+      case 'non aktif':
+        return 'Non Aktif';
+      case 'processing':
+      case 'diproses':
+      case 'sedang diproses':
+        return 'Diproses';
+      case 'expired':
+      case 'berakhir':
+        return 'Berakhir';
+      default:
+        return status;
+    }
+  }
 
-    final config = _buttonConfig[type]!;
-    return _ActionButton(
-      imageAsset: config['icon'],
-      label: config['label'],
-      color: config['color'],
-      isMobile: isMobile,
-      onPressed: () => _handleButtonAction(type),
+  String _buildSearchableText(Map<String, dynamic> item) {
+    return item.entries
+        .where((e) => e.value != null)
+        .map((e) => e.value.toString())
+        .join(' ')
+        .toLowerCase();
+  }
+
+  /// UI Interaction Helpers
+  void _onSearchChanged(String value) {
+    setState(() {
+      _searchText = value;
+    });
+    _filterAndSend();
+    widget.onRefresh?.call(
+      _searchText,
+      _mapStatusToId(_activeStatusFilter),
     );
   }
 
+  void _onFilterChanged(String value) {
+    setState(() {
+      _activeStatusFilter = value;
+    });
+    _filterAndSend();
+    widget.onRefresh?.call(
+      _searchText,
+      _mapStatusToId(_activeStatusFilter),
+    );
+  }
+
+  void _setAddModeEditing(bool enabled) {
+    final mgr = widget.stateManager;
+    if (mgr == null) return;
+
+    for (final col in mgr.refColumns) {
+      col.enableEditingMode = !_blockedFields.contains(col.field) && enabled;
+    }
+    mgr.notifyListeners();
+  }
+
+  String? _firstEditableField() {
+    final mgr = widget.stateManager;
+    if (mgr == null) return null;
+
+    for (final col in mgr.refColumns) {
+      if (!_blockedFields.contains(col.field)) {
+        return col.field;
+      }
+    }
+    return null;
+  }
+
+  /// Button Handlers (Add, Refresh, Delete, etc)
   void _handleButtonAction(ActionButtonType type) {
-    final currentData = widget.tableData ?? [];
     final filteredData = _getFilteredData();
 
     switch (type) {
@@ -362,53 +415,92 @@ class ActionButtonSectionState extends State<ActionButtonSection> {
   }
 
   void _handleAddPolis() {
-    // debugPrint('Adding new polis');
-
     if (widget.onAddPolis != null) {
       widget.onAddPolis!();
       return;
     }
 
     final manager = widget.stateManager;
-    if (manager != null) {
-      const addCount = 1;
-      final currentRowCount = manager.refRows.length;
-
-      final newRows = manager.getNewRows(count: addCount);
-
-      for (var i = 0; i < newRows.length; i++) {
-        final row = newRows[i];
-
-        // 🔢 Nomor otomatis: urutan + 1
-        final noUrut = currentRowCount + i + 1;
-
-        row.cells['no']?.value = noUrut.toString();
-        row.cells['status']?.value = 'diproses';
-      }
-
-      manager.appendRows(newRows);
-
-      manager.setCurrentCell(
-        newRows.first.cells.entries.first.value,
-        manager.refRows.length - 1,
+    if (manager == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('StateManager tidak ada')),
       );
-
-      manager.moveScrollByRow(
-        TrinaMoveDirection.down,
-        manager.refRows.length - 2,
-      );
-
-      manager.setKeepFocus(true);
-
       return;
     }
 
-    // Fallback
+    // backup
+    _rowsBackup = List<TrinaRow>.from(manager.refRows);
+
+    // clear dan buat draft
+    manager.removeAllRows();
+    final row = manager.getNewRows(count: 1).first;
+
+    final nextNo = _rowsBackup.length + 1;
+    row.cells['no']?.value = nextNo.toString();
+    row.cells['status']?.value = 'Diproses';
+
+    manager.appendRows([row]);
+
+    // aktifkan edit utk semua kolom selain blocked
+    _setAddModeEditing(true);
+
+    // fokus ke kolom editable pertama
+    final field = _firstEditableField();
+    if (field != null && row.cells.containsKey(field)) {
+      manager.setCurrentCell(row.cells[field], 0);
+    }
+    manager.setEditing(true);
+    manager.setKeepFocus(true);
+
+    setState(() {
+      _isAddMode = true;
+      _draftRow = row;
+    });
+
+    widget.onEnterAddMode?.call();
+  }
+
+  void _cancelAddMode() {
+    final manager = widget.stateManager;
+    if (manager == null) return;
+
+    manager.setEditing(false);
+    _setAddModeEditing(false);
+
+    manager.removeAllRows();
+    if (_rowsBackup.isNotEmpty) manager.appendRows(_rowsBackup);
+
+    setState(() {
+      _isAddMode = false;
+      _draftRow = null;
+      _rowsBackup = [];
+    });
+    widget.onExitAddMode?.call();
+  }
+
+  void _saveAddMode() {
+    final manager = widget.stateManager;
+    if (manager == null || _draftRow == null) return;
+
+    manager.setEditing(false);
+    _setAddModeEditing(false);
+
+    final restored = List<TrinaRow>.from(_rowsBackup)..add(_draftRow!);
+    manager.removeAllRows();
+    _draftRow?.cells['catatan']?.value = _catatanController.text;
+    manager.appendRows(restored);
+
+    manager.setCurrentCell(_draftRow!.cells.entries.first.value, restored.length - 1);
+    manager.setKeepFocus(true);
+
+    setState(() {
+      _isAddMode = false;
+      _draftRow = null;
+      _rowsBackup = [];
+    });
+    widget.onExitAddMode?.call();
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('✅ Tambah Polis dijalankan'),
-        duration: Duration(seconds: 2),
-      ),
+      const SnackBar(content: Text('✅ Data berhasil disimpan')),
     );
   }
 
@@ -497,11 +589,50 @@ class ActionButtonSectionState extends State<ActionButtonSection> {
     );
   }
 
+  /// Build UI Fragments
+  Widget _buildButton(ActionButtonType type) {
+    if (!widget.visibleButtons.contains(type)) return const SizedBox.shrink();
+
+    final config = _buttonConfig[type]!;
+    return _ActionButton(
+      imageAsset: config['icon'],
+      label: config['label'],
+      color: config['color'],
+      isMobile: isMobile,
+      onPressed: () => _handleButtonAction(type),
+    );
+  }
+
   Widget _buildButtonsGroup(List<ActionButtonType> types) {
     return Wrap(
       spacing: 8,
       runSpacing: 8,
       children: types.map(_buildButton).toList(),
+    );
+  }
+
+  Widget _buildSelectedBanner() {
+    if (_selectedCount == 0) return const SizedBox.shrink();
+    // print('[DEBUG] Banner checked: $_selectedCount | keys: $_selectedRowIds');
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 200),
+      child: Container(
+        width: double.infinity,
+        key: ValueKey('selected_$_selectedCount'),
+        padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 14),
+        decoration: BoxDecoration(
+          color: const Color(0x80007AFF),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Text(
+          'Dipilih: $_selectedCount Polis',
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 15,
+          ),
+        ),
+      ),
     );
   }
 
@@ -529,46 +660,24 @@ class ActionButtonSectionState extends State<ActionButtonSection> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final tableData = widget.tableData ?? [];
-    final filteredData = _getFilteredData();
-
-    return Container(
-      color: Colors.white,
-      width: double.infinity,
-      child: Center(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: maxWidth),
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: horizontalPadding,
-                vertical: 15
-            ),
-            child: Column(
-              children: [
-                // Debug info
-                if (tableData.isNotEmpty)
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    margin: const EdgeInsets.only(bottom: 8),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-
-                // Main content
-                isMobile ? _buildMobileLayout() : _buildDesktopLayout(),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 
   Widget _buildDesktopLayout() {
+    if (_isAddMode) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Wrap(
+            spacing: 8,
+            children: [
+              ElevatedButton(onPressed: _saveAddMode, child: const Text('Simpan')),
+              OutlinedButton(onPressed: _cancelAddMode, child: const Text('Batal')),
+            ],
+          ),
+        ],
+      );
+    }
+
+    // Normal mode (seperti sebelumnya)
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -604,9 +713,7 @@ class ActionButtonSectionState extends State<ActionButtonSection> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildButtonsGroup([
-              ActionButtonType.refresh,
-            ]),
+            _buildButtonsGroup([ActionButtonType.refresh]),
             if (shouldShowFilter)
               Expanded(
                 child: Align(
@@ -616,10 +723,8 @@ class ActionButtonSectionState extends State<ActionButtonSection> {
                       if (state.status == ListStatus.loading || state.items.isEmpty) {
                         return const SizedBox.shrink();
                       }
-
                       final rawOptions = state.items.map((e) => e.statusNama).toSet().toList();
                       final statusOptions = ['Semua', ...rawOptions.where((e) => e.toLowerCase() != 'semua')];
-
                       return _StatusFilterChips(
                         active: _activeStatusFilter,
                         options: statusOptions,
@@ -631,11 +736,28 @@ class ActionButtonSectionState extends State<ActionButtonSection> {
               ),
           ],
         ),
+        const SizedBox(height: 12),
+        _buildSelectedBanner(),
       ],
     );
   }
 
   Widget _buildMobileLayout() {
+    if (_isAddMode) {
+      return Row(
+        children: [
+          Expanded(
+            child: ElevatedButton(onPressed: _saveAddMode, child: const Text('Simpan')),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: OutlinedButton(onPressed: _cancelAddMode, child: const Text('Batal')),
+          ),
+        ],
+      );
+    }
+
+    // Normal mode (seperti sebelumnya)
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -671,7 +793,91 @@ class ActionButtonSectionState extends State<ActionButtonSection> {
           alignment: Alignment.centerLeft,
           child: _buildButton(ActionButtonType.refresh),
         ),
+        const SizedBox(height: 12),
+        _buildSelectedBanner(),
       ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final tableData = widget.tableData ?? [];
+    final filteredData = _getFilteredData();
+
+    return Container(
+      color: Colors.white,
+      width: double.infinity,
+      child: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: maxWidth),
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: horizontalPadding,
+                vertical: 15
+            ),
+            child: Column(
+              children: [
+                // Debug info
+                if (tableData.isNotEmpty)
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    margin: const EdgeInsets.only(bottom: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+
+                // Main content
+                isMobile ? _buildMobileLayout() : _buildDesktopLayout(),
+
+                if (_isAddMode)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            SvgPicture.asset(
+                              'assets/icons/catatan.svg',
+                              width: 20,
+                              height: 20,
+                              colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),
+                            ),
+                            const SizedBox(width: 8),
+                            const Text(
+                              'Catatan Tambahan',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            )
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        TextFormField(
+                          controller: _catatanController,
+                          maxLines: 3,
+                          decoration: InputDecoration(
+                            hintText: 'Contoh: "Menambah Karyawan Baru"',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 10,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -800,7 +1006,6 @@ class _SearchBoxState extends State<_SearchBox> {
           Flexible(
             child: TextField(
               controller: widget.controller,
-              cursorColor: const Color(0xFF91C050),
               focusNode: _focusNode,
               onChanged: widget.onChanged,
               decoration: InputDecoration(

@@ -72,15 +72,15 @@ class _ProfileSectionState extends State<ProfileSection> {
         }
       }
     }
-
-    debugPrint('📛 Display Name: $displayName');
-
-
-    debugPrint('📧 Last Login Email: $lastEmail');
-
-    debugPrint('[PS] isLoaded=${rekanState.isLoaded} '
-        'nama="${(rekanState.record?.rekanNama ?? '').trim()}" '
-        'fotoLoaded=${fotoState is ProfileDownloadFotoLoaded}');
+    //
+    // debugPrint('📛 Display Name: $displayName');
+    //
+    //
+    // debugPrint('📧 Last Login Email: $lastEmail');
+    //
+    // debugPrint('[PS] isLoaded=${rekanState.isLoaded} '
+    //     'nama="${(rekanState.record?.rekanNama ?? '').trim()}" '
+    //     'fotoLoaded=${fotoState is ProfileDownloadFotoLoaded}');
 
     return Container(
       key: widget.profileButtonKey,

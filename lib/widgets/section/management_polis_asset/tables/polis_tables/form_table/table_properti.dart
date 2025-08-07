@@ -28,6 +28,7 @@ class _TablePropertiState extends State<TableProperti> {
   List<Map<String, dynamic>> _originalItems = [];
   TrinaGridStateManager? _stateManager;
   ActionButtonSection? _actionButton;
+  bool _isAddMode = false;
 
   bool get isMobile => widget.constraints.maxWidth < 768;
 
@@ -82,21 +83,23 @@ class _TablePropertiState extends State<TableProperti> {
             if (state.status == ListStatus.success) {
               _originalItems = state.items.map(TrinaTableMapper.fromProperti).toList();
 
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                _actionKey.currentState?.updateTableData(_originalItems);
-              });
-
               return GenericTrinaTable(
-                columns: TrinaColumnBuilder.build(
-                  columns: [
-                    ColumnMeta(title: 'Alamat', field: 'alamat', widthFactor: 2.2),
-                    ColumnMeta(title: 'Harga Pertanggungan', field: 'tsi', widthFactor: 2.0, isCurrency: true),
-                    ColumnMeta(title: 'Premi', field: 'premi', widthFactor: 1.5, isCurrency: true),
-                    ColumnMeta(title: 'Klausa Bank', field: 'klausa', widthFactor: 2.0),
-                    ColumnMeta(title: 'Status', field: 'status', widthFactor: 1.4, isStatus: true),
-                  ],
-                ),
-                rows: TrinaRowBuilder.build(_originalItems, ['alamat', 'tsi', 'premi', 'klausa', 'status']),
+                  columns: TrinaColumnBuilder.build(
+                    columns: [
+                      ColumnMeta(title: 'Alamat', field: 'alamat', widthFactor: 2.2),
+                      ColumnMeta(title: 'Harga Pertanggungan', field: 'tsi', widthFactor: 2.0, isCurrency: true),
+                      ColumnMeta(title: 'Premi', field: 'premi', widthFactor: 1.5, isCurrency: true),
+                      ColumnMeta(title: 'Klausa Bank', field: 'klausa', widthFactor: 2.0),
+                      ColumnMeta(title: 'Status', field: 'status', widthFactor: 1.4, isStatus: true),
+                    ],
+                    showActionColumn: _isAddMode,
+                  ),
+
+                  rows: TrinaRowBuilder.build(
+                    _originalItems,
+                    ['alamat', 'tsi', 'premi', 'klausa', 'status'],
+                  ),
+
                   onGridLoaded: (manager) {
                     _stateManager = manager;
 
@@ -106,6 +109,12 @@ class _TablePropertiState extends State<TableProperti> {
                         constraints: widget.constraints,
                         stateManager: _stateManager,
                         selectedCategory: CategoryType.properti,
+                        onEnterAddMode: () {
+                          setState(() => _isAddMode = true);
+                        },
+                        onExitAddMode: () {
+                          setState(() => _isAddMode = false);
+                        },
                         tableData: _originalItems,
                         onExportSelected: (format) async {
                           final messenger = ScaffoldMessenger.of(context);

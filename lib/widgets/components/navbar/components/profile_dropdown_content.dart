@@ -20,12 +20,32 @@ class ProfileDropdownContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    double dropdownWidth;
+    if (screenWidth < 360) {
+      // 📱 Mobile sangat kecil (misal Galaxy Mini)
+      dropdownWidth = screenWidth - 32;
+    } else if (screenWidth < 480) {
+      // 📱 Mobile normal
+      dropdownWidth = screenWidth - 78;
+    } else if (screenWidth < 768) {
+      // 📱 Mobile besar / Tablet potrait
+      dropdownWidth = 240;
+    } else if (screenWidth < 1024) {
+      // 📲 Tablet landscape
+      dropdownWidth = 280;
+    } else {
+      // 💻 Desktop
+      dropdownWidth = 300;
+    }
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _refreshRekanIfNeeded(context);
       _loadFotoIfNeeded(context);
     });
     return Container(
-      width: 320,
+      width: dropdownWidth,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),

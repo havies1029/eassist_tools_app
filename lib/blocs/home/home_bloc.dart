@@ -285,17 +285,20 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     });
 
     on<PushPageEvent>((event, emit) async {
-      if (_pageStack.isNotEmpty && _pageStack.last == event.pageType) {
-        debugPrint("⏩ PushPageEvent dilewati karena sudah di stack terakhir: \${event.pageType}");
+      // 💡 Tetap izinkan push meski sama, kalau belum pernah push dari prefs
+      final isSameAsLast = _pageStack.isNotEmpty && _pageStack.last == event.pageType;
+
+      if (isSameAsLast && _hasStartupPush) {
+        debugPrint("⏩ PushPageEvent dilewati karena sudah di stack terakhir: ${event.pageType}");
         return;
       }
 
       _pageStack.add(event.pageType);
+
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('lastPageType', event.pageType.name);
 
-      final newState = _mapPageTypeToState(event.pageType);
-      emit(newState);
+      emit(_mapPageTypeToState(event.pageType));
       _dispatchInitEventForPage(event.pageType);
       markStartupPush();
     });

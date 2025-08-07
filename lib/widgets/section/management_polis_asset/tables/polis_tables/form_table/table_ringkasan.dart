@@ -13,7 +13,7 @@ import '../action_button_section.dart';
 import '../table.dart';
 
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'dart:io' show Platform;
+import 'dart:io' as io;
 
 class TableRingkasan extends StatefulWidget {
   final BoxConstraints constraints;
@@ -27,7 +27,6 @@ class _TableRingkasanState extends State<TableRingkasan> {
   final GlobalKey<ActionButtonSectionState> _actionKey = GlobalKey();
   List<Map<String, dynamic>> _originalItems = [];
   late final ActionButtonSection _actionButton;
-
   TrinaGridStateManager? _stateManager;
 
   bool get isMobile => widget.constraints.maxWidth < 768;
@@ -52,7 +51,7 @@ class _TableRingkasanState extends State<TableRingkasan> {
       showSearchBox: true,
       onExportSelected: (format) async {
         final messenger = ScaffoldMessenger.of(context);
-        if (kIsWeb || Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+        if (kIsWeb || io.Platform.isWindows || io.Platform.isMacOS || io.Platform.isLinux) {
           await ExportHelper.export(format, _originalItems, CategoryType.ringkasan);
           messenger.showSnackBar(const SnackBar(content: Text('✅ File berhasil diunduh ke perangkat Web/Desktop')));
         } else {
@@ -92,10 +91,6 @@ class _TableRingkasanState extends State<TableRingkasan> {
             if (state.status == ListStatus.success) {
               _originalItems = state.items.map(TrinaTableMapper.fromRingkasan).toList();
 
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                _actionKey.currentState?.updateTableData(_originalItems);
-              });
-
               return GenericTrinaTable(
                 columns: TrinaColumnBuilder.build(
                   columns: [
@@ -104,8 +99,9 @@ class _TableRingkasanState extends State<TableRingkasan> {
                     ColumnMeta(title: 'Harga Pasar', field: 'hargaPasar', widthFactor: 2.5, isCurrency: true),
                     ColumnMeta(title: 'Harga Pertanggungan', field: 'hargaPertanggungan', widthFactor: 2.5, isCurrency: true),
                   ],
+                  showActionColumn: false,
                 ),
-                rows: TrinaRowBuilder.build(_originalItems, ['aset', 'jumlah', 'hargaPasar', 'hargaPertanggungan']),
+                rows: TrinaRowBuilder.build(_originalItems, ['aset', 'jumlah', 'hargaPasar', 'hargaPertanggungan'], showActionColumn: false),
                 onGridLoaded: (manager) => _stateManager = manager,
               );
             } else if (state.status == ListStatus.loading) {

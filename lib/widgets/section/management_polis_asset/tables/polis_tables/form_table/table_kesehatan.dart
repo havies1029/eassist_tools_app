@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:eassist_tools_app/blocs/gen_aset_health/asethealthcari_bloc.dart';
 import 'package:trina_grid/trina_grid.dart';
 import '../../../../../../common/constants.dart';
@@ -13,7 +12,7 @@ import '../action_button_section.dart';
 import '../table.dart';
 
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'dart:io' show Platform;
+import 'dart:io' as io;
 
 class TableKesehatan extends StatefulWidget {
   final BoxConstraints constraints;
@@ -28,6 +27,7 @@ class _TableKesehatanState extends State<TableKesehatan> {
   List<Map<String, dynamic>> _originalItems = [];
   TrinaGridStateManager? _stateManager;
   ActionButtonSection? _actionButton;
+  bool _isAddMode = false;
 
   @override
   void initState() {
@@ -50,23 +50,21 @@ class _TableKesehatanState extends State<TableKesehatan> {
             if (state.status == ListStatus.success) {
               _originalItems = state.items.map(TrinaTableMapper.fromKesehatan).toList();
 
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                _actionKey.currentState?.updateTableData(_originalItems);
-              });
-
               return GenericTrinaTable(
                 columns: TrinaColumnBuilder.build(
-                  columns: [
-                    ColumnMeta(title: 'Nama', field: 'nama', widthFactor: 2.0),
-                    ColumnMeta(title: 'Tanggal Lahir', field: 'tgl_lahir', widthFactor: 2.0),
-                    ColumnMeta(title: 'Jenis Kelamin', field: 'jnskel', widthFactor: 1.5),
-                    ColumnMeta(title: 'Posisi', field: 'posisi', widthFactor: 1.5),
-                    ColumnMeta(title: 'Status', field: 'status', widthFactor: 1.2, isStatus: true),
-                  ],
-                ),
+                    columns: [
+                      ColumnMeta(title: 'Nama',          field: 'nama',      widthFactor: 2.0),
+                      ColumnMeta(title: 'Tanggal Lahir', field: 'tgl_lahir', widthFactor: 2.0),
+                      ColumnMeta(title: 'Jenis Kelamin', field: 'jnskel',    widthFactor: 1.5),
+                      ColumnMeta(title: 'Posisi',        field: 'posisi',    widthFactor: 1.5),
+                      ColumnMeta(title: 'Status',        field: 'status',    widthFactor: 1.2, isStatus: true),
+                    ],
+                  showActionColumn: !_isAddMode,
+                  ),
                 rows: TrinaRowBuilder.build(
                   _originalItems,
                   ['nama', 'tgl_lahir', 'jnskel', 'posisi', 'status'],
+                  showActionColumn: !_isAddMode,
                 ),
                 onGridLoaded: (manager) {
                   _stateManager = manager;
@@ -77,10 +75,16 @@ class _TableKesehatanState extends State<TableKesehatan> {
                       constraints: widget.constraints,
                       stateManager: _stateManager,
                       selectedCategory: CategoryType.kesehatan,
+                      onEnterAddMode: () {
+                        setState(() => _isAddMode = true);
+                      },
+                      onExitAddMode: () {
+                        setState(() => _isAddMode = false);
+                      },
                       tableData: _originalItems,
                       onExportSelected: (format) async {
                         final messenger = ScaffoldMessenger.of(context);
-                        if (kIsWeb || Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+                        if (kIsWeb || io.Platform.isWindows || io.Platform.isMacOS || io.Platform.isLinux) {
                           await ExportHelper.export(format, _originalItems, CategoryType.kesehatan);
                           messenger.showSnackBar(const SnackBar(content: Text('✅ File berhasil diunduh ke perangkat Web/Desktop')));
                         } else {
@@ -106,7 +110,7 @@ class _TableKesehatanState extends State<TableKesehatan> {
             } else if (state.status == ListStatus.loading) {
               return const Center(child: CircularProgressIndicator());
             } else {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(child: Text('Gagal memuat data.'));
             }
           },
         ),

@@ -239,13 +239,23 @@ Future<void> handleAuthenticationStateGlobal({
     final fromClient = state.authenticatedFrom == 'login_client';
 
     // Opsional: sinkron ke home bila bukan home
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      if (!context.mounted) return;
-      final homeBloc = context.read<HomeBloc>();
-      if (homeBloc.currentPage != PageType.home) {
+    // SchedulerBinding.instance.addPostFrameCallback((_) {
+    //   if (!context.mounted) return;
+    //   final homeBloc = context.read<HomeBloc>();
+    //   if (homeBloc.currentPage != PageType.home) {
+    //     homeBloc.add(PushPageEvent(PageType.home));
+    //   }
+    // });
+
+    // Cuma redirect ke home kalau memang login barusan (bukan refresh)
+    if (fromClient || isRedirectedFromLoginUser) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        if (!context.mounted) return;
+        final homeBloc = context.read<HomeBloc>();
         homeBloc.add(PushPageEvent(PageType.home));
-      }
-    });
+        isRedirectedFromLoginUser = false; // ✅ RESET FLAGNYA DI SINI
+      });
+    }
 
     _lastAuthStateGlobal = state;
     return;
@@ -293,8 +303,11 @@ Future<void> main() async {
             ..add(AppStarted()),
         ),
         BlocProvider<HomeBloc>(
-          create: (_) => HomeBloc(initialPage: PageType.home), // ← jangan emit langsung di sini
+          create: (_) => HomeBloc(initialPage: initialPageType), // 💥 GANTI INI
         ),
+        // BlocProvider<HomeBloc>(
+        //   create: (_) => HomeBloc(initialPage: PageType.home), // ← jangan emit langsung di sini
+        // ),
         BlocProvider<AuthLocalCubit>(
           create: (_) => AuthLocalCubit(appPrefs), // ⬅️ ini dia
         ),
@@ -316,17 +329,17 @@ Future<void> main() async {
     ),
   );
 
-  // ✅ Setelah runApp selesai
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    final context = navigatorKey.currentContext;
-    if (context != null) {
-      final homeBloc = BlocProvider.of<HomeBloc>(context);
-      if (initialPageType != PageType.home) {
-        // debugPrint("🧠 PostFrame: Push page from SharedPreferences: $initialPageType");
-        homeBloc.add(PushPageEvent(initialPageType));
-      }
-    }
-  });
+  // // ✅ Setelah runApp selesai
+  // WidgetsBinding.instance.addPostFrameCallback((_) {
+  //   final context = navigatorKey.currentContext;
+  //   if (context != null) {
+  //     final homeBloc = BlocProvider.of<HomeBloc>(context);
+  //     if (initialPageType != PageType.home) {
+  //       // debugPrint("🧠 PostFrame: Push page from SharedPreferences: $initialPageType");
+  //       homeBloc.add(PushPageEvent(initialPageType));
+  //     }
+  //   }
+  // });
 }
 
 class App extends StatelessWidget {

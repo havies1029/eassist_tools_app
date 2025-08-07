@@ -118,7 +118,10 @@ class FooterSection extends StatelessWidget {
   Widget _buildMobileLayout(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
+      children: [ // Map (full width)
+        _buildGoogleMapsButton(),
+        const SizedBox(height: 16.0),
+
         // Company Info
         _buildCompanyInfo(),
         const SizedBox(height: 16.0),
@@ -126,11 +129,6 @@ class FooterSection extends StatelessWidget {
         // Social Media
         _buildSocialMediaSection(),
         const SizedBox(height: 20.0),
-
-        // Map (full width)
-        _buildGoogleMapsButton(),
-        const SizedBox(height: 16.0),
-
         // Unggulan (full width)
         _buildSignatureSection(context),
         const SizedBox(height: 12.0),

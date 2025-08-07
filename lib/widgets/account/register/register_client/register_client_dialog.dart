@@ -318,7 +318,28 @@ class _RegisterClientDialogState extends BaseDialogState<RegisterClientDialog> {
                                     );
                                   },
                                   listener: (context, state) {
-                                    // Handle state changes if needed
+                                    if (state.hasFailure && state.errors.isNotEmpty) {
+                                      final error = state.errors.first;
+                                      if (error.toLowerCase().contains('telepon')) {
+                                        // 🎯 Tampilkan snackbar jika error terkait nomor telepon
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(
+                                            content: Text(error),
+                                            backgroundColor: Colors.red,
+                                            behavior: SnackBarBehavior.floating,
+                                          ),
+                                        );
+                                      } else {
+                                        // Error umum lainnya
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(
+                                            content: Text(error),
+                                            backgroundColor: Colors.orange,
+                                            behavior: SnackBarBehavior.floating,
+                                          ),
+                                        );
+                                      }
+                                    }
                                   },
                                 ),
 
@@ -606,8 +627,28 @@ class _RegisterClientDialogState extends BaseDialogState<RegisterClientDialog> {
                             );
                           },
                           listener: (context, state) {
-                            // Handle state changes if needed
+                            if (state.hasFailure && state.errors.isNotEmpty) {
+                              final error = state.errors.first;
+                              if (error.toLowerCase().contains('telepon')) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(error),
+                                    backgroundColor: Colors.red,
+                                    behavior: SnackBarBehavior.floating,
+                                  ),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(error),
+                                    backgroundColor: Colors.orange,
+                                    behavior: SnackBarBehavior.floating,
+                                  ),
+                                );
+                              }
+                            }
                           },
+
                         ),
                       ],
                     ),
