@@ -1,24 +1,28 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AnimatedInsuranceCard extends StatefulWidget {
-  final String title;
-  final String subtitle;
   final String imagePath;
-  final Color color;
   final bool isMobile;
   final VoidCallback onTap;
+  final double? width;
+  final double? height;
+  final BoxFit? fit;
+  final double? borderRadius;
+  final EdgeInsets? padding;
+  final EdgeInsets? margin;
 
   const AnimatedInsuranceCard({
     super.key,
-    required this.title,
-    required this.subtitle,
     required this.imagePath,
-    required this.color,
     required this.isMobile,
     required this.onTap,
+    this.width,
+    this.height,
+    this.fit = BoxFit.cover,
+    this.borderRadius = 20,
+    this.padding,
+    this.margin,
   });
 
   @override
@@ -86,159 +90,103 @@ class _AnimatedInsuranceCardState extends State<AnimatedInsuranceCard>
     }
   }
 
+  void _onTap() {
+    // Animate scale on tap like hover
+    _hoverController.forward().then((_) {
+      Future.delayed(const Duration(milliseconds: 100), () {
+        _hoverController.reverse();
+      });
+    });
+    widget.onTap();
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _hoverController,
       builder: (context, child) {
-        return Transform.scale(
-          scale: _scaleAnimation.value,
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  blurRadius: _elevationAnimation.value,
-                  offset: Offset(0, _elevationAnimation.value * 0.3),
-                  spreadRadius: 2,
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(widget.imagePath),
-                    fit: BoxFit.cover,
+        return Container(
+          margin: widget.margin,
+          child: Transform.scale(
+            scale: _scaleAnimation.value,
+            child: Container(
+              width: widget.width,
+              height: widget.height,
+              padding: widget.padding,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(widget.borderRadius ?? 20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: _elevationAnimation.value,
+                    offset: Offset(0, _elevationAnimation.value * 0.3),
+                    spreadRadius: 1,
                   ),
-                ),
-                child: Stack(
-                  children: [
-                    // Subtle gradient overlay for text readability
-                    Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.transparent,
-                            Colors.black.withOpacity(0.3),
-                            Colors.black.withOpacity(0.6),
-                          ],
-                          stops: const [0.0, 0.5, 1.0],
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(widget.borderRadius ?? 20),
+                child: Container(
+                  width: widget.width,
+                  height: widget.height,
+                  child: Stack(
+                    children: [
+                      // Main image
+                      Positioned.fill(
+                        child: Image.asset(
+                          widget.imagePath,
+                          fit: widget.fit ?? BoxFit.cover,
+                          width: widget.width,
+                          height: widget.height,
+                          errorBuilder: (context, error, stackTrace) {
+                            debugPrint('Error loading image: ${widget.imagePath}');
+                            return Container(
+                              width: widget.width,
+                              height: widget.height,
+                              color: Colors.grey[200],
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.image_not_supported,
+                                    color: Colors.grey[400],
+                                    size: 50,
+                                  ),
+                                  SizedBox(height: 8),
+                                  Text(
+                                    'Image not found',
+                                    style: TextStyle(
+                                      color: Colors.grey[600],
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
                         ),
                       ),
-                    ),
-
-                    // Content
-                    Padding(
-                      padding: EdgeInsets.all(widget.isMobile ? 16 : 24),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 30),
-
-                          // Title with better contrast
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                            child: AnimatedDefaultTextStyle(
-                              duration: const Duration(milliseconds: 300),
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: widget.isMobile ? 16 : 20,
-                                fontWeight: FontWeight.w800,
-                                fontFamily: 'Satoshi-Regular',
-                                shadows: const [
-                                  Shadow(
-                                    offset: Offset(0, 1),
-                                    blurRadius: 3,
-                                    color: Colors.black45,
-                                  ),
-                                ],
-                              ),
-                              child: Text(widget.title),
-                            ),
+                      // Hover overlay effect
+                      if (_overlayAnimation.value > 0)
+                        Positioned.fill(
+                          child: Container(
+                            color: Colors.black.withOpacity(_overlayAnimation.value),
                           ),
-
-                          const SizedBox(height: 8),
-
-                          // Subtitle with background for readability
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                            child: AnimatedDefaultTextStyle(
-                              duration: const Duration(milliseconds: 300),
-                              style: TextStyle(
-                                color: Colors.white.withOpacity(0.95),
-                                fontSize: widget.isMobile ? 11 : 13,
-                                fontWeight: FontWeight.w500,
-                                fontFamily: 'Satoshi-Regular',
-                                height: 1.4,
-                                shadows: const [
-                                  Shadow(
-                                    offset: Offset(0, 1),
-                                    blurRadius: 2,
-                                    color: Colors.black45,
-                                  ),
-                                ],
-                              ),
-                              child: Text(
-                                widget.subtitle,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
+                        ),
+                      // Invisible tap area
+                      Positioned.fill(
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: _onTap,
+                            onHover: _onHover,
+                            borderRadius: BorderRadius.circular(widget.borderRadius ?? 20),
+                            child: Container(),
                           ),
-
-                          const SizedBox(height: 16),
-                          const Spacer(),
-
-                          // Arrow icon with enhanced visibility
-                          AnimatedRotation(
-                            duration: const Duration(milliseconds: 300),
-                            turns: _isHovered ? 0.125 : 0,
-                            child: Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.9),
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  color: widget.color.withOpacity(0.3),
-                                  width: 1,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    blurRadius: 4,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: Icon(
-                                Icons.arrow_forward,
-                                color: widget.color,
-                                size: widget.isMobile ? 16 : 20,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    // Invisible tap area
-                    Positioned.fill(
-                      child: Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: widget.onTap,
-                          onHover: _onHover,
-                          borderRadius: BorderRadius.circular(20),
-                          child: Container(),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

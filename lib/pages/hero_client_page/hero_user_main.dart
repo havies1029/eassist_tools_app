@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../common/constants.dart';
 import '../../widgets/components/action/menu_action_section.dart';
 import '../../widgets/components/navbar/navbar_widget.dart';
 import '../../widgets/components/carousel/carousel_section.dart';
@@ -35,7 +36,7 @@ class HeroUserMain extends StatelessWidget {
               // Layer 1: Background
               Positioned.fill(
                 child: isMobile
-                    ? Container(color: const Color(0xFF91C050))
+                    ? Container(color: kBrandAccentColor)
                     : Image.asset(
                   'assets/images/bg-home.jpg',
                   fit: BoxFit.cover,
@@ -153,7 +154,7 @@ class _HeroUserPageState extends State<HeroUserPage> {
                   // Background
                   Positioned.fill(
                     child: isMobile
-                        ? Container(color: const Color(0xFF91C050))
+                        ? Container(color: kBrandAccentColor)
                         : Stack(
                       fit: StackFit.expand,
                       children: [
@@ -274,7 +275,7 @@ class _HeroUserPageState extends State<HeroUserPage> {
 
 
                   // Navbar overlay
-                  const _FixedNavbarOverlay(),
+                  // const _FixedNavbarOverlay(),
                 ],
               );
             },

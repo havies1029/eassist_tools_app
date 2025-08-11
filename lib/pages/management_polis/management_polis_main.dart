@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../common/constants.dart';
 import 'management_polis_page.dart';
 
 
@@ -12,8 +13,8 @@ class PolisManagementMain extends StatelessWidget {
       title: 'JPS Insurance',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: const Color(0xFF79AB43),
-        scaffoldBackgroundColor: const Color(0xFFD5F4B4),
+        primaryColor: kBrandPrimaryColor,
+        scaffoldBackgroundColor: kBrandLightColor,
         fontFamily: 'Satoshi-Regular',
         textTheme: const TextTheme(
           bodyMedium: TextStyle(
@@ -27,7 +28,7 @@ class PolisManagementMain extends StatelessWidget {
           ),
         ),
         buttonTheme: const ButtonThemeData(
-          buttonColor: Color(0xFF79AB43),
+          buttonColor: kBrandPrimaryColor,
           textTheme: ButtonTextTheme.primary,
         ),
       ),

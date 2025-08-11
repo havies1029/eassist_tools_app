@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../widgets/components/hero/hero_section.dart';
-import '../../widgets/section/signature_joss_page/find_insurance/paragraf_about.dart';
+import '../../widgets/section/customer_service/action_section_cs.dart';
 import '../../widgets/section/signature_joss_page/find_insurance/action_find_section.dart';
 import '../../widgets/components/navbar/navbar_widget.dart';
 import '../../widgets/section/about/floating_buttons_about.dart';
@@ -112,7 +112,7 @@ class _FindInsurancePageState extends State<FindInsurancePage> {
                           sectionType: SectionType.find_insurance),
                       FloatingButtons(constraints: constraints),
                       ActionSection(constraints: constraints),
-                      JPSInsuranceSection(constraints: constraints),
+                      ActionSectionCS(constraints: constraints),
                       FooterSection(constraints: constraints),
                     ],
                   ),

@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekan1crud_bloc.dart';
 
+import '../../common/constants.dart';
 import '../../repositories/user/user_repository.dart';
 import '../../widgets/account/login/login_gmail/popup_dialog_login.dart';
 import '../../widgets/account/profile/profile_main_page.dart';
@@ -115,7 +116,7 @@ class _HeroPageState extends State<HeroPage> {
         // Background
         Positioned.fill(
           child: isMobile
-              ? Container(color: const Color(0xFF91C050))
+              ? Container(color: kBrandAccentColor)
               : Image.asset(
             'assets/images/bg-home.jpg',
             fit: BoxFit.cover,
@@ -162,8 +163,8 @@ class _HeroPageState extends State<HeroPage> {
           ),
         ),
 
-        // Navbar
-        const FixedNavbarOverlay(),
+        // // Navbar
+        // const FixedNavbarOverlay(),
       ],
     );
   }

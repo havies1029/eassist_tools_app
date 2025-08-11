@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../common/constants.dart';
 import '../../repositories/user/user_repository.dart';
 import '../../widgets/components/navbar/navbar_widget.dart';
 import '../../widgets/section/about/floating_buttons_about.dart';
@@ -20,8 +21,8 @@ class ArticleMain extends StatelessWidget {
       title: 'JPS Insurance',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: const Color(0xFF91C050),
-        scaffoldBackgroundColor: const Color(0xFFD5F4B4),
+        primaryColor: kBrandAccentColor,
+        scaffoldBackgroundColor: kBrandLightColor,
         fontFamily: 'Satoshi-Regular',
         textTheme: const TextTheme(
           bodyMedium: TextStyle(
@@ -35,7 +36,7 @@ class ArticleMain extends StatelessWidget {
           ),
         ),
         buttonTheme: const ButtonThemeData(
-          buttonColor: Color(0xFF91C050),
+          buttonColor: kBrandAccentColor,
           textTheme: ButtonTextTheme.primary,
         ),
       ),

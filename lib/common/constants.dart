@@ -1,6 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:eassist_tools_app/common/size_config.dart';
 
+// ==== BRAND JPS (ABOUT PAGE) ====
+const kBrandPrimaryColor = Color(0xFF79AB43); // hijau utama
+const kBrandLightColor   = Color(0xFFD5F4B4); // hijau muda background
+const kBrandAccentColor  = Color(0xFF91C050); // hijau tombol
+const kBrandTextOnPrimary = Colors.white;     // teks di atas hijau
+const kBrandTextOnGradient = Color(0xFF6B8F4F);     // teks di atas hijau
+const kBrandTextOnSurface = Colors.black87;   // teks di atas background terang
+const kBrandTextOnOpacity1 = Color.fromRGBO(0, 0, 0, 0.4);
+const kBrandTextOnOpacity2 = Color.fromRGBO(0, 0, 0, 0.8);
+
+// Overlay untuk hero image
+const kBrandOverlayDark  = Color.fromARGB(160, 0, 0, 0); // ~62% hitam
+const kBrandOverlayLight = Color.fromARGB(80, 0, 0, 0);  // ~31% hitam
+
 const kPrimaryColor = Color(0xFFFF7643);
 const kPrimaryLightColor = Color(0xFFFFECDF);
 const kPrimaryGradientColor = LinearGradient(

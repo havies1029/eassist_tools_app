@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../common/constants.dart';
 import '../../repositories/user/user_repository.dart';
 import '../../widgets/components/navbar/navbar_widget.dart';
 import '../../widgets/section/customer_service/cs_section.dart';
@@ -19,7 +20,7 @@ class CSMain extends StatelessWidget {
       title: 'JPS Insurance',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: const Color(0xFF79AB43),
+        primaryColor: kBrandPrimaryColor,
         scaffoldBackgroundColor: Colors.white,
         fontFamily: 'Satoshi-Regular',
         textTheme: const TextTheme(
@@ -30,7 +31,7 @@ class CSMain extends StatelessWidget {
           ),
         ),
         buttonTheme: const ButtonThemeData(
-          buttonColor: Color(0xFF79AB43),
+          buttonColor: kBrandPrimaryColor,
           textTheme: ButtonTextTheme.primary,
         ),
       ),
@@ -45,7 +46,7 @@ class CSPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: kBrandTextOnPrimary,
       body: LayoutBuilder(
         builder: (context, constraints) {
           return Stack(
@@ -92,7 +93,7 @@ class CSPage extends StatelessWidget {
               cacheHeight: 900,
             ),
             Container(
-              color: Colors.black.withOpacity(0.4),
+              color: kBrandTextOnOpacity1,
             ),
           ],
         ),

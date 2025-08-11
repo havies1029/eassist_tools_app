@@ -1,13 +1,23 @@
 import 'package:eassist_tools_app/widgets/section/signature_joss_page/decorations/AnimatedInsuranceCard.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../decorations/AnimatedInsuranceCard.dart';
 
-
 class ActionSection extends StatefulWidget {
   final BoxConstraints constraints;
+  // Add these properties to control image dimensions
+  final double? customImageWidth;
+  final double? customImageHeight;
+  final BoxFit? imageFit;
 
-  const ActionSection({super.key, required this.constraints});
+  const ActionSection({
+    super.key,
+    required this.constraints,
+    this.customImageWidth,
+    this.customImageHeight,
+    this.imageFit = BoxFit.cover,
+  });
 
   @override
   State<ActionSection> createState() => _ActionSectionState();
@@ -34,7 +44,10 @@ class _ActionSectionState extends State<ActionSection>
 
   double get maxWidth =>
       widget.constraints.maxWidth > 1300 ? 1200 : widget.constraints.maxWidth * 0.9;
-  double get contentPadding => isMobile ? 16.0 : 0;
+
+  // Calculate dynamic image dimensions
+  double get imageWidth => widget.customImageWidth ?? (isMobile ? 300 : 334);
+  double get imageHeight => widget.customImageHeight ?? (isMobile ? 180 : 200);
 
   @override
   void initState() {
@@ -144,31 +157,25 @@ class _ActionSectionState extends State<ActionSection>
       builder: (context, child) {
         return Container(
           width: double.infinity,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: const BorderRadius.only(
+          decoration: const BoxDecoration(
+            color: Color(0xFFF8FAF5), // Light green background like in image
+            borderRadius: BorderRadius.only(
               topLeft: Radius.circular(50),
               topRight: Radius.circular(50),
             ),
           ),
           padding: EdgeInsets.only(
-            top: isMobile ? 20.0 : 40.0,
-            bottom: isMobile ? 0 : 40.0,
+            top: isMobile ? 40.0 : 80.0,
+            bottom: isMobile ? 40.0 : 80.0,
           ),
           child: Center(
             child: Container(
               width: maxWidth,
-              padding: EdgeInsets.symmetric(
-                vertical: isMobile ? 0 : 36.0,
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: contentPadding),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildInsuranceGrid(),
-                  ],
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _buildInsuranceGrid(),
+                ],
               ),
             ),
           ),
@@ -179,55 +186,63 @@ class _ActionSectionState extends State<ActionSection>
 
   Widget _buildInsuranceGrid() {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // New Header
         _buildNewHeader(),
-        // Grid kartu asuransi
+        SizedBox(height: 30),
         _buildInsuranceCards(),
       ],
     );
   }
 
   Widget _buildNewHeader() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 60.0),
-        child: FadeTransition(
-          opacity: _headerFadeAnimation,
-          child: SlideTransition(
-            position: _headerSlideAnimation,
-            child: RichText(
-              textAlign: TextAlign.center,
-              text: TextSpan(
+    return FadeTransition(
+      opacity: _headerFadeAnimation,
+      child: SlideTransition(
+        position: _headerSlideAnimation,
+        child: Column(
+          children: [
+            SvgPicture.asset('assets/icons/find_insurance.svg', width: 45, height: 50),
+            SizedBox(height: 12),
+            // Title
+            Text.rich(
+              TextSpan(
+                text: 'Yuk, temukan ',
                 style: TextStyle(
                   fontFamily: 'Satoshi-Regular',
-                  fontSize: isMobile ? 22.0 : 25.0,
-                  color: Colors.black,
-                  height: 1.4,
+                  fontSize: isMobile ? 20 : 25,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF000000),
                 ),
                 children: [
-                  const TextSpan(text: 'Yuk, temukan '),
                   TextSpan(
                     text: 'asuransi',
-                    style: TextStyle(
-                      color: const Color(0xFF79AB43),
-                      fontWeight: FontWeight.bold,
+                    style: const TextStyle(
+                      color: Color(0xFF91DA2D),
                     ),
                   ),
-                  const TextSpan(text: ' yang pas buat '),
-                  TextSpan(
-                    text: 'kamu',
-                    style: TextStyle(
-                      color: const Color(0xFF79AB43),
-                      fontWeight: FontWeight.bold,
-                    ),
+                  const TextSpan(
+                    text: ' yang pas buat kamu!',
                   ),
-                  const TextSpan(text: '!'),
                 ],
               ),
+              textAlign: TextAlign.center,
             ),
-          ),
+            SizedBox(height: 10),
+            // Subtitle
+            Container(
+              child: Text(
+                'Dari kendaraan sampai pendidikan, semua bisa kamu lindungi dengan mudah, cepat, dan harga yang bersahabat.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: 'Satoshi-Regular',
+                  fontSize: isMobile ? 15 : 15,
+                  fontWeight: FontWeight.w400,
+                  color: const Color(0xFFA6A6A6),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -235,56 +250,22 @@ class _ActionSectionState extends State<ActionSection>
 
   Widget _buildInsuranceCards() {
     final categories = [
-      {
-        'title': 'Asuransi Mobil',
-        'subtitle': 'Lindungi kendaraan Anda dengan perlindungan menyeluruh',
-        'image': 'assets/images/find_1.png',
-        'color': const Color(0xFF1E3A8A),
-      },
-      {
-        'title': 'Asuransi Kesehatan',
-        'subtitle': 'Jaminan kesehatan terbaik untuk keluarga tercinta',
-        'image': 'assets/images/find_2.png',
-        'color': const Color(0xFF059669),
-      },
-      {
-        'title': 'Asuransi Jiwa',
-        'subtitle': 'Perlindungan masa depan yang terjamin',
-        'image': 'assets/images/find_3.png',
-        'color': const Color(0xFF7C3AED),
-      },
-      {
-        'title': 'Asuransi Perjalanan',
-        'subtitle': 'Traveling dengan tenang dan nyaman',
-        'image': 'assets/images/find_4.png',
-        'color': const Color(0xFFDC2626),
-      },
-      {
-        'title': 'Asuransi Rumah & Properti',
-        'subtitle': 'Lindungi rumah dan harta berhargamu dari bencana dan risiko tak terduga',
-        'image': 'assets/images/find_5.png',
-        'color': const Color(0xFFDC2626),
-      },
-      {
-        'title': 'Asuransi Pendidikan',
-        'subtitle': 'Persiapkan masa depan dengan dana pendidikan yang aman',
-        'image': 'assets/images/find_6.png',
-        'color': const Color(0xFFDC2626),
-      },
+      {'image': 'assets/images/asuransi_mobil.png'},
+      {'image': 'assets/images/asuransi_kesehatan.png'},
+      {'image': 'assets/images/asuransi_jiwa.png'},
+      {'image': 'assets/images/asuransi_perjalanan.png'},
+      {'image': 'assets/images/asuransi_properti.png'},
+      {'image': 'assets/images/asuransi_pendidikan.png'},
     ];
 
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: isMobile ? 16 : 36,
-        mainAxisSpacing: isMobile ? 16 : 36,
-        childAspectRatio: isMobile ? 1.4 : 1.6,
-      ),
-      itemCount: categories.length,
-      itemBuilder: (context, index) {
-        final category = categories[index];
+    return Wrap(
+      alignment: WrapAlignment.center,
+      spacing: isMobile ? 12 : 24,
+      runSpacing: isMobile ? 16 : 24,
+      children: categories.asMap().entries.map((entry) {
+        final index = entry.key;
+        final category = entry.value;
+
         return TweenAnimationBuilder<double>(
           duration: Duration(milliseconds: 800 + (index * 200)),
           tween: Tween(begin: 0.0, end: 1.0),
@@ -294,36 +275,31 @@ class _ActionSectionState extends State<ActionSection>
               child: Opacity(
                 opacity: value,
                 child: _buildInsuranceCard(
-                  title: category['title'] as String,
-                  subtitle: category['subtitle'] as String,
-                  imagePath: category['image'] as String,
-                  color: category['color'] as Color,
+                  imagePath: category['image']!,
                   index: index,
                 ),
               ),
             );
           },
         );
-      },
+      }).toList(),
     );
   }
 
   Widget _buildInsuranceCard({
-    required String title,
-    required String subtitle,
     required String imagePath,
-    required Color color,
     required int index,
   }) {
     return AnimatedInsuranceCard(
-      title: title,
-      subtitle: subtitle,
       imagePath: imagePath,
-      color: color,
       isMobile: isMobile,
+      width: imageWidth,
+      height: imageHeight,
+      fit: widget.imageFit,
+      borderRadius: 12,
       onTap: () {
-        print('Selected: $title');
-        // Handle navigation or action here
+        // Handle tap action here
+        debugPrint('Tapped on insurance card: $imagePath');
       },
     );
   }

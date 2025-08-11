@@ -1,6 +1,5 @@
-
-
 import 'package:eassist_tools_app/pages/aset/aset_main.dart';
+import 'package:eassist_tools_app/pages/base/safelayoutframe.dart';
 import 'package:eassist_tools_app/pages/chatting/roomcari_list.dart';
 import 'package:eassist_tools_app/pages/gen_aset_health/asethealthcari_main.dart';
 import 'package:eassist_tools_app/pages/groupchat/groupchat_page.dart';
@@ -102,7 +101,7 @@ class PageContainerWithUserRepository extends PageContainerBase {
         );
         break;
     // case PageType.profile:
-    //   page = ProfileMainPage(
+    //   page = ProfileMainPaage(
     //     userid: userid,
     //     userRepository: userRepository,
     //   );
@@ -196,7 +195,7 @@ class PageContainer extends StatelessWidget {
     );
 
     return kIsWeb
-        ? child
+        ? SafeLayoutFrame(child: child)
         : FloatingChatWrapper(child: child);
   }
 

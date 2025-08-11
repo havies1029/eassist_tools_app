@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../common/constants.dart';
 import '../../widgets/components/hero/hero_section.dart';
 import '../../widgets/section/signature_joss_page/report_claim/jps_user/action_report_user_section.dart';
 import '../../widgets/components/navbar/navbar_widget.dart';
@@ -16,8 +17,8 @@ class UserJpsMain extends StatelessWidget {
       title: 'JPS Insurance',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: const Color(0xFF79AB43),
-        scaffoldBackgroundColor: const Color(0xFFD5F4B4),
+        primaryColor: kBrandPrimaryColor,
+        scaffoldBackgroundColor: kBrandLightColor,
         fontFamily: 'Satoshi-Regular',
         textTheme: const TextTheme(
           bodyMedium: TextStyle(
@@ -31,7 +32,7 @@ class UserJpsMain extends StatelessWidget {
           ),
         ),
         buttonTheme: const ButtonThemeData(
-          buttonColor: Color(0xFF79AB43),
+          buttonColor: kBrandPrimaryColor,
           textTheme: ButtonTextTheme.primary,
         ),
       ),
