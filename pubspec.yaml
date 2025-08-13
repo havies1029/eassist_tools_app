@@ -204,7 +204,12 @@ flutter:
     - assets/icons/tiktok.svg
     - assets/icons/tools.svg
     - assets/icons/user_roles.svg
+    - assets/images/ya1.svg
+    - assets/images/ya(1).png
     - assets/images/frame_polis.svg
+    - assets/icons/tabler_logout.svg
+    - assets/icons/lsicon_setting-outline.svg
+    - assets/icons/ya1.svg
 
 fonts:
     - family: HeeboBold

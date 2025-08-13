@@ -95,7 +95,7 @@ class HeroSection extends StatelessWidget {
           margin: AppTheme.responsiveMargin(constraints, sectionType: sectionType),
           padding: EdgeInsets.all(isMobile ? 0 : 40),
           decoration: BoxDecoration(
-            color: Color(0xFF91C050),
+            color: Colors.transparent,
             borderRadius: BorderRadius.circular(isMobile ? 0 : 20),
           ),
 

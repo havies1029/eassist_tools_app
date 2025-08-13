@@ -19,8 +19,10 @@ class Spacing {
 class AppColors {
   /// App Background
   /// Off white
-  static const background = Color(0xFFF7F7F7);
+  // static const background = Color(0xFFF7F7F7);
   //static const background = Color(0xffff6101);
+  static const background = Colors.transparent;
+
   static const cardBackground = Colors.white;
   static const activeFillColor = Color(0xFFE0E0E0);
 
