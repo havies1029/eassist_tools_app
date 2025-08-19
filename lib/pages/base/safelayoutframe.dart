@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/home/home_bloc.dart';
 import '../../pages/base/base_page.dart'; // untuk PageType
 import '../../widgets/components/bottom_nav/bottom_nav.dart';
+import '../heropage/fixed_navbar_overlay.dart';
 
 class SafeLayoutFrame extends StatelessWidget {
   final Widget child;
@@ -27,7 +28,7 @@ class SafeLayoutFrame extends StatelessWidget {
       ),
       child: Column(
         children: [
-          TopNav(),
+          FixedNavbarOverlay(),
           Expanded(child: child),
           CustomBottomNavigationBar(currentPage: currentPage),
         ],

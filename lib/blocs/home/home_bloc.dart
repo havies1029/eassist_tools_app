@@ -273,6 +273,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<BeritaArtikelPageActiveEvent>((event, emit) => emit(BeritaArtikelPageActive()));
     on<SppamvPageActiveEvent>((event, emit) => emit(SppamvPageActive()));
     on<SppaparPageActiveEvent>((event, emit) => emit(SppaparPageActive()));
+    on<GenKlaimPageActiveEvent>((event, emit) => emit(GenKlaimPageActive()));
+    on<GenKlaim2PageActiveEvent>((event, emit) => emit(GenKlaim2PageActive()));
     on<ResetToHomeEvent>((event, emit) async {
       _pageStack
         ..clear()
@@ -355,6 +357,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     PageType.sppamv: SppamvPageActiveEvent(),
     PageType.sppapar: SppaparPageActiveEvent(),
     PageType.promo: PromoPageActiveEvent(),
+    PageType.genklaim: GenKlaimPageActiveEvent(),
+    PageType.genklaim2: GenKlaim2PageActiveEvent(),
   };
 
   void _dispatchInitEventForPage(PageType pageType) {
@@ -406,6 +410,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     PageType.sppamv: () => SppamvPageActive(),
     PageType.sppapar: () => SppaparPageActive(),
     PageType.promo: () => PromoPageActive(),
+    PageType.genklaim: () => GenKlaimPageActive(),
+    PageType.genklaim2: () => GenKlaim2PageActive(),
   };
 
   static HomeState _mapPageTypeToState(PageType pageType) {

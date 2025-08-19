@@ -62,6 +62,8 @@ enum PageType {
   sppamv,
   sppapar,
   promo,
+  genklaim,
+  genklaim2,
 }
 
 abstract class PageContainerBase extends StatefulWidget {

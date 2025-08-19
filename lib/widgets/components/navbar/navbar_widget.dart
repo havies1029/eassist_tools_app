@@ -537,6 +537,22 @@ class _NavbarWidgetState extends State<NavbarWidget> {
         // context.go('/assets_management');
         break;
 
+      case 'genklaim':
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(PushPageEvent(PageType.genklaim));
+          // context.read<HomeBloc>().add(AsetHealthPageActiveEvent());
+        });
+        // context.go('/assets_management');
+        break;
+
+      case 'genklaim2':
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(PushPageEvent(PageType.genklaim2));
+          // context.read<HomeBloc>().add(AsetHealthPageActiveEvent());
+        });
+        // context.go('/assets_management');
+        break;
+
       case 'Test Profile':
         context.go('/test_profile');
         break;

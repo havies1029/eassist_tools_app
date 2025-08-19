@@ -108,6 +108,8 @@ class _HomePageState extends State<HomePage> {
     BeritaArtikelPageActive: PageType.beritaartikel,
     SppamvPageActive: PageType.sppamv,
     SppaparPageActive: PageType.sppapar,
+    GenKlaimPageActive: PageType.genklaim,
+    GenKlaim2PageActive: PageType.genklaim2,
   };
 
 // 2) Fungsi jadi ringkas

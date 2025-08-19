@@ -71,3 +71,7 @@ class LoadingHero2PageActive extends HomeState {}
 class LoadingHeroUserPageActive extends HomeState {}
 
 class PromoPageActive extends HomeState {}
+
+
+class GenKlaimPageActive extends HomeState {}
+class GenKlaim2PageActive extends HomeState {}

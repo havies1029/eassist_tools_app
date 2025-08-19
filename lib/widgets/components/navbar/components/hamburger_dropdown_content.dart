@@ -188,6 +188,9 @@
               SubMenuItem(icon: Icons.business_outlined, title: 'Berita3', onTap: () {}),
               SubMenuItem(icon: Icons.business_outlined, title: 'mv', onTap: () {}),
               SubMenuItem(icon: Icons.business_outlined, title: 'par', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'genklaim', onTap: () {}),
+              SubMenuItem(icon: Icons.business_outlined, title: 'genklaim2', onTap: () {}),
+
             ],
           },
           {

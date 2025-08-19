@@ -7,7 +7,7 @@ import 'package:eassist_tools_app/pages/home/home_page.dart';
 import 'package:eassist_tools_app/menu/app_menu_drawer.dart';
 import 'package:eassist_tools_app/pages/base/base_page.dart';
 import 'package:eassist_tools_app/common/styles.dart';
-import 'package:eassist_tools_app/pages/klaim/klaim1list_main.dart';
+import 'package:eassist_tools_app/pages/gen_klaim/klaim1list_main.dart';
 import 'package:eassist_tools_app/pages/login/change_pswd_main.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +34,7 @@ import '../gen_aset_ringkasan/asetringkasancari_main.dart';
 import '../gen_berita/berita_main.dart';
 
 import '../gen_cob_app/cobcari_main.dart';
+import '../gen_klaim/klaim2list_main.dart';
 import '../gen_profile/test_profile_main.dart';
 import '../gen_review/reviewcari_main.dart';
 import '../gen_sppamv/sppamvcrud_main.dart';
@@ -297,6 +298,10 @@ class PageContainer extends StatelessWidget {
         return "Memuat SPPAPAR";
       case PageType.promo:
         return "Memuat Promo";
+      case PageType.genklaim:
+        return "Memuat genklaim";
+      case PageType.genklaim2:
+        return "Memuat genklaim2";
       default:
         return "Login Page";
     }
@@ -383,7 +388,11 @@ class PageContainer extends StatelessWidget {
         return const SppaPolisMvMain();
       case PageType.sppapar:
         return const SppaPolisParMain();
+      case PageType.genklaim:
+        return const Klaim1ListMainPage();
         // return const SppaparCrudMainPage(viewMode: 'tambah', recordId: '');
+      case PageType.genklaim2:
+        return const Klaim2ListMainPage();
       case PageType.promo:
         // return const InsuranceProductWrapper(promo1List: [],);
         return const PolisMVPage();

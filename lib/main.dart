@@ -8,13 +8,12 @@ import 'package:eassist_tools_app/blocs/gallery/gallerymembercari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gallery/gallerytestimonycari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_aset_mv/asetmvcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_aset_par/asetparcari_bloc.dart';
+import 'package:eassist_tools_app/blocs/gen_klaim/klaim1crud_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekan1list_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekanbankcrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekangeneralcmpcrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekanpajakcrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekanpiclist_bloc.dart';
-import 'package:eassist_tools_app/blocs/klaim/klaim1list_bloc.dart';
-import 'package:eassist_tools_app/blocs/klaim/klaim2list_bloc.dart';
 import 'package:eassist_tools_app/blocs/local_prefs/article_selection_cubit.dart';
 import 'package:eassist_tools_app/blocs/login/change_password_bloc.dart';
 import 'package:eassist_tools_app/blocs/login/emailverification_bloc.dart';
@@ -33,6 +32,8 @@ import 'package:eassist_tools_app/pages/heropage/hero_main.dart';
 import 'package:eassist_tools_app/pages/home/home_page.dart';
 import 'package:eassist_tools_app/repositories/chatting/guestscrud_repository.dart';
 import 'package:eassist_tools_app/repositories/gen_aset_par/asetparcari_repository.dart';
+import 'package:eassist_tools_app/repositories/gen_klaim/klaim1crud_repository.dart';
+import 'package:eassist_tools_app/repositories/gen_klaim/klaim2crud_repository.dart';
 import 'package:eassist_tools_app/repositories/gen_profile/mrekan1crud_repository.dart';
 import 'package:eassist_tools_app/repositories/gen_profile/mrekan1list_repository.dart';
 import 'package:eassist_tools_app/repositories/gen_profile/mrekanbankcrud_repository.dart';
@@ -72,6 +73,9 @@ import 'blocs/gen_berita/berita3cari_bloc.dart';
 import 'blocs/gen_berita/beritakecilcari_bloc.dart';
 import 'blocs/gen_berita/beritalaincari_bloc.dart';
 import 'blocs/gen_cob_app/cobcari_bloc.dart';
+import 'blocs/gen_klaim/klaim1list_bloc.dart';
+import 'blocs/gen_klaim/klaim2crud_bloc.dart';
+import 'blocs/gen_klaim/klaim2list_bloc.dart';
 import 'blocs/gen_profile/mrekan1crud_bloc.dart';
 import 'blocs/gen_profile/mrekancontactcrud_bloc.dart';
 import 'blocs/gen_profile/mrekangeneralidvcrud_bloc.dart';
@@ -320,6 +324,12 @@ Future<void> main() async {
         BlocProvider<SimulasiParLocalCubit>(
           create: (_) => SimulasiParLocalCubit(appPrefs), // ⬅️ ini dia
         ),
+        BlocProvider<Klaim1ListBloc>(
+            create: (context) =>
+                Klaim1ListBloc()),
+        BlocProvider<Klaim2ListBloc>(
+            create: (context) =>
+                Klaim2ListBloc()),
       ],
       child: App(
         userRepository: userRepository,
@@ -380,12 +390,6 @@ class App extends StatelessWidget {
             create: (context) => NetworkBloc()..add(NetworkObserve())),
         BlocProvider<OnBoardMenuCariBloc>(
             create: (context) => OnBoardMenuCariBloc()),
-        BlocProvider<Klaim1ListBloc>(
-            create: (context) =>
-                Klaim1ListBloc()),
-        BlocProvider<Klaim2ListBloc>(
-            create: (context) =>
-                Klaim2ListBloc()),
         BlocProvider<GuestsCrudBloc>(
             create: (context) =>
                 GuestsCrudBloc(repository: GuestsCrudRepository())),
@@ -412,6 +416,12 @@ class App extends StatelessWidget {
                 RekanBankBloc(repository: RekanBankRepository())),
         BlocProvider<MRekanContactCrudBloc>(
           create: (context) => MRekanContactCrudBloc(repository: MRekanContactCrudRepository()),
+        ),
+        BlocProvider<Klaim1CrudBloc>(
+          create: (context) => Klaim1CrudBloc(repository: Klaim1CrudRepository()),
+        ),
+        BlocProvider<Klaim2CrudBloc>(
+          create: (context) => Klaim2CrudBloc(repository: Klaim2CrudRepository()),
         ),
         BlocProvider<MRekanGeneralCmpCrudBloc>(
           create: (context) => MRekanGeneralCmpCrudBloc(repository: MRekanGeneralCmpCrudRepository()),
@@ -482,6 +492,7 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => SppamvCrudBloc(repository: SppamvCrudRepository())),
         BlocProvider(create: (context) => SppaparListBloc()),
         BlocProvider(create: (context) => SppaparCrudBloc(repository: SppaparCrudRepository())),
+
       ],
       child: BlocListener<AuthenticationBloc, AuthenticationState>(
         listenWhen: (prev, curr) => prev.runtimeType != curr.runtimeType,

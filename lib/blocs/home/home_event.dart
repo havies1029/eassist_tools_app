@@ -75,6 +75,9 @@ class LoadingHero2PageActiveEvent extends HomeEvent {}
 class LoadingHeroUserPageActiveEvent extends HomeEvent {}
 
 class PromoPageActiveEvent extends HomeEvent {}
+
+class GenKlaimPageActiveEvent extends HomeEvent {}
+class GenKlaim2PageActiveEvent extends HomeEvent {}
 // ───────────────────────
 // Stack Management
 // ───────────────────────
