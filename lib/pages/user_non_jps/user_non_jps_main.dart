@@ -94,42 +94,9 @@ class _UserNonJpsPageState extends State<UserNonJpsPage> {
                   ),
                 ),
               ),
-
-              // Layer 3: Always-on-top Navbar with overlay support
-              const _FixedNavbarOverlay(),
             ],
           );
         },
-      ),
-    );
-  }
-}
-
-
-class _FixedNavbarOverlay extends StatelessWidget {
-  const _FixedNavbarOverlay();
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      top: 0,
-      left: 0,
-      right: 0,
-      child: Stack(
-        clipBehavior: Clip.none, // ini penting agar pop-up bisa muncul di luar batas
-        children: [
-          Material(
-            color: Colors.transparent,
-            elevation: 20,
-            child: NavbarWidget(
-              constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width,
-              ),
-              pageType: PageType.usernonjps,
-            ),
-
-          ),
-        ],
       ),
     );
   }

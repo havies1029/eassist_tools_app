@@ -1,0 +1,2 @@
+C:/Users/kalli/StudioProjects/eassist_tools_app/android/app/.cxx/RelWithDebInfo/w5w3k143/x86/CMakeFiles/edit_cache.dir
+C:/Users/kalli/StudioProjects/eassist_tools_app/android/app/.cxx/RelWithDebInfo/w5w3k143/x86/CMakeFiles/rebuild_cache.dir

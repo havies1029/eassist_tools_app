@@ -23,7 +23,6 @@ class FixedNavbarOverlay extends StatelessWidget {
               constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width,
               ),
-              pageType: PageType.home,
             ),
           ),
         ],

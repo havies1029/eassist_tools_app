@@ -31,7 +31,10 @@ class _PolisManagementPageState extends State<PolisManagementPage> {
     return Scaffold(
       body: LayoutBuilder(
         builder: (context, constraints) {
-          final isMobile = MediaQuery.of(context).size.width < 768;
+          final isMobile = MediaQuery
+              .of(context)
+              .size
+              .width < 768;
           return Stack(
             children: [
               // Layer 1: Background Image
@@ -84,7 +87,11 @@ class _PolisManagementPageState extends State<PolisManagementPage> {
                                   state.items.isNotEmpty) {
                                 final summary = state.items.first;
                                 debugPrint(
-                                    '[SUMMARY DEBUG] Aktif: ${summary.aktifQty}, NonAktif: ${summary.nonAktifQty}, Berakhir: ${summary.berakhirQty}, OnProgress: ${summary.onProgressQty}');
+                                    '[SUMMARY DEBUG] Aktif: ${summary
+                                        .aktifQty}, NonAktif: ${summary
+                                        .nonAktifQty}, Berakhir: ${summary
+                                        .berakhirQty}, OnProgress: ${summary
+                                        .onProgressQty}');
 
                                 return PolisSummarySection(
                                   constraints: constraints,
@@ -110,40 +117,9 @@ class _PolisManagementPageState extends State<PolisManagementPage> {
                   ),
                 ),
               ),
-
-              // Layer 3: Fixed Navbar
-              const _FixedNavbarOverlay(),
             ],
           );
         },
-      ),
-    );
-  }
-}
-
-class _FixedNavbarOverlay extends StatelessWidget {
-  const _FixedNavbarOverlay();
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      top: 0,
-      left: 0,
-      right: 0,
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Material(
-            color: Colors.transparent,
-            elevation: 20,
-            child: NavbarWidget(
-              constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width,
-              ),
-              pageType: PageType.polismanagement,
-            ),
-          ),
-        ],
       ),
     );
   }

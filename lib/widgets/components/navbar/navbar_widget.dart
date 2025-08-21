@@ -42,8 +42,12 @@ class DummyUserRepository extends UserRepository {
 class NavbarWidget extends StatefulWidget {
   final BoxConstraints constraints;
   final bool hideProfile;
-  final PageType pageType;
-  const NavbarWidget({super.key, required this.constraints, this.hideProfile = false, required this.pageType});
+
+  const NavbarWidget({
+    super.key,
+    required this.constraints,
+    this.hideProfile = false
+  });
 
   @override
   State<NavbarWidget> createState() => _NavbarWidgetState();
@@ -56,7 +60,6 @@ class _NavbarWidgetState extends State<NavbarWidget> {
   final GlobalKey _menuButtonKey = GlobalKey();
   final GlobalKey _profileButtonKey = GlobalKey();
 
-  // Overlay entries untuk dropdown menus
   OverlayEntry? _menuOverlayEntry;
   OverlayEntry? _profileOverlayEntry;
 
@@ -117,7 +120,7 @@ class _NavbarWidgetState extends State<NavbarWidget> {
           ),
           // Menu dropdown
           Positioned(
-            top: offset.dy, // ⬅️ MUNCUL pas nutup tombol (tanpa + size.height)
+            top: offset.dy, // ⬅ MUNCUL pas nutup tombol (tanpa + size.height)
 
             right: MediaQuery.of(context).size.width - offset.dx - size.width,
             child: Material(
@@ -171,7 +174,7 @@ class _NavbarWidgetState extends State<NavbarWidget> {
           ),
           // 🔽 Ini dropdown-nya
           Positioned(
-            top: offset.dy, // ⬅️ MUNCUL pas nutup tombol (tanpa + size.height)
+            top: offset.dy, // ⬅ MUNCUL pas nutup tombol (tanpa + size.height)
 
             right: MediaQuery.of(context).size.width - offset.dx - size.width,
             child: Material(
@@ -209,23 +212,28 @@ class _NavbarWidgetState extends State<NavbarWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return NavBar(
-      constraints: widget.constraints,
-      isMenuOpen: _isMenuOpen,
-      menuButtonKey: _menuButtonKey,
-      onHamburgerToggle: _toggleHamburgerMenu,
-      pageType: widget.pageType, // ✅ tambahkan ini
-      profileSection: widget.hideProfile
-          ? const SizedBox.shrink()
-          : ProfileSection(
-        profileButtonKey: _profileButtonKey,
-        isProfileMenuOpen: _isProfileMenuOpen,
-        onToggleProfileMenu: _toggleProfileMenu,
-      ),
+    // 🎯 Read current page from HomeBloc
+    return BlocBuilder<HomeBloc, HomeState>(
+      builder: (context, state) {
+        final currentPageType = context.read<HomeBloc>().currentPage;
+
+        return NavBar(
+          constraints: widget.constraints,
+          isMenuOpen: _isMenuOpen,
+          menuButtonKey: _menuButtonKey,
+          onHamburgerToggle: _toggleHamburgerMenu,
+          pageType: currentPageType,
+          profileSection: widget.hideProfile
+              ? const SizedBox.shrink()
+              : ProfileSection(
+            profileButtonKey: _profileButtonKey,
+            isProfileMenuOpen: _isProfileMenuOpen,
+            onToggleProfileMenu: _toggleProfileMenu,
+          ),
+        );
+      },
     );
   }
-
-
 
   void _handleProfileMenuTap(String menu) async {
     final dummyUserRepository = DummyUserRepository();
@@ -319,19 +327,19 @@ class _NavbarWidgetState extends State<NavbarWidget> {
         });
         break;
 
-      // case 'Home Page':
-      //   SchedulerBinding.instance.addPostFrameCallback((_) {
-      //     context.read<HomeBloc>().add(HeroPageActiveEvent());
-      //   });
-      //   // context.go('/hero');
-      //   break;
-      //
-      // case 'Hero User Page':
-      //   SchedulerBinding.instance.addPostFrameCallback((_) {
-      //     context.read<HomeBloc>().add(HeroUserPageActiveEvent());
-      //   });
-      //   // context.go('/hero_user');
-      //   break;
+    // case 'Home Page':
+    //   SchedulerBinding.instance.addPostFrameCallback((_) {
+    //     context.read<HomeBloc>().add(HeroPageActiveEvent());
+    //   });
+    //   // context.go('/hero');
+    //   break;
+    //
+    // case 'Hero User Page':
+    //   SchedulerBinding.instance.addPostFrameCallback((_) {
+    //     context.read<HomeBloc>().add(HeroUserPageActiveEvent());
+    //   });
+    //   // context.go('/hero_user');
+    //   break;
 
       case 'About JPS':
         SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -349,8 +357,8 @@ class _NavbarWidgetState extends State<NavbarWidget> {
 
       case 'Article Page':
       case 'Artikel Asuransi':
-      context.read<HomeBloc>().add(PushPageEvent(PageType.article));
-      // context.read<HomeBloc>().add(ArticlePageActiveEvent());
+        context.read<HomeBloc>().add(PushPageEvent(PageType.article));
+        // context.read<HomeBloc>().add(ArticlePageActiveEvent());
         // context.go('/article');
         break;
 
@@ -377,36 +385,36 @@ class _NavbarWidgetState extends State<NavbarWidget> {
         break;
 
       case 'Rekan General':
-        // context.go('/rekangeneral');
+      // context.go('/rekangeneral');
         break;
 
       case 'Rekan Pajak':
       case 'Rekan General V2':
-        // context.go('/rekanpajak');
+      // context.go('/rekanpajak');
         break;
 
       case 'Rekan Bank':
-        // context.go('/rekanbank');
+      // context.go('/rekanbank');
         break;
 
       case 'Rekan Pic Form':
-        // context.go('/rekanpic');
+      // context.go('/rekanpic');
         break;
 
       case 'Rekan Pic Crud Form':
-        // context.go('/rekanpiccrud');
+      // context.go('/rekanpiccrud');
         break;
 
       case 'Rekan Pic Crud Main':
-        // context.go('/rekanpiccrud_main');
+      // context.go('/rekanpiccrud_main');
         break;
 
       case 'Rekan Pic List List':
-        // context.go('/rekanpiclist');
+      // context.go('/rekanpiclist');
         break;
 
       case 'Rekan Pic List List Widget':
-        // context.go('/rekanpiclist_widget');
+      // context.go('/rekanpiclist_widget');
         break;
 
       case 'Cob Cari':

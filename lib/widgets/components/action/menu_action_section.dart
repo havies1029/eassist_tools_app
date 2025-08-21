@@ -162,6 +162,10 @@ class MenuActionSection extends StatelessWidget {
         break;
 
       case 'Klaim':
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          context.read<HomeBloc>().add(PushPageEvent(PageType.klaimtrack));
+          // context.read<HomeBloc>().add(AsetHealthPageActiveEvent());
+        });
       case 'Tagihan dan Pembayaran':
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

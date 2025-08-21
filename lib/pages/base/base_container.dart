@@ -7,7 +7,7 @@ import 'package:eassist_tools_app/pages/home/home_page.dart';
 import 'package:eassist_tools_app/menu/app_menu_drawer.dart';
 import 'package:eassist_tools_app/pages/base/base_page.dart';
 import 'package:eassist_tools_app/common/styles.dart';
-import 'package:eassist_tools_app/pages/klaim/klaim1list_main.dart';
+import 'package:eassist_tools_app/pages/gen_klaim/klaim1list_main.dart';
 import 'package:eassist_tools_app/pages/login/change_pswd_main.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -194,9 +194,7 @@ class PageContainer extends StatelessWidget {
       },
     );
 
-    return kIsWeb
-        ? SafeLayoutFrame(child: child)
-        : FloatingChatWrapper(child: child);
+    return SafeLayoutFrame(child: child);
   }
 
   String get _pageTitle {
