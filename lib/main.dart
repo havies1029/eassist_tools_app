@@ -431,7 +431,8 @@ class App extends StatelessWidget {
         ),
         BlocProvider<MRekanPajakCrudBloc>(
           create: (context) => MRekanPajakCrudBloc(repository: MRekanPajakCrudRepository()),
-        ),BlocProvider<MRekanBankCrudBloc>(
+        ),
+        BlocProvider<MRekanBankCrudBloc>(
           create: (context) => MRekanBankCrudBloc(repository: MRekanBankCrudRepository()),
         ),
         BlocProvider<MRekanGeneralIdvCrudBloc>(
