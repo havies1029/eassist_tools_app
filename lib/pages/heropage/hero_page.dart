@@ -17,6 +17,7 @@ import 'package:eassist_tools_app/pages/gen_review/reviewcari_main.dart';
 import 'package:eassist_tools_app/pages/gen_sppamv/sppamvlist_main.dart';
 import 'package:eassist_tools_app/pages/gen_sppapar/sppaparlist_main.dart';
 import 'package:eassist_tools_app/pages/gen_status_aset/statusasetcari_main.dart';
+import 'package:eassist_tools_app/pages/gen_trslog/trslogcari_main.dart';
 import 'package:eassist_tools_app/pages/heropage/fixed_nambar_overlay.dart';
 import 'package:eassist_tools_app/pages/klaim/klaim1list_main.dart';
 import 'package:eassist_tools_app/widgets/section/carousel_section.dart';
@@ -299,6 +300,17 @@ class _HeroPageState extends State<HeroPage> {
                                     );
                                   },
                                   child: Text("List Klaim"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const TrslogcariMain()),
+                                    );
+                                  },
+                                  child: Text("List Log Transaksi"),
                                 ),
                               ],
                             );

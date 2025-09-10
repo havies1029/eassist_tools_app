@@ -26,6 +26,7 @@ import 'package:eassist_tools_app/blocs/gen_sppamv/sppamvlist_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_sppapar/sppaparcrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_sppapar/sppaparlist_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_status_aset/statusasetcari_bloc.dart';
+import 'package:eassist_tools_app/blocs/gen_trslog/trslogcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaim/klaim1list_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaim/klaim2list_bloc.dart';
 import 'package:eassist_tools_app/blocs/login/change_password_bloc.dart';
@@ -243,6 +244,7 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => SppamvCrudBloc(repository: SppamvCrudRepository())),
         BlocProvider(create: (context) => SppaparListBloc()),
         BlocProvider(create: (context) => SppaparCrudBloc(repository: SppaparCrudRepository())),
+        BlocProvider(create: (context) => TrslogCariBloc()),
 
       ],
       child: MaterialApp(
