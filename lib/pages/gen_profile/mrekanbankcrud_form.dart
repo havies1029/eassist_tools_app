@@ -53,7 +53,7 @@ class MRekanBankCrudFormPageFormState extends State<MRekanBankCrudFormPage> {
 									children: [
 										const SizedBox(height: 10),
 										Text(
-											"${widget.viewMode == "tambah" ? "Tambah" : "Ubah"} Informasi Bank",
+											"${widget.viewMode == "tambah" ? "Tambah" : "Ubah"} Rekan Bank",
 											style: const TextStyle(
 												fontSize: 20.0,
 												color: Color(0xffff6101),

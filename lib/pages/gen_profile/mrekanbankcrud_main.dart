@@ -12,7 +12,7 @@ class MRekanBankCrudMainPage extends StatelessWidget {
 		return MobileDesignWidget(
 			child: Scaffold(
 				appBar: AppBar(
-					title: Text('${viewMode == "tambah"?"Tambah":"Ubah"} Informasi Bank'),
+					title: Text('${viewMode == "tambah"?"Tambah":"Ubah"} Rekan Bank'),
 				),
 				body: MRekanBankCrudFormPage(viewMode: viewMode, recordId: recordId)));
 	}
