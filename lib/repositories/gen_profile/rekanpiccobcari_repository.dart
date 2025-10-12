@@ -1,5 +1,6 @@
 import 'package:eassist_tools_app/apis/gen_profile/rekanpiccobcari_api.dart';
 import 'package:eassist_tools_app/models/gen_profile/rekanpiccobcari_model.dart';
+import 'package:eassist_tools_app/models/responseAPI/returndataapi_model.dart';
 
 class RekanPicCobCariRepository {
 
@@ -7,4 +8,10 @@ class RekanPicCobCariRepository {
 		RekanPicCobCariAPI api = RekanPicCobCariAPI();
 		return await api.getRekanPicCobCariAPI(rekanPicId, searchText, hal);
 	}
+
+  Future<ReturnDataAPI> rekanPicCobUpdateList(
+      String rekanPicId, List<RekanPicCobCariCheckboxModel> listChecked) async {
+    RekanPicCobCariAPI api = RekanPicCobCariAPI();
+    return api.rekanPicCobUpdateListAPI(rekanPicId, listChecked);
+  }
 }

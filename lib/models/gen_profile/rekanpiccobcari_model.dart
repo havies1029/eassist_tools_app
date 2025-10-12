@@ -1,27 +1,49 @@
 
+import 'package:string_validator/string_validator.dart';
+
 class RekanPicCobCariModel {
-	String mcobapp1Id;
+	String mcobId;
 	String mrekanpicId;
 	String mrekanpiccobId;
 	String cobNama;
+	bool isChecked = false;
 
-	RekanPicCobCariModel({required this.mcobapp1Id, required this.mrekanpicId, 
-		required this.mrekanpiccobId, required this.cobNama});
+	RekanPicCobCariModel({required this.mcobId, required this.mrekanpicId, 
+		required this.mrekanpiccobId, required this.cobNama, required this.isChecked});
 
 	factory RekanPicCobCariModel.fromJson(Map<String, dynamic> data) {
 		return RekanPicCobCariModel(
-			mcobapp1Id: data['mcobapp1Id']??'',
+			mcobId: data['mcobId']??'',
 			mrekanpicId: data['mrekanpicId']??'',
 			mrekanpiccobId: data['mrekanpiccobId']??'',
-			cobNama: data['cobNama']??''
+			cobNama: data['cobNama']??'',
+      isChecked: toBoolean(data['isChecked'].toString())
 		);
 
 	}
 
 	Map<String, dynamic> toJson() =>
-		{'mcobapp1Id': mcobapp1Id,
+		{'mcobId': mcobId,
 		'mrekanpicId': mrekanpicId,
 		'mrekanpiccobId': mrekanpiccobId,
-		'cobNama': cobNama};
+		'cobNama': cobNama,    
+    'isChecked': isChecked.toString()};
 
+}
+
+class RekanPicCobCariCheckboxModel {
+  String mcobId;
+  bool isChecked = false;
+
+  RekanPicCobCariCheckboxModel({required this.mcobId, required this.isChecked});
+
+  factory RekanPicCobCariCheckboxModel.fromJson(Map<String, dynamic> data) {
+    return RekanPicCobCariCheckboxModel(
+        mcobId: data['mcobId'] ?? '', 
+        isChecked: toBoolean(data['isChecked'].toString())
+        );
+  }
+
+  Map<String, dynamic> toJson() =>
+      {'mcobId': mcobId, 'isChecked': isChecked.toString()};
 }

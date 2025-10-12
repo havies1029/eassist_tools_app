@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:http/http.dart' as http;
 import 'package:eassist_tools_app/models/gen_profile/rekanpiccobcari_model.dart';
+import 'package:eassist_tools_app/models/responseAPI/returndataapi_model.dart';
 
 class RekanPicCobCariAPI{
 	Future<List<RekanPicCobCariModel>> getRekanPicCobCariAPI(String rekanPicId, String searchText, int hal) async {
@@ -23,5 +24,31 @@ class RekanPicCobCariAPI{
 		} else {
 			throw Exception("Failed to load data");
 		}
+	}
+
+  Future<ReturnDataAPI> rekanPicCobUpdateListAPI(String rekanPicId, 
+    List<RekanPicCobCariCheckboxModel> listChecked) async {
+		String updateListEndpoint =
+			"${AppData.prefixEndPoint}/api/profile/piccobcari/updatelistchecked";
+		Map<String, String> queryParams = {
+      "rekanPicId": rekanPicId,
+      "modul_id": "RekanPicCobUpdateListAPI"};
+		var uri = AppData.uriHtpp(AppData.httpAuthority, updateListEndpoint, queryParams);
+
+		ReturnDataAPI returnData;
+		final http.Response response = await http.post(uri,
+			headers: <String, String>{
+				'Content-Type': 'application/json; odata=verbos',
+				'Accept': 'application/json; odata=verbos',
+				'Authorization': 'Bearer ${AppData.userToken}'
+			},
+			body: jsonEncode(listChecked));
+
+		if (response.statusCode == 200) {
+			returnData = ReturnDataAPI.fromDatabaseJson(jsonDecode(response.body));
+		} else {
+			returnData = ReturnDataAPI(success: false, data: "", rowcount: 0);
+		}
+		return returnData;
 	}
 }

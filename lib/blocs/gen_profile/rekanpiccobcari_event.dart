@@ -18,3 +18,34 @@ class RefreshRekanPicCobCariEvent extends RekanPicCobCariEvents {
   List<Object> get props => [searchText, rekanPicId];
 }
 
+
+class UpdateCheckboxRekanPicCobEvent extends RekanPicCobCariEvents {
+  final RekanPicCobCariModel rekanPicCobItem;
+  final bool isChecked;
+
+  const UpdateCheckboxRekanPicCobEvent(
+      {required this.rekanPicCobItem, required this.isChecked});
+
+  @override
+  List<Object> get props => [rekanPicCobItem, isChecked];
+}
+
+class RequestToUpdateRekanPicCobEvent extends RekanPicCobCariEvents {}
+
+class Update2ApiJRekanPicCobEvent extends RekanPicCobCariEvents {
+  final String rekanPicId;
+
+  const Update2ApiJRekanPicCobEvent({required this.rekanPicId});
+  @override
+  List<Object> get props => [rekanPicId];
+}
+
+class InitialSelectedCOBRekanPicCobEvent extends RekanPicCobCariEvents {
+  final List<RekanPicCobCariModel> selectedCOB;
+
+  const InitialSelectedCOBRekanPicCobEvent(
+      {required this.selectedCOB});
+
+  @override
+  List<Object> get props => [selectedCOB];
+}
