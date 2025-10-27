@@ -10,12 +10,14 @@ class MRekanPicListModel {
 	String jabatanDesc;
 	String peranan;
 	String listCob;
+	String? statusPic;
 
 	MRekanPicListModel({required this.isDefault, required this.mjabatanId, 
 		required this.mrekan1Id, required this.mrekanpicId, 
 		required this.picEmail, required this.picHp, 
 		required this.picNama, required this.jabatanDesc,
-    required this.peranan, required this.listCob});
+    required this.peranan, required this.listCob,
+    required this.statusPic});
 
 	factory MRekanPicListModel.fromJson(Map<String, dynamic> data) {
 		return MRekanPicListModel(
@@ -28,7 +30,8 @@ class MRekanPicListModel {
 			picNama: data['picNama']??'',
 			jabatanDesc: data['jabatanDesc']??'',
       peranan: data['peranan']??'',
-      listCob: data['listCob']??''
+      listCob: data['listCob']??'',
+      statusPic: data['statusPic']??''
 		);
 
 	}
@@ -43,7 +46,8 @@ class MRekanPicListModel {
 		'picNama': picNama,
 		'jabatanDesc': jabatanDesc,
     'peranan': peranan,
-    'listCob': listCob
+    'listCob': listCob,
+    'statusPic': statusPic
     };
 
 }

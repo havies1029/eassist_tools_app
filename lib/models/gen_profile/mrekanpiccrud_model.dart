@@ -8,10 +8,11 @@ class MRekanPicCrudModel {
 	String? picNama;
 	String? mjabatanId;
 	ComboMJabatanModel? comboMJabatan;
+	String? statusPic;
 
 	MRekanPicCrudModel({this.isDefault, this.mrekanpicId, 
-		this.picEmail, this.picHp, 
-		this.picNama, this.mjabatanId, this.comboMJabatan});
+		this.picEmail, this.picHp, this.picNama, 
+    this.mjabatanId, this.comboMJabatan, this.statusPic});
 
 	factory MRekanPicCrudModel.fromJson(Map<String, dynamic> data) {
 		ComboMJabatanModel? comboMJabatan;
@@ -26,7 +27,8 @@ class MRekanPicCrudModel {
 			picHp: data['picHp']??'',
 			picNama: data['picNama']??'',
 			mjabatanId: data['mjabatanId']??'',
-			comboMJabatan: comboMJabatan
+			comboMJabatan: comboMJabatan,
+			statusPic: data['statusPic']??'',
 		);
 
 	}
@@ -38,6 +40,8 @@ class MRekanPicCrudModel {
 		'picHp': picHp,
 		'picNama': picNama,
 		'mjabatanId': mjabatanId,
-		'comboMJabatan': comboMJabatan?.toJson()};
+		'comboMJabatan': comboMJabatan?.toJson(),
+    'statusPic': statusPic
+};
 
 }
