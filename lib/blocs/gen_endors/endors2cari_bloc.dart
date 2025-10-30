@@ -18,6 +18,8 @@ Future<void> onRefreshEndors2Cari(
 		RefreshEndors2CariEvent event, Emitter<Endors2CariState> emit) async {
 	emit(const Endors2CariState());
 
+  emit(state.copyWith(sppa1Id: event.sppa1Id));
+
 	add(FetchEndors2CariEvent());
 }
 
@@ -27,31 +29,13 @@ Future<void> onFetchEndors2Cari(
 
 	Endors2CariRepository repo = Endors2CariRepository();
 	if (state.status == ListStatus.initial) {
-		List<Endors2CariModel> items = await repo.getEndors2Cari();
+		List<Endors2CariModel> items = await repo.getEndors2Cari(state.sppa1Id);
 		return emit(state.copyWith(
 			items: items,
 			hasReachedMax: false,
 			status: ListStatus.success,
 			));
-	}
-	List<Endors2CariModel> items = await repo.getEndors2Cari();
-	if (items.isEmpty) {
-		return emit(state.copyWith(hasReachedMax: true));
-	} else {
-		List<Endors2CariModel> endors2Cari = List.of(state.items)..addAll(items);
-
-		final result = endors2Cari
-			.whereWithIndex((e, index) =>
-				endors2Cari.indexWhere((e2) => e2.endors2Id == e.endors2Id) ==
-				index)
-			.toList();
-
-		return emit(state.copyWith(
-			items: result,
-			hasReachedMax: false,
-			status: ListStatus.success,
-			));
-		}
+	  }
 
 	}
 }

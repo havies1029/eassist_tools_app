@@ -4,8 +4,9 @@ import 'package:eassist_tools_app/widgets/listpage_filter_bar_ui.dart';
 import 'package:eassist_tools_app/blocs/gen_endors/endors2cari_bloc.dart';
 import 'package:eassist_tools_app/pages/gen_endors/endors2cari_list_widget.dart';
 
-class Endors2CariPage extends StatefulWidget {
-	const Endors2CariPage({super.key});
+class Endors2CariPage extends StatefulWidget {  
+	final String sppa1Id;
+	const Endors2CariPage({super.key, required this.sppa1Id});
 
 	@override
 	Endors2CariPageState createState() => Endors2CariPageState();
@@ -40,7 +41,7 @@ class Endors2CariPageState extends State<Endors2CariPage> {
 	}
 	void refreshData() {
 		endors2CariBloc.add(
-			RefreshEndors2CariEvent());
+			RefreshEndors2CariEvent(sppa1Id: widget.sppa1Id));
 	}
 
 	IconButton buildSearchButton() {
@@ -50,7 +51,7 @@ class Endors2CariPageState extends State<Endors2CariPage> {
 				size: 35.0,
 			),
 			onPressed: () {
-			endors2CariBloc.add(RefreshEndors2CariEvent(
+			endors2CariBloc.add(RefreshEndors2CariEvent(sppa1Id: widget.sppa1Id
 				));
 			});
 	}

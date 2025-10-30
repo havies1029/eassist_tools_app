@@ -4,10 +4,10 @@ import 'package:http/http.dart' as http;
 import 'package:eassist_tools_app/models/gen_endors/endors2cari_model.dart';
 
 class Endors2CariAPI{
-	Future<List<Endors2CariModel>> getEndors2CariAPI() async {
+	Future<List<Endors2CariModel>> getEndors2CariAPI(String sppa1Id) async {
 		String urlGetListEndPoint = "${AppData.prefixEndPoint}/api/endors/endors2cari/getlist";
-
-		var uri = AppData.uriHtpp(AppData.httpAuthority, urlGetListEndPoint);
+    Map<String, String> queryParams = {"sppa1Id": sppa1Id};
+		var uri = AppData.uriHtpp(AppData.httpAuthority, urlGetListEndPoint, queryParams);
 		final http.Response response = await http.get(uri, headers: <String, String>{
 			'Content-Type': 'application/json; odata=verbos',
 			'Accept': 'application/json; odata=verbos',
