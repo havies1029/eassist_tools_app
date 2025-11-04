@@ -4,6 +4,7 @@ import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart'
 import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:eassist_tools_app/repositories/user/user_repository.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 part 'login_event.dart';
@@ -40,6 +41,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       // Simpan password jika rememberMe true
       if (event.rememberMe) {
         userRepository.persistToken(userToken: user.token ?? "");
+
+        debugPrint("user.token : ${user.token}");
+
       }
 
       authenticationBloc.add(LoggedIn(user: user));
