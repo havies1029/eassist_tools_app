@@ -536,7 +536,7 @@ class Regmv2FormFormPageFormState extends State<Regmv2FormFormPage> {
 			Regmv2FormModel record = Regmv2FormModel(
 				aw: double.parse(fieldAwController.text.replaceAll(',', '')),
 				coverLama: int.parse(fieldCoverLamaController.text),
-				currId: fieldComboRMatauang?.rMATAUANGKODE,
+				currId: fieldComboRMatauang?.rmatauangKode,
 				isEq: toBoolean(fieldIsEqController.text),
 				isFlood: toBoolean(fieldIsFloodController.text),
 				isSrcc: toBoolean(fieldIsSrccController.text),

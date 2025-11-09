@@ -4,7 +4,6 @@ import 'package:eassist_tools_app/common/constants.dart';
 import 'package:eassist_tools_app/widgets/form_error.dart';
 import 'package:eassist_tools_app/blocs/gen_regmv/regmv4form_bloc.dart';
 import 'package:eassist_tools_app/models/gen_regmv/regmv4form_model.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 
 
 class Regmv4FormFormPage extends StatefulWidget {
@@ -113,7 +112,6 @@ class Regmv4FormFormPageFormState extends State<Regmv4FormFormPage> {
 					if (state.isLoaded) {
 						if (state.record != null){
 							fieldCaptionController.text = state.record!.caption;
-							fieldStnkStreamIdController.text = state.record!.stnkStreamId;
 						}
 					}
 				},
@@ -188,7 +186,6 @@ class Regmv4FormFormPageFormState extends State<Regmv4FormFormPage> {
 			Regmv4FormModel record = Regmv4FormModel(
 				caption: fieldCaptionController.text,
 				regmv4Id: '',
-				stnkStreamId: fieldStnkStreamIdController.text,
 			);
 			if (widget.viewMode == "tambah") {
 				regmv4FormBloc.add(Regmv4FormTambahEvent(record: record));

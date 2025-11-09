@@ -4,7 +4,6 @@ import 'package:eassist_tools_app/common/constants.dart';
 import 'package:eassist_tools_app/widgets/form_error.dart';
 import 'package:eassist_tools_app/blocs/gen_regmv/regmv5form_bloc.dart';
 import 'package:eassist_tools_app/models/gen_regmv/regmv5form_model.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 
 
 class Regmv5FormFormPage extends StatefulWidget {
@@ -113,7 +112,6 @@ class Regmv5FormFormPageFormState extends State<Regmv5FormFormPage> {
 					if (state.isLoaded) {
 						if (state.record != null){
 							fieldFotoCaptionController.text = state.record!.fotoCaption;
-							fieldFotoStreamIdController.text = state.record!.fotoStreamId;
 						}
 					}
 				},
@@ -187,7 +185,6 @@ class Regmv5FormFormPageFormState extends State<Regmv5FormFormPage> {
 			_formKey.currentState!.save();
 			Regmv5FormModel record = Regmv5FormModel(
 				fotoCaption: fieldFotoCaptionController.text,
-				fotoStreamId: fieldFotoStreamIdController.text,
 				regmv5Id: '',
 			);
 			if (widget.viewMode == "tambah") {
