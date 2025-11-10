@@ -18,4 +18,8 @@ class Regmv6FormRepository {
 	Future<Regmv6FormModel> regmv6FormLihat(String regmv6Id) async {
 		return await api.regmv6FormLihatAPI(regmv6Id);
 	}
+
+  Future<Regmv6FormModel> calPremiRegMv(String regmv6Id) async {
+		return await api.calPremiRegMvAPI(regmv6Id);
+	}
 }

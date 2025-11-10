@@ -1,56 +1,110 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:eassist_tools_app/common/app_data.dart';
+import 'package:eassist_tools_app/models/image/downloadfileinfo64.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:eassist_tools_app/models/responseAPI/returndataapi_model.dart';
-import 'package:eassist_tools_app/models/gen_regmv/regmv5form_model.dart';
 
 class Regmv5FormAPI {
 
-	Future<ReturnDataAPI> regmv5FormTambahAPI(Regmv5FormModel record) async {
-		String tambahEndpoint =
-			"${AppData.prefixEndPoint}/api/gen_regmv/regmv5form/create";
-		Map<String, String> queryParams = {"modul_id": "regmv5FormTambahAPI"};
-		var uri = AppData.uriHtpp(AppData.httpAuthority, tambahEndpoint, queryParams);
+  Future<ReturnDataAPI> uploadFileFotoMobil(
+      String regmv5Id, String filePath) async {
+    String base = AppData.apiDomain;
+    String uploadFotoEndpoint = "api/regmv/regmv5form/uploadfilefotomobil";
+    String uploadFotoURL = base + uploadFotoEndpoint;
 
-		ReturnDataAPI returnData;
-		final http.Response response = await http.post(uri,
-			headers: <String, String>{
-				'Content-Type': 'application/json; odata=verbos',
-				'Accept': 'application/json; odata=verbos',
-				'Authorization': 'Bearer ${AppData.userToken}'
-			},
-			body: jsonEncode(record.toJson()));
+    ReturnDataAPI returnData =
+        ReturnDataAPI(success: false, data: "", rowcount: 0);
 
-		if (response.statusCode == 200) {
-			returnData = ReturnDataAPI.fromDatabaseJson(jsonDecode(response.body));
-		} else {
-			returnData = ReturnDataAPI(success: false, data: "", rowcount: 0);
-		}
-		return returnData;
-	}
-	Future<bool> regmv5FormUbahAPI(Regmv5FormModel record) async {
-		String ubahEndpoint =
-			"${AppData.prefixEndPoint}/api/gen_regmv/regmv5form/update";
-		Map<String, String> queryParams = {"modul_id": "regmv5FormUbahAPI"};
+    var request = http.MultipartRequest('POST', Uri.parse(uploadFotoURL));
+    request.headers.addAll(AppData.httpHeaders);
+    request.fields['regmv5Id'] = regmv5Id;
 
-		var uri = AppData.uriHtpp(AppData.httpAuthority, ubahEndpoint, queryParams);
+    request.files
+        .add(await http.MultipartFile.fromPath('image_file', filePath));
+    await request.send().then((response) {
+      if (response.statusCode == 200) {
+        debugPrint("Success send Image");
+        returnData.success = true;
 
-		final http.Response response = await http.post(uri,
-			headers: <String, String>{
-				'Content-Type': 'application/json; odata=verbos',
-				'Accept': 'application/json; odata=verbos',
-				'Authorization': 'Bearer ${AppData.userToken}'
-			},
-			body: jsonEncode(record.toJson()));
+        response.stream.transform(utf8.decoder).listen((value) {
+          debugPrint(value);
+        });
+        //returnData = ReturnDataAPI.fromDatabaseJson(jsonDecode(response.));
+      } else {
+        debugPrint("Error send Image");
+      }
+    });
+    return returnData;
+  }
 
-		ReturnDataAPI returnData;
-		if (response.statusCode == 200) {
-			returnData = ReturnDataAPI.fromDatabaseJson(jsonDecode(response.body));
-		} else {
-			returnData = ReturnDataAPI(success: false, data: "", rowcount: 0);
-		}
-		return returnData.success;
-	}
+  Future<ReturnDataAPI> uploadBinaryFotoMobil(
+      String regmv5Id, String fileName, Uint8List bytes) async {
+    String base = AppData.apiDomain;
+    String uploadFotoEndpoint = "api/regmv/regmv5form/uploadbinaryfotomobil";
+    String uploadFotoURL = base + uploadFotoEndpoint;
+
+    ReturnDataAPI returnData =
+        ReturnDataAPI(success: false, data: "", rowcount: 0);
+
+    var request = http.MultipartRequest('POST', Uri.parse(uploadFotoURL));
+    request.headers.addAll(AppData.httpHeaders);
+    request.fields['regmv5Id'] = regmv5Id;
+    request.fields['filename'] = fileName;
+
+    request.files.add(
+        http.MultipartFile.fromBytes('image_file', bytes, filename: fileName));
+    await request.send().then((response) {
+      if (response.statusCode == 200) {
+        debugPrint("Success send Image");
+        returnData.success = true;
+
+        response.stream.transform(utf8.decoder).listen((value) {
+          debugPrint("response.stream.transform(utf8.decoder).listen((value)");
+          debugPrint(value);
+        });
+        //returnData = ReturnDataAPI.fromDatabaseJson(jsonDecode(response.));
+      } else {
+        debugPrint("Error send Image");
+        returnData.success = false;
+      }
+    });
+    return returnData;
+  }
+
+  Future<DownloadFileInfo64Model?> downloadFotoMobilAPI(
+      String regmv5Id) async {
+    DownloadFileInfo64Model? fileInfo;
+
+    String urlGetFileEndPoint =
+        "${AppData.prefixEndPoint}/api/regmv/regmv5form/getfotomobil";
+
+    Map<String, String> queryParams = {
+      "regmv5Id": regmv5Id,
+    };
+
+    debugPrint("downloadFotoMobilAPI #10");
+
+    var uri =
+        AppData.uriHtpp(AppData.httpAuthority, urlGetFileEndPoint, queryParams);
+    final http.Response response =
+        await http.get(uri, headers: AppData.httpHeaders);
+
+    //debugPrint("downloadFotoJobRealAPI #20");
+
+    //debugPrint("downloadFotoJobRealAPI response.statusCode : ${response.statusCode}");
+
+    if (response.statusCode == 200) {
+      //debugPrint("downloadFotoJobRealAPI -> response.body #30: ${response.body}");
+
+      fileInfo = DownloadFileInfo64Model.fromJson(jsonDecode(response.body));
+
+      //debugPrint("fileInfo.namafile : ${fileInfo.namafile}");
+    }
+    return fileInfo;
+  }
+
 	Future<bool> regmv5FormHapusAPI(String regmv5Id) async {
 		String hapusEndpoint = "${AppData.prefixEndPoint}/api/gen_regmv/regmv5form/delete";
 		Map<String, String> queryParams = {
@@ -72,22 +126,5 @@ class Regmv5FormAPI {
 		}
 		return returnData.success;
 	}
-	Future<Regmv5FormModel> regmv5FormLihatAPI(String regmv5Id) async {
-		String lihatEndpoint = "${AppData.prefixEndPoint}/api/gen_regmv/regmv5form/read";
-		Map<String, String> queryParams = {'regmv5Id': regmv5Id};
-		var uri = AppData.uriHtpp(AppData.httpAuthority, lihatEndpoint, queryParams);
-		final http.Response response =
-			await http.get(uri, headers: <String, String>{
-			'Content-Type': 'application/json; odata=verbos',
-			'Accept': 'application/json; odata=verbos',
-			'Authorization': 'Bearer ${AppData.userToken}'
-		});
-
-		if (response.statusCode == 200) {
-			var returnData = Regmv5FormModel.fromJson(jsonDecode(response.body));
-			return returnData;
-		} else {
-			return throw Exception("Failed to load data");
-		}
-	}
+	
 }

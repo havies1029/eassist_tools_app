@@ -6,7 +6,6 @@ import 'package:eassist_tools_app/blocs/gen_regmv/regmv6form_bloc.dart';
 import 'package:eassist_tools_app/models/gen_regmv/regmv6form_model.dart';
 import 'package:intl/intl.dart';
 import 'package:eassist_tools_app/common/thousand_separator_input_formatter.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 
 
 class Regmv6FormFormPage extends StatefulWidget {

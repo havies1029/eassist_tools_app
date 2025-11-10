@@ -7,22 +7,6 @@ abstract class Regmv5FormEvents extends Equatable {
 	List<Object> get props => [];
 }
 
-class Regmv5FormTambahEvent extends Regmv5FormEvents {
-	final Regmv5FormModel record;
-	const Regmv5FormTambahEvent({required this.record});
-
-	@override
-	List<Object> get props => [record];
-}
-
-class Regmv5FormUbahEvent extends Regmv5FormEvents {
-	final Regmv5FormModel record;
-	const Regmv5FormUbahEvent({required this.record});
-
-	@override
-	List<Object> get props => [record];
-}
-
 class Regmv5FormHapusEvent extends Regmv5FormEvents {
 	final String recordId;
 	const Regmv5FormHapusEvent({required this.recordId});
@@ -31,11 +15,74 @@ class Regmv5FormHapusEvent extends Regmv5FormEvents {
 	List<Object> get props => [recordId];
 }
 
-class Regmv5FormLihatEvent extends Regmv5FormEvents {
-	final String recordId;
-	const Regmv5FormLihatEvent({required this.recordId});
 
-	@override
-	List<Object> get props => [recordId];
+class UploadFileFotoEvent extends Regmv5FormEvents {
+  final String regmv5Id;
+  final String filePath;
+  final String imageSource;
+  const UploadFileFotoEvent(
+      {required this.regmv5Id,
+      required this.filePath,
+      required this.imageSource});
+
+  @override
+  List<Object> get props => [regmv5Id, filePath, imageSource];
 }
+
+class UploadBinaryFotoEvent extends Regmv5FormEvents {
+  final String regmv5Id;
+  final String fileName;
+  final Uint8List bytes;
+  final String imageSource;
+  const UploadBinaryFotoEvent(
+      {required this.regmv5Id,
+      required this.fileName,
+      required this.bytes,
+      required this.imageSource});
+
+  @override
+  List<Object> get props => [regmv5Id, fileName, bytes, imageSource];
+}
+
+class Save2StateFileFotoEvent extends Regmv5FormEvents {
+  final String filePath;
+  final String imageSource;
+  const Save2StateFileFotoEvent(
+      {required this.filePath, required this.imageSource});
+
+  @override
+  List<Object> get props => [filePath, imageSource];
+}
+
+class Save2StateBinaryFotoEvent extends Regmv5FormEvents {
+  final Uint8List fotoBytes;
+  final String imageSource;
+  final String fileName;
+  const Save2StateBinaryFotoEvent(
+      {required this.fotoBytes, required this.imageSource, required this.fileName});
+
+  @override
+  List<Object> get props => [fotoBytes, imageSource, fileName];
+}
+
+class DownloadFotoEvent extends Regmv5FormEvents {
+  final String regmv5Id;
+  const DownloadFotoEvent({required this.regmv5Id});
+
+  @override
+  List<Object> get props => [regmv5Id];
+}
+
+class HapusFotoStateEvent extends Regmv5FormEvents {}
+
+class ResetStateFotoEvent extends Regmv5FormEvents {}
+
+class SetErrorFotoEvent extends Regmv5FormEvents {
+  final String errorMsg;
+  const SetErrorFotoEvent({required this.errorMsg});
+
+  @override
+  List<Object> get props => [errorMsg];
+}
+
 

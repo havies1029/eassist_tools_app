@@ -90,4 +90,24 @@ class Regmv6FormAPI {
 			return throw Exception("Failed to load data");
 		}
 	}
+
+  Future<Regmv6FormModel> calPremiRegMvAPI(String regmv6Id) async {
+		String calPremiEndpoint = "${AppData.prefixEndPoint}/api/gen_regmv/regmv6form/hitungpremi";
+		Map<String, String> queryParams = {'regmv6Id': regmv6Id,
+			'modul_id': 'calPremiRegMvAPI'};
+		var uri = AppData.uriHtpp(AppData.httpAuthority, calPremiEndpoint, queryParams);
+		final http.Response response =
+			await http.get(uri, headers: <String, String>{
+			'Content-Type': 'application/json; odata=verbos',
+			'Accept': 'application/json; odata=verbos',
+			'Authorization': 'Bearer ${AppData.userToken}'
+		});
+
+		if (response.statusCode == 200) {
+			var returnData = Regmv6FormModel.fromJson(jsonDecode(response.body));
+			return returnData;
+		} else {
+			return throw Exception("Failed to load data");
+		}
+	}
 }
