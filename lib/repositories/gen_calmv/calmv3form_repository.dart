@@ -15,7 +15,10 @@ class Calmv3FormRepository {
 	Future<bool> calmv3FormHapus(String calmv3Id) async {
 		return await api.calmv3FormHapusAPI(calmv3Id);
 	}
-	Future<Calmv3FormModel> calmv3FormLihat(String calmv3Id) async {
-		return await api.calmv3FormLihatAPI(calmv3Id);
+	Future<Calmv3FormModel> calmv3FormLihat(String calmv1Id) async {
+		return await api.calmv3FormLihatAPI(calmv1Id);
+	}
+  Future<Calmv3FormModel> calmv3FormHitungPremi(String calmv1Id) async {
+		return await api.calmv3FormHitungPremiAPI(calmv1Id);
 	}
 }

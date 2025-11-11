@@ -7,6 +7,7 @@ DropdownSearch<ComboMMvtipeModel> buildFieldComboMMvtipe({
 	required String labelText,
 	GlobalKey<DropdownSearchState<ComboMMvtipeModel>>? comboKey,
 	ComboMMvtipeModel? initItem,
+  required String mvmerkId,
 	Function(ComboMMvtipeModel?)? onChangedCallback,
 	required Function(ComboMMvtipeModel?) onSaveCallback,
 	Function(ComboMMvtipeModel?)? validatorCallback
@@ -21,7 +22,7 @@ DropdownSearch<ComboMMvtipeModel> buildFieldComboMMvtipe({
 			),
 		),
 			items: (filter, infiniteScrollProps) async {
-				return ComboMMvtipeRepository().getComboMMvtipe(filter);
+				return ComboMMvtipeRepository().getComboMMvtipe(mvmerkId, filter);
 			},
 			suffixProps: const DropdownSuffixProps(clearButtonProps: ClearButtonProps(isVisible: false)),
 			popupProps: const PopupPropsMultiSelection.modalBottomSheet(

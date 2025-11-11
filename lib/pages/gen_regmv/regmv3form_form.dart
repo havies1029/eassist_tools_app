@@ -279,6 +279,7 @@ class Regmv3FormFormPageFormState extends State<Regmv3FormFormPage> {
 			comboKey: comboMMvmodelKey,
 			labelText: 'mmvmodelId',
 			initItem: fieldComboMMvmodel,
+      mvtipeId: fieldComboMMvtipe?.mmvtipeId??'',
 			onChangedCallback: (value) {
 				if (value != null) {
 					removeError(
@@ -331,6 +332,7 @@ class Regmv3FormFormPageFormState extends State<Regmv3FormFormPage> {
 			comboKey: comboMMvtipeKey,
 			labelText: 'mmvtipeId',
 			initItem: fieldComboMMvtipe,
+      mvmerkId: fieldComboMMvmerk?.mmvmerkId??'',
 			onChangedCallback: (value) {
 				if (value != null) {
 					removeError(

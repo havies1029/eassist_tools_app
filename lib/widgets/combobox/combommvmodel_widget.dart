@@ -6,7 +6,8 @@ import 'package:eassist_tools_app/repositories/combobox/combommvmodel_repository
 DropdownSearch<ComboMMvmodelModel> buildFieldComboMMvmodel({
 	required String labelText,
 	GlobalKey<DropdownSearchState<ComboMMvmodelModel>>? comboKey,
-	ComboMMvmodelModel? initItem,
+	ComboMMvmodelModel? initItem,  
+  required String mvtipeId,
 	Function(ComboMMvmodelModel?)? onChangedCallback,
 	required Function(ComboMMvmodelModel?) onSaveCallback,
 	Function(ComboMMvmodelModel?)? validatorCallback
@@ -21,7 +22,7 @@ DropdownSearch<ComboMMvmodelModel> buildFieldComboMMvmodel({
 			),
 		),
 			items: (filter, infiniteScrollProps) async {
-				return ComboMMvmodelRepository().getComboMMvmodel(filter);
+				return ComboMMvmodelRepository().getComboMMvmodel(mvtipeId, filter);
 			},
 			suffixProps: const DropdownSuffixProps(clearButtonProps: ClearButtonProps(isVisible: false)),
 			popupProps: const PopupPropsMultiSelection.modalBottomSheet(

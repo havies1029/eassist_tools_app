@@ -47,7 +47,14 @@ class Calmv3FormBloc extends Bloc<Calmv3FormEvents, Calmv3FormState> {
 	Future<void> onLihatCalmv3Form(
 		Calmv3FormLihatEvent event, Emitter<Calmv3FormState> emit) async {
 		emit(state.copyWith(isLoading: true, isLoaded: false));
-		Calmv3FormModel record = await repository.calmv3FormLihat(event.recordId);
+		Calmv3FormModel record = await repository.calmv3FormLihat(event.calmv1Id);
+		emit(state.copyWith(isLoading: false, isLoaded: true, record: record));
+	}
+
+	Future<void> onHitungPremiCalmv3Form(
+		Calmv3FormLihatEvent event, Emitter<Calmv3FormState> emit) async {
+		emit(state.copyWith(isLoading: true, isLoaded: false));
+		Calmv3FormModel record = await repository.calmv3FormHitungPremi(event.calmv1Id);
 		emit(state.copyWith(isLoading: false, isLoaded: true, record: record));
 	}
 

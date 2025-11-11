@@ -583,6 +583,7 @@ class SppamvCrudFormPageFormState extends State<SppamvCrudFormPage> {
 			comboKey: comboMMvtipeKey,
 			labelText: 'mvtipeId',
 			initItem: fieldComboMMvtipe,
+      mvmerkId: fieldComboMMvmerk?.mmvmerkId??'',
 			onChangedCallback: (value) {
 				if (value != null) {
 					removeError(

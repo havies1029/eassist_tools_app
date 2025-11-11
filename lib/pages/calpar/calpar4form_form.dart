@@ -2,32 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/common/constants.dart';
 import 'package:eassist_tools_app/widgets/form_error.dart';
-import 'package:eassist_tools_app/blocs/gen_calmv/calmv3form_bloc.dart';
-import 'package:eassist_tools_app/models/gen_calmv/calmv3form_model.dart';
+import 'package:eassist_tools_app/blocs/calpar/calpar4form_bloc.dart';
+import 'package:eassist_tools_app/models/calpar/calpar4form_model.dart';
 import 'package:intl/intl.dart';
 import 'package:eassist_tools_app/common/thousand_separator_input_formatter.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 
 
-class Calmv3FormFormPage extends StatefulWidget {
+class Calpar4FormFormPage extends StatefulWidget {
 	final String viewMode;
 	final String recordId;
 
-	const Calmv3FormFormPage({super.key, required this.viewMode, required this.recordId});
+	const Calpar4FormFormPage({super.key, required this.viewMode, required this.recordId});
 
 	@override
-	Calmv3FormFormPageFormState createState() => Calmv3FormFormPageFormState();
+	Calpar4FormFormPageFormState createState() => Calpar4FormFormPageFormState();
 }
 
-class Calmv3FormFormPageFormState extends State<Calmv3FormFormPage> {
-	late Calmv3FormBloc calmv3FormBloc;
+class Calpar4FormFormPageFormState extends State<Calpar4FormFormPage> {
+	late Calpar4FormBloc calpar4FormBloc;
 	final _formKey = GlobalKey<FormState>();
 	final List<String> errors = [];
-	var fieldDiskonPersenController = TextEditingController();
-	var fieldPremiAddController = TextEditingController();
-	var fieldPremiCascoController = TextEditingController();
-	var fieldPremiDiskonController = TextEditingController();
+	var fieldDiscNilaiController = TextEditingController();
+	var fieldDiscPersenController = TextEditingController();
+	var fieldPremiBiController = TextEditingController();
+	var fieldPremiEqvetController = TextEditingController();
 	var fieldPremiNetController = TextEditingController();
-	var fieldPremiSubtotalController = TextEditingController();
+	var fieldPremiOtherController = TextEditingController();
+	var fieldPremiParController = TextEditingController();
+	var fieldPremiRsmdccController = TextEditingController();
+	var fieldPremiTsfwdController = TextEditingController();
 
 	@override
 	void initState() {
@@ -39,8 +43,8 @@ class Calmv3FormFormPageFormState extends State<Calmv3FormFormPage> {
 
 	@override
 	Widget build(BuildContext context) {
-		calmv3FormBloc = BlocProvider.of<Calmv3FormBloc>(context);
-		return BlocConsumer<Calmv3FormBloc, Calmv3FormState>(
+		calpar4FormBloc = BlocProvider.of<Calpar4FormBloc>(context);
+		return BlocConsumer<Calpar4FormBloc, Calpar4FormState>(
 			builder: (context, state) {
 				return Dialog(
 					shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -53,7 +57,7 @@ class Calmv3FormFormPageFormState extends State<Calmv3FormFormPage> {
 									children: [
 										const SizedBox(height: 10),
 										Text(
-											"${widget.viewMode == "tambah" ? "Tambah" : "Ubah"} Perlindungan Tambahan",
+											"${widget.viewMode == "tambah" ? "Tambah" : "Ubah"} Info Premi",
 											style: const TextStyle(
 												fontSize: 20.0,
 												color: Color(0xffff6101),
@@ -64,13 +68,16 @@ class Calmv3FormFormPageFormState extends State<Calmv3FormFormPage> {
 											),
 										),
 										const SizedBox(height: 25),
-										buildFieldCalmv1Id(),
-										buildFieldDiskonPersen(),
-										buildFieldPremiAdd(),
-										buildFieldPremiCasco(),
-										buildFieldPremiDiskon(),
+										buildFieldCalpar1Id(),
+										buildFieldDiscNilai(),
+										buildFieldDiscPersen(),
+										buildFieldPremiBi(),
+										buildFieldPremiEqvet(),
 										buildFieldPremiNet(),
-										buildFieldPremiSubtotal(),
+										buildFieldPremiOther(),
+										buildFieldPremiPar(),
+										buildFieldPremiRsmdcc(),
+										buildFieldPremiTsfwd(),
 										const SizedBox(height: 25),
 										FormError(
 											errors: errors,
@@ -121,12 +128,15 @@ class Calmv3FormFormPageFormState extends State<Calmv3FormFormPage> {
 				listener: (context, state) {
 					if (state.isLoaded) {
 						if (state.record != null){
-							fieldDiskonPersenController.text = NumberFormat("#,###").format(state.record!.diskonPersen);
-							fieldPremiAddController.text = NumberFormat("#,###").format(state.record!.premiAdd);
-							fieldPremiCascoController.text = NumberFormat("#,###").format(state.record!.premiCasco);
-							fieldPremiDiskonController.text = NumberFormat("#,###").format(state.record!.premiDiskon);
+							fieldDiscNilaiController.text = NumberFormat("#,###").format(state.record!.discNilai);
+							fieldDiscPersenController.text = NumberFormat("#,###").format(state.record!.discPersen);
+							fieldPremiBiController.text = NumberFormat("#,###").format(state.record!.premiBi);
+							fieldPremiEqvetController.text = NumberFormat("#,###").format(state.record!.premiEqvet);
 							fieldPremiNetController.text = NumberFormat("#,###").format(state.record!.premiNet);
-							fieldPremiSubtotalController.text = NumberFormat("#,###").format(state.record!.premiSubtotal);
+							fieldPremiOtherController.text = NumberFormat("#,###").format(state.record!.premiOther);
+							fieldPremiParController.text = NumberFormat("#,###").format(state.record!.premiPar);
+							fieldPremiRsmdccController.text = NumberFormat("#,###").format(state.record!.premiRsmdcc);
+							fieldPremiTsfwdController.text = NumberFormat("#,###").format(state.record!.premiTsfwd);
 						}
 					}
 				},
@@ -134,23 +144,23 @@ class Calmv3FormFormPageFormState extends State<Calmv3FormFormPage> {
 		}
 	void loadData() {
 		if (widget.viewMode == "ubah") {
-		calmv3FormBloc.add(
-			Calmv3FormLihatEvent(calmv1Id: widget.recordId));
+		calpar4FormBloc.add(
+			Calpar4FormLihatEvent(recordId: widget.recordId));
 		}
 	}
 
-	Widget buildFieldCalmv1Id(){
+	Widget buildFieldCalpar1Id(){
 		return TextFormField(
 		);
 	}
 
-	Widget buildFieldDiskonPersen(){
+	Widget buildFieldDiscNilai(){
 		return TextFormField(
 			keyboardType: TextInputType.number,
 			inputFormatters: [ThousandsSeparatorInputFormatter()],
-			controller: fieldDiskonPersenController,
+			controller: fieldDiscNilaiController,
 			decoration: const InputDecoration(
-				labelText: "diskonPersen",
+				labelText: "discNilai",
 				floatingLabelBehavior: FloatingLabelBehavior.always,
 			),
 			onChanged: (value) {
@@ -169,13 +179,13 @@ class Calmv3FormFormPageFormState extends State<Calmv3FormFormPage> {
 		);
 	}
 
-	Widget buildFieldPremiAdd(){
+	Widget buildFieldDiscPersen(){
 		return TextFormField(
 			keyboardType: TextInputType.number,
 			inputFormatters: [ThousandsSeparatorInputFormatter()],
-			controller: fieldPremiAddController,
+			controller: fieldDiscPersenController,
 			decoration: const InputDecoration(
-				labelText: "premiAdd",
+				labelText: "discPersen",
 				floatingLabelBehavior: FloatingLabelBehavior.always,
 			),
 			onChanged: (value) {
@@ -194,13 +204,13 @@ class Calmv3FormFormPageFormState extends State<Calmv3FormFormPage> {
 		);
 	}
 
-	Widget buildFieldPremiCasco(){
+	Widget buildFieldPremiBi(){
 		return TextFormField(
 			keyboardType: TextInputType.number,
 			inputFormatters: [ThousandsSeparatorInputFormatter()],
-			controller: fieldPremiCascoController,
+			controller: fieldPremiBiController,
 			decoration: const InputDecoration(
-				labelText: "premiCasco",
+				labelText: "premiBi",
 				floatingLabelBehavior: FloatingLabelBehavior.always,
 			),
 			onChanged: (value) {
@@ -219,13 +229,13 @@ class Calmv3FormFormPageFormState extends State<Calmv3FormFormPage> {
 		);
 	}
 
-	Widget buildFieldPremiDiskon(){
+	Widget buildFieldPremiEqvet(){
 		return TextFormField(
 			keyboardType: TextInputType.number,
 			inputFormatters: [ThousandsSeparatorInputFormatter()],
-			controller: fieldPremiDiskonController,
+			controller: fieldPremiEqvetController,
 			decoration: const InputDecoration(
-				labelText: "premiDiskon",
+				labelText: "premiEqvet",
 				floatingLabelBehavior: FloatingLabelBehavior.always,
 			),
 			onChanged: (value) {
@@ -269,13 +279,88 @@ class Calmv3FormFormPageFormState extends State<Calmv3FormFormPage> {
 		);
 	}
 
-	Widget buildFieldPremiSubtotal(){
+	Widget buildFieldPremiOther(){
 		return TextFormField(
 			keyboardType: TextInputType.number,
 			inputFormatters: [ThousandsSeparatorInputFormatter()],
-			controller: fieldPremiSubtotalController,
+			controller: fieldPremiOtherController,
 			decoration: const InputDecoration(
-				labelText: "premiSubtotal",
+				labelText: "premiOther",
+				floatingLabelBehavior: FloatingLabelBehavior.always,
+			),
+			onChanged: (value) {
+				if (value.isNotEmpty) {
+				removeError(error: kStringNullError);
+				}
+			},
+			validator: (value) {
+				if (value == null || value.isEmpty) {
+					addError(error: kStringNullError);
+					return "";
+				}
+				return null;
+			},
+			textAlign: TextAlign.right,
+		);
+	}
+
+	Widget buildFieldPremiPar(){
+		return TextFormField(
+			keyboardType: TextInputType.number,
+			inputFormatters: [ThousandsSeparatorInputFormatter()],
+			controller: fieldPremiParController,
+			decoration: const InputDecoration(
+				labelText: "premiPar",
+				floatingLabelBehavior: FloatingLabelBehavior.always,
+			),
+			onChanged: (value) {
+				if (value.isNotEmpty) {
+				removeError(error: kStringNullError);
+				}
+			},
+			validator: (value) {
+				if (value == null || value.isEmpty) {
+					addError(error: kStringNullError);
+					return "";
+				}
+				return null;
+			},
+			textAlign: TextAlign.right,
+		);
+	}
+
+	Widget buildFieldPremiRsmdcc(){
+		return TextFormField(
+			keyboardType: TextInputType.number,
+			inputFormatters: [ThousandsSeparatorInputFormatter()],
+			controller: fieldPremiRsmdccController,
+			decoration: const InputDecoration(
+				labelText: "premiRsmdcc",
+				floatingLabelBehavior: FloatingLabelBehavior.always,
+			),
+			onChanged: (value) {
+				if (value.isNotEmpty) {
+				removeError(error: kStringNullError);
+				}
+			},
+			validator: (value) {
+				if (value == null || value.isEmpty) {
+					addError(error: kStringNullError);
+					return "";
+				}
+				return null;
+			},
+			textAlign: TextAlign.right,
+		);
+	}
+
+	Widget buildFieldPremiTsfwd(){
+		return TextFormField(
+			keyboardType: TextInputType.number,
+			inputFormatters: [ThousandsSeparatorInputFormatter()],
+			controller: fieldPremiTsfwdController,
+			decoration: const InputDecoration(
+				labelText: "premiTsfwd",
 				floatingLabelBehavior: FloatingLabelBehavior.always,
 			),
 			onChanged: (value) {
@@ -301,20 +386,23 @@ class Calmv3FormFormPageFormState extends State<Calmv3FormFormPage> {
 	void onSaveForm() {
 		if (_formKey.currentState!.validate()) {
 			_formKey.currentState!.save();
-			Calmv3FormModel record = Calmv3FormModel(
-				calmv3Id: '',
-				diskonPersen: double.parse(fieldDiskonPersenController.text.replaceAll(',', '')),
-				premiAdd: double.parse(fieldPremiAddController.text.replaceAll(',', '')),
-				premiCasco: double.parse(fieldPremiCascoController.text.replaceAll(',', '')),
-				premiDiskon: double.parse(fieldPremiDiskonController.text.replaceAll(',', '')),
+			Calpar4FormModel record = Calpar4FormModel(
+				calpar4Id: '',
+				discNilai: double.parse(fieldDiscNilaiController.text.replaceAll(',', '')),
+				discPersen: double.parse(fieldDiscPersenController.text.replaceAll(',', '')),
+				premiBi: double.parse(fieldPremiBiController.text.replaceAll(',', '')),
+				premiEqvet: double.parse(fieldPremiEqvetController.text.replaceAll(',', '')),
 				premiNet: double.parse(fieldPremiNetController.text.replaceAll(',', '')),
-				premiSubtotal: double.parse(fieldPremiSubtotalController.text.replaceAll(',', '')),
+				premiOther: double.parse(fieldPremiOtherController.text.replaceAll(',', '')),
+				premiPar: double.parse(fieldPremiParController.text.replaceAll(',', '')),
+				premiRsmdcc: double.parse(fieldPremiRsmdccController.text.replaceAll(',', '')),
+				premiTsfwd: double.parse(fieldPremiTsfwdController.text.replaceAll(',', '')),
 			);
 			if (widget.viewMode == "tambah") {
-				calmv3FormBloc.add(Calmv3FormTambahEvent(record: record));
+				calpar4FormBloc.add(Calpar4FormTambahEvent(record: record));
 			} else if (widget.viewMode == "ubah") {
-				record.calmv3Id = calmv3FormBloc.state.record!.calmv3Id;
-				calmv3FormBloc.add(Calmv3FormUbahEvent(record: record));
+				record.calpar4Id = calpar4FormBloc.state.record!.calpar4Id;
+				calpar4FormBloc.add(Calpar4FormUbahEvent(record: record));
 			}
 			_dismissDialog();
 		}

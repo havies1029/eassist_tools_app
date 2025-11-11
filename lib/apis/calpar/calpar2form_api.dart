@@ -2,14 +2,14 @@ import 'dart:convert';
 import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:http/http.dart' as http;
 import 'package:eassist_tools_app/models/responseAPI/returndataapi_model.dart';
-import 'package:eassist_tools_app/models/gen_calmv/calmv3form_model.dart';
+import 'package:eassist_tools_app/models/calpar/calpar2form_model.dart';
 
-class Calmv3FormAPI {
+class Calpar2FormAPI {
 
-	Future<ReturnDataAPI> calmv3FormTambahAPI(Calmv3FormModel record) async {
+	Future<ReturnDataAPI> calpar2FormTambahAPI(Calpar2FormModel record) async {
 		String tambahEndpoint =
-			"${AppData.prefixEndPoint}/api/calmv/calmv3form/create";
-		Map<String, String> queryParams = {"modul_id": "calmv3FormTambahAPI"};
+			"${AppData.prefixEndPoint}/api/calpar/calpar2form/create";
+		Map<String, String> queryParams = {"modul_id": "calpar2FormTambahAPI"};
 		var uri = AppData.uriHtpp(AppData.httpAuthority, tambahEndpoint, queryParams);
 
 		ReturnDataAPI returnData;
@@ -28,10 +28,10 @@ class Calmv3FormAPI {
 		}
 		return returnData;
 	}
-	Future<bool> calmv3FormUbahAPI(Calmv3FormModel record) async {
+	Future<bool> calpar2FormUbahAPI(Calpar2FormModel record) async {
 		String ubahEndpoint =
-			"${AppData.prefixEndPoint}/api/calmv/calmv3form/update";
-		Map<String, String> queryParams = {"modul_id": "calmv3FormUbahAPI"};
+			"${AppData.prefixEndPoint}/api/calpar/calpar2form/update";
+		Map<String, String> queryParams = {"modul_id": "calpar2FormUbahAPI"};
 
 		var uri = AppData.uriHtpp(AppData.httpAuthority, ubahEndpoint, queryParams);
 
@@ -51,11 +51,11 @@ class Calmv3FormAPI {
 		}
 		return returnData.success;
 	}
-	Future<bool> calmv3FormHapusAPI(String calmv3Id) async {
-		String hapusEndpoint = "${AppData.prefixEndPoint}/api/calmv/calmv3form/delete";
+	Future<bool> calpar2FormHapusAPI(String calpar2Id) async {
+		String hapusEndpoint = "${AppData.prefixEndPoint}/api/calpar/calpar2form/delete";
 		Map<String, String> queryParams = {
-			'calmv3Id': calmv3Id,
-			'modul_id': 'calmv3FormHapusAPI'};
+			'calpar2Id': calpar2Id,
+			'modul_id': 'calpar2FormHapusAPI'};
 		var uri = AppData.uriHtpp(AppData.httpAuthority, hapusEndpoint, queryParams);
 		final http.Response response =
 			await http.get(uri, headers: <String, String>{
@@ -72,9 +72,9 @@ class Calmv3FormAPI {
 		}
 		return returnData.success;
 	}
-	Future<Calmv3FormModel> calmv3FormLihatAPI(String calmv1Id) async {
-		String lihatEndpoint = "${AppData.prefixEndPoint}/api/calmv/calmv3form/read";
-		Map<String, String> queryParams = {'calmv1Id': calmv1Id};
+	Future<Calpar2FormModel> calpar2FormLihatAPI(String calpar2Id) async {
+		String lihatEndpoint = "${AppData.prefixEndPoint}/api/calpar/calpar2form/read";
+		Map<String, String> queryParams = {'calpar2Id': calpar2Id};
 		var uri = AppData.uriHtpp(AppData.httpAuthority, lihatEndpoint, queryParams);
 		final http.Response response =
 			await http.get(uri, headers: <String, String>{
@@ -84,27 +84,7 @@ class Calmv3FormAPI {
 		});
 
 		if (response.statusCode == 200) {
-			var returnData = Calmv3FormModel.fromJson(jsonDecode(response.body));
-			return returnData;
-		} else {
-			return throw Exception("Failed to load data");
-		}
-	}
-
-  Future<Calmv3FormModel> calmv3FormHitungPremiAPI(String calmv1Id) async {
-		String lihatEndpoint = "${AppData.prefixEndPoint}/api/calmv/calmv3form/hitungpremi";
-		Map<String, String> queryParams = {'calmv1Id': calmv1Id,
-			'modul_id': 'calmv3FormHitungPremiAPI'};
-		var uri = AppData.uriHtpp(AppData.httpAuthority, lihatEndpoint, queryParams);
-		final http.Response response =
-			await http.get(uri, headers: <String, String>{
-			'Content-Type': 'application/json; odata=verbos',
-			'Accept': 'application/json; odata=verbos',
-			'Authorization': 'Bearer ${AppData.userToken}'
-		});
-
-		if (response.statusCode == 200) {
-			var returnData = Calmv3FormModel.fromJson(jsonDecode(response.body));
+			var returnData = Calpar2FormModel.fromJson(jsonDecode(response.body));
 			return returnData;
 		} else {
 			return throw Exception("Failed to load data");

@@ -5,10 +5,10 @@ import 'package:eassist_tools_app/models/combobox/combommvmodel_model.dart';
 
 class ComboMMvmodelAPI {
 
-	Future<List<ComboMMvmodelModel>> getComboMMvmodelAPI(String filter) async {
+	Future<List<ComboMMvmodelModel>> getComboMMvmodelAPI(String mvtipeId, String filter) async {
 		String urlGetComboEndPoint = "${AppData.prefixEndPoint}/api/mmvmodelcombobox/getlist";
 
-		Map<String, String> queryParams = {"filter": filter};
+		Map<String, String> queryParams = {"mvtipeId": mvtipeId, "filter": filter};
 		var uri = AppData.uriHtpp(AppData.httpAuthority, urlGetComboEndPoint, queryParams);
 		final http.Response response = await http.get(uri, headers: <String, String>{
 			'Content-Type': 'application/json; odata=verbos',

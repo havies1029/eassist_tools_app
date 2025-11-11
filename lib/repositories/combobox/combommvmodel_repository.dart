@@ -3,8 +3,8 @@ import 'package:eassist_tools_app/models/combobox/combommvmodel_model.dart';
 
 class ComboMMvmodelRepository {
 
-	Future<List<ComboMMvmodelModel>> getComboMMvmodel(String filter) async {
+	Future<List<ComboMMvmodelModel>> getComboMMvmodel(String mvtipeId, String filter) async {
 		ComboMMvmodelAPI api = ComboMMvmodelAPI();
-		return await api.getComboMMvmodelAPI(filter);
+		return await api.getComboMMvmodelAPI(mvtipeId, filter);
 	}
 }

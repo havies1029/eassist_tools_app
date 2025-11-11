@@ -1,15 +1,14 @@
 import 'dart:convert';
 import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:http/http.dart' as http;
-import 'package:eassist_tools_app/models/combobox/combommvtipe_model.dart';
+import 'package:eassist_tools_app/models/calpar/calpar1list_model.dart';
 
-class ComboMMvtipeAPI {
+class Calpar1ListAPI{
+	Future<List<Calpar1ListModel>> getCalpar1ListAPI(String searchText, int hal) async {
+		String urlGetListEndPoint = "${AppData.prefixEndPoint}/api/calpar/calpar1list/getlist";
 
-	Future<List<ComboMMvtipeModel>> getComboMMvtipeAPI(String mvmerkId, String filter) async {
-		String urlGetComboEndPoint = "${AppData.prefixEndPoint}/api/mmvtipecombobox/getlist";
-
-		Map<String, String> queryParams = {"mvmerkId": mvmerkId, "filter": filter};
-		var uri = AppData.uriHtpp(AppData.httpAuthority, urlGetComboEndPoint, queryParams);
+		Map<String, String> queryParams = {"searchText": searchText, "hal": hal.toString()};
+		var uri = AppData.uriHtpp(AppData.httpAuthority, urlGetListEndPoint, queryParams);
 		final http.Response response = await http.get(uri, headers: <String, String>{
 			'Content-Type': 'application/json; odata=verbos',
 			'Accept': 'application/json; odata=verbos',
@@ -19,7 +18,7 @@ class ComboMMvtipeAPI {
 		if (response.statusCode == 200) {
 			final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
 			return parsed
-				.map<ComboMMvtipeModel>((json) => ComboMMvtipeModel.fromJson(json))
+				.map<Calpar1ListModel>((json) => Calpar1ListModel.fromJson(json))
 				.toList();
 		} else {
 			throw Exception("Failed to load data");
