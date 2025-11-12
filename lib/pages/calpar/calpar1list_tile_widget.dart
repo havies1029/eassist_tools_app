@@ -6,6 +6,7 @@ import 'package:eassist_tools_app/widgets/my_text.dart';
 class Calpar1ListTileWidget extends StatelessWidget {
 	final String calpar1Id;
 	final int coverBulan;
+	final String jenisNama;
 	final String kelasNama;
 	final String okupasiDesc;
 
@@ -13,6 +14,7 @@ class Calpar1ListTileWidget extends StatelessWidget {
 		{super.key,
 		required this.calpar1Id, 
 		required this.coverBulan, 
+		required this.jenisNama, 
 		required this.kelasNama, 
 		required this.okupasiDesc});
 
@@ -47,6 +49,15 @@ class Calpar1ListTileWidget extends StatelessWidget {
 						Container(height: 5),
 						Text(
 							NumberFormat("#,###").format(coverBulan),
+							style: MyText.bodyLarge(context)!
+								.copyWith(color: MyColors.grey_80)),
+						Container(height: 10),
+						Text("jenisNama",
+							style: MyText.bodyLarge(context)!
+								.copyWith(color: MyColors.grey_40)),
+						Container(height: 5),
+						Text(
+							jenisNama,
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),

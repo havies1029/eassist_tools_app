@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/models/responseAPI/returndataapi_model.dart';
 import 'package:eassist_tools_app/models/combobox/comborokupasi_model.dart';
 import 'package:eassist_tools_app/models/combobox/comborkonstruksiojk_model.dart';
+import 'package:eassist_tools_app/models/combobox/combomjnscoverpar_model.dart';
 import 'package:eassist_tools_app/models/calpar/calpar1crud_model.dart';
 import 'package:eassist_tools_app/repositories/calpar/calpar1crud_repository.dart';
 
@@ -18,6 +19,7 @@ class Calpar1CrudBloc extends Bloc<Calpar1CrudEvents, Calpar1CrudState> {
 		on<Calpar1CrudLihatEvent>(onLihatCalpar1Crud);
 		on<ComboROkupasiChangedEvent>(onComboROkupasiChanged);
 		on<ComboRKonstruksiojkChangedEvent>(onComboRKonstruksiojkChanged);
+		on<ComboMJnscoverParChangedEvent>(onComboMJnscoverParChanged);
 	}
 
 	Future<void> onTambahCalpar1Crud(
@@ -77,6 +79,18 @@ class Calpar1CrudBloc extends Bloc<Calpar1CrudEvents, Calpar1CrudState> {
 			isLoading: false,
 			isLoaded: true,
 			comboRKonstruksiojk: comboRKonstruksiojk));
+	}
+
+	Future<void> onComboMJnscoverParChanged(
+			ComboMJnscoverParChangedEvent event, Emitter<Calpar1CrudState> emit) async {
+
+		emit(state.copyWith(isLoading: true, isLoaded: false));
+
+		ComboMJnscoverParModel comboMJnscoverPar = event.comboMJnscoverPar;
+		emit(state.copyWith(
+			isLoading: false,
+			isLoaded: true,
+			comboMJnscoverPar: comboMJnscoverPar));
 	}
 
 }

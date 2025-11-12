@@ -4,10 +4,13 @@ import 'package:eassist_tools_app/common/constants.dart';
 import 'package:eassist_tools_app/widgets/form_error.dart';
 import 'package:eassist_tools_app/blocs/calpar/calpar1crud_bloc.dart';
 import 'package:eassist_tools_app/models/calpar/calpar1crud_model.dart';
+import 'package:eassist_tools_app/models/combobox/combomjnscoverpar_model.dart';
+import 'package:eassist_tools_app/widgets/combobox/combomjnscoverpar_widget.dart';
 import 'package:eassist_tools_app/models/combobox/comborkonstruksiojk_model.dart';
 import 'package:eassist_tools_app/widgets/combobox/comborkonstruksiojk_widget.dart';
 import 'package:eassist_tools_app/models/combobox/comborokupasi_model.dart';
 import 'package:eassist_tools_app/widgets/combobox/comborokupasi_widget.dart';
+import 'package:intl/intl.dart';
 import 'package:eassist_tools_app/common/thousand_separator_input_formatter.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
@@ -27,6 +30,8 @@ class Calpar1CrudFormPageFormState extends State<Calpar1CrudFormPage> {
 	final _formKey = GlobalKey<FormState>();
 	final List<String> errors = [];
 	var fieldCoverBulanController = TextEditingController();
+	ComboMJnscoverParModel? fieldComboMJnscoverPar;
+	final comboMJnscoverParKey = GlobalKey<DropdownSearchState<ComboMJnscoverParModel>>();
 	ComboRKonstruksiojkModel? fieldComboRKonstruksiojk;
 	final comboRKonstruksiojkKey = GlobalKey<DropdownSearchState<ComboRKonstruksiojkModel>>();
 	ComboROkupasiModel? fieldComboROkupasi;
@@ -68,6 +73,7 @@ class Calpar1CrudFormPageFormState extends State<Calpar1CrudFormPage> {
 										),
 										const SizedBox(height: 25),
 										buildFieldCoverBulan(),
+										buildFieldMjnscoverparId(),
 										buildFieldRkonstruksiojkId(),
 										buildFieldRokupasiId(),
 										const SizedBox(height: 25),
@@ -122,6 +128,7 @@ class Calpar1CrudFormPageFormState extends State<Calpar1CrudFormPage> {
 						if (state.record != null){
 							fieldCoverBulanController.text = state.record!.coverBulan.toString();
 						}
+						fieldComboMJnscoverPar = state.comboMJnscoverPar;
 						fieldComboRKonstruksiojk = state.comboRKonstruksiojk;
 						fieldComboROkupasi = state.comboROkupasi;
 					}
@@ -157,6 +164,32 @@ class Calpar1CrudFormPageFormState extends State<Calpar1CrudFormPage> {
 				return null;
 			},
 			textAlign: TextAlign.right,
+		);
+	}
+
+	Widget buildFieldMjnscoverparId(){
+		return buildFieldComboMJnscoverPar(
+			comboKey: comboMJnscoverParKey,
+			labelText: 'mjnscoverparId',
+			initItem: fieldComboMJnscoverPar,
+			onChangedCallback: (value) {
+				if (value != null) {
+					removeError(
+						error: "Field ComboMJnscoverPar tidak boleh kosong.");
+					calpar1CrudBloc.add(ComboMJnscoverParChangedEvent(comboMJnscoverPar: value));
+				}
+			},
+			onSaveCallback: (value) {
+				if (value != null) {
+					fieldComboMJnscoverPar = value;
+				}
+			},
+			validatorCallback: (value) {
+				if (value == null) {
+					addError(
+						error: "Field ComboMJnscoverPar tidak boleh kosong.");
+				}
+			},
 		);
 	}
 
@@ -222,6 +255,7 @@ class Calpar1CrudFormPageFormState extends State<Calpar1CrudFormPage> {
 			Calpar1CrudModel record = Calpar1CrudModel(
 				calpar1Id: '',
 				coverBulan: int.parse(fieldCoverBulanController.text),
+				mjnscoverparId: fieldComboMJnscoverPar?.mjnscoverparId,
 				rkonstruksiojkId: fieldComboRKonstruksiojk?.rkonstruksiojkId,
 				rokupasiId: fieldComboROkupasi?.rokupasiId,
 			);
