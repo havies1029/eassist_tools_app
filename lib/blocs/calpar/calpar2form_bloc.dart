@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/models/responseAPI/returndataapi_model.dart';
 import 'package:eassist_tools_app/models/combobox/combormatauang_model.dart';
-import 'package:eassist_tools_app/models/combobox/combombiindemnityojk_model.dart';
 import 'package:eassist_tools_app/models/calpar/calpar2form_model.dart';
 import 'package:eassist_tools_app/repositories/calpar/calpar2form_repository.dart';
 
@@ -17,7 +16,6 @@ class Calpar2FormBloc extends Bloc<Calpar2FormEvents, Calpar2FormState> {
 		on<Calpar2FormHapusEvent>(onHapusCalpar2Form);
 		on<Calpar2FormLihatEvent>(onLihatCalpar2Form);
 		on<ComboRMatauangChangedEvent>(onComboRMatauangChanged);
-		on<ComboMBiindemnityOjkChangedEvent>(onComboMBiindemnityOjkChanged);
 	}
 
 	Future<void> onTambahCalpar2Form(
@@ -65,18 +63,6 @@ class Calpar2FormBloc extends Bloc<Calpar2FormEvents, Calpar2FormState> {
 			isLoading: false,
 			isLoaded: true,
 			comboRMatauang: comboRMatauang));
-	}
-
-	Future<void> onComboMBiindemnityOjkChanged(
-			ComboMBiindemnityOjkChangedEvent event, Emitter<Calpar2FormState> emit) async {
-
-		emit(state.copyWith(isLoading: true, isLoaded: false));
-
-		ComboMBiindemnityOjkModel comboMBiindemnityOjk = event.comboMBiindemnityOjk;
-		emit(state.copyWith(
-			isLoading: false,
-			isLoaded: true,
-			comboMBiindemnityOjk: comboMBiindemnityOjk));
 	}
 
 }

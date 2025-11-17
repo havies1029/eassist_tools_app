@@ -45,9 +45,3 @@ class ComboRMatauangChangedEvent extends Calpar2FormEvents{
 
 	@override	List<Object> get props => [comboRMatauang];}
 
-class ComboMBiindemnityOjkChangedEvent extends Calpar2FormEvents{
-	final ComboMBiindemnityOjkModel comboMBiindemnityOjk;
-	const ComboMBiindemnityOjkChangedEvent({required this.comboMBiindemnityOjk});
-
-	@override	List<Object> get props => [comboMBiindemnityOjk];}
-

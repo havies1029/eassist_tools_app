@@ -51,11 +51,4 @@ class Calpar4FormBloc extends Bloc<Calpar4FormEvents, Calpar4FormState> {
 		emit(state.copyWith(isLoading: false, isLoaded: true, record: record));
 	}
 
-  Future<void> onHitungPremiCalpar4Form(
-		Calpar4FormHitungPremiEvent event, Emitter<Calpar4FormState> emit) async {
-		emit(state.copyWith(isLoading: true, isLoaded: false));
-		Calpar4FormModel record = await repository.calpar4FormHitungPremi(event.calpar1Id);
-		emit(state.copyWith(isLoading: false, isLoaded: true, record: record));
-	}
-
 }

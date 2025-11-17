@@ -57,7 +57,7 @@ class Calpar4FormFormPageFormState extends State<Calpar4FormFormPage> {
 									children: [
 										const SizedBox(height: 10),
 										Text(
-											"${widget.viewMode == "tambah" ? "Tambah" : "Ubah"} Info Premi",
+											"${widget.viewMode == "tambah" ? "Tambah" : "Ubah"} Hitung Premi",
 											style: const TextStyle(
 												fontSize: 20.0,
 												color: Color(0xffff6101),

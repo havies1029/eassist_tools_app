@@ -6,6 +6,8 @@ import 'package:eassist_tools_app/blocs/calpar/calpar3form_bloc.dart';
 import 'package:eassist_tools_app/models/calpar/calpar3form_model.dart';
 import 'package:eassist_tools_app/models/combobox/combomkabzonagempa_model.dart';
 import 'package:eassist_tools_app/widgets/combobox/combomkabzonagempa_widget.dart';
+import 'package:eassist_tools_app/models/combobox/combomjnscoverpar_model.dart';
+import 'package:eassist_tools_app/widgets/combobox/combomjnscoverpar_widget.dart';
 import 'package:eassist_tools_app/models/combobox/combomwilayah_model.dart';
 import 'package:eassist_tools_app/widgets/combobox/combomwilayah_widget.dart';
 import 'package:intl/intl.dart';
@@ -30,9 +32,10 @@ class Calpar3FormFormPageFormState extends State<Calpar3FormFormPage> {
 	final _formKey = GlobalKey<FormState>();
 	final List<String> errors = [];
 	var fieldIsEqController = TextEditingController();
-	var fieldIsTsfwdController = TextEditingController();
 	ComboMKabZonaGempaModel? fieldComboMKabZonaGempa;
 	final comboMKabZonaGempaKey = GlobalKey<DropdownSearchState<ComboMKabZonaGempaModel>>();
+	ComboMJnscoverParModel? fieldComboMJnscoverPar;
+	final comboMJnscoverParKey = GlobalKey<DropdownSearchState<ComboMJnscoverParModel>>();
 	ComboMWilayahModel? fieldComboMWilayah;
 	final comboMWilayahKey = GlobalKey<DropdownSearchState<ComboMWilayahModel>>();
 	var fieldRateEqvetController = TextEditingController();
@@ -66,7 +69,7 @@ class Calpar3FormFormPageFormState extends State<Calpar3FormFormPage> {
 									children: [
 										const SizedBox(height: 10),
 										Text(
-											"${widget.viewMode == "tambah" ? "Tambah" : "Ubah"} Info Tarif",
+											"${widget.viewMode == "tambah" ? "Tambah" : "Ubah"} Perhitungan Tarif",
 											style: const TextStyle(
 												fontSize: 20.0,
 												color: Color(0xffff6101),
@@ -79,8 +82,8 @@ class Calpar3FormFormPageFormState extends State<Calpar3FormFormPage> {
 										const SizedBox(height: 25),
 										buildFieldCalpar1Id(),
 										buildFieldIsEq(),
-										buildFieldIsTsfwd(),
 										buildFieldKab2zonagempaId(),
+										buildFieldMjnscoverparId(),
 										buildFieldMwilayahId(),
 										buildFieldRateEqvet(),
 										buildFieldRateOther(),
@@ -139,7 +142,6 @@ class Calpar3FormFormPageFormState extends State<Calpar3FormFormPage> {
 					if (state.isLoaded) {
 						if (state.record != null){
 							fieldIsEqController.text = state.record!.isEq.toString();
-							fieldIsTsfwdController.text = state.record!.isTsfwd.toString();
 							fieldRateEqvetController.text = NumberFormat("#,###").format(state.record!.rateEqvet);
 							fieldRateOtherController.text = NumberFormat("#,###").format(state.record!.rateOther);
 							fieldRateParController.text = NumberFormat("#,###").format(state.record!.ratePar);
@@ -148,6 +150,7 @@ class Calpar3FormFormPageFormState extends State<Calpar3FormFormPage> {
 							fieldRateTsfwdController.text = NumberFormat("#,###").format(state.record!.rateTsfwd);
 						}
 						fieldComboMKabZonaGempa = state.comboMKabZonaGempa;
+						fieldComboMJnscoverPar = state.comboMJnscoverPar;
 						fieldComboMWilayah = state.comboMWilayah;
 					}
 				},
@@ -178,19 +181,6 @@ class Calpar3FormFormPageFormState extends State<Calpar3FormFormPage> {
 		);
 	}
 
-	Widget buildFieldIsTsfwd(){
-		return CheckboxWidget(
-			leftLabel: "",
-			rightLabel: "isTsfwd",
-			initialValue: toBoolean(fieldIsTsfwdController.text),
-			callback: (value) {
-				setState(() {
-					fieldIsTsfwdController.text = value.toString();
-				});
-			}
-		);
-	}
-
 	Widget buildFieldKab2zonagempaId(){
 		return buildFieldComboMKabZonaGempa(
 			comboKey: comboMKabZonaGempaKey,
@@ -212,6 +202,32 @@ class Calpar3FormFormPageFormState extends State<Calpar3FormFormPage> {
 				if (value == null) {
 					addError(
 						error: "Field ComboMKabZonaGempa tidak boleh kosong.");
+				}
+			},
+		);
+	}
+
+	Widget buildFieldMjnscoverparId(){
+		return buildFieldComboMJnscoverPar(
+			comboKey: comboMJnscoverParKey,
+			labelText: 'mjnscoverparId',
+			initItem: fieldComboMJnscoverPar,
+			onChangedCallback: (value) {
+				if (value != null) {
+					removeError(
+						error: "Field ComboMJnscoverPar tidak boleh kosong.");
+					calpar3FormBloc.add(ComboMJnscoverParChangedEvent(comboMJnscoverPar: value));
+				}
+			},
+			onSaveCallback: (value) {
+				if (value != null) {
+					fieldComboMJnscoverPar = value;
+				}
+			},
+			validatorCallback: (value) {
+				if (value == null) {
+					addError(
+						error: "Field ComboMJnscoverPar tidak boleh kosong.");
 				}
 			},
 		);
@@ -403,8 +419,8 @@ class Calpar3FormFormPageFormState extends State<Calpar3FormFormPage> {
 			Calpar3FormModel record = Calpar3FormModel(
 				calpar3Id: '',
 				isEq: toBoolean(fieldIsEqController.text),
-				isTsfwd: toBoolean(fieldIsTsfwdController.text),
 				kab2zonagempaId: fieldComboMKabZonaGempa?.mkabzonagempaId,
+				mjnscoverparId: fieldComboMJnscoverPar?.mjnscoverparId,
 				mwilayahId: fieldComboMWilayah?.mwilayahId,
 				rateEqvet: double.parse(fieldRateEqvetController.text.replaceAll(',', '')),
 				rateOther: double.parse(fieldRateOtherController.text.replaceAll(',', '')),

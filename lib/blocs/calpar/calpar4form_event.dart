@@ -39,11 +39,3 @@ class Calpar4FormLihatEvent extends Calpar4FormEvents {
 	List<Object> get props => [recordId];
 }
 
-class Calpar4FormHitungPremiEvent extends Calpar4FormEvents {
-	final String calpar1Id;
-	const Calpar4FormHitungPremiEvent({required this.calpar1Id});
-
-	@override
-	List<Object> get props => [calpar1Id];
-}
-

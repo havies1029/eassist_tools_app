@@ -9,7 +9,6 @@ class Calpar2FormState extends Equatable {
 	final bool isSaved;
 	final bool hasFailure;
 	final ComboRMatauangModel? comboRMatauang;
-	final ComboMBiindemnityOjkModel? comboMBiindemnityOjk;
 	const Calpar2FormState(
 		{this.record,
 		this.isLoading = false,
@@ -18,7 +17,6 @@ class Calpar2FormState extends Equatable {
 		this.isSaved = false,
 		this.hasFailure = false,
 		this.comboRMatauang,
-		this.comboMBiindemnityOjk,
 });
 
 	Calpar2FormState copyWith({
@@ -29,7 +27,6 @@ class Calpar2FormState extends Equatable {
 		bool? isSaved,
 		bool? hasFailure,
 		ComboRMatauangModel? comboRMatauang,
-		ComboMBiindemnityOjkModel? comboMBiindemnityOjk,
 	}){
 		return Calpar2FormState(
 			record: record ?? this.record,
@@ -39,7 +36,6 @@ class Calpar2FormState extends Equatable {
 			isSaved: isSaved ?? this.isSaved,
 			hasFailure: hasFailure ?? this.hasFailure,
 			comboRMatauang: comboRMatauang?? this.comboRMatauang,
-			comboMBiindemnityOjk: comboMBiindemnityOjk?? this.comboMBiindemnityOjk,
 		);
 	}
 

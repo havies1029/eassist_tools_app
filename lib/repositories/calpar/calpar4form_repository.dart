@@ -18,8 +18,4 @@ class Calpar4FormRepository {
 	Future<Calpar4FormModel> calpar4FormLihat(String calpar4Id) async {
 		return await api.calpar4FormLihatAPI(calpar4Id);
 	}
-
-  Future<Calpar4FormModel> calpar4FormHitungPremi(String calpar1Id) async {
-		return await api.calpar4FormHitungPremiAPI(calpar1Id);
-	}
 }

@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/models/responseAPI/returndataapi_model.dart';
+import 'package:eassist_tools_app/models/combobox/combomjnscoverpar_model.dart';
 import 'package:eassist_tools_app/models/combobox/combomwilayah_model.dart';
 import 'package:eassist_tools_app/models/combobox/combomkabzonagempa_model.dart';
 import 'package:eassist_tools_app/models/calpar/calpar3form_model.dart';
@@ -16,6 +17,7 @@ class Calpar3FormBloc extends Bloc<Calpar3FormEvents, Calpar3FormState> {
 		on<Calpar3FormTambahEvent>(onTambahCalpar3Form);
 		on<Calpar3FormHapusEvent>(onHapusCalpar3Form);
 		on<Calpar3FormLihatEvent>(onLihatCalpar3Form);
+		on<ComboMJnscoverParChangedEvent>(onComboMJnscoverParChanged);
 		on<ComboMWilayahChangedEvent>(onComboMWilayahChanged);
 		on<ComboMKabZonaGempaChangedEvent>(onComboMKabZonaGempaChanged);
 	}
@@ -53,6 +55,18 @@ class Calpar3FormBloc extends Bloc<Calpar3FormEvents, Calpar3FormState> {
 		emit(state.copyWith(isLoading: true, isLoaded: false));
 		Calpar3FormModel record = await repository.calpar3FormLihat(event.recordId);
 		emit(state.copyWith(isLoading: false, isLoaded: true, record: record));
+	}
+
+	Future<void> onComboMJnscoverParChanged(
+			ComboMJnscoverParChangedEvent event, Emitter<Calpar3FormState> emit) async {
+
+		emit(state.copyWith(isLoading: true, isLoaded: false));
+
+		ComboMJnscoverParModel comboMJnscoverPar = event.comboMJnscoverPar;
+		emit(state.copyWith(
+			isLoading: false,
+			isLoaded: true,
+			comboMJnscoverPar: comboMJnscoverPar));
 	}
 
 	Future<void> onComboMWilayahChanged(

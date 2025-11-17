@@ -90,23 +90,4 @@ class Calpar4FormAPI {
 			return throw Exception("Failed to load data");
 		}
 	}
-
-  Future<Calpar4FormModel> calpar4FormHitungPremiAPI(String calpar1Id) async {
-		String lihatEndpoint = "${AppData.prefixEndPoint}/api/calpar/calpar4form/hitungpremi";
-		Map<String, String> queryParams = {'calpar1Id': calpar1Id, "modul_id": "calpar4FormHitungPremiAPI"};
-		var uri = AppData.uriHtpp(AppData.httpAuthority, lihatEndpoint, queryParams);
-		final http.Response response =
-			await http.get(uri, headers: <String, String>{
-			'Content-Type': 'application/json; odata=verbos',
-			'Accept': 'application/json; odata=verbos',
-			'Authorization': 'Bearer ${AppData.userToken}'
-		});
-
-		if (response.statusCode == 200) {
-			var returnData = Calpar4FormModel.fromJson(jsonDecode(response.body));
-			return returnData;
-		} else {
-			return throw Exception("Failed to load data");
-		}
-	}
 }

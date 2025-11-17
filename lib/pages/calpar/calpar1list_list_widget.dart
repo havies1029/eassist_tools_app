@@ -83,7 +83,6 @@ class Calpar1ListListWidgetState extends State<Calpar1ListListWidget> {
 											child: Calpar1ListTileWidget(
 												calpar1Id: state.items[index].calpar1Id,
 												coverBulan: state.items[index].coverBulan,
-												jenisNama: state.items[index].jenisNama,
 												kelasNama: state.items[index].kelasNama,
 												okupasiDesc: state.items[index].okupasiDesc,
 											)),

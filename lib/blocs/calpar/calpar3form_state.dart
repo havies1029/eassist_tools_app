@@ -8,6 +8,7 @@ class Calpar3FormState extends Equatable {
 	final bool isSaving;
 	final bool isSaved;
 	final bool hasFailure;
+	final ComboMJnscoverParModel? comboMJnscoverPar;
 	final ComboMWilayahModel? comboMWilayah;
 	final ComboMKabZonaGempaModel? comboMKabZonaGempa;
 	const Calpar3FormState(
@@ -17,6 +18,7 @@ class Calpar3FormState extends Equatable {
 		this.isSaving = false,
 		this.isSaved = false,
 		this.hasFailure = false,
+		this.comboMJnscoverPar,
 		this.comboMWilayah,
 		this.comboMKabZonaGempa,
 });
@@ -28,6 +30,7 @@ class Calpar3FormState extends Equatable {
 		bool? isSaving,
 		bool? isSaved,
 		bool? hasFailure,
+		ComboMJnscoverParModel? comboMJnscoverPar,
 		ComboMWilayahModel? comboMWilayah,
 		ComboMKabZonaGempaModel? comboMKabZonaGempa,
 	}){
@@ -38,6 +41,7 @@ class Calpar3FormState extends Equatable {
 			isSaving: isSaving ?? this.isSaving,
 			isSaved: isSaved ?? this.isSaved,
 			hasFailure: hasFailure ?? this.hasFailure,
+			comboMJnscoverPar: comboMJnscoverPar?? this.comboMJnscoverPar,
 			comboMWilayah: comboMWilayah?? this.comboMWilayah,
 			comboMKabZonaGempa: comboMKabZonaGempa?? this.comboMKabZonaGempa,
 		);

@@ -10,7 +10,6 @@ class Calpar1CrudState extends Equatable {
 	final bool hasFailure;
 	final ComboROkupasiModel? comboROkupasi;
 	final ComboRKonstruksiojkModel? comboRKonstruksiojk;
-	final ComboMJnscoverParModel? comboMJnscoverPar;
 	const Calpar1CrudState(
 		{this.record,
 		this.isLoading = false,
@@ -20,7 +19,6 @@ class Calpar1CrudState extends Equatable {
 		this.hasFailure = false,
 		this.comboROkupasi,
 		this.comboRKonstruksiojk,
-		this.comboMJnscoverPar,
 });
 
 	Calpar1CrudState copyWith({
@@ -32,7 +30,6 @@ class Calpar1CrudState extends Equatable {
 		bool? hasFailure,
 		ComboROkupasiModel? comboROkupasi,
 		ComboRKonstruksiojkModel? comboRKonstruksiojk,
-		ComboMJnscoverParModel? comboMJnscoverPar,
 	}){
 		return Calpar1CrudState(
 			record: record ?? this.record,
@@ -43,7 +40,6 @@ class Calpar1CrudState extends Equatable {
 			hasFailure: hasFailure ?? this.hasFailure,
 			comboROkupasi: comboROkupasi?? this.comboROkupasi,
 			comboRKonstruksiojk: comboRKonstruksiojk?? this.comboRKonstruksiojk,
-			comboMJnscoverPar: comboMJnscoverPar?? this.comboMJnscoverPar,
 		);
 	}
 
