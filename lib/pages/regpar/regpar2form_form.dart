@@ -60,7 +60,7 @@ class Regpar2FormFormPageFormState extends State<Regpar2FormFormPage> {
 									children: [
 										const SizedBox(height: 10),
 										Text(
-											"${widget.viewMode == "tambah" ? "Tambah" : "Ubah"} Data Tertanggung",
+											"${widget.viewMode == "tambah" ? "Tambah" : "Ubah"} Info Polis",
 											style: const TextStyle(
 												fontSize: 20.0,
 												color: Color(0xffff6101),
