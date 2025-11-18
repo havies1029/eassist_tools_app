@@ -289,7 +289,7 @@ class Regpar2FormFormPageFormState extends State<Regpar2FormFormPage> {
 				polisMulai: DateTime.parse(fieldPolisMulaiController.text),
 				regpar2Id: '',
 				rkonstruksiojkId: fieldComboRKonstruksiojk?.rkonstruksiojkId,
-				rokupasiId: fieldComboROkupasi?.rOKUPASIID,
+				rokupasiId: fieldComboROkupasi?.rokupasiId,
 			);
 			if (widget.viewMode == "tambah") {
 				regpar2FormBloc.add(Regpar2FormTambahEvent(record: record));

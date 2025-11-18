@@ -307,7 +307,7 @@ class Regpar4FormFormPageFormState extends State<Regpar4FormFormPage> {
 		if (_formKey.currentState!.validate()) {
 			_formKey.currentState!.save();
 			Regpar4FormModel record = Regpar4FormModel(
-				currId: fieldComboRMatauang?.rMATAUANGKODE,
+				currId: fieldComboRMatauang?.rmatauangKode,
 				regpar4Id: '',
 				siBuilding: double.parse(fieldSiBuildingController.text.replaceAll(',', '')),
 				siContent: double.parse(fieldSiContentController.text.replaceAll(',', '')),
