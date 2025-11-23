@@ -11,6 +11,8 @@ import 'package:eassist_tools_app/blocs/gen_aset_ringkasan/asetringkasancari_blo
 import 'package:eassist_tools_app/blocs/gen_berita/berita1cari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_berita/berita2cari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_berita/berita3cari_bloc.dart';
+import 'package:eassist_tools_app/blocs/gen_calmv/calmv1crud_bloc.dart';
+import 'package:eassist_tools_app/blocs/gen_calmv/calmv1list_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_cob_app/cobcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekan1crud_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekancontactcrud_bloc.dart';
@@ -53,6 +55,7 @@ import 'package:eassist_tools_app/blocs/takeimage/takeimage_cubit.dart';
 import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:eassist_tools_app/pages/heropage/hero_main.dart';
 import 'package:eassist_tools_app/repositories/chatting/guestscrud_repository.dart';
+import 'package:eassist_tools_app/repositories/gen_calmv/calmv1crud_repository.dart';
 import 'package:eassist_tools_app/repositories/gen_profile/mrekan1crud_repository.dart';
 import 'package:eassist_tools_app/repositories/gen_profile/mrekancontactcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/gen_profile/mrekangeneralcmpcrud_repository.dart';
@@ -244,7 +247,9 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => SppamvCrudBloc(repository: SppamvCrudRepository())),
         BlocProvider(create: (context) => SppaparListBloc()),
         BlocProvider(create: (context) => SppaparCrudBloc(repository: SppaparCrudRepository())),
-        BlocProvider(create: (context) => TrslogCariBloc()),
+        BlocProvider(create: (context) => TrslogCariBloc()),        
+        BlocProvider(create: (context) => Calmv1ListBloc()),
+        BlocProvider(create: (context) => Calmv1CrudBloc(repository: Calmv1CrudRepository())),
 
       ],
       child: MaterialApp(
