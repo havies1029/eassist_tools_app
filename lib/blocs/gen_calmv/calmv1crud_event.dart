@@ -57,3 +57,15 @@ class ComboMMvgrupOjkChangedEvent extends Calmv1CrudEvents{
 
 	@override	List<Object> get props => [comboMMvgrupOjk];}
 
+class ComboMMvpakaiChangedEvent extends Calmv1CrudEvents{
+	final ComboMMvpakaiModel comboMMvpakai;
+	const ComboMMvpakaiChangedEvent({required this.comboMMvpakai});
+
+	@override	List<Object> get props => [comboMMvpakai];}
+
+class ComboRMatauangChangedEvent extends Calmv1CrudEvents{
+	final ComboRMatauangModel comboRMatauang;
+	const ComboRMatauangChangedEvent({required this.comboRMatauang});
+
+	@override	List<Object> get props => [comboRMatauang];}
+

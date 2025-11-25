@@ -7,9 +7,10 @@ class Calmv1ListTileWidget extends StatelessWidget {
 	final String calmv1Id;
 	final int coverBulan;
 	final String coverName;
-	final String currId;
 	final String grupNama;
 	final double harga;
+	final String pakaiNama;
+	final String rMATAUANGNAMA;
 	final int thnBuat;
 	final String wilayahNama;
 
@@ -18,9 +19,10 @@ class Calmv1ListTileWidget extends StatelessWidget {
 		required this.calmv1Id, 
 		required this.coverBulan, 
 		required this.coverName, 
-		required this.currId, 
 		required this.grupNama, 
 		required this.harga, 
+		required this.pakaiNama, 
+		required this.rMATAUANGNAMA, 
 		required this.thnBuat, 
 		required this.wilayahNama});
 
@@ -67,15 +69,6 @@ class Calmv1ListTileWidget extends StatelessWidget {
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
-						Text("currId",
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_40)),
-						Container(height: 5),
-						Text(
-							currId,
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_80)),
-						Container(height: 10),
 						Text("grupNama",
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_40)),
@@ -91,6 +84,24 @@ class Calmv1ListTileWidget extends StatelessWidget {
 						Container(height: 5),
 						Text(
 							NumberFormat("#,###").format(harga),
+							style: MyText.bodyLarge(context)!
+								.copyWith(color: MyColors.grey_80)),
+						Container(height: 10),
+						Text("pakaiNama",
+							style: MyText.bodyLarge(context)!
+								.copyWith(color: MyColors.grey_40)),
+						Container(height: 5),
+						Text(
+							pakaiNama,
+							style: MyText.bodyLarge(context)!
+								.copyWith(color: MyColors.grey_80)),
+						Container(height: 10),
+						Text("rMATAUANGNAMA",
+							style: MyText.bodyLarge(context)!
+								.copyWith(color: MyColors.grey_40)),
+						Container(height: 5),
+						Text(
+							rMATAUANGNAMA,
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),

@@ -12,7 +12,7 @@ class Calmv1CrudMainPage extends StatelessWidget {
 		return MobileDesignWidget(
 			child: Scaffold(
 				appBar: AppBar(
-					title: Text('${viewMode == "tambah"?"Tambah":"Ubah"} Data Kendaraan'),
+					title: Text('${viewMode == "tambah"?"Tambah":"Ubah"} CalMV #1'),
 				),
 				body: Calmv1CrudFormPage(viewMode: viewMode, recordId: recordId)));
 	}

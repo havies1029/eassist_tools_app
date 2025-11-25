@@ -4,10 +4,14 @@ import 'package:eassist_tools_app/common/constants.dart';
 import 'package:eassist_tools_app/widgets/form_error.dart';
 import 'package:eassist_tools_app/blocs/gen_calmv/calmv1crud_bloc.dart';
 import 'package:eassist_tools_app/models/gen_calmv/calmv1crud_model.dart';
+import 'package:eassist_tools_app/models/combobox/combormatauang_model.dart';
+import 'package:eassist_tools_app/widgets/combobox/combormatauang_widget.dart';
 import 'package:eassist_tools_app/models/combobox/combommvgrupojk_model.dart';
 import 'package:eassist_tools_app/widgets/combobox/combommvgrupojk_widget.dart';
 import 'package:eassist_tools_app/models/combobox/combommvjnscover_model.dart';
 import 'package:eassist_tools_app/widgets/combobox/combommvjnscover_widget.dart';
+import 'package:eassist_tools_app/models/combobox/combommvpakai_model.dart';
+import 'package:eassist_tools_app/widgets/combobox/combommvpakai_widget.dart';
 import 'package:eassist_tools_app/models/combobox/combomwilayah_model.dart';
 import 'package:eassist_tools_app/widgets/combobox/combomwilayah_widget.dart';
 import 'package:intl/intl.dart';
@@ -30,12 +34,15 @@ class Calmv1CrudFormPageFormState extends State<Calmv1CrudFormPage> {
 	final _formKey = GlobalKey<FormState>();
 	final List<String> errors = [];
 	var fieldCoverBulanController = TextEditingController();
-	var fieldCurrIdController = TextEditingController();
+	ComboRMatauangModel? fieldComboRMatauang;
+	final comboRMatauangKey = GlobalKey<DropdownSearchState<ComboRMatauangModel>>();
 	var fieldHargaController = TextEditingController();
 	ComboMMvgrupOjkModel? fieldComboMMvgrupOjk;
 	final comboMMvgrupOjkKey = GlobalKey<DropdownSearchState<ComboMMvgrupOjkModel>>();
 	ComboMMvjnscoverModel? fieldComboMMvjnscover;
 	final comboMMvjnscoverKey = GlobalKey<DropdownSearchState<ComboMMvjnscoverModel>>();
+	ComboMMvpakaiModel? fieldComboMMvpakai;
+	final comboMMvpakaiKey = GlobalKey<DropdownSearchState<ComboMMvpakaiModel>>();
 	ComboMWilayahModel? fieldComboMWilayah;
 	final comboMWilayahKey = GlobalKey<DropdownSearchState<ComboMWilayahModel>>();
 	var fieldThnBuatController = TextEditingController();
@@ -64,7 +71,7 @@ class Calmv1CrudFormPageFormState extends State<Calmv1CrudFormPage> {
 									children: [
 										const SizedBox(height: 10),
 										Text(
-											"${widget.viewMode == "tambah" ? "Tambah" : "Ubah"} Data Kendaraan",
+											"${widget.viewMode == "tambah" ? "Tambah" : "Ubah"} CalMV #1",
 											style: const TextStyle(
 												fontSize: 20.0,
 												color: Color(0xffff6101),
@@ -80,6 +87,7 @@ class Calmv1CrudFormPageFormState extends State<Calmv1CrudFormPage> {
 										buildFieldHarga(),
 										buildFieldMmvgrupojkId(),
 										buildFieldMmvjnscoverId(),
+										buildFieldMmvpakaiId(),
 										buildFieldMwilayahId(),
 										buildFieldThnBuat(),
 										const SizedBox(height: 25),
@@ -133,12 +141,13 @@ class Calmv1CrudFormPageFormState extends State<Calmv1CrudFormPage> {
 					if (state.isLoaded) {
 						if (state.record != null){
 							fieldCoverBulanController.text = state.record!.coverBulan.toString();
-							fieldCurrIdController.text = state.record!.currId;
 							fieldHargaController.text = NumberFormat("#,###").format(state.record!.harga);
 							fieldThnBuatController.text = state.record!.thnBuat.toString();
 						}
+						fieldComboRMatauang = state.comboRMatauang;
 						fieldComboMMvgrupOjk = state.comboMMvgrupOjk;
 						fieldComboMMvjnscover = state.comboMMvjnscover;
+						fieldComboMMvpakai = state.comboMMvpakai;
 						fieldComboMWilayah = state.comboMWilayah;
 					}
 				},
@@ -177,23 +186,27 @@ class Calmv1CrudFormPageFormState extends State<Calmv1CrudFormPage> {
 	}
 
 	Widget buildFieldCurrId(){
-		return TextFormField(
-			controller: fieldCurrIdController,
-			decoration: const InputDecoration(
-				labelText: "currId",
-				floatingLabelBehavior: FloatingLabelBehavior.always,
-			),
-			onChanged: (value) {
-				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
+		return buildFieldComboRMatauang(
+			comboKey: comboRMatauangKey,
+			labelText: 'currId',
+			initItem: fieldComboRMatauang,
+			onChangedCallback: (value) {
+				if (value != null) {
+					removeError(
+						error: "Field ComboRMatauang tidak boleh kosong.");
+					calmv1CrudBloc.add(ComboRMatauangChangedEvent(comboRMatauang: value));
 				}
 			},
-			validator: (value) {
-				if (value == null || value.isEmpty) {
-					addError(error: kStringNullError);
-					return "";
+			onSaveCallback: (value) {
+				if (value != null) {
+					fieldComboRMatauang = value;
 				}
-				return null;
+			},
+			validatorCallback: (value) {
+				if (value == null) {
+					addError(
+						error: "Field ComboRMatauang tidak boleh kosong.");
+				}
 			},
 		);
 	}
@@ -275,6 +288,32 @@ class Calmv1CrudFormPageFormState extends State<Calmv1CrudFormPage> {
 		);
 	}
 
+	Widget buildFieldMmvpakaiId(){
+		return buildFieldComboMMvpakai(
+			comboKey: comboMMvpakaiKey,
+			labelText: 'mmvpakaiId',
+			initItem: fieldComboMMvpakai,
+			onChangedCallback: (value) {
+				if (value != null) {
+					removeError(
+						error: "Field ComboMMvpakai tidak boleh kosong.");
+					calmv1CrudBloc.add(ComboMMvpakaiChangedEvent(comboMMvpakai: value));
+				}
+			},
+			onSaveCallback: (value) {
+				if (value != null) {
+					fieldComboMMvpakai = value;
+				}
+			},
+			validatorCallback: (value) {
+				if (value == null) {
+					addError(
+						error: "Field ComboMMvpakai tidak boleh kosong.");
+				}
+			},
+		);
+	}
+
 	Widget buildFieldMwilayahId(){
 		return buildFieldComboMWilayah(
 			comboKey: comboMWilayahKey,
@@ -336,10 +375,11 @@ class Calmv1CrudFormPageFormState extends State<Calmv1CrudFormPage> {
 			Calmv1CrudModel record = Calmv1CrudModel(
 				calmv1Id: '',
 				coverBulan: int.parse(fieldCoverBulanController.text),
-				currId: fieldCurrIdController.text,
+				currId: fieldComboRMatauang?.rmatauangKode,
 				harga: double.parse(fieldHargaController.text.replaceAll(',', '')),
 				mmvgrupojkId: fieldComboMMvgrupOjk?.mmvgrupojkId,
 				mmvjnscoverId: fieldComboMMvjnscover?.mmvjnscoverId,
+				mmvpakaiId: fieldComboMMvpakai?.mmvpakaiId,
 				mwilayahId: fieldComboMWilayah?.mwilayahId,
 				thnBuat: int.parse(fieldThnBuatController.text),
 			);

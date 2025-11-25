@@ -4,6 +4,8 @@ import 'package:eassist_tools_app/models/responseAPI/returndataapi_model.dart';
 import 'package:eassist_tools_app/models/combobox/combommvjnscover_model.dart';
 import 'package:eassist_tools_app/models/combobox/combomwilayah_model.dart';
 import 'package:eassist_tools_app/models/combobox/combommvgrupojk_model.dart';
+import 'package:eassist_tools_app/models/combobox/combommvpakai_model.dart';
+import 'package:eassist_tools_app/models/combobox/combormatauang_model.dart';
 import 'package:eassist_tools_app/models/gen_calmv/calmv1crud_model.dart';
 import 'package:eassist_tools_app/repositories/gen_calmv/calmv1crud_repository.dart';
 
@@ -20,6 +22,8 @@ class Calmv1CrudBloc extends Bloc<Calmv1CrudEvents, Calmv1CrudState> {
 		on<ComboMMvjnscoverChangedEvent>(onComboMMvjnscoverChanged);
 		on<ComboMWilayahChangedEvent>(onComboMWilayahChanged);
 		on<ComboMMvgrupOjkChangedEvent>(onComboMMvgrupOjkChanged);
+		on<ComboMMvpakaiChangedEvent>(onComboMMvpakaiChanged);
+		on<ComboRMatauangChangedEvent>(onComboRMatauangChanged);
 	}
 
 	Future<void> onTambahCalmv1Crud(
@@ -91,6 +95,30 @@ class Calmv1CrudBloc extends Bloc<Calmv1CrudEvents, Calmv1CrudState> {
 			isLoading: false,
 			isLoaded: true,
 			comboMMvgrupOjk: comboMMvgrupOjk));
+	}
+
+	Future<void> onComboMMvpakaiChanged(
+			ComboMMvpakaiChangedEvent event, Emitter<Calmv1CrudState> emit) async {
+
+		emit(state.copyWith(isLoading: true, isLoaded: false));
+
+		ComboMMvpakaiModel comboMMvpakai = event.comboMMvpakai;
+		emit(state.copyWith(
+			isLoading: false,
+			isLoaded: true,
+			comboMMvpakai: comboMMvpakai));
+	}
+
+	Future<void> onComboRMatauangChanged(
+			ComboRMatauangChangedEvent event, Emitter<Calmv1CrudState> emit) async {
+
+		emit(state.copyWith(isLoading: true, isLoaded: false));
+
+		ComboRMatauangModel comboRMatauang = event.comboRMatauang;
+		emit(state.copyWith(
+			isLoading: false,
+			isLoaded: true,
+			comboRMatauang: comboRMatauang));
 	}
 
 }

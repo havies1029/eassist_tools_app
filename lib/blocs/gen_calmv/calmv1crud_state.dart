@@ -11,6 +11,8 @@ class Calmv1CrudState extends Equatable {
 	final ComboMMvjnscoverModel? comboMMvjnscover;
 	final ComboMWilayahModel? comboMWilayah;
 	final ComboMMvgrupOjkModel? comboMMvgrupOjk;
+	final ComboMMvpakaiModel? comboMMvpakai;
+	final ComboRMatauangModel? comboRMatauang;
 	const Calmv1CrudState(
 		{this.record,
 		this.isLoading = false,
@@ -21,6 +23,8 @@ class Calmv1CrudState extends Equatable {
 		this.comboMMvjnscover,
 		this.comboMWilayah,
 		this.comboMMvgrupOjk,
+		this.comboMMvpakai,
+		this.comboRMatauang,
 });
 
 	Calmv1CrudState copyWith({
@@ -33,6 +37,8 @@ class Calmv1CrudState extends Equatable {
 		ComboMMvjnscoverModel? comboMMvjnscover,
 		ComboMWilayahModel? comboMWilayah,
 		ComboMMvgrupOjkModel? comboMMvgrupOjk,
+		ComboMMvpakaiModel? comboMMvpakai,
+		ComboRMatauangModel? comboRMatauang,
 	}){
 		return Calmv1CrudState(
 			record: record ?? this.record,
@@ -44,6 +50,8 @@ class Calmv1CrudState extends Equatable {
 			comboMMvjnscover: comboMMvjnscover?? this.comboMMvjnscover,
 			comboMWilayah: comboMWilayah?? this.comboMWilayah,
 			comboMMvgrupOjk: comboMMvgrupOjk?? this.comboMMvgrupOjk,
+			comboMMvpakai: comboMMvpakai?? this.comboMMvpakai,
+			comboRMatauang: comboRMatauang?? this.comboRMatauang,
 		);
 	}
 
