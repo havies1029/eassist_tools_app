@@ -3,6 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/models/responseAPI/returndataapi_model.dart';
 import 'package:eassist_tools_app/models/combobox/comborokupasi_model.dart';
 import 'package:eassist_tools_app/models/combobox/comborkonstruksiojk_model.dart';
+import 'package:eassist_tools_app/models/combobox/combompropinsi_model.dart';
+import 'package:eassist_tools_app/models/combobox/combomkota_model.dart';
+import 'package:eassist_tools_app/models/combobox/combomkecamatan_model.dart';
+import 'package:eassist_tools_app/models/combobox/combomkelurahan_model.dart';
 import 'package:eassist_tools_app/models/regpar/regpar2form_model.dart';
 import 'package:eassist_tools_app/repositories/regpar/regpar2form_repository.dart';
 
@@ -18,6 +22,10 @@ class Regpar2FormBloc extends Bloc<Regpar2FormEvents, Regpar2FormState> {
 		on<Regpar2FormLihatEvent>(onLihatRegpar2Form);
 		on<ComboROkupasiChangedEvent>(onComboROkupasiChanged);
 		on<ComboRKonstruksiojkChangedEvent>(onComboRKonstruksiojkChanged);
+		on<ComboMPropinsiChangedEvent>(onComboMPropinsiChanged);
+		on<ComboMKotaChangedEvent>(onComboMKotaChanged);
+		on<ComboMKecamatanChangedEvent>(onComboMKecamatanChanged);
+		on<ComboMKelurahanChangedEvent>(onComboMKelurahanChanged);
 	}
 
 	Future<void> onTambahRegpar2Form(
@@ -77,6 +85,54 @@ class Regpar2FormBloc extends Bloc<Regpar2FormEvents, Regpar2FormState> {
 			isLoading: false,
 			isLoaded: true,
 			comboRKonstruksiojk: comboRKonstruksiojk));
+	}
+
+	Future<void> onComboMPropinsiChanged(
+			ComboMPropinsiChangedEvent event, Emitter<Regpar2FormState> emit) async {
+
+		emit(state.copyWith(isLoading: true, isLoaded: false));
+
+		ComboMPropinsiModel comboMPropinsi = event.comboMPropinsi;
+		emit(state.copyWith(
+			isLoading: false,
+			isLoaded: true,
+			comboMPropinsi: comboMPropinsi));
+	}
+
+	Future<void> onComboMKotaChanged(
+			ComboMKotaChangedEvent event, Emitter<Regpar2FormState> emit) async {
+
+		emit(state.copyWith(isLoading: true, isLoaded: false));
+
+		ComboMKotaModel comboMKota = event.comboMKota;
+		emit(state.copyWith(
+			isLoading: false,
+			isLoaded: true,
+			comboMKota: comboMKota));
+	}
+
+	Future<void> onComboMKecamatanChanged(
+			ComboMKecamatanChangedEvent event, Emitter<Regpar2FormState> emit) async {
+
+		emit(state.copyWith(isLoading: true, isLoaded: false));
+
+		ComboMKecamatanModel comboMKecamatan = event.comboMKecamatan;
+		emit(state.copyWith(
+			isLoading: false,
+			isLoaded: true,
+			comboMKecamatan: comboMKecamatan));
+	}
+
+	Future<void> onComboMKelurahanChanged(
+			ComboMKelurahanChangedEvent event, Emitter<Regpar2FormState> emit) async {
+
+		emit(state.copyWith(isLoading: true, isLoaded: false));
+
+		ComboMKelurahanModel comboMKelurahan = event.comboMKelurahan;
+		emit(state.copyWith(
+			isLoading: false,
+			isLoaded: true,
+			comboMKelurahan: comboMKelurahan));
 	}
 
 }

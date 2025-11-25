@@ -1,21 +1,57 @@
+import 'package:eassist_tools_app/models/combobox/combomkecamatan_model.dart';
+import 'package:eassist_tools_app/models/combobox/combomkelurahan_model.dart';
+import 'package:eassist_tools_app/models/combobox/combomkota_model.dart';
+import 'package:eassist_tools_app/models/combobox/combompropinsi_model.dart';
 import 'package:eassist_tools_app/models/combobox/comborkonstruksiojk_model.dart';
 import 'package:eassist_tools_app/models/combobox/comborokupasi_model.dart';
 
 class Regpar2FormModel {
 	int coverLama;
+	String objectAlamat;
 	DateTime polisAkhir;
 	DateTime polisMulai;
 	String regpar2Id;
+	String? objectKecamatanId;
+	ComboMKecamatanModel? comboMKecamatan;
+	String? objectKelurahanId;
+	ComboMKelurahanModel? comboMKelurahan;
+	String? objectKotaId;
+	ComboMKotaModel? comboMKota;
+	String? objectPropinsiId;
+	ComboMPropinsiModel? comboMPropinsi;
 	String? rkonstruksiojkId;
 	ComboRKonstruksiojkModel? comboRKonstruksiojk;
 	String? rokupasiId;
 	ComboROkupasiModel? comboROkupasi;
 
-	Regpar2FormModel({required this.coverLama, required this.polisAkhir, 
-		required this.polisMulai, required this.regpar2Id, 
-		this.rkonstruksiojkId, this.comboRKonstruksiojk, this.rokupasiId, this.comboROkupasi});
+	Regpar2FormModel({required this.coverLama, required this.objectAlamat, 
+		required this.polisAkhir, required this.polisMulai, 
+		required this.regpar2Id, this.objectKecamatanId, this.comboMKecamatan, 
+		this.objectKelurahanId, this.comboMKelurahan, this.objectKotaId, this.comboMKota, 
+		this.objectPropinsiId, this.comboMPropinsi, this.rkonstruksiojkId, this.comboRKonstruksiojk, 
+		this.rokupasiId, this.comboROkupasi});
 
 	factory Regpar2FormModel.fromJson(Map<String, dynamic> data) {
+		ComboMKecamatanModel? comboMKecamatan;
+		if (data['comboMKecamatan'] != null) {
+			comboMKecamatan = ComboMKecamatanModel.fromJson(data['comboMKecamatan']);
+		}
+
+		ComboMKelurahanModel? comboMKelurahan;
+		if (data['comboMKelurahan'] != null) {
+			comboMKelurahan = ComboMKelurahanModel.fromJson(data['comboMKelurahan']);
+		}
+
+		ComboMKotaModel? comboMKota;
+		if (data['comboMKota'] != null) {
+			comboMKota = ComboMKotaModel.fromJson(data['comboMKota']);
+		}
+
+		ComboMPropinsiModel? comboMPropinsi;
+		if (data['comboMPropinsi'] != null) {
+			comboMPropinsi = ComboMPropinsiModel.fromJson(data['comboMPropinsi']);
+		}
+
 		ComboRKonstruksiojkModel? comboRKonstruksiojk;
 		if (data['comboRKonstruksiojk'] != null) {
 			comboRKonstruksiojk = ComboRKonstruksiojkModel.fromJson(data['comboRKonstruksiojk']);
@@ -28,9 +64,18 @@ class Regpar2FormModel {
 
 		return Regpar2FormModel(
 			coverLama: int.tryParse(data['coverLama'].toString())??0,
+			objectAlamat: data['objectAlamat']??'',
 			polisAkhir: DateTime.tryParse(data['polisAkhir'].toString())??DateTime.now(),
 			polisMulai: DateTime.tryParse(data['polisMulai'].toString())??DateTime.now(),
 			regpar2Id: data['regpar2Id']??'',
+			objectKecamatanId: data['objectKecamatanId']??'',
+			comboMKecamatan: comboMKecamatan,
+			objectKelurahanId: data['objectKelurahanId']??'',
+			comboMKelurahan: comboMKelurahan,
+			objectKotaId: data['objectKotaId']??'',
+			comboMKota: comboMKota,
+			objectPropinsiId: data['objectPropinsiId']??'',
+			comboMPropinsi: comboMPropinsi,
 			rkonstruksiojkId: data['rkonstruksiojkId']??'',
 			comboRKonstruksiojk: comboRKonstruksiojk,
 			rokupasiId: data['rokupasiId']??'',
@@ -41,9 +86,18 @@ class Regpar2FormModel {
 
 	Map<String, dynamic> toJson() =>
 		{'coverLama': coverLama.toString(),
+		'objectAlamat': objectAlamat,
 		'polisAkhir': polisAkhir.toIso8601String(),
 		'polisMulai': polisMulai.toIso8601String(),
 		'regpar2Id': regpar2Id,
+		'objectKecamatanId': objectKecamatanId,
+		'comboMKecamatan': comboMKecamatan?.toJson(),
+		'objectKelurahanId': objectKelurahanId,
+		'comboMKelurahan': comboMKelurahan?.toJson(),
+		'objectKotaId': objectKotaId,
+		'comboMKota': comboMKota?.toJson(),
+		'objectPropinsiId': objectPropinsiId,
+		'comboMPropinsi': comboMPropinsi?.toJson(),
 		'rkonstruksiojkId': rkonstruksiojkId,
 		'comboRKonstruksiojk': comboRKonstruksiojk?.toJson(),
 		'rokupasiId': rokupasiId,

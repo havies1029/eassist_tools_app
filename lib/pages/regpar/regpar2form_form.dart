@@ -4,6 +4,14 @@ import 'package:eassist_tools_app/common/constants.dart';
 import 'package:eassist_tools_app/widgets/form_error.dart';
 import 'package:eassist_tools_app/blocs/regpar/regpar2form_bloc.dart';
 import 'package:eassist_tools_app/models/regpar/regpar2form_model.dart';
+import 'package:eassist_tools_app/models/combobox/combomkecamatan_model.dart';
+import 'package:eassist_tools_app/widgets/combobox/combomkecamatan_widget.dart';
+import 'package:eassist_tools_app/models/combobox/combomkelurahan_model.dart';
+import 'package:eassist_tools_app/widgets/combobox/combomkelurahan_widget.dart';
+import 'package:eassist_tools_app/models/combobox/combomkota_model.dart';
+import 'package:eassist_tools_app/widgets/combobox/combomkota_widget.dart';
+import 'package:eassist_tools_app/models/combobox/combompropinsi_model.dart';
+import 'package:eassist_tools_app/widgets/combobox/combompropinsi_widget.dart';
 import 'package:eassist_tools_app/models/combobox/comborkonstruksiojk_model.dart';
 import 'package:eassist_tools_app/widgets/combobox/comborkonstruksiojk_widget.dart';
 import 'package:eassist_tools_app/models/combobox/comborokupasi_model.dart';
@@ -29,6 +37,15 @@ class Regpar2FormFormPageFormState extends State<Regpar2FormFormPage> {
 	final _formKey = GlobalKey<FormState>();
 	final List<String> errors = [];
 	var fieldCoverLamaController = TextEditingController();
+	var fieldObjectAlamatController = TextEditingController();
+	ComboMKecamatanModel? fieldComboMKecamatan;
+	final comboMKecamatanKey = GlobalKey<DropdownSearchState<ComboMKecamatanModel>>();
+	ComboMKelurahanModel? fieldComboMKelurahan;
+	final comboMKelurahanKey = GlobalKey<DropdownSearchState<ComboMKelurahanModel>>();
+	ComboMKotaModel? fieldComboMKota;
+	final comboMKotaKey = GlobalKey<DropdownSearchState<ComboMKotaModel>>();
+	ComboMPropinsiModel? fieldComboMPropinsi;
+	final comboMPropinsiKey = GlobalKey<DropdownSearchState<ComboMPropinsiModel>>();
 	var fieldPolisAkhirController = TextEditingController(text: DateTime.now().toIso8601String());
 	var fieldPolisMulaiController = TextEditingController(text: DateTime.now().toIso8601String());
 	ComboRKonstruksiojkModel? fieldComboRKonstruksiojk;
@@ -60,7 +77,7 @@ class Regpar2FormFormPageFormState extends State<Regpar2FormFormPage> {
 									children: [
 										const SizedBox(height: 10),
 										Text(
-											"${widget.viewMode == "tambah" ? "Tambah" : "Ubah"} Info Polis",
+											"${widget.viewMode == "tambah" ? "Tambah" : "Ubah"} Reg PAR #2",
 											style: const TextStyle(
 												fontSize: 20.0,
 												color: Color(0xffff6101),
@@ -72,6 +89,11 @@ class Regpar2FormFormPageFormState extends State<Regpar2FormFormPage> {
 										),
 										const SizedBox(height: 25),
 										buildFieldCoverLama(),
+										buildFieldObjectAlamat(),
+										buildFieldObjectKecamatanId(),
+										buildFieldObjectKelurahanId(),
+										buildFieldObjectKotaId(),
+										buildFieldObjectPropinsiId(),
 										buildFieldPolisAkhir(),
 										buildFieldPolisMulai(),
 										buildFieldRegpar1Id(),
@@ -128,9 +150,14 @@ class Regpar2FormFormPageFormState extends State<Regpar2FormFormPage> {
 					if (state.isLoaded) {
 						if (state.record != null){
 							fieldCoverLamaController.text = state.record!.coverLama.toString();
+							fieldObjectAlamatController.text = state.record!.objectAlamat;
 							fieldPolisAkhirController.text = state.record!.polisAkhir.toIso8601String();
 							fieldPolisMulaiController.text = state.record!.polisMulai.toIso8601String();
 						}
+						fieldComboMKecamatan = state.comboMKecamatan;
+						fieldComboMKelurahan = state.comboMKelurahan;
+						fieldComboMKota = state.comboMKota;
+						fieldComboMPropinsi = state.comboMPropinsi;
 						fieldComboRKonstruksiojk = state.comboRKonstruksiojk;
 						fieldComboROkupasi = state.comboROkupasi;
 					}
@@ -166,6 +193,138 @@ class Regpar2FormFormPageFormState extends State<Regpar2FormFormPage> {
 				return null;
 			},
 			textAlign: TextAlign.right,
+		);
+	}
+
+	Widget buildFieldObjectAlamat(){
+		return TextFormField(
+			keyboardType: TextInputType.multiline,
+			minLines: 1,
+			maxLines: 3,
+			controller: fieldObjectAlamatController,
+			decoration: const InputDecoration(
+				labelText: "objectAlamat",
+				floatingLabelBehavior: FloatingLabelBehavior.always,
+			),
+			onChanged: (value) {
+				if (value.isNotEmpty) {
+				removeError(error: kStringNullError);
+				}
+			},
+			validator: (value) {
+				if (value == null || value.isEmpty) {
+					addError(error: kStringNullError);
+					return "";
+				}
+				return null;
+			},
+		);
+	}
+
+	Widget buildFieldObjectKecamatanId(){
+		return buildFieldComboMKecamatan(
+			comboKey: comboMKecamatanKey,
+			labelText: 'objectKecamatanId',
+			initItem: fieldComboMKecamatan,
+      kotaId: fieldComboMKota?.mkotaId ?? '',
+			onChangedCallback: (value) {
+				if (value != null) {
+					removeError(
+						error: "Field ComboMKecamatan tidak boleh kosong.");
+					regpar2FormBloc.add(ComboMKecamatanChangedEvent(comboMKecamatan: value));
+				}
+			},
+			onSaveCallback: (value) {
+				if (value != null) {
+					fieldComboMKecamatan = value;
+				}
+			},
+			validatorCallback: (value) {
+				if (value == null) {
+					addError(
+						error: "Field ComboMKecamatan tidak boleh kosong.");
+				}
+			},
+		);
+	}
+
+	Widget buildFieldObjectKelurahanId(){
+		return buildFieldComboMKelurahan(
+			comboKey: comboMKelurahanKey,
+			labelText: 'objectKelurahanId',
+			initItem: fieldComboMKelurahan,
+      kecamatanId: fieldComboMKecamatan?.mkecamatanId ?? '',
+			onChangedCallback: (value) {
+				if (value != null) {
+					removeError(
+						error: "Field ComboMKelurahan tidak boleh kosong.");
+					regpar2FormBloc.add(ComboMKelurahanChangedEvent(comboMKelurahan: value));
+				}
+			},
+			onSaveCallback: (value) {
+				if (value != null) {
+					fieldComboMKelurahan = value;
+				}
+			},
+			validatorCallback: (value) {
+				if (value == null) {
+					addError(
+						error: "Field ComboMKelurahan tidak boleh kosong.");
+				}
+			},
+		);
+	}
+
+	Widget buildFieldObjectKotaId(){
+		return buildFieldComboMKota(
+			comboKey: comboMKotaKey,
+			labelText: 'objectKotaId',
+			initItem: fieldComboMKota,
+      propinsiId: fieldComboMPropinsi?.mpropinsiId ?? '',
+			onChangedCallback: (value) {
+				if (value != null) {
+					removeError(
+						error: "Field ComboMKota tidak boleh kosong.");
+					regpar2FormBloc.add(ComboMKotaChangedEvent(comboMKota: value));
+				}
+			},
+			onSaveCallback: (value) {
+				if (value != null) {
+					fieldComboMKota = value;
+				}
+			},
+			validatorCallback: (value) {
+				if (value == null) {
+					addError(
+						error: "Field ComboMKota tidak boleh kosong.");
+				}
+			},
+		);
+	}
+
+	Widget buildFieldObjectPropinsiId(){
+		return buildFieldComboMPropinsi(
+			comboKey: comboMPropinsiKey,
+			labelText: 'objectPropinsiId',
+			initItem: fieldComboMPropinsi,
+			onChangedCallback: (value) {
+				if (value != null) {
+					removeError(
+						error: "Field ComboMPropinsi tidak boleh kosong.");
+					regpar2FormBloc.add(ComboMPropinsiChangedEvent(comboMPropinsi: value));
+				}
+			},
+			onSaveCallback: (value) {
+				if (value != null) {
+					fieldComboMPropinsi = value;
+				}
+			},
+			validatorCallback: (value) {
+				if (value == null) {
+					addError(
+						error: "Field ComboMPropinsi tidak boleh kosong.");
+				}
+			},
 		);
 	}
 
@@ -285,6 +444,11 @@ class Regpar2FormFormPageFormState extends State<Regpar2FormFormPage> {
 			_formKey.currentState!.save();
 			Regpar2FormModel record = Regpar2FormModel(
 				coverLama: int.parse(fieldCoverLamaController.text),
+				objectAlamat: fieldObjectAlamatController.text,
+				objectKecamatanId: fieldComboMKecamatan?.mkecamatanId,
+				objectKelurahanId: fieldComboMKelurahan?.mkelurahanId,
+				objectKotaId: fieldComboMKota?.mkotaId,
+				objectPropinsiId: fieldComboMPropinsi?.mpropinsiId,
 				polisAkhir: DateTime.parse(fieldPolisAkhirController.text),
 				polisMulai: DateTime.parse(fieldPolisMulaiController.text),
 				regpar2Id: '',
