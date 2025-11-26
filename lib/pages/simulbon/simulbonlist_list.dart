@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:eassist_tools_app/widgets/listpage_filter_bar_ui.dart';
 import 'package:eassist_tools_app/widgets/floatingmenumaster_widget.dart';
 import 'package:eassist_tools_app/blocs/simulbon/simulbonlist_bloc.dart';
 import 'package:eassist_tools_app/blocs/simulbon/simulboncrud_bloc.dart';
@@ -59,9 +58,9 @@ class SimulbonListPageState extends State<SimulbonListPage> {
 					child: Column(
 						mainAxisAlignment: MainAxisAlignment.start,
 						children: [
-							ListPageFilterBarUIWidget(
-								searchController: _searchController,
-								searchButton: buildSearchButton()),
+							// ListPageFilterBarUIWidget(
+							// 	searchController: _searchController,
+							// 	searchButton: buildSearchButton()),
 							buildList()
 						],
 

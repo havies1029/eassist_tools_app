@@ -7,12 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:accordion/accordion.dart';
 import 'package:accordion/controllers.dart';
 
-class SimulparCrudFormV2Page extends StatefulWidget {
+class SimulparCrudFormV2Page extends StatefulWidget {  
+  final String usage;
   final String viewMode;
   final String recordId;
 
   const SimulparCrudFormV2Page(
-      {super.key, required this.viewMode, required this.recordId});
+      {super.key, required this.usage, required this.viewMode, required this.recordId});
 
   @override
   SimulparCrudFormPageFormV2State createState() =>
@@ -55,7 +56,7 @@ class SimulparCrudFormPageFormV2State extends State<SimulparCrudFormV2Page> {
             leftIcon:
                 const Icon(Icons.money, color: Colors.white),
             header: Text('Sum Insured', style: MyText.headerStyle()),
-            content: SimulparCrudFormSumInsuredPage(viewMode: widget.viewMode, recordId: widget.recordId,)
+            content: SimulparCrudFormSumInsuredPage(usage: widget.usage, viewMode: widget.viewMode, recordId: widget.recordId,)
           ),
           AccordionSection(
             isOpen: true,
@@ -64,7 +65,7 @@ class SimulparCrudFormPageFormV2State extends State<SimulparCrudFormV2Page> {
             leftIcon:
                 const Icon(Icons.security, color: Colors.white),
             header: Text('Rate', style: MyText.headerStyle()),
-            content: SimulparCrudFormCoverV2Page(viewMode: widget.viewMode, recordId: widget.recordId,)
+            content: SimulparCrudFormCoverV2Page(usage: widget.usage, viewMode: widget.viewMode, recordId: widget.recordId,)
           ),
           AccordionSection(
             isOpen: true,
@@ -73,7 +74,7 @@ class SimulparCrudFormPageFormV2State extends State<SimulparCrudFormV2Page> {
             leftIcon:
                 const Icon(Icons.calculate, color: Colors.white),
             header: Text('Perhitungan Premi', style: MyText.headerStyle()),
-            content: SimulparCrudFormPremiPage(viewMode: widget.viewMode, recordId: widget.recordId,)
+            content: SimulparCrudFormPremiPage(usage: widget.usage, viewMode: widget.viewMode, recordId: widget.recordId,)
           ),
         ]);
   }

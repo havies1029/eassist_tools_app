@@ -5,20 +5,17 @@ import 'package:eassist_tools_app/widgets/mobiledesign_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SimulparCrudMainPage extends StatefulWidget {
-	final String viewMode;
-	final String recordId;
+  final String usage;
+  const SimulparCrudMainPage({super.key, required this.usage});
 
-	const SimulparCrudMainPage({super.key, required this.viewMode, required this.recordId});
-
-	@override
-  SimulparCrudMainPageState createState() =>
-      SimulparCrudMainPageState();
+  @override
+  SimulparCrudMainPageState createState() => SimulparCrudMainPageState();
 }
 
-class SimulparCrudMainPageState extends State<SimulparCrudMainPage>{
+class SimulparCrudMainPageState extends State<SimulparCrudMainPage> {
   late SimulparCrudBloc simulparCrudBloc;
 
-    @override
+  @override
   void initState() {
     super.initState();
     Future.delayed(const Duration(milliseconds: 500), () {
@@ -27,24 +24,16 @@ class SimulparCrudMainPageState extends State<SimulparCrudMainPage>{
   }
 
   @override
-	Widget build(BuildContext context) {
+  Widget build(BuildContext context) {
     simulparCrudBloc = BlocProvider.of<SimulparCrudBloc>(context);
-		return MobileDesignWidget(
-			child: Scaffold(
-				appBar: AppBar(
-					title: Text('${widget.viewMode == "tambah"?"Tambah":"Ubah"} Premi PAR'),
-				),
-				body: SimulparCrudFormV2Page(viewMode: widget.viewMode, recordId: widget.recordId)));
-	}
+    return MobileDesignWidget(
+        child: Scaffold(            
+            body: SimulparCrudFormV2Page(usage: widget.usage, viewMode: "tambah", recordId: "")));
+  }
 
   void loadData() {
     debugPrint("######### SimulparCrudMainPage -> loadData ############3");
 
-    if (widget.viewMode == "ubah") {
-      simulparCrudBloc.add(SimulparCrudLihatEvent(recordId: widget.recordId));
-    } else if (widget.viewMode == "tambah") {
-      simulparCrudBloc.add(SimulPARCrudInitValueEvent());
-    }
+    simulparCrudBloc.add(SimulPARCrudInitValueEvent());
   }
 }
-

@@ -9,8 +9,6 @@ abstract class UserEvents extends Equatable {
 
 class GetUserEvent extends UserEvents {}
 
-class CreateUserEvent extends UserEvents {}
-
 class UpdateUserEvent extends UserEvents {
   final User user;
   const UpdateUserEvent({required this.user});

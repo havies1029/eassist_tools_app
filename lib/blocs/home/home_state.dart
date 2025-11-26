@@ -11,6 +11,26 @@ class ProfilePageActive extends HomeState {}
 class RoomCariPageActive extends HomeState {}
 class ChatSupportPageActive extends HomeState {}
 class ChangePasswordPageActive extends HomeState {}
-class SimulMVPageActive extends HomeState {}
-class SimulPARPageActive extends HomeState {}
+class SimulBONPageActive extends HomeState {}
+
+class SimulCARPageActive extends HomeState {}
+class SimulCARGOPageActive extends HomeState {}
 class SimulEEIPageActive extends HomeState {}
+class SimulGISPageActive extends HomeState {}
+class SimulGITPageActive extends HomeState {}
+
+class SimulMBPageActive extends HomeState{}
+
+class SimulMVPageActive extends HomeState {}
+
+class SimulPARPageActive extends HomeState {}
+
+class  SimulTREEPageActive extends HomeState {}
+
+class SimulWPPageActive extends HomeState {}
+
+class SimulFlexasPageActive extends HomeState {}
+
+class TrackKlaimPageActive extends HomeState {}
+
+class StartChatPageActive extends HomeState {}

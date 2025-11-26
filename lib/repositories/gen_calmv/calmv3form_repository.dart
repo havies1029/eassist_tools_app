@@ -1,0 +1,24 @@
+import 'package:eassist_tools_app/models/responseAPI/returndataapi_model.dart';
+import 'package:eassist_tools_app/apis/gen_calmv/calmv3form_api.dart';
+import 'package:eassist_tools_app/models/gen_calmv/calmv3form_model.dart';
+
+class Calmv3FormRepository {
+
+	Calmv3FormAPI api = Calmv3FormAPI();
+
+	Future<ReturnDataAPI> calmv3FormTambah(Calmv3FormModel record) async {
+		return await api.calmv3FormTambahAPI(record);
+	}
+	Future<bool> calmv3FormUbah(Calmv3FormModel record) async {
+		return await api.calmv3FormUbahAPI(record);
+	}
+	Future<bool> calmv3FormHapus(String calmv3Id) async {
+		return await api.calmv3FormHapusAPI(calmv3Id);
+	}
+	Future<Calmv3FormModel> calmv3FormLihat(String calmv1Id) async {
+		return await api.calmv3FormLihatAPI(calmv1Id);
+	}
+  Future<Calmv3FormModel> calmv3FormHitungPremi(String calmv1Id) async {
+		return await api.calmv3FormHitungPremiAPI(calmv1Id);
+	}
+}

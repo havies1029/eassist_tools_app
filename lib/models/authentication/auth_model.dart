@@ -12,13 +12,13 @@ class UserInfo {
 }
 
 class UserLogin {
-  String? username;
+  String? email;
   String? password;
 
-  UserLogin({this.username, this.password});
+  UserLogin({this.email, this.password});
 
   Map<String, dynamic> toDatabaseJson() =>
-      {"username": username, "password": password};
+      {"email": email, "password": password};
 }
 
 class Token {
@@ -45,10 +45,10 @@ class Token {
     //debugPrint("encripted token : $enkriptToken");
 
     AppData.userToken = enkriptToken;
-    AppData.userCabang = info[1];
-    AppData.personId = info[12];
-    AppData.personName = info[2];
-    AppData.hasDownline = toBoolean(info[6], false);
+    //AppData.userCabang = info[1];
+    //AppData.personId = info[12];
+    //AppData.personName = info[2];
+    //AppData.hasDownline = toBoolean(info[6], false);
     AppData.httpHeaders = <String, String>{
       'Content-Type': 'application/json; odata=verbos',
       'Accept': 'application/json; odata=verbos',

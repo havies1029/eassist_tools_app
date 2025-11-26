@@ -1,0 +1,56 @@
+import 'package:eassist_tools_app/models/combobox/combormatauang_model.dart';
+
+class SimulcarCrudModel {
+	int? coverBulan;
+	double? rate;
+	String? simulcarId;
+	double? tsi;
+	String? rmatauangKode;
+	double? premi;
+	String? currDesc;
+	int? thnBuat;
+	ComboRMatauangModel? comboRMatauang;
+
+	SimulcarCrudModel(
+			{this.coverBulan,
+				this.rate,
+				this.simulcarId,
+				this.tsi,
+				this.rmatauangKode,
+				this.premi,
+				this.currDesc,
+				this.thnBuat,
+				this.comboRMatauang});
+
+	factory SimulcarCrudModel.fromJson(Map<String, dynamic> data) {
+		ComboRMatauangModel? comboRMatauang;
+		if (data['comboRMatauang'] != null) {
+			comboRMatauang = ComboRMatauangModel.fromJson(data['comboRMatauang']);
+		}
+
+		return SimulcarCrudModel(
+			coverBulan: int.tryParse(data['coverBulan'].toString()) ?? 0,
+			rate: double.tryParse(data['rate'].toString()) ?? 0,
+			simulcarId: data['simulcarId'] ?? '',
+			tsi: double.tryParse(data['tsi'].toString()) ?? 0,
+			rmatauangKode: data['rmatauangKode'] ?? '',
+			premi: double.tryParse(data['premi'].toString()) ?? 0,
+			comboRMatauang: comboRMatauang,
+			currDesc: data['currDesc'] ?? 'IDR',
+			thnBuat: int.tryParse(data['thnBuat'].toString()) ?? 0,);
+	}
+
+	Map<String, dynamic> toJson() => {
+		'coverBulan': coverBulan.toString(),
+		'rate': rate.toString(),
+		'simulcarId': simulcarId,
+		'tsi': tsi.toString(),
+		'rmatauangKode': rmatauangKode,
+		'premi': premi.toString(),
+		'comboRMatauang': comboRMatauang?.toJson(),
+		'currDesc': currDesc,
+		'thnBuat': thnBuat
+	};
+}
+
+

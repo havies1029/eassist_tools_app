@@ -59,9 +59,9 @@ class SimulwpListPageState extends State<SimulwpListPage> {
 					child: Column(
 						mainAxisAlignment: MainAxisAlignment.start,
 						children: [
-							ListPageFilterBarUIWidget(
-								searchController: _searchController,
-								searchButton: buildSearchButton()),
+							// ListPageFilterBarUIWidget(
+							// 	searchController: _searchController,
+							// 	searchButton: buildSearchButton()),
 							buildList()
 						],
 

@@ -1,3 +1,4 @@
+import 'package:eassist_tools_app/pages/dashboard/dashboard_main.dart';
 import 'package:eassist_tools_app/pages/onboard/onboard_main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,8 +39,8 @@ class _HomePageState extends State<HomePage> {
           SizeConfig().init(context);
           debugPrint("state : $state");
           if (state is HomePageActive) {            
-            return const PageContainer(pageType: PageType.simuleei);
-            //return const OnboardMainPage();
+            return const PageContainer(pageType: PageType.home);
+            // return const OnboardMainPage();
           } else if (state is RoomCariPageActive) {            
             return const PageContainer(pageType: PageType.roomchat);
           } else if (state is ChangePasswordPageActive) {            
@@ -48,8 +49,30 @@ class _HomePageState extends State<HomePage> {
             return const PageContainer(pageType: PageType.simulmv);  
           } else if (state is SimulPARPageActive) {            
             return const PageContainer(pageType: PageType.simulpar);  
+          } else if (state is SimulFlexasPageActive) {            
+            return const PageContainer(pageType: PageType.simulflexas);  
           } else if (state is SimulEEIPageActive) {            
             return const PageContainer(pageType: PageType.simuleei);  
+          } else if (state is SimulGITPageActive) {            
+            return const PageContainer(pageType: PageType.simulgit);  
+          } else if (state is SimulGISPageActive) {            
+            return const PageContainer(pageType: PageType.simulgis); 
+          } else if (state is SimulBONPageActive) {            
+            return const PageContainer(pageType: PageType.simulbon);  
+          } else if (state is SimulWPPageActive) {            
+            return const PageContainer(pageType: PageType.simulwp);
+          } else if (state is SimulCARGOPageActive) {
+            return const PageContainer(pageType: PageType.simulcargo);
+          } else if (state is SimulCARPageActive) {
+            return const PageContainer(pageType: PageType.simulcar);
+          } else if (state is SimulMBPageActive) {
+            return const PageContainer(pageType: PageType.simulmb);
+          } else if (state is SimulTREEPageActive) {
+            return const PageContainer(pageType: PageType.simultree);
+          } else if (state is TrackKlaimPageActive) {
+            return const PageContainer(pageType: PageType.klaimtrack);
+          } else if (state is StartChatPageActive) {
+            return const PageContainer(pageType: PageType.startchat);
           } else if (state is ProfilePageActive) {
             return PageContainerWithUserRepository(
               pageType: PageType.profile,

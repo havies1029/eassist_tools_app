@@ -1,0 +1,143 @@
+import 'package:flutter/material.dart';
+import 'profile_menu_item.dart'; // path ke ProfileMenuItem yang sudah kamu ekstrak
+
+class ProfileDropdownContent extends StatelessWidget {
+  final VoidCallback onClose;
+  final void Function(String menu) onMenuTap;
+
+  const ProfileDropdownContent({
+    Key? key,
+    required this.onClose,
+    required this.onMenuTap,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 280,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [BoxShadow(
+          color: Colors.black.withOpacity(0.15),
+          blurRadius: 10,
+          offset: Offset(0,4),
+        )],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // header gradien
+          Container(
+            padding: EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Color(0xFF79AB43), Color(0xFF8BBD54)],
+              ),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+            ),
+            child: Row(
+              children: [
+                // avatar + status
+                Stack(
+                  children: [
+                    Container(
+                      width:35, height:35,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width:2),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(17.5),
+                        child: Image.asset(
+                          'assets/images/profile_placeholder.jpg',
+                          fit: BoxFit.cover,
+                          errorBuilder:(c,e,s) => Container(
+                            color: Colors.white.withOpacity(0.3),
+                            child: Icon(Icons.person, color:Colors.white, size:20),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      bottom:0, right:0,
+                      child: Container(
+                        width:10, height:10,
+                        decoration: BoxDecoration(
+                          color: Color(0xFF4CAF50),
+                          shape: BoxShape.circle,
+                          border: Border.all(color:Colors.white, width:1.5),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(width:12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Nadya Septrijayani',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize:16,
+                          fontWeight: FontWeight.bold,
+                          fontFamily:'Satoshi-Regular',
+                        ),
+                      ),
+                      Text(
+                        'Online',
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.8),
+                          fontSize:12,
+                          fontFamily:'Satoshi-Regular',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.close, color:Colors.white, size:20),
+                  onPressed: onClose,
+                  padding: EdgeInsets.zero,
+                  constraints: BoxConstraints(),
+                ),
+              ],
+            ),
+          ),
+
+          // daftar menu
+          Padding(
+            padding: EdgeInsets.symmetric(vertical:8),
+            child: Column(
+              children: [
+                ProfileMenuItem(
+                  icon: Icons.person_outline,
+                  title: 'Profil',
+                  onTap: () => onMenuTap('Profil'),
+                ),
+                ProfileMenuItem(
+                  icon: Icons.lock_reset,
+                  title: 'Reset Password',
+                  onTap: () => onMenuTap('Reset Password'),
+                ),
+                Divider(
+                  height:1, thickness:1, color:Color(0xFFE5E5E5),
+                  indent:16, endIndent:16,
+                ),
+                ProfileMenuItem(
+                  icon: Icons.logout,
+                  title: 'Logout',
+                  onTap: () => onMenuTap('Logout'),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

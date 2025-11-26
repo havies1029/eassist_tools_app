@@ -60,9 +60,9 @@ class SimuleeiListPageState extends State<SimuleeiListPage> {
 					child: Column(
 						mainAxisAlignment: MainAxisAlignment.start,
 						children: [
-							ListPageFilterBarUIWidget(
-								searchController: _searchController,
-								searchButton: buildSearchButton()),
+							// ListPageFilterBarUIWidget(
+							// 	searchController: _searchController,
+							// 	searchButton: buildSearchButton()),
 							buildList()
 						],
 
@@ -103,7 +103,7 @@ class SimuleeiListPageState extends State<SimuleeiListPage> {
 	void showDialogViewData(BuildContext context, String viewMode, String recordId) {
 		FocusScope.of(context).requestFocus(FocusNode());
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return SimuleeiCrudMainPage(viewMode: viewMode, recordId: recordId);
+      return SimuleeiCrudMainPage();
     }));
 		
 	}

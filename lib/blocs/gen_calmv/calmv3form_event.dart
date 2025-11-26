@@ -1,0 +1,49 @@
+part of 'calmv3form_bloc.dart';
+
+abstract class Calmv3FormEvents extends Equatable {
+	const Calmv3FormEvents();
+
+	@override
+	List<Object> get props => [];
+}
+
+class Calmv3FormTambahEvent extends Calmv3FormEvents {
+	final Calmv3FormModel record;
+	const Calmv3FormTambahEvent({required this.record});
+
+	@override
+	List<Object> get props => [record];
+}
+
+class Calmv3FormUbahEvent extends Calmv3FormEvents {
+	final Calmv3FormModel record;
+	const Calmv3FormUbahEvent({required this.record});
+
+	@override
+	List<Object> get props => [record];
+}
+
+class Calmv3FormHapusEvent extends Calmv3FormEvents {
+	final String recordId;
+	const Calmv3FormHapusEvent({required this.recordId});
+
+	@override
+	List<Object> get props => [recordId];
+}
+
+class Calmv3FormLihatEvent extends Calmv3FormEvents {
+	final String calmv1Id;
+	const Calmv3FormLihatEvent({required this.calmv1Id});
+
+	@override
+	List<Object> get props => [calmv1Id];
+}
+
+class Calmv3FormHitungPremiEvent extends Calmv3FormEvents {
+	final String calmv1Id;
+	const Calmv3FormHitungPremiEvent({required this.calmv1Id});
+
+	@override
+	List<Object> get props => [calmv1Id];
+}
+

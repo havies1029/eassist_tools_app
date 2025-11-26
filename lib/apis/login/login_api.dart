@@ -6,80 +6,117 @@ import 'package:http/http.dart' as http;
 import 'package:eassist_tools_app/models/authentication/auth_model.dart';
 import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:eassist_tools_app/models/user/user_model.dart';
-import 'package:string_validator/string_validator.dart';
 
-final _base = AppData.apiDomain;
-const _tokenEndpoint = "api/login/apilogin";
-final _tokenURL = _base + _tokenEndpoint;
+class LoginApi {
+  final _base = AppData.apiDomain;
 
-Future<User> validateUserLogin(UserLogin userLogin) async {
-  UserInfo userinfo = UserInfo(userLogin: userLogin);
+  Future<User> validateUserLoginAPI(UserLogin userLogin) async {
+    String tokenEndpoint = "api/login/apilogin";
+    final tokenURL = _base + tokenEndpoint;
+    UserInfo userinfo = UserInfo(userLogin: userLogin);
 
-  debugPrint("validateUserLogin #10");
+    debugPrint("validateUserLogin #10");
 
-  //debugPrint(_tokenURL);
-  //debugPrint(jsonEncode(userinfo.toJson()));
+    //debugPrint(tokenURL);
+    //debugPrint(jsonEncode(userinfo.toJson()));
 
-  /*
-  try {
-    await http.post(Uri.parse(_tokenURL),
+    try {
+      await http.post(Uri.parse(tokenURL),
+          headers: <String, String>{
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/json; odata=verbos',
+            'Accept': 'application/json; odata=verbos'
+          },
+          //body: jsonEncode(userLogin.toDatabaseJson()),
+
+          body: jsonEncode(userinfo.toJson()));
+    } catch (e) {
+      debugPrint("error : ${e.toString()}");
+    }
+
+    final http.Response response = await http.post(Uri.parse(tokenURL),
         headers: <String, String>{
-          'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json; odata=verbos',
           'Accept': 'application/json; odata=verbos'
         },
         //body: jsonEncode(userLogin.toDatabaseJson()),
 
         body: jsonEncode(userinfo.toJson()));
-  } catch (e) {
-    debugPrint("error : ${e.toString()}");
-  }
-  */
 
-  final http.Response response = await http.post(Uri.parse(_tokenURL),
-      headers: <String, String>{
-        'Content-Type': 'application/json; odata=verbos',
-        'Accept': 'application/json; odata=verbos'
-      },
-      //body: jsonEncode(userLogin.toDatabaseJson()),
+    //debugPrint("validateUserLogin #12");
 
-      body: jsonEncode(userinfo.toJson()));
+    //debugPrint("response.statusCode : ${response.statusCode}");
 
-  //debugPrint("validateUserLogin #12");
+    //debugPrint("validateUserLogin #20");
 
-  //debugPrint("response.statusCode : ${response.statusCode}");
+    if (response.statusCode == 200) {
+      //debugPrint("Berhasil Login #30");
 
-  //debugPrint("validateUserLogin #20");
+      //debugPrint(jsonDecode(response.body));
 
-  if (response.statusCode == 200) {
-    //debugPrint("Berhasil Login #30");
+      String tokeninfo = jsonDecode(response.body);
+      List<String> info = tokeninfo.split(";");
+      String username = info[8];
+      Token token = Token.split(username, tokeninfo);
 
-    //debugPrint(jsonDecode(response.body));
-
-    String tokeninfo = jsonDecode(response.body);
-    List<String> info = tokeninfo.split(";");
-
-    Token token = Token.split(userLogin.username!, tokeninfo);
-
-    try {
-      User user = User(
-        id: 0,
-        token: token.token,
-        username: userLogin.username,
-        nama: info[2],
-        email: info[5],
-        personId: info[12],
-        userCabang: info[1],
-        hasDownline: toBoolean(info[6], false)
-      );
-      return user;
-    } on Exception catch (e) {
-     //debugPrint("Error : ${e.toString()}");
-      rethrow;
+      try {
+        User user = User(
+            id: 0,
+            token: token.token,
+            username: username,
+            nama: info[2],
+            email: info[5],
+            userCabang: info[1],
+            custType: "C",);
+        return user;
+      } on Exception catch (e) {
+        //debugPrint("Error : ${e.toString()}");
+        rethrow;
+      }
+    } else {
+      //debugPrint("validateUserLogin #25");
+      //debugPrint(jsonDecode(response.body));
+      throw Exception(json.decode(response.body));
     }
-  } else {
-    //debugPrint("validateUserLogin #25");
-    //debugPrint(jsonDecode(response.body));
-    throw Exception(json.decode(response.body));
+  }
+
+  Future<User> getUserByTokenAPI(String token) async {
+    String urlGetUserEndPoint = "${AppData.prefixEndPoint}/api/login/getuser";
+
+    var uri = AppData.uriHtpp(AppData.httpAuthority, urlGetUserEndPoint);
+    final http.Response response =
+        await http.get(uri, headers: <String, String>{
+      'Content-Type': 'application/json; odata=verbos',
+      'Accept': 'application/json; odata=verbos',
+      'Authorization': 'Bearer $token'
+    });
+
+    if (response.statusCode == 200) {
+      String result = jsonDecode(response.body);
+      List<String> info = result.split(";");
+      if (info[0] == "U") {
+        User user = User(
+            id: 0,
+            token: token,
+            username: info[1],
+            nama: info[1],
+            email: info[2],
+            custType: info[0],);
+        return user;
+      } else if (info[0] == "C") {
+        User user = User(
+            id: 0,
+            token: token,
+            username: info[1],
+            nama: info[2],
+            email: info[3],
+            custType: info[0],);
+        return user;
+      } else {
+        throw Exception("User not found or invalid token");
+      }
+    } else {
+      throw Exception("Failed to load data getUserByTokenAPI: ${response.statusCode}");
+    }
   }
 }

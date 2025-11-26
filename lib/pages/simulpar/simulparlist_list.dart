@@ -59,9 +59,9 @@ class SimulparListPageState extends State<SimulparListPage> {
 					child: Column(
 						mainAxisAlignment: MainAxisAlignment.start,
 						children: [
-							ListPageFilterBarUIWidget(
-								searchController: _searchController,
-								searchButton: buildSearchButton()),
+							// ListPageFilterBarUIWidget(
+							// 	searchController: _searchController,
+							// 	searchButton: buildSearchButton()),
 							buildList()
 						],
 
@@ -102,7 +102,7 @@ class SimulparListPageState extends State<SimulparListPage> {
 	void showDialogViewData(BuildContext context, String viewMode, String recordId) {
 		FocusScope.of(context).requestFocus(FocusNode());
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return SimulparCrudMainPage(viewMode: viewMode, recordId: recordId);
+      return SimulparCrudMainPage(usage: 'PAREQ',);
     }));
 	}
 

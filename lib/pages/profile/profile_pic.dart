@@ -7,7 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:eassist_tools_app/blocs/takeimage/takeimage_cubit.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:eassist_tools_app/dao/user/user_dao.dart';
 import 'dart:io' as io;
 
 class ProfilePic extends StatefulWidget {
@@ -20,54 +19,6 @@ class ProfilePic extends StatefulWidget {
 class ProfilePicState extends State<ProfilePic> {
   File? fileAvatar;
   Uint8List? bytesAvatar;
-
-  Future<Uint8List> getBytesAvatar() async {
-    //debugPrint("getBytesAvatar #10");
-    UserDao dao = UserDao();
-    Uint8List bytesAvatar = await dao.getUserFoto(0);
-
-    //debugPrint(bytesAvatar.toString());
-
-    //debugPrint("getBytesAvatar #20");
-
-    return bytesAvatar;
-  }
-
-  Widget loadingWidget() {
-    //debugPrint("loadingWidget #10");
-
-    return FutureBuilder<Uint8List>(
-      future: getBytesAvatar(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          //debugPrint("snapshot berhasil");
-
-          return Container(
-              width: MediaQuery.of(context).size.width,
-              height: 320,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                image: MemoryImage(snapshot.data!),
-                fit: BoxFit.cover,
-              )));
-
-          //return Image.memory(snapshot.data!);
-        } else if (snapshot.hasError) {
-          //debugPrint("snapshot error");
-          //debugPrint('${snapshot.error}');
-          return const Center(
-              child: Text('❌', style: TextStyle(fontSize: 72.0)));
-        } else {
-          //debugPrint("snapshot tidak jelas");
-          return Container(
-            //padding: EdgeInsets.all((widget.size - 50.0) / 2.0),
-            padding: const EdgeInsets.all(20.0),
-            child: const CircularProgressIndicator(),
-          );
-        }
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +41,7 @@ class ProfilePicState extends State<ProfilePic> {
                   //debugPrint("Profile Pic => BlockBuilder #20");
 
                   return loadingWidget();
+                  //return Container();
                 } else {
                   return Image.asset("assets/images/icon-user-default.png");
                 }
@@ -165,7 +117,8 @@ class ProfilePicState extends State<ProfilePic> {
                     backgroundColor: Colors.white,
                     child: ClipOval(
                         clipper: IconCameraClip(),
-                        child: SvgPicture.asset("assets/icons/Camera Icon.svg")),
+                        child:
+                            SvgPicture.asset("assets/icons/Camera Icon.svg")),
                   ),
                 ),
               ),
@@ -192,6 +145,47 @@ class ProfilePicState extends State<ProfilePic> {
         ),
       ],
     );
+  }
+
+  Widget loadingWidget() {
+    //debugPrint("loadingWidget #10");
+
+    return FutureBuilder<Uint8List>(
+      future: getBytesAvatar(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          //debugPrint("snapshot berhasil");
+
+          return Container(
+              width: MediaQuery.of(context).size.width,
+              height: 320,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                image: MemoryImage(snapshot.data!),
+                fit: BoxFit.cover,
+              )));
+
+          //return Image.memory(snapshot.data!);
+        } else if (snapshot.hasError) {
+          //debugPrint("snapshot error");
+          //debugPrint('${snapshot.error}');
+          return const Center(
+              child: Text('❌', style: TextStyle(fontSize: 72.0)));
+        } else {
+          //debugPrint("snapshot tidak jelas");
+          return Container(
+            //padding: EdgeInsets.all((widget.size - 50.0) / 2.0),
+            padding: const EdgeInsets.all(20.0),
+            child: const CircularProgressIndicator(),
+          );
+        }
+      },
+    );
+  }
+
+  Future<Uint8List> getBytesAvatar() async {
+    // Return an empty Uint8List or your actual avatar bytes here
+    return Uint8List(0);
   }
 }
 

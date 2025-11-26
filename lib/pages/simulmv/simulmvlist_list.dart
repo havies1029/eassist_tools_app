@@ -59,9 +59,9 @@ class SimulmvListPageState extends State<SimulmvListPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                ListPageFilterBarUIWidget(
-                    searchController: _searchController,
-                    searchButton: buildSearchButton()),
+                // ListPageFilterBarUIWidget(
+                //     searchController: _searchController,
+                //     searchButton: buildSearchButton()),
                 buildList()
               ],
             ),
@@ -104,7 +104,7 @@ class SimulmvListPageState extends State<SimulmvListPage> {
     FocusScope.of(context).requestFocus(FocusNode());
 
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return SimulmvCrudMainPage(viewMode: viewMode, recordId: recordId);
+      return SimulmvCrudMainPage(); //ubah
     }));
     /*
 		showDialog(

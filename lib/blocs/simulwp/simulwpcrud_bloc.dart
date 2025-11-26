@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/models/responseAPI/returndataapi_model.dart';
 import 'package:eassist_tools_app/models/combobox/combormatauang_model.dart';
@@ -9,60 +12,140 @@ part 'simulwpcrud_event.dart';
 part 'simulwpcrud_state.dart';
 
 class SimulwpCrudBloc extends Bloc<SimulwpCrudEvents, SimulwpCrudState> {
-	final SimulwpCrudRepository repository;
-	SimulwpCrudBloc({required this.repository}) : super(const SimulwpCrudState()) {
-		on<SimulwpCrudUbahEvent>(onUbahSimulwpCrud);
-		on<SimulwpCrudTambahEvent>(onTambahSimulwpCrud);
-		on<SimulwpCrudHapusEvent>(onHapusSimulwpCrud);
-		on<SimulwpCrudLihatEvent>(onLihatSimulwpCrud);
-		on<ComboRMatauangChangedEvent>(onComboRMatauangChanged);
-	}
+  final SimulwpCrudRepository repository;
+  SimulwpCrudBloc({required this.repository})
+      : super(const SimulwpCrudState()) {
+    on<SimulwpCrudUbahEvent>(onUbahSimulwpCrud);
+    on<SimulwpCrudTambahEvent>(onTambahSimulwpCrud);
+    on<SimulwpCrudHapusEvent>(onHapusSimulwpCrud);
+    on<SimulwpCrudLihatEvent>(onLihatSimulwpCrud);
+    on<ComboRMatauangChangedEvent>(onComboRMatauangChanged);
+    on<SimulWpCrudInitValueEvent>(onSimulWpCrudInitValueEvent);
+    on<HitungPremiWpEvent>(onHitungPremiWpEvent);
+    on<FieldBulanChangedEvent>(onFieldBulanChangedEvent);
+    on<FieldPlafondChangedEvent>(onFieldPlafondChangedEvent);
+    on<FieldUsiaChangedEvent>(onFieldUsiaChangedEvent);
+  }
 
-	Future<void> onTambahSimulwpCrud(
-		SimulwpCrudTambahEvent event, Emitter<SimulwpCrudState> emit) async {
+  Future<void> onTambahSimulwpCrud(
+      SimulwpCrudTambahEvent event, Emitter<SimulwpCrudState> emit) async {
+    ReturnDataAPI returnData;
+    bool hasFailure = true;
+    emit(state.copyWith(isSaving: true, isSaved: false));
+    returnData = await repository.simulwpCrudTambah(event.record);
+    hasFailure = !returnData.success;
+    emit(
+        state.copyWith(isSaving: false, isSaved: true, hasFailure: hasFailure));
+  }
 
-		ReturnDataAPI returnData;
-		bool hasFailure = true;
-		emit(state.copyWith(isSaving: true, isSaved: false));
-		returnData = await repository.simulwpCrudTambah(event.record);
-		hasFailure = !returnData.success;
-		emit(state.copyWith(
-			isSaving: false,
-			isSaved: true,
-			hasFailure: hasFailure));
-	}
+  Future<void> onUbahSimulwpCrud(
+      SimulwpCrudUbahEvent event, Emitter<SimulwpCrudState> emit) async {
+    emit(state.copyWith(isSaving: true, isSaved: false));
+    bool hasFailure = !await repository.simulwpCrudUbah(event.record);
+    emit(
+        state.copyWith(isSaving: false, isSaved: true, hasFailure: hasFailure));
+  }
 
-	Future<void> onUbahSimulwpCrud(
-		SimulwpCrudUbahEvent event, Emitter<SimulwpCrudState> emit) async {
-		emit(state.copyWith(isSaving: true, isSaved: false));
-		bool hasFailure = !await repository.simulwpCrudUbah(event.record);
-		emit(state.copyWith(isSaving: false, isSaved: true, hasFailure: hasFailure));
-	}
+  Future<void> onHapusSimulwpCrud(
+      SimulwpCrudHapusEvent event, Emitter<SimulwpCrudState> emit) async {
+    emit(state.copyWith(isSaving: true, isSaved: false));
+    bool hasFailure = !await repository.simulwpCrudHapus(event.recordId);
+    emit(
+        state.copyWith(isSaving: false, isSaved: true, hasFailure: hasFailure));
+  }
 
-	Future<void> onHapusSimulwpCrud(
-		SimulwpCrudHapusEvent event, Emitter<SimulwpCrudState> emit) async {
-		emit(state.copyWith(isSaving: true, isSaved: false));
-		bool hasFailure = !await repository.simulwpCrudHapus(event.recordId);
-		emit(state.copyWith(isSaving: false, isSaved: true, hasFailure: hasFailure));
-	}
+  Future<void> onLihatSimulwpCrud(
+      SimulwpCrudLihatEvent event, Emitter<SimulwpCrudState> emit) async {
+    emit(state.copyWith(isLoading: true, isLoaded: false));
+    SimulwpCrudModel record = await repository.simulwpCrudLihat(event.recordId);
+    emit(state.copyWith(isLoading: false, isLoaded: true, record: record));
+  }
 
-	Future<void> onLihatSimulwpCrud(
-		SimulwpCrudLihatEvent event, Emitter<SimulwpCrudState> emit) async {
-		emit(state.copyWith(isLoading: true, isLoaded: false));
-		SimulwpCrudModel record = await repository.simulwpCrudLihat(event.recordId);
-		emit(state.copyWith(isLoading: false, isLoaded: true, record: record));
-	}
+  Future<void> onComboRMatauangChanged(
+      ComboRMatauangChangedEvent event, Emitter<SimulwpCrudState> emit) async {
+    emit(state.copyWith(isLoading: true, isLoaded: false));
 
-	Future<void> onComboRMatauangChanged(
-			ComboRMatauangChangedEvent event, Emitter<SimulwpCrudState> emit) async {
+    ComboRMatauangModel comboRMatauang = event.comboRMatauang;
+    emit(state.copyWith(
+        isLoading: false, isLoaded: true, comboRMatauang: comboRMatauang));
+  }
 
-		emit(state.copyWith(isLoading: true, isLoaded: false));
+  Future<void> onSimulWpCrudInitValueEvent(
+      SimulWpCrudInitValueEvent event, Emitter<SimulwpCrudState> emit) async {
+    emit(state.copyWith(isLoading: true, isLoaded: false));
 
-		ComboRMatauangModel comboRMatauang = event.comboRMatauang;
-		emit(state.copyWith(
-			isLoading: false,
-			isLoaded: true,
-			comboRMatauang: comboRMatauang));
-	}
+    SimulwpCrudModel record = await repository.simulWpCrudInitValue();
+
+    emit(state.copyWith(
+        isLoading: false,
+        isLoaded: true,
+        record: record,
+        comboRMatauang: record.comboRMatauang));
+  }
+
+  Future<void> onHitungPremiWpEvent(
+      HitungPremiWpEvent event, Emitter<SimulwpCrudState> emit) async {
+    debugPrint("onHitungPremiWpEvent");
+
+    emit(state.copyWith(isLoading: true, isLoaded: false));
+
+    ReturnDataAPI returnData;
+    bool isValid = true;
+    List<String> errors = [];
+    SimulwpCrudModel record = state.record ?? SimulwpCrudModel();
+
+    if ((record.coverBulan == null) || (record.coverBulan == 0)) {
+      isValid = false;
+      errors.add("Field 'Lama Cover' harus >= 1 bulan");
+    }
+
+    if (record.plafond == null || record.plafond == 0) {
+      isValid = false;
+      errors.add("Field 'Plafond' harus > 0.");
+    }
+
+    if (record.usia == null || record.usia == 0) {
+      isValid = false;
+      errors.add("Field 'Usia' harus > 0.");
+    }
+
+    if (isValid) {
+      returnData = await repository.simulWpCrudCalcPremi(record);
+      if (returnData.success) {
+        record.premi = double.tryParse(returnData.data) ?? 0;
+      }
+    }
+
+    emit(state.copyWith(
+        isLoading: false,
+        isLoaded: true,
+        hasFailure: !isValid,
+        record: record,
+        errors: errors));
+  }
+
+  Future<void> onFieldBulanChangedEvent(
+      FieldBulanChangedEvent event, Emitter<SimulwpCrudState> emit) async {
+    SimulwpCrudModel record = state.record ?? SimulwpCrudModel();
+    record.coverBulan = event.bulan;
+
+    emit(state.copyWith(record: record));
+  }
+
+  Future<void> onFieldPlafondChangedEvent(
+      FieldPlafondChangedEvent event, Emitter<SimulwpCrudState> emit) async {
+    SimulwpCrudModel record = state.record ?? SimulwpCrudModel();
+    record.plafond = event.plafond;
+
+    emit(state.copyWith(record: record));
+  }
+
+  Future<void> onFieldUsiaChangedEvent(FieldUsiaChangedEvent event, Emitter<SimulwpCrudState> emit) async {
+
+    SimulwpCrudModel record = state.record ?? SimulwpCrudModel();
+    record.usia = event.usia;
+
+    emit(state.copyWith(record: record));
+  }
 
 }

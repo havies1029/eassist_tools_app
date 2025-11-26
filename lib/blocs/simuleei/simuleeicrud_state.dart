@@ -8,6 +8,8 @@ class SimuleeiCrudState extends Equatable {
 	final bool isSaving;
 	final bool isSaved;
 	final bool hasFailure;
+	final bool isFieldOpsiChanged;
+	final bool isFieldCascoChanged;
 	final ComboRMatauangModel? comboRMatauang;
   final List<String>? errors;
 	const SimuleeiCrudState(
@@ -17,6 +19,8 @@ class SimuleeiCrudState extends Equatable {
 		this.isSaving = false,
 		this.isSaved = false,
 		this.hasFailure = false,
+		this.isFieldCascoChanged = false,
+		this.isFieldOpsiChanged = false,
 		this.comboRMatauang,
     this.errors,
 });
@@ -28,6 +32,7 @@ class SimuleeiCrudState extends Equatable {
 		bool? isSaving,
 		bool? isSaved,
 		bool? hasFailure,
+		bool? isFieldCascoChanged,
 		ComboRMatauangModel? comboRMatauang,
     List<String>? errors,
 	}){
@@ -39,10 +44,11 @@ class SimuleeiCrudState extends Equatable {
 			isSaved: isSaved ?? this.isSaved,
 			hasFailure: hasFailure ?? this.hasFailure,
 			comboRMatauang: comboRMatauang?? this.comboRMatauang,
+			isFieldCascoChanged: isFieldCascoChanged ?? this.isFieldCascoChanged,
       errors: errors ?? this.errors,
 		);
 	}
 
 	@override
-	List<Object> get props => [isLoading, isLoaded, isSaving, isSaved, hasFailure];
+	List<Object> get props => [isLoading, isLoaded, isSaving, isSaved, hasFailure, isFieldCascoChanged,];
 }

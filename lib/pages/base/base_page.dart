@@ -18,7 +18,18 @@ enum PageType {
   changepswd,
   simulmv,
   simulpar,
-  simuleei
+  simulflexas,
+  simuleei,
+  simulgit,
+  simulgis,
+  simulbon,
+  simulwp,
+  simulcargo,
+  simulcar,
+  simulmb,
+  simultree,
+  klaimtrack,
+  startchat
 }
 
 abstract class PageContainerBase extends StatefulWidget {
@@ -35,28 +46,31 @@ abstract class PageContainerBase extends StatefulWidget {
   PageContainerBaseState createState() => PageContainerBaseState();
 }
 
-class PageContainerBaseState extends State<PageContainerBase> {  
+class PageContainerBaseState extends State<PageContainerBase> {
   late OnBoardMenuCariBloc onBoardMenuCariBloc;
+  late HomeBloc homeBloc;
 
   @override
   Widget build(BuildContext context) {
-    
     onBoardMenuCariBloc = BlocProvider.of<OnBoardMenuCariBloc>(context);
+    homeBloc = BlocProvider.of<HomeBloc>(context);
+
+    debugPrint("homeBloc.state : ${homeBloc.state}");
 
     return MobileDesignWidget(
       child: Container(
         color: Colors.grey[200],
-        child: pageContainerType(
-            context,
-            widget.body,
-            widget.pageTitle,
-            widget.menuDrawer,
-            widget.background,
-            widget.backgroundColor,
-            widget.parentModal),
+        child: widget.body, //baru
+        //   child: pageContainerType(
+      //       context,
+      //       widget.body,
+      //       widget.pageTitle,
+      //       widget.menuDrawer,
+      //       widget.background,
+      //       widget.backgroundColor,
+      //       widget.parentModal),
       ),
     );
-
   }
 
   Widget pageContainerType(
@@ -120,10 +134,17 @@ class PageContainerBaseState extends State<PageContainerBase> {
                     BlocProvider.of<HomeBloc>(context)
                         .add(HomePageActiveEvent());
                   },
-                  child: SizedBox(
-                    width: 100,
-                    height: 100,
-                    child: Image.asset(Img.get('login_logo.png')),
+                  child: (homeBloc.state is HomePageActive)
+                      ? Container()
+                      : SizedBox(
+                          width: 100,
+                          height: 100,
+                          // child: Image.asset(Img.get('login_logo.png')),
+                    child: Icon(
+                      Icons.home,  // Ikon rumah
+                      color: Colors.black,  // Mengatur warna ikon menjadi hitam
+                      size: 38.0,  // Ukuran ikon (bisa disesuaikan)
+                    ),
                   ),
                 )
               ],

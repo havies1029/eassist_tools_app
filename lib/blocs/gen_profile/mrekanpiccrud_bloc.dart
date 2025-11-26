@@ -1,0 +1,80 @@
+import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:eassist_tools_app/models/responseAPI/returndataapi_model.dart';
+import 'package:eassist_tools_app/models/combobox/combomjabatan_model.dart';
+import 'package:eassist_tools_app/models/gen_profile/mrekanpiccrud_model.dart';
+import 'package:eassist_tools_app/repositories/gen_profile/mrekanpiccrud_repository.dart';
+
+part 'mrekanpiccrud_event.dart';
+part 'mrekanpiccrud_state.dart';
+
+class MRekanPicCrudBloc extends Bloc<MRekanPicCrudEvents, MRekanPicCrudState> {
+  final MRekanPicCrudRepository repository;
+  MRekanPicCrudBloc({required this.repository})
+      : super(const MRekanPicCrudState()) {
+    on<MRekanPicCrudUbahEvent>(onUbahMRekanPicCrud);
+    on<MRekanPicCrudTambahEvent>(onTambahMRekanPicCrud);
+    on<MRekanPicCrudHapusEvent>(onHapusMRekanPicCrud);
+    on<MRekanPicCrudLihatEvent>(onLihatMRekanPicCrud);
+    on<ComboMJabatanChangedEvent>(onComboMJabatanChanged);
+    on<CheckboxIsDefaultChangedEvent>(onCheckboxIsDefaultChangedEvent);
+  }
+
+  Future<void> onTambahMRekanPicCrud(
+      MRekanPicCrudTambahEvent event, Emitter<MRekanPicCrudState> emit) async {
+    ReturnDataAPI returnData;
+    bool hasFailure = true;
+    emit(state.copyWith(isSaving: true, isSaved: false));
+    returnData = await repository.mRekanPicCrudTambah(event.record);
+    hasFailure = !returnData.success;
+    emit(
+        state.copyWith(isSaving: false, isSaved: true, hasFailure: hasFailure));
+  }
+
+  Future<void> onUbahMRekanPicCrud(
+      MRekanPicCrudUbahEvent event, Emitter<MRekanPicCrudState> emit) async {
+    emit(state.copyWith(isSaving: true, isSaved: false));
+    bool hasFailure = !await repository.mRekanPicCrudUbah(event.record);
+    emit(
+        state.copyWith(isSaving: false, isSaved: true, hasFailure: hasFailure));
+  }
+
+  Future<void> onHapusMRekanPicCrud(
+      MRekanPicCrudHapusEvent event, Emitter<MRekanPicCrudState> emit) async {
+    emit(state.copyWith(isSaving: true, isSaved: false));
+    bool hasFailure = !await repository.mRekanPicCrudHapus(event.recordId);
+    emit(
+        state.copyWith(isSaving: false, isSaved: true, hasFailure: hasFailure));
+  }
+
+  Future<void> onLihatMRekanPicCrud(
+      MRekanPicCrudLihatEvent event, Emitter<MRekanPicCrudState> emit) async {
+    emit(state.copyWith(isLoading: true, isLoaded: false));
+    MRekanPicCrudModel record =
+        await repository.mRekanPicCrudLihat(event.recordId);
+    
+    emit(state.copyWith(isLoading: false, isLoaded: true, record: record, comboMJabatan: record.comboMJabatan));
+  }
+
+  Future<void> onComboMJabatanChanged(
+      ComboMJabatanChangedEvent event, Emitter<MRekanPicCrudState> emit) async {
+
+    ComboMJabatanModel comboMJabatan = event.comboMJabatan;
+    emit(state.copyWith(comboMJabatan: comboMJabatan));
+  }
+
+  Future<void> onCheckboxIsDefaultChangedEvent(
+      CheckboxIsDefaultChangedEvent event,
+      Emitter<MRekanPicCrudState> emit) async {
+
+    debugPrint("onCheckboxIsDefaultChangedEvent");
+
+    emit(state.copyWith(isFieldIsDefaultChanged: false));
+
+    MRekanPicCrudModel? record = state.record ?? MRekanPicCrudModel();
+    record.isDefault = event.isChecked;
+
+    emit(state.copyWith(isFieldIsDefaultChanged: true, record: record));
+  }
+}

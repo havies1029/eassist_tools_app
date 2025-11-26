@@ -14,5 +14,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<SimulMVPageActiveEvent>((event, emit) => emit(SimulMVPageActive())); 
     on<SimulPARPageActiveEvent>((event, emit) => emit(SimulPARPageActive()));
     on<SimulEEIPageActiveEvent>((event, emit) => emit(SimulEEIPageActive()));
+    on<SimulGITPageActiveEvent>((event, emit) => emit(SimulGITPageActive()));
+    on<SimulGISPageActiveEvent>((event, emit) => emit(SimulGISPageActive()));
+    on<SimulBONPageActiveEvent>((event, emit) => emit(SimulBONPageActive()));
+    on<SimulWPPageActiveEvent>((event, emit) => emit(SimulWPPageActive()));
+    on<SimulCARGOPageActiveEvent>((event, emit) => emit(SimulCARGOPageActive()));
+    on<SimulFlexasPageActiveEvent>((event, emit) => emit(SimulFlexasPageActive()));
+    on<SimulCARPageActiveEvent>((event, emit) => emit(SimulCARPageActive()));
+    on<SimulMBPageActiveEvent>((event, emit) => emit(SimulMBPageActive()));
+    on<SimulTREEPageActiveEvent>((event, emit) => emit(SimulTREEPageActive()));
+    on<TrackKlaimPageActiveEvent>((event, emit) => emit(TrackKlaimPageActive()));
+    on<StartChatPageActiveEvent>((event, emit) => emit(StartChatPageActive()));
   }
 }
