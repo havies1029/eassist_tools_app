@@ -8,7 +8,6 @@ import 'package:intl/intl.dart';
 import 'package:eassist_tools_app/common/thousand_separator_input_formatter.dart';
 import 'package:string_validator/string_validator.dart';
 import 'package:eassist_tools_app/widgets/checkbox_widget.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 
 
 class Calmv2FormFormPage extends StatefulWidget {
@@ -73,7 +72,6 @@ class Calmv2FormFormPageFormState extends State<Calmv2FormFormPage> {
 										),
 										const SizedBox(height: 25),
 										buildFieldAw(),
-										buildFieldCalmv1Id(),
 										buildFieldIsEq(),
 										buildFieldIsFlood(),
 										buildFieldIsSrcc(),
@@ -385,6 +383,7 @@ class Calmv2FormFormPageFormState extends State<Calmv2FormFormPage> {
 		if (_formKey.currentState!.validate()) {
 			_formKey.currentState!.save();
 			Calmv2FormModel record = Calmv2FormModel(
+        calmv1Id: '',
 				aw: double.parse(fieldAwController.text.replaceAll(',', '')),
 				calmv2Id: '',
 				isEq: toBoolean(fieldIsEqController.text),
@@ -398,10 +397,11 @@ class Calmv2FormFormPageFormState extends State<Calmv2FormFormPage> {
 				pll: double.parse(fieldPllController.text.replaceAll(',', '')),
 				tpl: double.parse(fieldTplController.text.replaceAll(',', '')),
 			);
+
+        	record.calmv1Id = widget.recordId;
 			if (widget.viewMode == "tambah") {
 				calmv2FormBloc.add(Calmv2FormTambahEvent(record: record));
 			} else if (widget.viewMode == "ubah") {
-				record.calmv2Id = calmv2FormBloc.state.record!.calmv2Id;
 				calmv2FormBloc.add(Calmv2FormUbahEvent(record: record));
 			}
 			_dismissDialog();

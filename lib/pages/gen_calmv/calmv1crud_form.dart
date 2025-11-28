@@ -343,7 +343,6 @@ class Calmv1CrudFormPageFormState extends State<Calmv1CrudFormPage> {
 	Widget buildFieldThnBuat(){
 		return TextFormField(
 			keyboardType: TextInputType.number,
-			inputFormatters: [ThousandsSeparatorInputFormatter()],
 			controller: fieldThnBuatController,
 			decoration: const InputDecoration(
 				labelText: "thnBuat",

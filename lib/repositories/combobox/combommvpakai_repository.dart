@@ -3,8 +3,8 @@ import 'package:eassist_tools_app/models/combobox/combommvpakai_model.dart';
 
 class ComboMMvpakaiRepository {
 
-	Future<List<ComboMMvpakaiModel>> getComboMMvpakai(String filter) async {
+	Future<List<ComboMMvpakaiModel>> getComboMMvpakai() async {
 		ComboMMvpakaiAPI api = ComboMMvpakaiAPI();
-		return await api.getComboMMvpakaiAPI(filter);
+		return await api.getComboMMvpakaiAPI();
 	}
 }

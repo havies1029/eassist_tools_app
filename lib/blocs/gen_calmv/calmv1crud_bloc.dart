@@ -58,66 +58,52 @@ class Calmv1CrudBloc extends Bloc<Calmv1CrudEvents, Calmv1CrudState> {
 		Calmv1CrudLihatEvent event, Emitter<Calmv1CrudState> emit) async {
 		emit(state.copyWith(isLoading: true, isLoaded: false));
 		Calmv1CrudModel record = await repository.calmv1CrudLihat(event.recordId);
-		emit(state.copyWith(isLoading: false, isLoaded: true, record: record));
+		emit(state.copyWith(isLoading: false, isLoaded: true, record: record,
+      comboMMvgrupOjk: record.comboMMvgrupOjk,
+      comboMMvjnscover: record.comboMMvjnscover,
+      comboMMvpakai: record.comboMMvpakai,
+      comboMWilayah: record.comboMWilayah,
+      comboRMatauang: record.comboRMatauang,
+    ));
 	}
 
 	Future<void> onComboMMvjnscoverChanged(
 			ComboMMvjnscoverChangedEvent event, Emitter<Calmv1CrudState> emit) async {
 
-		emit(state.copyWith(isLoading: true, isLoaded: false));
-
 		ComboMMvjnscoverModel comboMMvjnscover = event.comboMMvjnscover;
 		emit(state.copyWith(
-			isLoading: false,
-			isLoaded: true,
 			comboMMvjnscover: comboMMvjnscover));
 	}
 
 	Future<void> onComboMWilayahChanged(
 			ComboMWilayahChangedEvent event, Emitter<Calmv1CrudState> emit) async {
 
-		emit(state.copyWith(isLoading: true, isLoaded: false));
-
 		ComboMWilayahModel comboMWilayah = event.comboMWilayah;
 		emit(state.copyWith(
-			isLoading: false,
-			isLoaded: true,
 			comboMWilayah: comboMWilayah));
 	}
 
 	Future<void> onComboMMvgrupOjkChanged(
 			ComboMMvgrupOjkChangedEvent event, Emitter<Calmv1CrudState> emit) async {
 
-		emit(state.copyWith(isLoading: true, isLoaded: false));
-
 		ComboMMvgrupOjkModel comboMMvgrupOjk = event.comboMMvgrupOjk;
 		emit(state.copyWith(
-			isLoading: false,
-			isLoaded: true,
 			comboMMvgrupOjk: comboMMvgrupOjk));
 	}
 
 	Future<void> onComboMMvpakaiChanged(
 			ComboMMvpakaiChangedEvent event, Emitter<Calmv1CrudState> emit) async {
 
-		emit(state.copyWith(isLoading: true, isLoaded: false));
-
 		ComboMMvpakaiModel comboMMvpakai = event.comboMMvpakai;
 		emit(state.copyWith(
-			isLoading: false,
-			isLoaded: true,
 			comboMMvpakai: comboMMvpakai));
 	}
 
 	Future<void> onComboRMatauangChanged(
 			ComboRMatauangChangedEvent event, Emitter<Calmv1CrudState> emit) async {
 
-		emit(state.copyWith(isLoading: true, isLoaded: false));
-
 		ComboRMatauangModel comboRMatauang = event.comboRMatauang;
 		emit(state.copyWith(
-			isLoading: false,
-			isLoaded: true,
 			comboRMatauang: comboRMatauang));
 	}
 

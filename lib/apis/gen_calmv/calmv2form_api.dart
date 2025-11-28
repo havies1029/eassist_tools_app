@@ -72,9 +72,9 @@ class Calmv2FormAPI {
 		}
 		return returnData.success;
 	}
-	Future<Calmv2FormModel> calmv2FormLihatAPI(String calmv2Id) async {
+	Future<Calmv2FormModel> calmv2FormLihatAPI(String calmv1Id) async {
 		String lihatEndpoint = "${AppData.prefixEndPoint}/api/calmv/calmv2form/read";
-		Map<String, String> queryParams = {'calmv2Id': calmv2Id};
+		Map<String, String> queryParams = {'calmv1Id': calmv1Id};
 		var uri = AppData.uriHtpp(AppData.httpAuthority, lihatEndpoint, queryParams);
 		final http.Response response =
 			await http.get(uri, headers: <String, String>{

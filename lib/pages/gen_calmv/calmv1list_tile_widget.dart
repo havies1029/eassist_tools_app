@@ -1,4 +1,8 @@
+import 'package:eassist_tools_app/blocs/gen_calmv/calmv3form_bloc.dart';
+import 'package:eassist_tools_app/pages/gen_calmv/calmv2form_form.dart';
+import 'package:eassist_tools_app/pages/gen_calmv/calmv3form_form.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:eassist_tools_app/widgets/my_colors.dart';
 import 'package:eassist_tools_app/widgets/my_text.dart';
@@ -10,7 +14,7 @@ class Calmv1ListTileWidget extends StatelessWidget {
 	final String grupNama;
 	final double harga;
 	final String pakaiNama;
-	final String rMATAUANGNAMA;
+	final String rmatauangNama;
 	final int thnBuat;
 	final String wilayahNama;
 
@@ -22,7 +26,7 @@ class Calmv1ListTileWidget extends StatelessWidget {
 		required this.grupNama, 
 		required this.harga, 
 		required this.pakaiNama, 
-		required this.rMATAUANGNAMA, 
+		required this.rmatauangNama, 
 		required this.thnBuat, 
 		required this.wilayahNama});
 
@@ -96,12 +100,12 @@ class Calmv1ListTileWidget extends StatelessWidget {
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
-						Text("rMATAUANGNAMA",
+						Text("rmatauangNama",
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_40)),
 						Container(height: 5),
 						Text(
-							rMATAUANGNAMA,
+							rmatauangNama,
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
@@ -123,8 +127,86 @@ class Calmv1ListTileWidget extends StatelessWidget {
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
+            Row(
+											mainAxisAlignment: MainAxisAlignment.spaceAround,
+											children: [
+												SizedBox(
+													width: MediaQuery.of(context).size.width * 0.25,
+													height: 80,
+													child: Padding(
+														padding: const EdgeInsets.only(top: 30.0),
+														child: ElevatedButton(
+															onPressed: () {
+																showDialogCalMv2ViewData(context, 'ubah', calmv1Id);
+															},
+															child: const Text(
+																'CalMV2',
+																style: TextStyle(fontSize: 13.0),
+															),
+														),
+													),
+												),
+                        SizedBox(
+													width: MediaQuery.of(context).size.width * 0.25,
+													height: 80,
+													child: Padding(
+														padding: const EdgeInsets.only(top: 30.0),
+														child: ElevatedButton(
+															onPressed: () {
+                                context.read<Calmv3FormBloc>().add(
+                                  Calmv3FormHitungPremiEvent(calmv1Id: calmv1Id));
+															},
+															child: const Text(
+																'Hitung Premi',
+																style: TextStyle(fontSize: 13.0),
+															),
+														),
+													),
+												),
+												SizedBox(
+													width: MediaQuery.of(context).size.width * 0.25,
+													height: 80,
+													child: Padding(
+														padding: const EdgeInsets.only(top: 30.0),
+														child: ElevatedButton(
+															onPressed: () {
+																showDialogCalMv3ViewData(context, 'lihat', calmv1Id);
+															},
+															child: const Text(
+																'CalMV3',
+																style: TextStyle(fontSize: 13.0),
+															),
+														),
+													),
+												),
+											],
+										),
+
 				]),
 			)
 		);
 	}
+
+  void showDialogCalMv2ViewData(BuildContext context, String viewMode, String recordId) {
+		FocusScope.of(context).requestFocus(FocusNode());
+		showDialog(
+			context: context,
+			barrierDismissible: false,
+			builder: (BuildContext context) {
+				return Calmv2FormFormPage(viewMode: viewMode, recordId: recordId);
+			},
+			useSafeArea: true);
+  }
+
+  void showDialogCalMv3ViewData(BuildContext context, String viewMode, String recordId) {
+		FocusScope.of(context).requestFocus(FocusNode());
+		showDialog(
+			context: context,
+			barrierDismissible: false,
+			builder: (BuildContext context) {
+				return Calmv3FormFormPage(viewMode: viewMode, recordId: recordId);
+			},
+			useSafeArea: true);
+  }
+
 }

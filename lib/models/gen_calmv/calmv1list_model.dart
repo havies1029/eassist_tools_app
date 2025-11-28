@@ -12,7 +12,7 @@ class Calmv1ListModel {
 	String coverName;
 	String grupNama;
 	String pakaiNama;
-	String rMATAUANGNAMA;
+	String rmatauangNama;
 	String wilayahNama;
 
 	Calmv1ListModel({required this.calmv1Id, required this.coverBulan, 
@@ -21,7 +21,7 @@ class Calmv1ListModel {
 		required this.mmvpakaiId, required this.mwilayahId, 
 		required this.thnBuat, required this.coverName, 
 		required this.grupNama, required this.pakaiNama, 
-		required this.rMATAUANGNAMA, required this.wilayahNama});
+		required this.rmatauangNama, required this.wilayahNama});
 
 	factory Calmv1ListModel.fromJson(Map<String, dynamic> data) {
 		return Calmv1ListModel(
@@ -37,7 +37,7 @@ class Calmv1ListModel {
 			coverName: data['coverName']??'',
 			grupNama: data['grupNama']??'',
 			pakaiNama: data['pakaiNama']??'',
-			rMATAUANGNAMA: data['rMATAUANGNAMA']??'',
+			rmatauangNama: data['rmatauangNama']??'',
 			wilayahNama: data['wilayahNama']??''
 		);
 
@@ -56,7 +56,7 @@ class Calmv1ListModel {
 		'coverName': coverName,
 		'grupNama': grupNama,
 		'pakaiNama': pakaiNama,
-		'rMATAUANGNAMA': rMATAUANGNAMA,
+		'rmatauangNama': rmatauangNama,
 		'wilayahNama': wilayahNama};
 
 }

@@ -7,6 +7,9 @@ class Calmv1ListMainPage extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) {
 		return Scaffold(
+      appBar: AppBar(
+        title: Text("List Simulasi MV"),
+      ),
 			backgroundColor: Colors.grey[100],
 			body: const Calmv1ListPage(),
 		);

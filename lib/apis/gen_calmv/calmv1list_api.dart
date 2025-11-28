@@ -5,7 +5,7 @@ import 'package:eassist_tools_app/models/gen_calmv/calmv1list_model.dart';
 
 class Calmv1ListAPI{
 	Future<List<Calmv1ListModel>> getCalmv1ListAPI(String searchText, int hal) async {
-		String urlGetListEndPoint = "${AppData.prefixEndPoint}/api/gen_calmv/calmv1list/getlist";
+		String urlGetListEndPoint = "${AppData.prefixEndPoint}/api/calmv/calmv1list/getlist";
 
 		Map<String, String> queryParams = {"searchText": searchText, "hal": hal.toString()};
 		var uri = AppData.uriHtpp(AppData.httpAuthority, urlGetListEndPoint, queryParams);

@@ -1,5 +1,6 @@
 
 class Calmv2FormModel {
+	String calmv1Id;
 	double aw;
 	String calmv2Id;
 	bool isEq;
@@ -13,7 +14,8 @@ class Calmv2FormModel {
 	double pll;
 	double tpl;
 
-	Calmv2FormModel({required this.aw, required this.calmv2Id, 
+	Calmv2FormModel({required this.calmv1Id,
+    required this.aw, required this.calmv2Id, 
 		required this.isEq, required this.isFlood, 
 		required this.isSrcc, required this.isTbod, 
 		required this.isTerrorism, required this.pad, 
@@ -22,6 +24,7 @@ class Calmv2FormModel {
 
 	factory Calmv2FormModel.fromJson(Map<String, dynamic> data) {
 		return Calmv2FormModel(
+      calmv1Id: data['calmv1Id']??'',
 			aw: double.tryParse(data['aw'].toString())??0,
 			calmv2Id: data['calmv2Id']??'',
 			isEq: data['isEq']??'',
@@ -39,7 +42,8 @@ class Calmv2FormModel {
 	}
 
 	Map<String, dynamic> toJson() =>
-		{'aw': aw.toString(),
+		{ 'calmv1Id': calmv1Id,
+      'aw': aw.toString(),
 		'calmv2Id': calmv2Id,
 		'isEq': isEq,
 		'isFlood': isFlood,

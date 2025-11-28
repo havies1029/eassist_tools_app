@@ -8,7 +8,7 @@ class Calmv1CrudAPI {
 
 	Future<ReturnDataAPI> calmv1CrudTambahAPI(Calmv1CrudModel record) async {
 		String tambahEndpoint =
-			"${AppData.prefixEndPoint}/api/gen_calmv/calmv1crud/create";
+			"${AppData.prefixEndPoint}/api/calmv/calmv1crud/create";
 		Map<String, String> queryParams = {"modul_id": "calmv1CrudTambahAPI"};
 		var uri = AppData.uriHtpp(AppData.httpAuthority, tambahEndpoint, queryParams);
 
@@ -30,7 +30,7 @@ class Calmv1CrudAPI {
 	}
 	Future<bool> calmv1CrudUbahAPI(Calmv1CrudModel record) async {
 		String ubahEndpoint =
-			"${AppData.prefixEndPoint}/api/gen_calmv/calmv1crud/update";
+			"${AppData.prefixEndPoint}/api/calmv/calmv1crud/update";
 		Map<String, String> queryParams = {"modul_id": "calmv1CrudUbahAPI"};
 
 		var uri = AppData.uriHtpp(AppData.httpAuthority, ubahEndpoint, queryParams);
@@ -52,7 +52,7 @@ class Calmv1CrudAPI {
 		return returnData.success;
 	}
 	Future<bool> calmv1CrudHapusAPI(String calmv1Id) async {
-		String hapusEndpoint = "${AppData.prefixEndPoint}/api/gen_calmv/calmv1crud/delete";
+		String hapusEndpoint = "${AppData.prefixEndPoint}/api/calmv/calmv1crud/delete";
 		Map<String, String> queryParams = {
 			'calmv1Id': calmv1Id,
 			'modul_id': 'calmv1CrudHapusAPI'};
@@ -73,7 +73,7 @@ class Calmv1CrudAPI {
 		return returnData.success;
 	}
 	Future<Calmv1CrudModel> calmv1CrudLihatAPI(String calmv1Id) async {
-		String lihatEndpoint = "${AppData.prefixEndPoint}/api/gen_calmv/calmv1crud/read";
+		String lihatEndpoint = "${AppData.prefixEndPoint}/api/calmv/calmv1crud/read";
 		Map<String, String> queryParams = {'calmv1Id': calmv1Id};
 		var uri = AppData.uriHtpp(AppData.httpAuthority, lihatEndpoint, queryParams);
 		final http.Response response =

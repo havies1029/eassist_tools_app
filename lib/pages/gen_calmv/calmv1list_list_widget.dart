@@ -87,7 +87,7 @@ class Calmv1ListListWidgetState extends State<Calmv1ListListWidget> {
 												grupNama: state.items[index].grupNama,
 												harga: state.items[index].harga,
 												pakaiNama: state.items[index].pakaiNama,
-												rMATAUANGNAMA: state.items[index].rMATAUANGNAMA,
+												rmatauangNama: state.items[index].rmatauangNama,
 												thnBuat: state.items[index].thnBuat,
 												wilayahNama: state.items[index].wilayahNama,
 											)),

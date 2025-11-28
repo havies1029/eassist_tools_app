@@ -95,22 +95,7 @@ class Calmv3FormFormPageFormState extends State<Calmv3FormFormPage> {
 														),
 													),
 												),
-												SizedBox(
-													width: MediaQuery.of(context).size.width * 0.3,
-													height: 60,
-													child: Padding(
-														padding: const EdgeInsets.only(top: 30.0),
-														child: ElevatedButton(
-															onPressed: () {
-																onSaveForm();
-															},
-															child: const Text(
-																'Save',
-																style: TextStyle(fontSize: 13.0),
-															),
-														),
-													),
-												),
+												
 											],
 										),
 									],
@@ -133,10 +118,10 @@ class Calmv3FormFormPageFormState extends State<Calmv3FormFormPage> {
 			);
 		}
 	void loadData() {
-		if (widget.viewMode == "ubah") {
+		
 		calmv3FormBloc.add(
 			Calmv3FormLihatEvent(calmv1Id: widget.recordId));
-		}
+		
 	}
 
 	Widget buildFieldCalmv1Id(){

@@ -14,6 +14,7 @@ class Calmv3FormBloc extends Bloc<Calmv3FormEvents, Calmv3FormState> {
 		on<Calmv3FormTambahEvent>(onTambahCalmv3Form);
 		on<Calmv3FormHapusEvent>(onHapusCalmv3Form);
 		on<Calmv3FormLihatEvent>(onLihatCalmv3Form);
+    on<Calmv3FormHitungPremiEvent>(onHitungPremiCalmv3Form);
 	}
 
 	Future<void> onTambahCalmv3Form(
@@ -52,7 +53,7 @@ class Calmv3FormBloc extends Bloc<Calmv3FormEvents, Calmv3FormState> {
 	}
 
 	Future<void> onHitungPremiCalmv3Form(
-		Calmv3FormLihatEvent event, Emitter<Calmv3FormState> emit) async {
+		Calmv3FormHitungPremiEvent event, Emitter<Calmv3FormState> emit) async {
 		emit(state.copyWith(isLoading: true, isLoaded: false));
 		Calmv3FormModel record = await repository.calmv3FormHitungPremi(event.calmv1Id);
 		emit(state.copyWith(isLoading: false, isLoaded: true, record: record));
