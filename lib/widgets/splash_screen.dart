@@ -12,11 +12,11 @@ class SplashScreen extends StatefulWidget {
   final VoidCallback? onFinish;
 
   const SplashScreen({
-    Key? key,
+    super.key,
     required this.imageAsset,
     this.animationDuration = const Duration(seconds: 3),
     this.onFinish,
-  }) : super(key: key);
+  });
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -169,10 +169,10 @@ class GradientText extends StatelessWidget {
 
   const GradientText(
       this.text, {
-        Key? key,
+        super.key,
         required this.gradient,
         required this.style,
-      }) : super(key: key);
+      });
 
   @override
   Widget build(BuildContext context) {

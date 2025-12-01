@@ -5,13 +5,9 @@ import 'package:eassist_tools_app/blocs/gen_aset_ringkasan/asetringkasancari_blo
 import 'package:eassist_tools_app/blocs/gen_cob_app/cobcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_status_aset/statusasetcari_bloc.dart';
 import 'package:eassist_tools_app/common/constants.dart';
-import 'package:eassist_tools_app/pages/gen_aset_health/asethealthcari_list.dart';
 import 'package:eassist_tools_app/pages/gen_aset_health/asethealthcari_list_widget.dart';
-import 'package:eassist_tools_app/pages/gen_aset_mv/asetmvcari_list.dart';
 import 'package:eassist_tools_app/pages/gen_aset_mv/asetmvcari_list_widget.dart';
-import 'package:eassist_tools_app/pages/gen_aset_par/asetparcari_list.dart';
 import 'package:eassist_tools_app/pages/gen_aset_par/asetparcari_list_widget.dart';
-import 'package:eassist_tools_app/pages/gen_aset_ringkasan/asetringkasancari_list.dart';
 import 'package:eassist_tools_app/pages/gen_aset_ringkasan/asetringkasancari_list_widget.dart';
 import 'package:eassist_tools_app/pages/gen_cob_app/button_group_cob_aset.dart';
 import 'package:eassist_tools_app/pages/gen_status_aset/button_group_status_aset.dart';

@@ -4,7 +4,6 @@ import 'package:eassist_tools_app/blocs/home/home_bloc.dart';
 import 'constants.dart';
 import 'menu_item_button.dart' as customWidgets;
 import 'header_section.dart';
-import 'horizontal_divider.dart';
 import 'my_colors.dart';
 
 class MenuAllWidget extends StatelessWidget {
@@ -111,7 +110,7 @@ class MenuGridState extends State<MenuGrid> {
         if (menuid == "simulmb" || menuid == "simuleei" || menuid == "simulcar") {
           int lastSpace = label.lastIndexOf(" ");
           if (lastSpace != -1) {
-            label = label.substring(0, lastSpace) + "\n" + label.substring(lastSpace + 1);
+            label = "${label.substring(0, lastSpace)}\n${label.substring(lastSpace + 1)}";
           }
         }
 
@@ -181,8 +180,7 @@ class _AnimatedTile extends StatefulWidget {
     required this.onTap,
     required this.label,
     required this.imagePath,
-    Key? key,
-  }) : super(key: key);
+  });
 
   @override
   State<_AnimatedTile> createState() => _AnimatedTileState();

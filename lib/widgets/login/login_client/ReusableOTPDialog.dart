@@ -1,4 +1,4 @@
-import 'dart:math'; // untuk fungsi min()
+// untuk fungsi min()
 import 'package:flutter/material.dart';
 import '../../../pages/hero_user_page/hero_user_main.dart';
 import '../../register/register_client/popup_client.dart';
@@ -49,8 +49,12 @@ class _ReusableOTPDialogState extends State<ReusableOTPDialog>
   @override
   void dispose() {
     _animationController.dispose();
-    for (final c in _controllers) c.dispose();
-    for (final f in _focusNodes) f.dispose();
+    for (final c in _controllers) {
+      c.dispose();
+    }
+    for (final f in _focusNodes) {
+      f.dispose();
+    }
     super.dispose();
   }
 

@@ -3,6 +3,7 @@ import 'package:eassist_tools_app/models/combobox/combomjnscoverpar_model.dart';
 import 'package:eassist_tools_app/models/combobox/combomwilayah_model.dart';
 
 class Calpar3FormModel {
+  String calpar1Id;
 	String calpar3Id;
 	bool isEq;
 	double rateEqvet;
@@ -18,7 +19,7 @@ class Calpar3FormModel {
 	String? mwilayahId;
 	ComboMWilayahModel? comboMWilayah;
 
-	Calpar3FormModel({required this.calpar3Id, required this.isEq, 
+	Calpar3FormModel({required this.calpar1Id, required this.calpar3Id, required this.isEq, 
 		required this.rateEqvet, required this.rateOther, 
 		required this.ratePar, required this.rateRsmdcc, 
 		required this.rateTotal, required this.rateTsfwd, 
@@ -42,6 +43,7 @@ class Calpar3FormModel {
 		}
 
 		return Calpar3FormModel(
+      calpar1Id: data['calpar1Id']??'',
 			calpar3Id: data['calpar3Id']??'',
 			isEq: data['isEq']??'',
 			rateEqvet: double.tryParse(data['rateEqvet'].toString())??0,
@@ -61,7 +63,9 @@ class Calpar3FormModel {
 	}
 
 	Map<String, dynamic> toJson() =>
-		{'calpar3Id': calpar3Id,
+		{
+      'calpar1Id': calpar1Id,
+      'calpar3Id': calpar3Id,
 		'isEq': isEq,
 		'rateEqvet': rateEqvet.toString(),
 		'rateOther': rateOther.toString(),

@@ -3,7 +3,7 @@ import '../../../pages/hero_user_page/hero_user_main.dart';
 import '../../register/register_client/popup_client.dart';
 
 class LoginClientPage extends StatefulWidget {
-  const LoginClientPage({Key? key}) : super(key: key);
+  const LoginClientPage({super.key});
 
   @override
   _LoginClientPageState createState() => _LoginClientPageState();

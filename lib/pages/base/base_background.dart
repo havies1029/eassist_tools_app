@@ -6,7 +6,7 @@ class BackgroundImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Theme.of(context).colorScheme.background,
+      color: Theme.of(context).colorScheme.surface,
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height * .7,
       child: ClipPath(

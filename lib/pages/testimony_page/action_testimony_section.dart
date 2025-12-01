@@ -79,7 +79,7 @@ class ActionSectionState extends State<ActionSection> with SingleTickerProviderS
             horizontal: widget.constraints.maxWidth > 1200 ? 64.0 : 32.0,
           ),
           child: Center(
-            child: Container(
+            child: SizedBox(
               width: maxWidth,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,

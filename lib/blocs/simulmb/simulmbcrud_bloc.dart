@@ -136,7 +136,7 @@ class SimulmbCrudBloc extends Bloc<SimulmbCrudEvents, SimulmbCrudState> {
 			errors.add("Field 'Lama Cover' harus >= 1 bulan");
 		}
 
-		if (record.tsi == null || record.tsi == 0) {
+		if (record.tsi == 0) {
 			isValid = false;
 			errors.add("Field 'TSI' harus > 0.");
 		}

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/models/responseAPI/returndataapi_model.dart';
 import 'package:eassist_tools_app/models/combobox/combomwilayah_model.dart';
@@ -26,6 +27,12 @@ class Regmv3FormBloc extends Bloc<Regmv3FormEvents, Regmv3FormState> {
 		on<ComboMMvmodelChangedEvent>(onComboMMvmodelChanged);
 		on<ComboMWarnaChangedEvent>(onComboMWarnaChanged);
 		on<ComboMMvpakaiChangedEvent>(onComboMMvpakaiChanged);
+    on<FieldThnBuatChangedEvent>(onFieldThnBuatChanged);
+    on<FieldAksesorisChangedEvent>(onFieldAksesorisChanged);
+    on<FieldHargaChangedEvent>(onFieldHargaChanged);
+    on<FieldMesinNoChangedEvent>(onFieldMesinNoChanged);
+    on<FieldPlatNoChangedEvent>(onFieldPlatNoChanged);
+    on<FieldRangkaNoChangedEvent>(onFieldRangkaNoChanged);    
 	}
 
 	Future<void> onTambahRegmv3Form(
@@ -60,18 +67,21 @@ class Regmv3FormBloc extends Bloc<Regmv3FormEvents, Regmv3FormState> {
 		Regmv3FormLihatEvent event, Emitter<Regmv3FormState> emit) async {
 		emit(state.copyWith(isLoading: true, isLoaded: false));
 		Regmv3FormModel record = await repository.regmv3FormLihat(event.recordId);
-		emit(state.copyWith(isLoading: false, isLoaded: true, record: record));
+		emit(state.copyWith(isLoading: false, isLoaded: true, record: record,
+      comboMMvmerk: record.comboMMvmerk,
+      comboMMvtipe: record.comboMMvtipe,
+      comboMMvmodel: record.comboMMvmodel,
+      comboMWilayah: record.comboMWilayah,
+      comboMWarna: record.comboMWarna,
+      comboMMvpakai: record.comboMMvpakai,
+    ));
 	}
 
 	Future<void> onComboMWilayahChanged(
 			ComboMWilayahChangedEvent event, Emitter<Regmv3FormState> emit) async {
 
-		emit(state.copyWith(isLoading: true, isLoaded: false));
-
 		ComboMWilayahModel comboMWilayah = event.comboMWilayah;
 		emit(state.copyWith(
-			isLoading: false,
-			isLoaded: true,
 			comboMWilayah: comboMWilayah));
 	}
 
@@ -82,57 +92,105 @@ class Regmv3FormBloc extends Bloc<Regmv3FormEvents, Regmv3FormState> {
 
 		ComboMMvmerkModel comboMMvmerk = event.comboMMvmerk;
 		emit(state.copyWith(
-			isLoading: false,
-			isLoaded: true,
+      isLoading: false, isLoaded: true,
 			comboMMvmerk: comboMMvmerk));
 	}
 
 	Future<void> onComboMMvtipeChanged(
 			ComboMMvtipeChangedEvent event, Emitter<Regmv3FormState> emit) async {
 
-		emit(state.copyWith(isLoading: true, isLoaded: false));
+    emit(state.copyWith(isLoading: true, isLoaded: false));
 
 		ComboMMvtipeModel comboMMvtipe = event.comboMMvtipe;
 		emit(state.copyWith(
-			isLoading: false,
-			isLoaded: true,
+      isLoading: false, isLoaded: true,
 			comboMMvtipe: comboMMvtipe));
 	}
 
 	Future<void> onComboMMvmodelChanged(
 			ComboMMvmodelChangedEvent event, Emitter<Regmv3FormState> emit) async {
 
-		emit(state.copyWith(isLoading: true, isLoaded: false));
-
 		ComboMMvmodelModel comboMMvmodel = event.comboMMvmodel;
 		emit(state.copyWith(
-			isLoading: false,
-			isLoaded: true,
 			comboMMvmodel: comboMMvmodel));
 	}
 
 	Future<void> onComboMWarnaChanged(
 			ComboMWarnaChangedEvent event, Emitter<Regmv3FormState> emit) async {
 
-		emit(state.copyWith(isLoading: true, isLoaded: false));
-
 		ComboMWarnaModel comboMWarna = event.comboMWarna;
 		emit(state.copyWith(
-			isLoading: false,
-			isLoaded: true,
 			comboMWarna: comboMWarna));
 	}
 
 	Future<void> onComboMMvpakaiChanged(
 			ComboMMvpakaiChangedEvent event, Emitter<Regmv3FormState> emit) async {
 
-		emit(state.copyWith(isLoading: true, isLoaded: false));
-
 		ComboMMvpakaiModel comboMMvpakai = event.comboMMvpakai;
 		emit(state.copyWith(
-			isLoading: false,
-			isLoaded: true,
 			comboMMvpakai: comboMMvpakai));
 	}
+
+  Future<void> onFieldThnBuatChanged(
+      FieldThnBuatChangedEvent event, Emitter<Regmv3FormState> emit) async {
+
+    Regmv3FormModel? record = state.record;
+    int thnBuat = int.tryParse(event.thnBuat) ?? 0;
+    record = record?.copyWith(thnBuat: thnBuat);
+
+    emit(state.copyWith(
+      record: record));
+  }
+
+  Future<void> onFieldAksesorisChanged(
+      FieldAksesorisChangedEvent event, Emitter<Regmv3FormState> emit) async {
+
+    Regmv3FormModel? record = state.record;
+    record = record?.copyWith(aksesoris: event.aksesoris);
+
+    emit(state.copyWith(
+      record: record));
+  }
+
+  Future<void> onFieldHargaChanged(
+      FieldHargaChangedEvent event, Emitter<Regmv3FormState> emit) async {
+
+    Regmv3FormModel? record = state.record;
+    double harga = double.tryParse(event.harga) ?? 0.0;
+    record = record?.copyWith(harga: harga);
+
+    emit(state.copyWith(
+      record: record));
+  }
+
+  Future<void> onFieldMesinNoChanged(
+      FieldMesinNoChangedEvent event, Emitter<Regmv3FormState> emit) async {
+
+    Regmv3FormModel? record = state.record;
+    record = record?.copyWith(mesinNo: event.mesinNo);
+
+    emit(state.copyWith(
+      record: record));
+  }
+
+  Future<void> onFieldPlatNoChanged(
+      FieldPlatNoChangedEvent event, Emitter<Regmv3FormState> emit) async {
+
+    Regmv3FormModel? record = state.record;
+    record = record?.copyWith(platNo: event.platNo);
+
+    emit(state.copyWith(
+      record: record));
+  }
+  
+  Future<void> onFieldRangkaNoChanged(
+      FieldRangkaNoChangedEvent event, Emitter<Regmv3FormState> emit) async {
+
+    Regmv3FormModel? record = state.record;
+    record = record?.copyWith(rangkaNo: event.rangkaNo);
+
+    emit(state.copyWith(
+      record: record));
+  }
 
 }

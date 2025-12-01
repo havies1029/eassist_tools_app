@@ -60,5 +60,5 @@ class Regmv3FormState extends Equatable {
 	}
 
 	@override
-	List<Object> get props => [isLoading, isLoaded, isSaving, isSaved, hasFailure];
+	List<Object> get props => [isLoading, isLoaded, isSaving, isSaved, hasFailure, record ?? ''];
 }

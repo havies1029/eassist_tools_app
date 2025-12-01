@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
-import 'dart:math' show pi;
 
 import '../../repositories/user/user_repository.dart';
 // import '../../widgets/login/login_client/popup_client.dart';
 import '../../widgets/section/navbar/navbar_widget.dart';
-import '../profile/profile_main_page.dart';
-import '../../widgets/section/carousel_section.dart';
-import '../../widgets/section/client_section.dart';
-import '../../widgets/section/feature_section.dart';
 import '../../widgets/section/about/floating_buttons_about.dart';
 import '../../widgets/section/footer_section.dart';
 import '../../widgets/section/about/hero_section_about.dart';
-import '../../widgets/section/testimonial_section.dart';
 import 'action_article_section.dart';
 
 class DummyUserRepository extends UserRepository {

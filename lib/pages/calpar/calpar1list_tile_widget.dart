@@ -1,3 +1,6 @@
+import 'package:eassist_tools_app/pages/calpar/calpar2form_form.dart';
+import 'package:eassist_tools_app/pages/calpar/calpar3form_form.dart';
+import 'package:eassist_tools_app/pages/calpar/calpar4form_form.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:eassist_tools_app/widgets/my_colors.dart';
@@ -68,8 +71,122 @@ class Calpar1ListTileWidget extends StatelessWidget {
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
+
+            Container(height: 10),
+						Row(
+							mainAxisAlignment: MainAxisAlignment.spaceAround,
+							children: [
+								SizedBox(
+									width: MediaQuery.of(context).size.width * 0.25,
+									height: 80,
+									child: Padding(
+										padding: const EdgeInsets.only(top: 30.0),
+										child: ElevatedButton(
+											onPressed: () {
+												showDialogCalPar2ViewData(context, 'ubah', calpar1Id);
+											},
+											child: const Text(
+												'CalPar2',
+												style: TextStyle(fontSize: 13.0),
+											),
+										),
+									),
+								),
+								SizedBox(
+									width: MediaQuery.of(context).size.width * 0.25,
+									height: 80,
+									child: Padding(
+										padding: const EdgeInsets.only(top: 30.0),
+										child: ElevatedButton(
+											onPressed: () {
+												showDialogCalPar3ViewData(context, 'ubah', calpar1Id);
+											},
+											child: const Text(
+												'CalPar3',
+												style: TextStyle(fontSize: 13.0),
+											),
+										),
+									),
+								),
+								SizedBox(
+									width: MediaQuery.of(context).size.width * 0.25,
+									height: 80,
+									child: Padding(
+										padding: const EdgeInsets.only(top: 30.0),
+										child: ElevatedButton(
+											onPressed: () {
+												showDialogCalPar4ViewData(context, 'ubah', calpar1Id);
+											},
+											child: const Text(
+												'CalPar4',
+												style: TextStyle(fontSize: 13.0),
+											),
+										),
+									),
+								),
+							],
+						),
+
+            Container(height: 10),
+						Row(
+							mainAxisAlignment: MainAxisAlignment.spaceAround,
+							children: [								
+								SizedBox(
+									width: MediaQuery.of(context).size.width * 0.25,
+									height: 80,
+									child: Padding(
+										padding: const EdgeInsets.only(top: 30.0),
+										child: ElevatedButton(
+											onPressed: () {
+												
+											},
+											child: const Text(
+												'Cal MV to Reg MV',
+												style: TextStyle(fontSize: 13.0),
+											),
+										),
+									),
+								),								
+							],
+						),
+
 				]),
 			)
 		);
 	}
+
+  void showDialogCalPar2ViewData(BuildContext context, String viewMode, String recordId) {
+		FocusScope.of(context).requestFocus(FocusNode());
+		showDialog(
+			context: context,
+			barrierDismissible: false,
+			builder: (BuildContext context) {
+				return Calpar2FormFormPage(viewMode: viewMode, recordId: recordId);
+			},
+			useSafeArea: true);
+  }
+
+  void showDialogCalPar3ViewData(BuildContext context, String viewMode, String recordId) {
+		FocusScope.of(context).requestFocus(FocusNode());
+		showDialog(
+			context: context,
+			barrierDismissible: false,
+			builder: (BuildContext context) {
+				return Calpar3FormFormPage(viewMode: viewMode, recordId: recordId);
+			},
+			useSafeArea: true);
+  }
+
+   void showDialogCalPar4ViewData(BuildContext context, String viewMode, String recordId) {
+		FocusScope.of(context).requestFocus(FocusNode());
+		showDialog(
+			context: context,
+			barrierDismissible: false,
+			builder: (BuildContext context) {
+				return Calpar4FormFormPage(viewMode: viewMode, recordId: recordId);
+			},
+			useSafeArea: true);
+  }
+
+
 }

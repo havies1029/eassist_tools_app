@@ -7,10 +7,10 @@ class HamburgerDropdownContent extends StatefulWidget {
   final void Function(String title) onMenuTap;
 
   const HamburgerDropdownContent({
-    Key? key,
+    super.key,
     required this.onClose,
     required this.onMenuTap,
-  }) : super(key: key);
+  });
 
   @override
   _HamburgerDropdownContentState createState() =>

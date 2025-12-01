@@ -72,9 +72,9 @@ class Regmv6FormAPI {
 		}
 		return returnData.success;
 	}
-	Future<Regmv6FormModel> regmv6FormLihatAPI(String regmv6Id) async {
+	Future<Regmv6FormModel> regmv6FormLihatAPI(String regmv1Id) async {
 		String lihatEndpoint = "${AppData.prefixEndPoint}/api/regmv/regmv6form/read";
-		Map<String, String> queryParams = {'regmv6Id': regmv6Id};
+		Map<String, String> queryParams = {'regmv1Id': regmv1Id};
 		var uri = AppData.uriHtpp(AppData.httpAuthority, lihatEndpoint, queryParams);
 		final http.Response response =
 			await http.get(uri, headers: <String, String>{
@@ -90,4 +90,24 @@ class Regmv6FormAPI {
 			return throw Exception("Failed to load data");
 		}
 	}
+
+  Future<Regmv6FormModel> regmv6FormHitungPremiAPI(String regmv1Id) async {
+    String hitungPremiEndpoint = "${AppData.prefixEndPoint}/api/regmv/regmv6form/hitungpremi";
+    Map<String, String> queryParams = {'regmv1Id': regmv1Id, 'modul_id': 'regmv6FormHitungPremi'};
+    var uri = AppData.uriHtpp(AppData.httpAuthority, hitungPremiEndpoint, queryParams);
+    final http.Response response =
+      await http.get(uri, headers: <String, String>{
+      'Content-Type': 'application/json; odata=verbos',
+      'Accept': 'application/json; odata=verbos',
+      'Authorization': 'Bearer ${AppData.userToken}'
+    });     
+    
+    Regmv6FormModel returnData;
+    if (response.statusCode == 200) {
+      returnData = Regmv6FormModel.fromJson(jsonDecode(response.body));
+    } else {
+      return throw Exception("Failed to proses hitung premi");
+    }
+    return returnData;    
+  }
 }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:eassist_tools_app/common/app_data.dart';
+import 'package:eassist_tools_app/models/responseAPI/returndataapi_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:eassist_tools_app/models/gen_calmv/calmv1list_model.dart';
 
@@ -24,4 +25,28 @@ class Calmv1ListAPI{
 			throw Exception("Failed to load data");
 		}
 	}
+
+  Future<ReturnDataAPI> calmv2RegmvAPI(String calmv1Id) async {
+		String hapusEndpoint = "${AppData.prefixEndPoint}/api/calmv/calmv2regmv";
+		Map<String, String> queryParams = {
+			'calmv1Id': calmv1Id,
+			'modul_id': 'calmv2RegmvAPI'};
+		var uri = AppData.uriHtpp(AppData.httpAuthority, hapusEndpoint, queryParams);
+		final http.Response response =
+			await http.get(uri, headers: <String, String>{
+			'Content-Type': 'application/json; odata=verbose',
+			'Accept': 'application/json; odata=verbose',
+			'Authorization': 'Bearer ${AppData.userToken}'
+		});
+
+		ReturnDataAPI returnData;
+		if (response.statusCode == 200) {
+			returnData = ReturnDataAPI.fromDatabaseJson(jsonDecode(response.body));
+		} else {
+			returnData = ReturnDataAPI(success: false, data: "", rowcount: 0);
+		}
+		return returnData;
+	}
+
+
 }

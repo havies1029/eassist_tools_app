@@ -102,7 +102,9 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
   @override
   void dispose() {
     _scrollController.dispose();
-    _controllers.values.forEach((controller) => controller.dispose());
+    for (var controller in _controllers.values) {
+      controller.dispose();
+    }
     super.dispose();
   }
 
@@ -187,7 +189,7 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
         width: 130,
         height: 30,
         decoration: BoxDecoration(
-          color: const Color(0xDFFFC6).withOpacity(1),
+          color: const Color(0x00dfffc6).withOpacity(1),
           borderRadius: BorderRadius.circular(110),
           boxShadow: [
             BoxShadow(

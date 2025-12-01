@@ -1,5 +1,4 @@
 import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
-import 'package:eassist_tools_app/blocs/login/emailverification_bloc.dart';
 import 'package:eassist_tools_app/pages/heropage/hero_page.dart';
 import 'package:eassist_tools_app/widgets/login/login_gmail/popup_dialog_login.dart';
 import 'package:flutter/material.dart';

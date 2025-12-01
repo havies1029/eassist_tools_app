@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../pages/heropage/hero_main.dart';
 
 class ActionSection extends StatefulWidget {
   final BoxConstraints constraints;

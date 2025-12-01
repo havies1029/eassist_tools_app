@@ -1,12 +1,7 @@
-import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:flutter/material.dart';
-import 'package:eassist_tools_app/widgets/google_signin_button_stub.dart'
-if (dart.library.js_interop) 'package:eassist_tools_app/widgets/google_signin_button_web.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
 import '../login/login_gmail/popup_dialog_login.dart';
 import '../register/register_client/popup_client.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 
 final GoogleSignIn _googleSignIn = GoogleSignIn(
   scopes: [

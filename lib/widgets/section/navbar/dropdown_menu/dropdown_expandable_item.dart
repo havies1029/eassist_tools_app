@@ -1,4 +1,3 @@
-import 'dart:math' show pi;
 import 'package:flutter/material.dart';
 import 'dropdown_sub_menu_tile.dart';
 import 'sub_menu_item.dart';
@@ -13,13 +12,13 @@ class DropdownExpandableItem extends StatefulWidget {
   final VoidCallback onHeaderTap;
 
   const DropdownExpandableItem({
-    Key? key,
+    super.key,
     required this.icon,
     required this.title,
     required this.subItems,
     required this.isExpanded,
     required this.onHeaderTap,
-  }) : super(key: key);
+  });
 
   @override
   _DropdownExpandableItemState createState() =>

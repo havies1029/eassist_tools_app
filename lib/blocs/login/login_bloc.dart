@@ -5,7 +5,6 @@ import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:eassist_tools_app/repositories/user/user_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';

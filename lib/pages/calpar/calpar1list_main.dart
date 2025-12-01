@@ -7,6 +7,9 @@ class Calpar1ListMainPage extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) {
 		return Scaffold(
+      appBar: AppBar(
+        title: const Text('Calpar List'),
+      ),
 			backgroundColor: Colors.grey[100],
 			body: const Calpar1ListPage(),
 		);

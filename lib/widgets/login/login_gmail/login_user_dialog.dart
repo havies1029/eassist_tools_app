@@ -3,7 +3,6 @@ import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart'
 import 'package:eassist_tools_app/blocs/login/emailverification_bloc.dart';
 import 'package:eassist_tools_app/models/login/emailverification_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'Base_Dialog.dart';
@@ -46,9 +45,9 @@ class LoginUserDialogState extends BaseDialogState<LoginUserDialog> {
   final _emailController = TextEditingController();
 
   bool _isHovering = false;
-  bool _isGmailHovering = false;
+  final bool _isGmailHovering = false;
   bool _isHoveringRegister = false;
-  bool _isHoveringForgotPassword = false;
+  final bool _isHoveringForgotPassword = false;
   bool _rememberLogin = true;
   bool _isHoveringGmail = false;
 

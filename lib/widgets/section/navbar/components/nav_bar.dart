@@ -10,13 +10,13 @@ class NavBar extends StatelessWidget {
   final Widget profileSection;
 
   const NavBar({
-    Key? key,
+    super.key,
     required this.constraints,
     required this.isMenuOpen,
     required this.menuButtonKey,
     required this.onHamburgerToggle,
     required this.profileSection,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

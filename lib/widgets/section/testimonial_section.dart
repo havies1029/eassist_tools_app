@@ -222,7 +222,7 @@ class TestimonialSection extends StatelessWidget {
               ),
               children: [
                 TextSpan(
-                  text: testimonial['name']! + '\n',
+                  text: '${testimonial['name']!}\n',
                   style: TextStyle(
                     fontSize: isMobile ? 12.0 : 18.0,
                     fontWeight: FontWeight.bold,

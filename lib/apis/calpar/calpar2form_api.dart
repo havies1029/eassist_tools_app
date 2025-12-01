@@ -72,9 +72,9 @@ class Calpar2FormAPI {
 		}
 		return returnData.success;
 	}
-	Future<Calpar2FormModel> calpar2FormLihatAPI(String calpar2Id) async {
+	Future<Calpar2FormModel> calpar2FormLihatAPI(String calpar1Id) async {
 		String lihatEndpoint = "${AppData.prefixEndPoint}/api/calpar/calpar2form/read";
-		Map<String, String> queryParams = {'calpar2Id': calpar2Id};
+		Map<String, String> queryParams = {'calpar1Id': calpar1Id};
 		var uri = AppData.uriHtpp(AppData.httpAuthority, lihatEndpoint, queryParams);
 		final http.Response response =
 			await http.get(uri, headers: <String, String>{

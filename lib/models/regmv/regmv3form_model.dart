@@ -4,8 +4,10 @@ import 'package:eassist_tools_app/models/combobox/combommvpakai_model.dart';
 import 'package:eassist_tools_app/models/combobox/combommvtipe_model.dart';
 import 'package:eassist_tools_app/models/combobox/combomwarna_model.dart';
 import 'package:eassist_tools_app/models/combobox/combomwilayah_model.dart';
+import 'package:flutter/material.dart';
 
 class Regmv3FormModel {
+  String regmv1Id;
 	String aksesoris;
 	double harga;
 	String mesinNo;
@@ -26,7 +28,7 @@ class Regmv3FormModel {
 	String? mwilayahId;
 	ComboMWilayahModel? comboMWilayah;
 
-	Regmv3FormModel({required this.aksesoris, required this.harga, 
+	Regmv3FormModel({required this.regmv1Id, required this.aksesoris, required this.harga, 
 		required this.mesinNo, required this.platNo, 
 		required this.rangkaNo, required this.regmv3Id, 
 		required this.thnBuat, this.mmvmerkId, this.comboMMvmerk, 
@@ -66,6 +68,7 @@ class Regmv3FormModel {
 		}
 
 		return Regmv3FormModel(
+			regmv1Id: data['regmv1Id']??'',
 			aksesoris: data['aksesoris']??'',
 			harga: double.tryParse(data['harga'].toString())??0,
 			mesinNo: data['mesinNo']??'',
@@ -90,7 +93,9 @@ class Regmv3FormModel {
 	}
 
 	Map<String, dynamic> toJson() =>
-		{'aksesoris': aksesoris,
+		{
+      'regmv1Id': regmv1Id,
+      'aksesoris': aksesoris,
 		'harga': harga.toString(),
 		'mesinNo': mesinNo,
 		'platNo': platNo,
@@ -109,5 +114,52 @@ class Regmv3FormModel {
 		'comboMWarna': comboMWarna?.toJson(),
 		'mwilayahId': mwilayahId,
 		'comboMWilayah': comboMWilayah?.toJson()};
+
+  Regmv3FormModel copyWith({
+    String? regmv1Id,
+    String? aksesoris,
+    double? harga,
+    String? mesinNo,
+    String? platNo,
+    String? rangkaNo,
+    String? regmv3Id,
+    int? thnBuat,
+    String? mmvmerkId,
+    ComboMMvmerkModel? comboMMvmerk,
+    String? mmvmodelId,
+    ComboMMvmodelModel? comboMMvmodel,
+    String? mmvpakaiId,
+    ComboMMvpakaiModel? comboMMvpakai,
+    String? mmvtipeId,
+    ComboMMvtipeModel? comboMMvtipe,
+    String? mwarnaId,
+    ComboMWarnaModel? comboMWarna,
+    String? mwilayahId,
+    ComboMWilayahModel? comboMWilayah,
+  }){
+
+    return Regmv3FormModel(
+      regmv1Id: regmv1Id ?? this.regmv1Id,
+      aksesoris: aksesoris ?? this.aksesoris,
+      harga: harga ?? this.harga,
+      mesinNo: mesinNo ?? this.mesinNo,
+      platNo: platNo ?? this.platNo,
+      rangkaNo: rangkaNo ?? this.rangkaNo,
+      regmv3Id: regmv3Id ?? this.regmv3Id,
+      thnBuat: thnBuat ?? this.thnBuat,
+      mmvmerkId: mmvmerkId ?? this.mmvmerkId,
+      comboMMvmerk: comboMMvmerk ?? this.comboMMvmerk,
+      mmvmodelId: mmvmodelId ?? this.mmvmodelId,
+      comboMMvmodel: comboMMvmodel ?? this.comboMMvmodel,
+      mmvpakaiId: mmvpakaiId ?? this.mmvpakaiId,
+      comboMMvpakai: comboMMvpakai ?? this.comboMMvpakai,
+      mmvtipeId: mmvtipeId ?? this.mmvtipeId,
+      comboMMvtipe: comboMMvtipe ?? this.comboMMvtipe,
+      mwarnaId: mwarnaId ?? this.mwarnaId,
+      comboMWarna: comboMWarna ?? this.comboMWarna,
+      mwilayahId: mwilayahId ?? this.mwilayahId,
+      comboMWilayah: comboMWilayah ?? this.comboMWilayah,
+    );
+  }
 
 }

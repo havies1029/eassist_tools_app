@@ -6,10 +6,10 @@ class ProfileDropdownContent extends StatelessWidget {
   final void Function(String menu) onMenuTap;
 
   const ProfileDropdownContent({
-    Key? key,
+    super.key,
     required this.onClose,
     required this.onMenuTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,7 @@
 import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
 import 'package:eassist_tools_app/pages/about_jps/action_about_section.dart';
 import 'package:eassist_tools_app/pages/aset/aset_main.dart';
+import 'package:eassist_tools_app/pages/calpar/calpar1list_main.dart';
 import 'package:eassist_tools_app/pages/find_insurance/find_section_insurance.dart';
 import 'package:eassist_tools_app/pages/find_insurance/floating_buttons_insurance.dart';
 import 'package:eassist_tools_app/pages/gen_aset_dashboard/asetdashboardcari_main.dart';
@@ -21,6 +22,7 @@ import 'package:eassist_tools_app/pages/gen_status_aset/statusasetcari_main.dart
 import 'package:eassist_tools_app/pages/gen_trslog/trslogcari_main.dart';
 import 'package:eassist_tools_app/pages/heropage/fixed_nambar_overlay.dart';
 import 'package:eassist_tools_app/pages/klaim/klaim1list_main.dart';
+import 'package:eassist_tools_app/pages/regmv/regmv1list_main.dart';
 import 'package:eassist_tools_app/widgets/section/carousel_section.dart';
 import 'package:eassist_tools_app/widgets/section/client_section.dart';
 import 'package:eassist_tools_app/widgets/section/feature_section.dart';
@@ -146,7 +148,29 @@ class _HeroPageState extends State<HeroPage> {
                                               Calmv1ListMainPage()),
                                     );
                                   },
-                                  child: Text("List Simulasi MV"),
+                                  child: Text("Simulasi MV"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              Regmv1ListMainPage()),
+                                    );
+                                  },
+                                  child: Text("Registrasi MV"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              Calpar1ListMainPage()),
+                                    );
+                                  },
+                                  child: Text("Simulasi PAR"),
                                 ),
                                 TextButton(
                                   onPressed: () {

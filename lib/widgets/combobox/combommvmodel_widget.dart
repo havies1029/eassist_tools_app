@@ -33,7 +33,7 @@ DropdownSearch<ComboMMvmodelModel> buildFieldComboMMvmodel({
 			),
 			compareFn: (item, sItem) => item.mmvmodelId == sItem.mmvmodelId,
 			itemAsString: (item) {
-				return item.mmvtipeId;
+				return item.nmModel;
 			},
 			onChanged: (value) {
 				if (onChangedCallback != null) {
@@ -68,7 +68,7 @@ Widget itemBuilderComboMMvmodel(
 			),
 		child: ListTile(
 			selected: isSelected,
-			title: Text(item.mmvtipeId),
+			title: Text(item.nmModel),
 		),
 	);
 }

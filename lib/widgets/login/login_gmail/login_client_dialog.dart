@@ -2,10 +2,7 @@ import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart'
 import 'package:eassist_tools_app/blocs/login/login_bloc.dart';
 import 'package:eassist_tools_app/widgets/login/login_gmail/Base_Dialog.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:eassist_tools_app/widgets/google_signin_button_stub.dart'
-    if (dart.library.js_interop) 'package:eassist_tools_app/widgets/google_signin_button_web.dart';
 
 class LoginClientDialog extends BaseDialog {
   const LoginClientDialog({super.key});

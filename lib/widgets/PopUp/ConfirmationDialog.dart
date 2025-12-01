@@ -6,9 +6,9 @@ class ConfirmationDialog extends StatefulWidget {
   final VoidCallback onConfirm;
 
   const ConfirmationDialog({
-    Key? key,
+    super.key,
     required this.onConfirm,
-  }) : super(key: key);
+  });
 
   @override
   _ConfirmationDialogState createState() => _ConfirmationDialogState();

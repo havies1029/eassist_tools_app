@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math' show pi;
 
-import '../../widgets/section/action_section.dart';
 import '../../widgets/section/carousel_section.dart';
 import '../../widgets/section/client_section.dart';
 import '../../widgets/section/feature_section.dart';

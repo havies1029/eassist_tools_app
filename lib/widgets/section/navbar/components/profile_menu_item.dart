@@ -7,12 +7,12 @@ class ProfileMenuItem extends StatefulWidget {
   final bool isDestructive;
 
   const ProfileMenuItem({
-    Key? key,
+    super.key,
     required this.icon,
     required this.title,
     required this.onTap,
     this.isDestructive = false,
-  }) : super(key: key);
+  });
 
   @override
   _ProfileMenuItemState createState() => _ProfileMenuItemState();

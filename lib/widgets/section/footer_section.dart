@@ -35,7 +35,7 @@ class FooterSection extends StatelessWidget {
             color: Colors.white,
             padding: const EdgeInsets.symmetric(vertical: 20.0),
             child: Center(
-              child: Container(
+              child: SizedBox(
                 width: maxWidth,
                 child: Text(
                   'Protect your future with JPS. © ${DateTime.now().year} JPS Insurance Platform.',

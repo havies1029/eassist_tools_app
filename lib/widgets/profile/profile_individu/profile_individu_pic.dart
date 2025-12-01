@@ -55,7 +55,7 @@ class ProfileIndividuPicSection extends StatelessWidget {
         width: 130,
         height: 30,
         decoration: BoxDecoration(
-          color: const Color(0xDFFFC6).withOpacity(1),
+          color: const Color(0x00dfffc6).withOpacity(1),
           borderRadius: BorderRadius.circular(110),
           boxShadow: [
             BoxShadow(

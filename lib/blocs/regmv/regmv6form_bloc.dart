@@ -14,6 +14,7 @@ class Regmv6FormBloc extends Bloc<Regmv6FormEvents, Regmv6FormState> {
 		on<Regmv6FormTambahEvent>(onTambahRegmv6Form);
 		on<Regmv6FormHapusEvent>(onHapusRegmv6Form);
 		on<Regmv6FormLihatEvent>(onLihatRegmv6Form);
+    on<Regmv6FormHitungPremiEvent>(onHitungPremiRegmv6Form);
 	}
 
 	Future<void> onTambahRegmv6Form(
@@ -50,5 +51,13 @@ class Regmv6FormBloc extends Bloc<Regmv6FormEvents, Regmv6FormState> {
 		Regmv6FormModel record = await repository.regmv6FormLihat(event.recordId);
 		emit(state.copyWith(isLoading: false, isLoaded: true, record: record));
 	}
+  
+  Future<void> onHitungPremiRegmv6Form(
+    Regmv6FormHitungPremiEvent event, Emitter<Regmv6FormState> emit) async {
+    emit(state.copyWith(isCalculating: true, isCalculated: false));
+    Regmv6FormModel record = await repository.regmv6FormHitungPremi(event.regmv1Id);
+    emit(state.copyWith(isCalculating: false, isCalculated: true, record: record));
+  }
+
 
 }

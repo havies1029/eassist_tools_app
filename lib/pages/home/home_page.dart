@@ -1,5 +1,3 @@
-import 'package:eassist_tools_app/pages/dashboard/dashboard_main.dart';
-import 'package:eassist_tools_app/pages/onboard/onboard_main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/blocs/home/home_bloc.dart';

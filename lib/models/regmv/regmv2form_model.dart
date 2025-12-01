@@ -15,6 +15,7 @@ class Regmv2FormModel {
 	DateTime polisAkhir;
 	DateTime polisMulai;
 	String regmv2Id;
+	String regmv1Id;
 	double tpl;
 	String? currId;
 	ComboRMatauangModel? comboRMatauang;
@@ -27,7 +28,8 @@ class Regmv2FormModel {
 		required this.pad, required this.pap, 
 		required this.passangerCount, required this.pll, 
 		required this.polisAkhir, required this.polisMulai, 
-		required this.regmv2Id, required this.tpl, 
+		required this.regmv2Id, required this.regmv1Id,
+    required this.tpl, 
 		this.currId, this.comboRMatauang, this.mmvjnscoverId, this.comboMMvjnscover});
 
 	factory Regmv2FormModel.fromJson(Map<String, dynamic> data) {
@@ -55,6 +57,7 @@ class Regmv2FormModel {
 			polisAkhir: DateTime.tryParse(data['polisAkhir'].toString())??DateTime.now(),
 			polisMulai: DateTime.tryParse(data['polisMulai'].toString())??DateTime.now(),
 			regmv2Id: data['regmv2Id']??'',
+      regmv1Id: data['regmv1Id']??'',
 			tpl: double.tryParse(data['tpl'].toString())??0,
 			currId: data['currId']??'',
 			comboRMatauang: comboRMatauang,
@@ -78,6 +81,7 @@ class Regmv2FormModel {
 		'polisAkhir': polisAkhir.toIso8601String(),
 		'polisMulai': polisMulai.toIso8601String(),
 		'regmv2Id': regmv2Id,
+    'regmv1Id': regmv1Id,
 		'tpl': tpl.toString(),
 		'currId': currId,
 		'comboRMatauang': comboRMatauang?.toJson(),

@@ -1,3 +1,4 @@
+import 'package:eassist_tools_app/blocs/gen_calmv/calmv1list_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_calmv/calmv3form_bloc.dart';
 import 'package:eassist_tools_app/pages/gen_calmv/calmv2form_form.dart';
 import 'package:eassist_tools_app/pages/gen_calmv/calmv3form_form.dart';
@@ -127,60 +128,84 @@ class Calmv1ListTileWidget extends StatelessWidget {
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
-            Row(
-											mainAxisAlignment: MainAxisAlignment.spaceAround,
-											children: [
-												SizedBox(
-													width: MediaQuery.of(context).size.width * 0.25,
-													height: 80,
-													child: Padding(
-														padding: const EdgeInsets.only(top: 30.0),
-														child: ElevatedButton(
-															onPressed: () {
-																showDialogCalMv2ViewData(context, 'ubah', calmv1Id);
-															},
-															child: const Text(
-																'CalMV2',
-																style: TextStyle(fontSize: 13.0),
-															),
-														),
-													),
-												),
-                        SizedBox(
-													width: MediaQuery.of(context).size.width * 0.25,
-													height: 80,
-													child: Padding(
-														padding: const EdgeInsets.only(top: 30.0),
-														child: ElevatedButton(
-															onPressed: () {
-                                context.read<Calmv3FormBloc>().add(
-                                  Calmv3FormHitungPremiEvent(calmv1Id: calmv1Id));
-															},
-															child: const Text(
-																'Hitung Premi',
-																style: TextStyle(fontSize: 13.0),
-															),
-														),
-													),
-												),
-												SizedBox(
-													width: MediaQuery.of(context).size.width * 0.25,
-													height: 80,
-													child: Padding(
-														padding: const EdgeInsets.only(top: 30.0),
-														child: ElevatedButton(
-															onPressed: () {
-																showDialogCalMv3ViewData(context, 'lihat', calmv1Id);
-															},
-															child: const Text(
-																'CalMV3',
-																style: TextStyle(fontSize: 13.0),
-															),
-														),
-													),
-												),
-											],
+						Row(
+							mainAxisAlignment: MainAxisAlignment.spaceAround,
+							children: [
+								SizedBox(
+									width: MediaQuery.of(context).size.width * 0.25,
+									height: 80,
+									child: Padding(
+										padding: const EdgeInsets.only(top: 30.0),
+										child: ElevatedButton(
+											onPressed: () {
+												showDialogCalMv2ViewData(context, 'ubah', calmv1Id);
+											},
+											child: const Text(
+												'CalMV2',
+												style: TextStyle(fontSize: 13.0),
+											),
 										),
+									),
+								),
+								SizedBox(
+									width: MediaQuery.of(context).size.width * 0.25,
+									height: 80,
+									child: Padding(
+										padding: const EdgeInsets.only(top: 30.0),
+										child: ElevatedButton(
+											onPressed: () {
+												context.read<Calmv3FormBloc>().add(
+												Calmv3FormHitungPremiEvent(calmv1Id: calmv1Id));
+											},
+											child: const Text(
+												'Hitung Premi',
+												style: TextStyle(fontSize: 13.0),
+											),
+										),
+									),
+								),
+								SizedBox(
+									width: MediaQuery.of(context).size.width * 0.25,
+									height: 80,
+									child: Padding(
+										padding: const EdgeInsets.only(top: 30.0),
+										child: ElevatedButton(
+											onPressed: () {
+												showDialogCalMv3ViewData(context, 'lihat', calmv1Id);
+											},
+											child: const Text(
+												'CalMV3',
+												style: TextStyle(fontSize: 13.0),
+											),
+										),
+									),
+								),
+							],
+						),
+
+            Container(height: 10),
+						Row(
+							mainAxisAlignment: MainAxisAlignment.spaceAround,
+							children: [								
+								SizedBox(
+									width: MediaQuery.of(context).size.width * 0.25,
+									height: 80,
+									child: Padding(
+										padding: const EdgeInsets.only(top: 30.0),
+										child: ElevatedButton(
+											onPressed: () {
+												context.read<Calmv1ListBloc>().add(
+												CalMv2RegMvEvent(calmv1Id: calmv1Id));
+											},
+											child: const Text(
+												'Cal MV to Reg MV',
+												style: TextStyle(fontSize: 13.0),
+											),
+										),
+									),
+								),								
+							],
+						),
 
 				]),
 			)

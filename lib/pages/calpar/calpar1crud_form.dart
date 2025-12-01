@@ -8,7 +8,6 @@ import 'package:eassist_tools_app/models/combobox/comborkonstruksiojk_model.dart
 import 'package:eassist_tools_app/widgets/combobox/comborkonstruksiojk_widget.dart';
 import 'package:eassist_tools_app/models/combobox/comborokupasi_model.dart';
 import 'package:eassist_tools_app/widgets/combobox/comborokupasi_widget.dart';
-import 'package:intl/intl.dart';
 import 'package:eassist_tools_app/common/thousand_separator_input_formatter.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 

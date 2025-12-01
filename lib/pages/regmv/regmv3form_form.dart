@@ -89,19 +89,19 @@ class Regmv3FormFormPageFormState extends State<Regmv3FormFormPage> {
 											),
 										),
 										const SizedBox(height: 25),
+
+										buildFieldThnBuat(),
+										buildFieldMmvmerkId(),
+										buildFieldMmvtipeId(),
+										buildFieldMmvmodelId(),
 										buildFieldAksesoris(),
 										buildFieldHarga(),
 										buildFieldMesinNo(),
-										buildFieldMmvmerkId(),
-										buildFieldMmvmodelId(),
 										buildFieldMmvpakaiId(),
-										buildFieldMmvtipeId(),
 										buildFieldMwarnaId(),
 										buildFieldMwilayahId(),
 										buildFieldPlatNo(),
 										buildFieldRangkaNo(),
-										buildFieldRegmv1Id(),
-										buildFieldThnBuat(),
 										const SizedBox(height: 25),
 										FormError(
 											errors: errors,
@@ -149,6 +149,9 @@ class Regmv3FormFormPageFormState extends State<Regmv3FormFormPage> {
 						),
 					));
 				},
+				buildWhen: (previous, current) {
+					return previous.isLoaded != current.isLoaded;
+				},
 				listener: (context, state) {
 					if (state.isLoaded) {
 						if (state.record != null){
@@ -165,7 +168,7 @@ class Regmv3FormFormPageFormState extends State<Regmv3FormFormPage> {
 						fieldComboMMvtipe = state.comboMMvtipe;
 						fieldComboMWarna = state.comboMWarna;
 						fieldComboMWilayah = state.comboMWilayah;
-					}
+					}										
 				},
 			);
 		}
@@ -190,6 +193,7 @@ class Regmv3FormFormPageFormState extends State<Regmv3FormFormPage> {
 				if (value.isNotEmpty) {
 				removeError(error: kStringNullError);
 				}
+        regmv3FormBloc.add(FieldAksesorisChangedEvent(aksesoris: value));
 			},
 			validator: (value) {
 				if (value == null || value.isEmpty) {
@@ -214,6 +218,11 @@ class Regmv3FormFormPageFormState extends State<Regmv3FormFormPage> {
 				if (value.isNotEmpty) {
 				removeError(error: kStringNullError);
 				}
+        debugPrint('Harga changed: $value');
+        final cleanValue = value.replaceAll(RegExp(r'[^0-9]'), '');
+        debugPrint('Harga cleaned: $cleanValue');
+
+        regmv3FormBloc.add(FieldHargaChangedEvent(harga: cleanValue));
 			},
 			validator: (value) {
 				if (value == null || value.isEmpty) {
@@ -237,6 +246,7 @@ class Regmv3FormFormPageFormState extends State<Regmv3FormFormPage> {
 				if (value.isNotEmpty) {
 				removeError(error: kStringNullError);
 				}
+        regmv3FormBloc.add(FieldMesinNoChangedEvent(mesinNo: value));
 			},
 			validator: (value) {
 				if (value == null || value.isEmpty) {
@@ -257,7 +267,9 @@ class Regmv3FormFormPageFormState extends State<Regmv3FormFormPage> {
 				if (value != null) {
 					removeError(
 						error: "Field ComboMMvmerk tidak boleh kosong.");
-					regmv3FormBloc.add(ComboMMvmerkChangedEvent(comboMMvmerk: value));
+					regmv3FormBloc.add(ComboMMvmerkChangedEvent(comboMMvmerk: value));      
+					comboMMvtipeKey.currentState?.changeSelectedItem(null);    
+					comboMMvmodelKey.currentState?.changeSelectedItem(null);
 				}
 			},
 			onSaveCallback: (value) {
@@ -269,6 +281,36 @@ class Regmv3FormFormPageFormState extends State<Regmv3FormFormPage> {
 				if (value == null) {
 					addError(
 						error: "Field ComboMMvmerk tidak boleh kosong.");
+				}
+			},
+		);
+	}
+
+
+	Widget buildFieldMmvtipeId(){
+    debugPrint('buildFieldMmvtipeId with mvmerkId=${fieldComboMMvmerk?.mmvmerkId}');
+		return buildFieldComboMMvtipe(
+			comboKey: comboMMvtipeKey,
+			labelText: 'mmvtipeId',
+			initItem: fieldComboMMvtipe,
+      		mvmerkId: fieldComboMMvmerk?.mmvmerkId??'',
+			onChangedCallback: (value) {
+				if (value != null) {
+					removeError(
+						error: "Field ComboMMvtipe tidak boleh kosong.");
+					regmv3FormBloc.add(ComboMMvtipeChangedEvent(comboMMvtipe: value));
+					comboMMvmodelKey.currentState?.changeSelectedItem(null);
+				}
+			},
+			onSaveCallback: (value) {
+				if (value != null) {
+					fieldComboMMvtipe = value;
+				}
+			},
+			validatorCallback: (value) {
+				if (value == null) {
+					addError(
+						error: "Field ComboMMvtipe tidak boleh kosong.");
 				}
 			},
 		);
@@ -327,32 +369,6 @@ class Regmv3FormFormPageFormState extends State<Regmv3FormFormPage> {
 		);
 	}
 
-	Widget buildFieldMmvtipeId(){
-		return buildFieldComboMMvtipe(
-			comboKey: comboMMvtipeKey,
-			labelText: 'mmvtipeId',
-			initItem: fieldComboMMvtipe,
-      mvmerkId: fieldComboMMvmerk?.mmvmerkId??'',
-			onChangedCallback: (value) {
-				if (value != null) {
-					removeError(
-						error: "Field ComboMMvtipe tidak boleh kosong.");
-					regmv3FormBloc.add(ComboMMvtipeChangedEvent(comboMMvtipe: value));
-				}
-			},
-			onSaveCallback: (value) {
-				if (value != null) {
-					fieldComboMMvtipe = value;
-				}
-			},
-			validatorCallback: (value) {
-				if (value == null) {
-					addError(
-						error: "Field ComboMMvtipe tidak boleh kosong.");
-				}
-			},
-		);
-	}
 
 	Widget buildFieldMwarnaId(){
 		return buildFieldComboMWarna(
@@ -417,6 +433,7 @@ class Regmv3FormFormPageFormState extends State<Regmv3FormFormPage> {
 				if (value.isNotEmpty) {
 				removeError(error: kStringNullError);
 				}
+        regmv3FormBloc.add(FieldPlatNoChangedEvent(platNo: value));
 			},
 			validator: (value) {
 				if (value == null || value.isEmpty) {
@@ -439,6 +456,7 @@ class Regmv3FormFormPageFormState extends State<Regmv3FormFormPage> {
 				if (value.isNotEmpty) {
 				removeError(error: kStringNullError);
 				}
+        regmv3FormBloc.add(FieldRangkaNoChangedEvent(rangkaNo: value));
 			},
 			validator: (value) {
 				if (value == null || value.isEmpty) {
@@ -457,8 +475,7 @@ class Regmv3FormFormPageFormState extends State<Regmv3FormFormPage> {
 
 	Widget buildFieldThnBuat(){
 		return TextFormField(
-			keyboardType: TextInputType.number,
-			inputFormatters: [ThousandsSeparatorInputFormatter()],
+			keyboardType: TextInputType.number,			
 			controller: fieldThnBuatController,
 			decoration: const InputDecoration(
 				labelText: "thnBuat",
@@ -466,8 +483,9 @@ class Regmv3FormFormPageFormState extends State<Regmv3FormFormPage> {
 			),
 			onChanged: (value) {
 				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
-				}
+				  removeError(error: kStringNullError);
+				}        
+        regmv3FormBloc.add(FieldThnBuatChangedEvent(thnBuat: value));
 			},
 			validator: (value) {
 				if (value == null || value.isEmpty) {
@@ -488,6 +506,7 @@ class Regmv3FormFormPageFormState extends State<Regmv3FormFormPage> {
 		if (_formKey.currentState!.validate()) {
 			_formKey.currentState!.save();
 			Regmv3FormModel record = Regmv3FormModel(
+        regmv1Id: widget.recordId,
 				aksesoris: fieldAksesorisController.text,
 				harga: double.parse(fieldHargaController.text.replaceAll(',', '')),
 				mesinNo: fieldMesinNoController.text,
@@ -502,6 +521,7 @@ class Regmv3FormFormPageFormState extends State<Regmv3FormFormPage> {
 				regmv3Id: '',
 				thnBuat: int.parse(fieldThnBuatController.text),
 			);
+      
 			if (widget.viewMode == "tambah") {
 				regmv3FormBloc.add(Regmv3FormTambahEvent(record: record));
 			} else if (widget.viewMode == "ubah") {

@@ -69,7 +69,7 @@ class LoginApi {
             userCabang: info[1],
             custType: "C",);
         return user;
-      } on Exception catch (e) {
+      } on Exception {
         //debugPrint("Error : ${e.toString()}");
         rethrow;
       }

@@ -1,5 +1,7 @@
 
 class Calpar4FormModel {
+
+	String calpar1Id;
 	String calpar4Id;
 	double discNilai;
 	double discPersen;
@@ -11,7 +13,7 @@ class Calpar4FormModel {
 	double premiRsmdcc;
 	double premiTsfwd;
 
-	Calpar4FormModel({required this.calpar4Id, required this.discNilai, 
+	Calpar4FormModel({required this.calpar1Id, required this.calpar4Id, required this.discNilai, 
 		required this.discPersen, required this.premiBi, 
 		required this.premiEqvet, required this.premiNet, 
 		required this.premiOther, required this.premiPar, 
@@ -19,6 +21,7 @@ class Calpar4FormModel {
 
 	factory Calpar4FormModel.fromJson(Map<String, dynamic> data) {
 		return Calpar4FormModel(
+			calpar1Id: data['calpar1Id']??'',
 			calpar4Id: data['calpar4Id']??'',
 			discNilai: double.tryParse(data['discNilai'].toString())??0,
 			discPersen: double.tryParse(data['discPersen'].toString())??0,
@@ -34,7 +37,8 @@ class Calpar4FormModel {
 	}
 
 	Map<String, dynamic> toJson() =>
-		{'calpar4Id': calpar4Id,
+		{'calpar1Id': calpar1Id,
+		'calpar4Id': calpar4Id,
 		'discNilai': discNilai.toString(),
 		'discPersen': discPersen.toString(),
 		'premiBi': premiBi.toString(),

@@ -161,7 +161,7 @@ class Calmv2FormFormPageFormState extends State<Calmv2FormFormPage> {
 			inputFormatters: [ThousandsSeparatorInputFormatter()],
 			controller: fieldAwController,
 			decoration: const InputDecoration(
-				labelText: "aw",
+				labelText: "aw (%)",
 				floatingLabelBehavior: FloatingLabelBehavior.always,
 			),
 			onChanged: (value) {

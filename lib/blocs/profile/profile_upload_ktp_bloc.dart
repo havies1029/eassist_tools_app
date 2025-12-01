@@ -1,9 +1,7 @@
 import 'dart:typed_data';
 import 'package:bloc/bloc.dart';
-import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:eassist_tools_app/repositories/profile/profile_ktp_repository.dart';
 import 'package:equatable/equatable.dart';
-import 'package:dio/dio.dart';
 
 part 'profile_upload_ktp_event.dart';
 part 'profile_upload_ktp_state.dart';

@@ -1,12 +1,9 @@
-import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
 import 'package:eassist_tools_app/blocs/login/login_bloc.dart';
 import '../../blocs/networkconnection/network_bloc.dart';
 import 'package:eassist_tools_app/widgets/my_colors.dart';
 import 'package:eassist_tools_app/widgets/header_section.dart';
-import 'package:eassist_tools_app/widgets/button_shape.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 class LoginForm extends StatefulWidget {

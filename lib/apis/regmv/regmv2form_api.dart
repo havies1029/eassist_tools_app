@@ -51,10 +51,10 @@ class Regmv2FormAPI {
 		}
 		return returnData.success;
 	}
-	Future<bool> regmv2FormHapusAPI(String regmv2Id) async {
+	Future<bool> regmv2FormHapusAPI(String regmv1Id) async {
 		String hapusEndpoint = "${AppData.prefixEndPoint}/api/regmv/regmv2form/delete";
 		Map<String, String> queryParams = {
-			'regmv2Id': regmv2Id,
+			'regmv1Id': regmv1Id,
 			'modul_id': 'regmv2FormHapusAPI'};
 		var uri = AppData.uriHtpp(AppData.httpAuthority, hapusEndpoint, queryParams);
 		final http.Response response =
@@ -72,9 +72,9 @@ class Regmv2FormAPI {
 		}
 		return returnData.success;
 	}
-	Future<Regmv2FormModel> regmv2FormLihatAPI(String regmv2Id) async {
+	Future<Regmv2FormModel> regmv2FormLihatAPI(String regmv1Id) async {
 		String lihatEndpoint = "${AppData.prefixEndPoint}/api/regmv/regmv2form/read";
-		Map<String, String> queryParams = {'regmv2Id': regmv2Id};
+		Map<String, String> queryParams = {'regmv1Id': regmv1Id};
 		var uri = AppData.uriHtpp(AppData.httpAuthority, lihatEndpoint, queryParams);
 		final http.Response response =
 			await http.get(uri, headers: <String, String>{

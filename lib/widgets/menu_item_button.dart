@@ -5,10 +5,10 @@ class MenuItemButton extends StatelessWidget {
   final String label;
 
   const MenuItemButton({
-    Key? key,
+    super.key,
     required this.imagePath,
     required this.label,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

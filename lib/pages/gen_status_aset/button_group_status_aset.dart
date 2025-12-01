@@ -1,4 +1,3 @@
-import 'package:eassist_tools_app/blocs/gen_cob_app/cobcari_bloc.dart' as cobcari;
 import 'package:eassist_tools_app/blocs/gen_status_aset/statusasetcari_bloc.dart';
 import 'package:eassist_tools_app/common/constants.dart';
 import 'package:flutter/material.dart';

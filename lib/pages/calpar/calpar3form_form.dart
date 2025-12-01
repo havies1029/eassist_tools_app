@@ -80,7 +80,6 @@ class Calpar3FormFormPageFormState extends State<Calpar3FormFormPage> {
 											),
 										),
 										const SizedBox(height: 25),
-										buildFieldCalpar1Id(),
 										buildFieldIsEq(),
 										buildFieldKab2zonagempaId(),
 										buildFieldMjnscoverparId(),
@@ -161,11 +160,6 @@ class Calpar3FormFormPageFormState extends State<Calpar3FormFormPage> {
 		calpar3FormBloc.add(
 			Calpar3FormLihatEvent(recordId: widget.recordId));
 		}
-	}
-
-	Widget buildFieldCalpar1Id(){
-		return TextFormField(
-		);
 	}
 
 	Widget buildFieldIsEq(){
@@ -417,6 +411,7 @@ class Calpar3FormFormPageFormState extends State<Calpar3FormFormPage> {
 		if (_formKey.currentState!.validate()) {
 			_formKey.currentState!.save();
 			Calpar3FormModel record = Calpar3FormModel(
+        calpar1Id: widget.recordId,
 				calpar3Id: '',
 				isEq: toBoolean(fieldIsEqController.text),
 				kab2zonagempaId: fieldComboMKabZonaGempa?.mkabzonagempaId,

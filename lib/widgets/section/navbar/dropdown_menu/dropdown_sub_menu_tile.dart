@@ -6,9 +6,9 @@ class DropdownSubMenuTile extends StatefulWidget {
   final SubMenuItem subItem;
 
   const DropdownSubMenuTile({
-    Key? key,
+    super.key,
     required this.subItem,
-  }) : super(key: key);
+  });
 
   @override
   _DropdownSubMenuTileState createState() => _DropdownSubMenuTileState();

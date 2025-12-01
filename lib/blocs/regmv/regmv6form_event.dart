@@ -39,3 +39,10 @@ class Regmv6FormLihatEvent extends Regmv6FormEvents {
 	List<Object> get props => [recordId];
 }
 
+class Regmv6FormHitungPremiEvent extends Regmv6FormEvents {
+	final String regmv1Id;
+	const Regmv6FormHitungPremiEvent({required this.regmv1Id});
+
+	@override
+	List<Object> get props => [regmv1Id];
+}

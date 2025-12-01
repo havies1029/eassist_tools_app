@@ -7,6 +7,9 @@ class Regmv1ListMainPage extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) {
 		return Scaffold(
+      appBar: AppBar(
+        title: const Text('Regmv List'),
+      ),
 			backgroundColor: Colors.grey[100],
 			body: const Regmv1ListPage(),
 		);

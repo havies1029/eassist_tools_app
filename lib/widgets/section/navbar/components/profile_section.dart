@@ -6,11 +6,11 @@ class ProfileSection extends StatelessWidget {
   final VoidCallback onToggleProfileMenu;
 
   const ProfileSection({
-    Key? key,
+    super.key,
     required this.profileButtonKey,
     required this.isProfileMenuOpen,
     required this.onToggleProfileMenu,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

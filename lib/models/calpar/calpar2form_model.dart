@@ -1,6 +1,7 @@
 import 'package:eassist_tools_app/models/combobox/combormatauang_model.dart';
 
 class Calpar2FormModel {
+  String calpar1Id;
 	String calpar2Id;
 	double siBuilding;
 	double siContent;
@@ -10,7 +11,7 @@ class Calpar2FormModel {
 	String? rmatauangKode;
 	ComboRMatauangModel? comboRMatauang;
 
-	Calpar2FormModel({required this.calpar2Id, required this.siBuilding, 
+	Calpar2FormModel({required this.calpar1Id, required this.calpar2Id, required this.siBuilding, 
 		required this.siContent, required this.siMachinery, 
 		required this.siOther, required this.siStock, 
 		this.rmatauangKode, this.comboRMatauang});
@@ -22,6 +23,7 @@ class Calpar2FormModel {
 		}
 
 		return Calpar2FormModel(
+			calpar1Id: data['calpar1Id']??'',
 			calpar2Id: data['calpar2Id']??'',
 			siBuilding: double.tryParse(data['siBuilding'].toString())??0,
 			siContent: double.tryParse(data['siContent'].toString())??0,
@@ -35,7 +37,8 @@ class Calpar2FormModel {
 	}
 
 	Map<String, dynamic> toJson() =>
-		{'calpar2Id': calpar2Id,
+		{'calpar1Id': calpar1Id,
+		'calpar2Id': calpar2Id,
 		'siBuilding': siBuilding.toString(),
 		'siContent': siContent.toString(),
 		'siMachinery': siMachinery.toString(),

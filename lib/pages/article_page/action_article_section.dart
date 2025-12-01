@@ -342,7 +342,7 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
                 ),
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );
@@ -374,7 +374,7 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
               color: Colors.black87,
             ),
           ),
-        )).toList(),
+        )),
       ],
     );
   }
@@ -687,7 +687,7 @@ class _ActionSectionState extends State<ActionSection> with TickerProviderStateM
                 ),
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );

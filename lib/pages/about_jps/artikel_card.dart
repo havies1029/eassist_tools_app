@@ -70,7 +70,7 @@ class _ArtikelCardState extends State<ArtikelCard> with TickerProviderStateMixin
             horizontal: contentPadding,
           ),
           child: Center(
-            child: Container(
+            child: SizedBox(
               width: maxWidth,
               child: SlideTransition(
                 position: _slideInAnimation,

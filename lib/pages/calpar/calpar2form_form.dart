@@ -68,7 +68,6 @@ class Calpar2FormFormPageFormState extends State<Calpar2FormFormPage> {
 											),
 										),
 										const SizedBox(height: 25),
-										buildFieldCalpar1Id(),
 										buildFieldRmatauangKode(),
 										buildFieldSiBuilding(),
 										buildFieldSiContent(),
@@ -143,10 +142,6 @@ class Calpar2FormFormPageFormState extends State<Calpar2FormFormPage> {
 		}
 	}
 
-	Widget buildFieldCalpar1Id(){
-		return TextFormField(
-		);
-	}
 
 	Widget buildFieldRmatauangKode(){
 		return buildFieldComboRMatauang(
@@ -307,7 +302,8 @@ class Calpar2FormFormPageFormState extends State<Calpar2FormFormPage> {
 		if (_formKey.currentState!.validate()) {
 			_formKey.currentState!.save();
 			Calpar2FormModel record = Calpar2FormModel(
-				calpar2Id: '',
+				calpar1Id: widget.recordId,
+        calpar2Id: '',
 				rmatauangKode: fieldComboRMatauang?.rmatauangKode ?? '',
 				siBuilding: double.parse(fieldSiBuildingController.text.replaceAll(',', '')),
 				siContent: double.parse(fieldSiContentController.text.replaceAll(',', '')),

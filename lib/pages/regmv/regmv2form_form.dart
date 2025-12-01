@@ -83,7 +83,8 @@ class Regmv2FormFormPageFormState extends State<Regmv2FormFormPage> {
 											),
 										),
 										const SizedBox(height: 25),
-										buildFieldAw(),
+										buildFieldPolisAkhir(),
+										buildFieldPolisMulai(),
 										buildFieldCurrId(),
 										buildFieldIsEq(),
 										buildFieldIsFlood(),
@@ -91,13 +92,11 @@ class Regmv2FormFormPageFormState extends State<Regmv2FormFormPage> {
 										buildFieldIsTbod(),
 										buildFieldIsTerrorism(),
 										buildFieldMmvjnscoverId(),
+										buildFieldAw(),
 										buildFieldPad(),
 										buildFieldPap(),
 										buildFieldPassangerCount(),
 										buildFieldPll(),
-										buildFieldPolisAkhir(),
-										buildFieldPolisMulai(),
-										buildFieldRegmv1Id(),
 										buildFieldTpl(),
 										const SizedBox(height: 25),
 										FormError(
@@ -521,6 +520,7 @@ class Regmv2FormFormPageFormState extends State<Regmv2FormFormPage> {
 				polisAkhir: DateTime.parse(fieldPolisAkhirController.text),
 				polisMulai: DateTime.parse(fieldPolisMulaiController.text),
 				regmv2Id: '',
+        		regmv1Id: widget.recordId,
 				tpl: double.parse(fieldTplController.text.replaceAll(',', '')),
 			);
 			if (widget.viewMode == "tambah") {

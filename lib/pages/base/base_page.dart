@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/blocs/home/home_bloc.dart';
-import 'package:eassist_tools_app/common/img.dart';
 
 enum PageType {
   home,
@@ -110,7 +109,7 @@ class PageContainerBaseState extends State<PageContainerBase> {
           Container(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
-            color: Theme.of(context).colorScheme.background,
+            color: Theme.of(context).colorScheme.surface,
           ),
           background,
           Scaffold(

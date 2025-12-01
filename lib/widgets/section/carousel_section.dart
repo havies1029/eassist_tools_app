@@ -130,7 +130,7 @@ class _CarouselSectionState extends State<CarouselSection>
         horizontal: isMobile ? 4.0 : 40.0,
       ),
       child: Center(
-        child: Container(
+        child: SizedBox(
           width: maxWidth,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,

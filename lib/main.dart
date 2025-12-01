@@ -1,4 +1,9 @@
 import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
+import 'package:eassist_tools_app/blocs/calpar/calpar1crud_bloc.dart';
+import 'package:eassist_tools_app/blocs/calpar/calpar1list_bloc.dart';
+import 'package:eassist_tools_app/blocs/calpar/calpar2form_bloc.dart';
+import 'package:eassist_tools_app/blocs/calpar/calpar3form_bloc.dart';
+import 'package:eassist_tools_app/blocs/calpar/calpar4form_bloc.dart';
 import 'package:eassist_tools_app/blocs/chatting/guestscrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/gallery/galleryeventcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gallery/gallerymembercari_bloc.dart';
@@ -42,6 +47,17 @@ import 'package:eassist_tools_app/blocs/profile/profile_download_foto_bloc.dart'
 import 'package:eassist_tools_app/blocs/profile/profile_upload_foto_bloc.dart';
 import 'package:eassist_tools_app/blocs/profile/profile_upload_ktp_bloc.dart';
 import 'package:eassist_tools_app/blocs/progressindicator/progressindicator_bloc.dart';
+import 'package:eassist_tools_app/blocs/regmv/regmv1crud_bloc.dart';
+import 'package:eassist_tools_app/blocs/regmv/regmv1list_bloc.dart';
+import 'package:eassist_tools_app/blocs/regmv/regmv2form_bloc.dart';
+import 'package:eassist_tools_app/blocs/regmv/regmv3form_bloc.dart';
+import 'package:eassist_tools_app/blocs/regmv/regmv4form_bloc.dart';
+import 'package:eassist_tools_app/blocs/regmv/regmv5form_bloc.dart';
+import 'package:eassist_tools_app/blocs/regmv/regmv6form_bloc.dart';
+import 'package:eassist_tools_app/blocs/regmv/regmv7form_bloc.dart';
+import 'package:eassist_tools_app/blocs/regmv/regmv_upload_foto_acc_bloc.dart';
+import 'package:eassist_tools_app/blocs/regmv/regmv_upload_foto_mobil_bloc.dart';
+import 'package:eassist_tools_app/blocs/regmv/regmv_upload_stnk_bloc.dart';
 import 'package:eassist_tools_app/blocs/reguser/reguser_bloc.dart';
 import 'package:eassist_tools_app/blocs/simuleei/simuleeicrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/simuleei/simuleeilist_bloc.dart';
@@ -56,6 +72,10 @@ import 'package:eassist_tools_app/blocs/simulwp/simulwpcrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/takeimage/takeimage_cubit.dart';
 import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:eassist_tools_app/pages/heropage/hero_main.dart';
+import 'package:eassist_tools_app/repositories/calpar/calpar1crud_repository.dart';
+import 'package:eassist_tools_app/repositories/calpar/calpar2form_repository.dart';
+import 'package:eassist_tools_app/repositories/calpar/calpar3form_repository.dart';
+import 'package:eassist_tools_app/repositories/calpar/calpar4form_repository.dart';
 import 'package:eassist_tools_app/repositories/chatting/guestscrud_repository.dart';
 import 'package:eassist_tools_app/repositories/gen_calmv/calmv1crud_repository.dart';
 import 'package:eassist_tools_app/repositories/gen_calmv/calmv2form_repository.dart';
@@ -71,6 +91,16 @@ import 'package:eassist_tools_app/repositories/login/change_password_repository.
 import 'package:eassist_tools_app/repositories/login/emailverification_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/profile_ktp_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/userfoto_repository.dart';
+import 'package:eassist_tools_app/repositories/regmv/regmv1crud_repository.dart';
+import 'package:eassist_tools_app/repositories/regmv/regmv2form_repository.dart';
+import 'package:eassist_tools_app/repositories/regmv/regmv3form_repository.dart';
+import 'package:eassist_tools_app/repositories/regmv/regmv4form_repository.dart';
+import 'package:eassist_tools_app/repositories/regmv/regmv5form_repository.dart';
+import 'package:eassist_tools_app/repositories/regmv/regmv6form_repository.dart';
+import 'package:eassist_tools_app/repositories/regmv/regmv7form_repository.dart';
+import 'package:eassist_tools_app/repositories/regmv/regmv_upload_foto_acc_repository.dart';
+import 'package:eassist_tools_app/repositories/regmv/regmv_upload_foto_mobil_repository.dart';
+import 'package:eassist_tools_app/repositories/regmv/regmv_upload_stnk_repository.dart';
 import 'package:eassist_tools_app/repositories/reguser/reguser_repository.dart';
 import 'package:eassist_tools_app/repositories/simulbon/simulboncrud_repository.dart';
 import 'package:eassist_tools_app/repositories/simulcar/simulcarcrud_repository.dart';
@@ -255,7 +285,23 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => Calmv1ListBloc()),
         BlocProvider(create: (context) => Calmv1CrudBloc(repository: Calmv1CrudRepository())),
         BlocProvider(create: (context) => Calmv2FormBloc(repository: Calmv2FormRepository())),
-        BlocProvider(create: (context) => Calmv3FormBloc(repository: Calmv3FormRepository())),
+        BlocProvider(create: (context) => Calmv3FormBloc(repository: Calmv3FormRepository())),    
+        BlocProvider(create: (context) => Regmv1ListBloc()),
+        BlocProvider(create: (context) => Regmv1CrudBloc(repository: Regmv1CrudRepository())),
+        BlocProvider(create: (context) => Regmv2FormBloc(repository: Regmv2FormRepository())),
+        BlocProvider(create: (context) => Regmv3FormBloc(repository: Regmv3FormRepository())),
+        BlocProvider(create: (context) => Regmv4FormBloc(repository: Regmv4FormRepository())),
+        BlocProvider(create: (context) => Regmv5FormBloc(repository: Regmv5FormRepository())),
+        BlocProvider(create: (context) => Regmv6FormBloc(repository: Regmv6FormRepository())),            
+        BlocProvider(create: (context) => Regmv7FormBloc(repository: Regmv7FormRepository())),
+        BlocProvider(create: (context) => RegmvUploadStnkBloc(repository: RegmvUploadStnkRepository())),    
+        BlocProvider(create: (context) => RegmvUploadFotoMobilBloc(repository: RegmvUploadFotoMobilRepository())),  
+        BlocProvider(create: (context) => RegmvUploadFotoAccBloc(repository: RegmvUploadFotoAccRepository())),
+        BlocProvider(create: (context) => Calpar1ListBloc()),
+        BlocProvider(create: (context) => Calpar1CrudBloc(repository: Calpar1CrudRepository())),
+        BlocProvider(create: (context) => Calpar2FormBloc( repository: Calpar2FormRepository())),
+        BlocProvider(create: (context) => Calpar3FormBloc( repository: Calpar3FormRepository())),
+        BlocProvider(create: (context) => Calpar4FormBloc( repository: Calpar4FormRepository())),
 
       ],
       child: MaterialApp(

@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:string_validator/string_validator.dart';
 
 class UserInfo {
   UserLogin? userLogin;

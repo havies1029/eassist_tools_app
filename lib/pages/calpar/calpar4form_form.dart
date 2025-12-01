@@ -6,7 +6,6 @@ import 'package:eassist_tools_app/blocs/calpar/calpar4form_bloc.dart';
 import 'package:eassist_tools_app/models/calpar/calpar4form_model.dart';
 import 'package:intl/intl.dart';
 import 'package:eassist_tools_app/common/thousand_separator_input_formatter.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 
 
 class Calpar4FormFormPage extends StatefulWidget {
@@ -68,7 +67,6 @@ class Calpar4FormFormPageFormState extends State<Calpar4FormFormPage> {
 											),
 										),
 										const SizedBox(height: 25),
-										buildFieldCalpar1Id(),
 										buildFieldDiscNilai(),
 										buildFieldDiscPersen(),
 										buildFieldPremiBi(),
@@ -147,11 +145,6 @@ class Calpar4FormFormPageFormState extends State<Calpar4FormFormPage> {
 		calpar4FormBloc.add(
 			Calpar4FormLihatEvent(recordId: widget.recordId));
 		}
-	}
-
-	Widget buildFieldCalpar1Id(){
-		return TextFormField(
-		);
 	}
 
 	Widget buildFieldDiscNilai(){
@@ -387,6 +380,7 @@ class Calpar4FormFormPageFormState extends State<Calpar4FormFormPage> {
 		if (_formKey.currentState!.validate()) {
 			_formKey.currentState!.save();
 			Calpar4FormModel record = Calpar4FormModel(
+        calpar1Id: widget.recordId,
 				calpar4Id: '',
 				discNilai: double.parse(fieldDiscNilaiController.text.replaceAll(',', '')),
 				discPersen: double.parse(fieldDiscPersenController.text.replaceAll(',', '')),

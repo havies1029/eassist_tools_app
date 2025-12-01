@@ -8,8 +8,6 @@ import 'package:eassist_tools_app/widgets/section/navbar/components/nav_bar.dart
 import 'package:eassist_tools_app/widgets/section/navbar/components/profile_dropdown_content.dart';
 import 'package:eassist_tools_app/widgets/section/navbar/components/profile_section.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'dart:math' show pi;
 
 import '../../../pages/about_jps/about_main.dart';
 import '../../../pages/article_page/article_main.dart';
@@ -39,7 +37,7 @@ class NavbarWidget extends StatefulWidget {
 }
 
 class _NavbarWidgetState extends State<NavbarWidget> {
-  int _expandedMenuIndex = -1;
+  final int _expandedMenuIndex = -1;
   bool _isMenuOpen = false;
   bool _isProfileMenuOpen = false;
   final GlobalKey _menuButtonKey = GlobalKey();

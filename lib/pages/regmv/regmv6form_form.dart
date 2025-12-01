@@ -70,7 +70,6 @@ class Regmv6FormFormPageFormState extends State<Regmv6FormFormPage> {
 										buildFieldPremiDiskon(),
 										buildFieldPremiNet(),
 										buildFieldPremiSubtotal(),
-										buildFieldRegmv1Id(),
 										const SizedBox(height: 25),
 										FormError(
 											errors: errors,

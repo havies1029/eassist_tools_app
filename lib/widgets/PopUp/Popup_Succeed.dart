@@ -9,10 +9,10 @@ class PopupSuceedPage extends StatefulWidget {
   final VoidCallback onOk;
 
   const PopupSuceedPage({
-    Key? key,
+    super.key,
     required this.message,
     required this.onOk,
-  }) : super(key: key);
+  });
 
   @override
   _PopupSuceedPageState createState() => _PopupSuceedPageState();
