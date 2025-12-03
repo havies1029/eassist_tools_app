@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/models/responseAPI/returndataapi_model.dart';
+import 'package:eassist_tools_app/models/combobox/combomcobapp1_model.dart';
 import 'package:eassist_tools_app/models/combobox/combormatauang_model.dart';
 import 'package:eassist_tools_app/models/regother/regother1crud_model.dart';
 import 'package:eassist_tools_app/repositories/regother/regother1crud_repository.dart';
@@ -15,7 +16,11 @@ class Regother1CrudBloc extends Bloc<Regother1CrudEvents, Regother1CrudState> {
 		on<Regother1CrudTambahEvent>(onTambahRegother1Crud);
 		on<Regother1CrudHapusEvent>(onHapusRegother1Crud);
 		on<Regother1CrudLihatEvent>(onLihatRegother1Crud);
+		on<ComboMCobApp1ChangedEvent>(onComboMCobApp1Changed);
 		on<ComboRMatauangChangedEvent>(onComboRMatauangChanged);
+    on<ResetRegother1CrudEvent>((event, emit) {
+      emit(Regother1CrudState.initial());
+    });
 	}
 
 	Future<void> onTambahRegother1Crud(
@@ -50,18 +55,23 @@ class Regother1CrudBloc extends Bloc<Regother1CrudEvents, Regother1CrudState> {
 		Regother1CrudLihatEvent event, Emitter<Regother1CrudState> emit) async {
 		emit(state.copyWith(isLoading: true, isLoaded: false));
 		Regother1CrudModel record = await repository.regother1CrudLihat(event.recordId);
-		emit(state.copyWith(isLoading: false, isLoaded: true, record: record));
+		emit(state.copyWith(isLoading: false, isLoaded: true, 
+      record: record, comboMCobApp1: record.comboMCobApp1,comboRMatauang: record.comboRMatauang));
+	}
+
+	Future<void> onComboMCobApp1Changed(
+			ComboMCobApp1ChangedEvent event, Emitter<Regother1CrudState> emit) async {
+
+		ComboMCobApp1Model comboMCobApp1 = event.comboMCobApp1;
+		emit(state.copyWith(
+			comboMCobApp1: comboMCobApp1));
 	}
 
 	Future<void> onComboRMatauangChanged(
 			ComboRMatauangChangedEvent event, Emitter<Regother1CrudState> emit) async {
 
-		emit(state.copyWith(isLoading: true, isLoaded: false));
-
 		ComboRMatauangModel comboRMatauang = event.comboRMatauang;
 		emit(state.copyWith(
-			isLoading: false,
-			isLoaded: true,
 			comboRMatauang: comboRMatauang));
 	}
 

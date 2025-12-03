@@ -1,14 +1,15 @@
 import 'dart:convert';
 import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:http/http.dart' as http;
-import 'package:eassist_tools_app/models/regother/regother1list_model.dart';
+import 'package:eassist_tools_app/models/combobox/combomcobapp1_model.dart';
 
-class Regother1ListAPI{
-	Future<List<Regother1ListModel>> getRegother1ListAPI(String searchText, int hal) async {
-		String urlGetListEndPoint = "${AppData.prefixEndPoint}/api/regother/regother1list/getlist";
+class ComboMCobApp1API {
 
-		Map<String, String> queryParams = {"searchText": searchText, "hal": hal.toString()};
-		var uri = AppData.uriHtpp(AppData.httpAuthority, urlGetListEndPoint, queryParams);
+	Future<List<ComboMCobApp1Model>> getComboMCobApp1API(String filter) async {
+		String urlGetComboEndPoint = "${AppData.prefixEndPoint}/api/mcobapp1combobox/getlist";
+
+		Map<String, String> queryParams = {"filter": filter};
+		var uri = AppData.uriHtpp(AppData.httpAuthority, urlGetComboEndPoint, queryParams);
 		final http.Response response = await http.get(uri, headers: <String, String>{
 			'Content-Type': 'application/json; odata=verbos',
 			'Accept': 'application/json; odata=verbos',
@@ -18,7 +19,7 @@ class Regother1ListAPI{
 		if (response.statusCode == 200) {
 			final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
 			return parsed
-				.map<Regother1ListModel>((json) => Regother1ListModel.fromJson(json))
+				.map<ComboMCobApp1Model>((json) => ComboMCobApp1Model.fromJson(json))
 				.toList();
 		} else {
 			throw Exception("Failed to load data");

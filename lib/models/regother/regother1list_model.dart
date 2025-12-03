@@ -6,12 +6,12 @@ class Regother1ListModel {
 	String remark;
 	double tsi;
 	String cobNama;
-	String rMATAUANGNAMA;
+	String rmatauangNama;
 
 	Regother1ListModel({required this.currId, required this.mcobId, 
 		required this.regother1Id, required this.remark, 
 		required this.tsi, required this.cobNama, 
-		required this.rMATAUANGNAMA});
+		required this.rmatauangNama});
 
 	factory Regother1ListModel.fromJson(Map<String, dynamic> data) {
 		return Regother1ListModel(
@@ -21,7 +21,7 @@ class Regother1ListModel {
 			remark: data['remark']??'',
 			tsi: double.tryParse(data['tsi'].toString())??0,
 			cobNama: data['cobNama']??'',
-			rMATAUANGNAMA: data['rMATAUANGNAMA']??''
+			rmatauangNama: data['rmatauangNama']??''
 		);
 
 	}
@@ -33,6 +33,6 @@ class Regother1ListModel {
 		'remark': remark,
 		'tsi': tsi.toString(),
 		'cobNama': cobNama,
-		'rMATAUANGNAMA': rMATAUANGNAMA};
+		'rmatauangNama': rmatauangNama};
 
 }

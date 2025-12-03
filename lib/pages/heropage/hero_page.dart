@@ -23,6 +23,7 @@ import 'package:eassist_tools_app/pages/gen_trslog/trslogcari_main.dart';
 import 'package:eassist_tools_app/pages/heropage/fixed_nambar_overlay.dart';
 import 'package:eassist_tools_app/pages/klaim/klaim1list_main.dart';
 import 'package:eassist_tools_app/pages/regmv/regmv1list_main.dart';
+import 'package:eassist_tools_app/pages/regother/regother1list_main.dart';
 import 'package:eassist_tools_app/pages/regpar/regpar1list_main.dart';
 import 'package:eassist_tools_app/widgets/section/carousel_section.dart';
 import 'package:eassist_tools_app/widgets/section/client_section.dart';
@@ -183,6 +184,16 @@ class _HeroPageState extends State<HeroPage> {
                                     );
                                   },
                                   child: Text("Registrasi PAR"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Regother1ListMainPage()),
+                                    );
+                                  },
+                                  child: Text("Registrasi Other"),
                                 ),
                                 TextButton(
                                   onPressed: () {

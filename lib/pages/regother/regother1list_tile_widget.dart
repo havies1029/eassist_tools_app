@@ -7,7 +7,7 @@ class Regother1ListTileWidget extends StatelessWidget {
 	final String cobNama;
 	final String regother1Id;
 	final String remark;
-	final String rMATAUANGNAMA;
+	final String rmatauangNama;
 	final double tsi;
 
 	const Regother1ListTileWidget(
@@ -15,7 +15,7 @@ class Regother1ListTileWidget extends StatelessWidget {
 		required this.cobNama, 
 		required this.regother1Id, 
 		required this.remark, 
-		required this.rMATAUANGNAMA, 
+		required this.rmatauangNama, 
 		required this.tsi});
 
 	@override
@@ -61,12 +61,12 @@ class Regother1ListTileWidget extends StatelessWidget {
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
-						Text("rMATAUANGNAMA",
+						Text("rmatauangNama",
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_40)),
 						Container(height: 5),
 						Text(
-							rMATAUANGNAMA,
+							rmatauangNama,
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),

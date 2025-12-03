@@ -1,4 +1,5 @@
 import 'package:eassist_tools_app/models/combobox/combormatauang_model.dart';
+import 'package:eassist_tools_app/models/combobox/combomcobapp1_model.dart';
 
 class Regother1CrudModel {
 	String regother1Id;
@@ -6,9 +7,12 @@ class Regother1CrudModel {
 	double tsi;
 	String? currId;
 	ComboRMatauangModel? comboRMatauang;
+	String? mcobId;
+	ComboMCobApp1Model? comboMCobApp1;
 
 	Regother1CrudModel({required this.regother1Id, required this.remark, 
-		required this.tsi, this.currId, this.comboRMatauang});
+		required this.tsi, this.currId, this.comboRMatauang, 
+		this.mcobId, this.comboMCobApp1});
 
 	factory Regother1CrudModel.fromJson(Map<String, dynamic> data) {
 		ComboRMatauangModel? comboRMatauang;
@@ -16,12 +20,19 @@ class Regother1CrudModel {
 			comboRMatauang = ComboRMatauangModel.fromJson(data['comboRMatauang']);
 		}
 
+		ComboMCobApp1Model? comboMCobApp1;
+		if (data['comboMCobApp1'] != null) {
+			comboMCobApp1 = ComboMCobApp1Model.fromJson(data['comboMCobApp1']);
+		}
+
 		return Regother1CrudModel(
 			regother1Id: data['regother1Id']??'',
 			remark: data['remark']??'',
 			tsi: double.tryParse(data['tsi'].toString())??0,
 			currId: data['currId']??'',
-			comboRMatauang: comboRMatauang
+			comboRMatauang: comboRMatauang,
+			mcobId: data['mcobId']??'',
+			comboMCobApp1: comboMCobApp1
 		);
 
 	}
@@ -31,6 +42,8 @@ class Regother1CrudModel {
 		'remark': remark,
 		'tsi': tsi.toString(),
 		'currId': currId,
-		'comboRMatauang': comboRMatauang?.toJson()};
+		'comboRMatauang': comboRMatauang?.toJson(),
+		'mcobId': mcobId,
+		'comboMCobApp1': comboMCobApp1?.toJson()};
 
 }

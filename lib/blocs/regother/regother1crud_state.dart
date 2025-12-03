@@ -8,6 +8,7 @@ class Regother1CrudState extends Equatable {
 	final bool isSaving;
 	final bool isSaved;
 	final bool hasFailure;
+	final ComboMCobApp1Model? comboMCobApp1;
 	final ComboRMatauangModel? comboRMatauang;
 	const Regother1CrudState(
 		{this.record,
@@ -16,6 +17,7 @@ class Regother1CrudState extends Equatable {
 		this.isSaving = false,
 		this.isSaved = false,
 		this.hasFailure = false,
+		this.comboMCobApp1,
 		this.comboRMatauang,
 });
 
@@ -26,6 +28,7 @@ class Regother1CrudState extends Equatable {
 		bool? isSaving,
 		bool? isSaved,
 		bool? hasFailure,
+		ComboMCobApp1Model? comboMCobApp1,
 		ComboRMatauangModel? comboRMatauang,
 	}){
 		return Regother1CrudState(
@@ -35,9 +38,24 @@ class Regother1CrudState extends Equatable {
 			isSaving: isSaving ?? this.isSaving,
 			isSaved: isSaved ?? this.isSaved,
 			hasFailure: hasFailure ?? this.hasFailure,
+			comboMCobApp1: comboMCobApp1?? this.comboMCobApp1,
 			comboRMatauang: comboRMatauang?? this.comboRMatauang,
 		);
 	}
+
+  factory Regother1CrudState.initial() {
+    return const Regother1CrudState(
+      record: null,
+      isLoading: false,
+      isLoaded: false,
+      isSaving: false,
+      isSaved: false,
+      hasFailure: false,
+      comboMCobApp1: null,
+      comboRMatauang: null,
+    );
+  }
+
 
 	@override
 	List<Object> get props => [isLoading, isLoaded, isSaving, isSaved, hasFailure];

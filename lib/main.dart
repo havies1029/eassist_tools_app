@@ -58,6 +58,8 @@ import 'package:eassist_tools_app/blocs/regmv/regmv7form_bloc.dart';
 import 'package:eassist_tools_app/blocs/regmv/regmv_upload_foto_acc_bloc.dart';
 import 'package:eassist_tools_app/blocs/regmv/regmv_upload_foto_mobil_bloc.dart';
 import 'package:eassist_tools_app/blocs/regmv/regmv_upload_stnk_bloc.dart';
+import 'package:eassist_tools_app/blocs/regother/regother1crud_bloc.dart';
+import 'package:eassist_tools_app/blocs/regother/regother1list_bloc.dart';
 import 'package:eassist_tools_app/blocs/regpar/regpar1crud_bloc.dart';
 import 'package:eassist_tools_app/blocs/regpar/regpar1list_bloc.dart';
 import 'package:eassist_tools_app/blocs/regpar/regpar2form_bloc.dart';
@@ -107,6 +109,7 @@ import 'package:eassist_tools_app/repositories/regmv/regmv7form_repository.dart'
 import 'package:eassist_tools_app/repositories/regmv/regmv_upload_foto_acc_repository.dart';
 import 'package:eassist_tools_app/repositories/regmv/regmv_upload_foto_mobil_repository.dart';
 import 'package:eassist_tools_app/repositories/regmv/regmv_upload_stnk_repository.dart';
+import 'package:eassist_tools_app/repositories/regother/regother1crud_repository.dart';
 import 'package:eassist_tools_app/repositories/regpar/regpar1crud_repository.dart';
 import 'package:eassist_tools_app/repositories/regpar/regpar2form_repository.dart';
 import 'package:eassist_tools_app/repositories/regpar/regpar3form_repository.dart';
@@ -319,6 +322,8 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => Regpar3FormBloc( repository: Regpar3FormRepository())),
         BlocProvider(create: (context) => Regpar4FormBloc( repository: Regpar4FormRepository())),
         BlocProvider(create: (context) => Regpar5FormBloc( repository: Regpar5FormRepository())),
+        BlocProvider(create: (context) => Regother1ListBloc()),
+        BlocProvider(create: (context) => Regother1CrudBloc(repository: Regother1CrudRepository())),
 
       ],
       child: MaterialApp(

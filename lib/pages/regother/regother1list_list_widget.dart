@@ -84,7 +84,7 @@ class Regother1ListListWidgetState extends State<Regother1ListListWidget> {
 												cobNama: state.items[index].cobNama,
 												regother1Id: state.items[index].regother1Id,
 												remark: state.items[index].remark,
-												rMATAUANGNAMA: state.items[index].rMATAUANGNAMA,
+												rmatauangNama: state.items[index].rmatauangNama,
 												tsi: state.items[index].tsi,
 											)),
 							],

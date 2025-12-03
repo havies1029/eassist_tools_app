@@ -7,6 +7,9 @@ class Regother1ListMainPage extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) {
 		return Scaffold(
+      appBar: AppBar(
+        title: const Text('Reg Others'),
+      ),
 			backgroundColor: Colors.grey[100],
 			body: const Regother1ListPage(),
 		);

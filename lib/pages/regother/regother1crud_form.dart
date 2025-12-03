@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/common/constants.dart';
@@ -6,6 +8,8 @@ import 'package:eassist_tools_app/blocs/regother/regother1crud_bloc.dart';
 import 'package:eassist_tools_app/models/regother/regother1crud_model.dart';
 import 'package:eassist_tools_app/models/combobox/combormatauang_model.dart';
 import 'package:eassist_tools_app/widgets/combobox/combormatauang_widget.dart';
+import 'package:eassist_tools_app/models/combobox/combomcobapp1_model.dart';
+import 'package:eassist_tools_app/widgets/combobox/combomcobapp1_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:eassist_tools_app/common/thousand_separator_input_formatter.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -27,6 +31,8 @@ class Regother1CrudFormPageFormState extends State<Regother1CrudFormPage> {
 	final List<String> errors = [];
 	ComboRMatauangModel? fieldComboRMatauang;
 	final comboRMatauangKey = GlobalKey<DropdownSearchState<ComboRMatauangModel>>();
+	ComboMCobApp1Model? fieldComboMCobApp1;
+	final comboMCobApp1Key = GlobalKey<DropdownSearchState<ComboMCobApp1Model>>();
 	var fieldRemarkController = TextEditingController();
 	var fieldTsiController = TextEditingController();
 
@@ -54,7 +60,7 @@ class Regother1CrudFormPageFormState extends State<Regother1CrudFormPage> {
 									children: [
 										const SizedBox(height: 10),
 										Text(
-											"${widget.viewMode == "tambah" ? "Tambah" : "Ubah"} Reg Other #1",
+											"${widget.viewMode == "tambah" ? "Tambah" : "Ubah"} Reg Other",
 											style: const TextStyle(
 												fontSize: 20.0,
 												color: Color(0xffff6101),
@@ -64,9 +70,9 @@ class Regother1CrudFormPageFormState extends State<Regother1CrudFormPage> {
 												decoration: TextDecoration.underline,
 											),
 										),
-										const SizedBox(height: 25),
-										buildFieldCurrId(),
+										const SizedBox(height: 25),                    
 										buildFieldMcobId(),
+										buildFieldCurrId(),
 										buildFieldRemark(),
 										buildFieldTsi(),
 										const SizedBox(height: 25),
@@ -123,15 +129,16 @@ class Regother1CrudFormPageFormState extends State<Regother1CrudFormPage> {
 							fieldTsiController.text = NumberFormat("#,###").format(state.record!.tsi);
 						}
 						fieldComboRMatauang = state.comboRMatauang;
+						fieldComboMCobApp1 = state.comboMCobApp1;
 					}
 				},
 			);
 		}
 	void loadData() {
 		if (widget.viewMode == "ubah") {
-		regother1CrudBloc.add(
-			Regother1CrudLihatEvent(recordId: widget.recordId));
-		}
+      regother1CrudBloc.add(
+        Regother1CrudLihatEvent(recordId: widget.recordId));
+		}        
 	}
 
 	Widget buildFieldCurrId(){
@@ -161,7 +168,28 @@ class Regother1CrudFormPageFormState extends State<Regother1CrudFormPage> {
 	}
 
 	Widget buildFieldMcobId(){
-		return TextFormField(
+		return buildFieldComboMCobApp1(
+			comboKey: comboMCobApp1Key,
+			labelText: 'mcobId',
+			initItem: fieldComboMCobApp1,
+			onChangedCallback: (value) {
+				if (value != null) {
+					removeError(
+						error: "Field ComboMCobApp1 tidak boleh kosong.");
+					regother1CrudBloc.add(ComboMCobApp1ChangedEvent(comboMCobApp1: value));
+				}
+			},
+			onSaveCallback: (value) {
+				if (value != null) {
+					fieldComboMCobApp1 = value;
+				}
+			},
+			validatorCallback: (value) {
+				if (value == null) {
+					addError(
+						error: "Field ComboMCobApp1 tidak boleh kosong.");
+				}
+			},
 		);
 	}
 
@@ -224,6 +252,7 @@ class Regother1CrudFormPageFormState extends State<Regother1CrudFormPage> {
 			_formKey.currentState!.save();
 			Regother1CrudModel record = Regother1CrudModel(
 				currId: fieldComboRMatauang?.rmatauangKode,
+				mcobId: fieldComboMCobApp1?.mCobApp1Id,
 				regother1Id: '',
 				remark: fieldRemarkController.text,
 				tsi: double.parse(fieldTsiController.text.replaceAll(',', '')),
