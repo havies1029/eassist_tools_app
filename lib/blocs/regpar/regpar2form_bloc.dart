@@ -26,6 +26,9 @@ class Regpar2FormBloc extends Bloc<Regpar2FormEvents, Regpar2FormState> {
 		on<ComboMKotaChangedEvent>(onComboMKotaChanged);
 		on<ComboMKecamatanChangedEvent>(onComboMKecamatanChanged);
 		on<ComboMKelurahanChangedEvent>(onComboMKelurahanChanged);
+		on<FieldPolisMulaiChangedEvent>(onFieldPolisMulaiChanged);
+		on<FieldPolisAkhirChangedEvent>(onFieldPolisAkhirChanged);
+		on<FieldObjectAlamatChangedEvent>(onFieldObjectAlamatChangedEvent);
 	}
 
 	Future<void> onTambahRegpar2Form(
@@ -60,7 +63,14 @@ class Regpar2FormBloc extends Bloc<Regpar2FormEvents, Regpar2FormState> {
 		Regpar2FormLihatEvent event, Emitter<Regpar2FormState> emit) async {
 		emit(state.copyWith(isLoading: true, isLoaded: false));
 		Regpar2FormModel record = await repository.regpar2FormLihat(event.recordId);
-		emit(state.copyWith(isLoading: false, isLoaded: true, record: record));
+		emit(state.copyWith(isLoading: false, isLoaded: true, record: record,
+      comboMKecamatan: record.comboMKecamatan,
+      comboMKelurahan: record.comboMKelurahan,
+      comboMKota: record.comboMKota,
+      comboMPropinsi: record.comboMPropinsi,
+      comboRKonstruksiojk: record.comboRKonstruksiojk,
+      comboROkupasi: record.comboROkupasi,
+    ));
 	}
 
 	Future<void> onComboROkupasiChanged(
@@ -134,5 +144,47 @@ class Regpar2FormBloc extends Bloc<Regpar2FormEvents, Regpar2FormState> {
 			isLoaded: true,
 			comboMKelurahan: comboMKelurahan));
 	}
+
+  Future<void> onFieldPolisMulaiChanged(
+      FieldPolisMulaiChangedEvent event, Emitter<Regpar2FormState> emit) async {
+
+    emit(state.copyWith(isLoading: true, isLoaded: false));
+
+    DateTime polisMulai = event.polisMulai;
+    var record = state.record?.copyWith(polisMulai: polisMulai);
+
+      emit(state.copyWith(
+        isLoading: false,
+      isLoaded: true,
+      record: record));
+  }
+
+  Future<void> onFieldPolisAkhirChanged(
+      FieldPolisAkhirChangedEvent event, Emitter<Regpar2FormState> emit) async {
+
+    emit(state.copyWith(isLoading: true, isLoaded: false));
+
+    DateTime polisAkhir = event.polisAkhir;
+    var record = state.record?.copyWith(polisAkhir: polisAkhir);
+
+      emit(state.copyWith(
+        isLoading: false,
+      isLoaded: true,
+      record: record));
+  }
+
+  Future<void> onFieldObjectAlamatChangedEvent(
+      FieldObjectAlamatChangedEvent event, Emitter<Regpar2FormState> emit) async {
+
+    emit(state.copyWith(isLoading: true, isLoaded: false));
+
+    String objectAlamat = event.objectAlamat;
+    var record = state.record?.copyWith(objectAlamat: objectAlamat);
+
+      emit(state.copyWith(
+        isLoading: false,
+      isLoaded: true,
+      record: record));
+  }
 
 }

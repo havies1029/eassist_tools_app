@@ -1,11 +1,9 @@
 
-import 'dart:convert';
 
 import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:dio/dio.dart';
 import 'dart:typed_data';
 
-import 'package:eassist_tools_app/models/responseAPI/returndataapi_model.dart';
 import 'package:flutter/material.dart';
 
 class RegmvUploadFotoMobilApi {

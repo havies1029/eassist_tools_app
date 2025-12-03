@@ -75,3 +75,26 @@ class ComboMKelurahanChangedEvent extends Regpar2FormEvents{
 
 	@override	List<Object> get props => [comboMKelurahan];}
 
+class FieldPolisMulaiChangedEvent extends Regpar2FormEvents {
+  final DateTime polisMulai;
+  const FieldPolisMulaiChangedEvent({required this.polisMulai});
+
+  @override
+  List<Object> get props => [polisMulai];
+}
+
+class FieldPolisAkhirChangedEvent extends Regpar2FormEvents {
+  final DateTime polisAkhir;
+  const FieldPolisAkhirChangedEvent({required this.polisAkhir});
+
+  @override
+  List<Object> get props => [polisAkhir];
+}
+
+class FieldObjectAlamatChangedEvent extends Regpar2FormEvents {
+  final String objectAlamat;
+  const FieldObjectAlamatChangedEvent({required this.objectAlamat});
+
+  @override
+  List<Object> get props => [objectAlamat];
+}

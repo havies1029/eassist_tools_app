@@ -14,6 +14,7 @@ class Calpar4FormBloc extends Bloc<Calpar4FormEvents, Calpar4FormState> {
 		on<Calpar4FormTambahEvent>(onTambahCalpar4Form);
 		on<Calpar4FormHapusEvent>(onHapusCalpar4Form);
 		on<Calpar4FormLihatEvent>(onLihatCalpar4Form);
+    on<Calpar4FormHitungPremiEvent>(onHitungPremiCalpar4Form);
 	}
 
 	Future<void> onTambahCalpar4Form(
@@ -50,5 +51,12 @@ class Calpar4FormBloc extends Bloc<Calpar4FormEvents, Calpar4FormState> {
 		Calpar4FormModel record = await repository.calpar4FormLihat(event.recordId);
 		emit(state.copyWith(isLoading: false, isLoaded: true, record: record));
 	}
+
+  Future<void> onHitungPremiCalpar4Form(
+    Calpar4FormHitungPremiEvent event, Emitter<Calpar4FormState> emit) async {
+    emit(state.copyWith(isCalculating: true, isCalculated: false));
+    Calpar4FormModel record = await repository.calpar4FormHitungPremi(event.calpar1Id);
+    emit(state.copyWith(isCalculating: false, isCalculated: true, record: record));
+  } 
 
 }

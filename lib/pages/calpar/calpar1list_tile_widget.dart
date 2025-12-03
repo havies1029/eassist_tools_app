@@ -1,8 +1,11 @@
+import 'package:eassist_tools_app/blocs/calpar/calpar1list_bloc.dart';
+import 'package:eassist_tools_app/blocs/calpar/calpar4form_bloc.dart';
 import 'package:eassist_tools_app/pages/calpar/calpar2form_form.dart';
 import 'package:eassist_tools_app/pages/calpar/calpar3form_form.dart';
 import 'package:eassist_tools_app/pages/calpar/calpar4form_form.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/widgets/my_colors.dart';
 import 'package:eassist_tools_app/widgets/my_text.dart';
 
@@ -138,10 +141,28 @@ class Calpar1ListTileWidget extends StatelessWidget {
 										padding: const EdgeInsets.only(top: 30.0),
 										child: ElevatedButton(
 											onPressed: () {
-												
+												context.read<Calpar4FormBloc>().add(
+												  Calpar4FormHitungPremiEvent(calpar1Id: calpar1Id));
 											},
 											child: const Text(
-												'Cal MV to Reg MV',
+												'Hitung Premi',
+												style: TextStyle(fontSize: 13.0),
+											),
+										),
+									),
+								),								
+                SizedBox(
+									width: MediaQuery.of(context).size.width * 0.25,
+									height: 80,
+									child: Padding(
+										padding: const EdgeInsets.only(top: 30.0),
+										child: ElevatedButton(
+											onPressed: () {
+												context.read<Calpar1ListBloc>().add(
+												  CalPar2RegParEvent(calpar1Id: calpar1Id));
+											},
+											child: const Text(
+												'CalPar to RegPar',
 												style: TextStyle(fontSize: 13.0),
 											),
 										),

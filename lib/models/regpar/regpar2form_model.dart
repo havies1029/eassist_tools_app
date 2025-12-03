@@ -6,7 +6,7 @@ import 'package:eassist_tools_app/models/combobox/comborkonstruksiojk_model.dart
 import 'package:eassist_tools_app/models/combobox/comborokupasi_model.dart';
 
 class Regpar2FormModel {
-	int coverLama;
+  String regpar1Id;
 	String objectAlamat;
 	DateTime polisAkhir;
 	DateTime polisMulai;
@@ -24,7 +24,7 @@ class Regpar2FormModel {
 	String? rokupasiId;
 	ComboROkupasiModel? comboROkupasi;
 
-	Regpar2FormModel({required this.coverLama, required this.objectAlamat, 
+	Regpar2FormModel({ required this.regpar1Id, required this.objectAlamat, 
 		required this.polisAkhir, required this.polisMulai, 
 		required this.regpar2Id, this.objectKecamatanId, this.comboMKecamatan, 
 		this.objectKelurahanId, this.comboMKelurahan, this.objectKotaId, this.comboMKota, 
@@ -63,7 +63,7 @@ class Regpar2FormModel {
 		}
 
 		return Regpar2FormModel(
-			coverLama: int.tryParse(data['coverLama'].toString())??0,
+      regpar1Id: data['regpar1Id']??'',
 			objectAlamat: data['objectAlamat']??'',
 			polisAkhir: DateTime.tryParse(data['polisAkhir'].toString())??DateTime.now(),
 			polisMulai: DateTime.tryParse(data['polisMulai'].toString())??DateTime.now(),
@@ -85,8 +85,9 @@ class Regpar2FormModel {
 	}
 
 	Map<String, dynamic> toJson() =>
-		{'coverLama': coverLama.toString(),
-		'objectAlamat': objectAlamat,
+		{
+      'regpar1Id': regpar1Id,
+      'objectAlamat': objectAlamat,
 		'polisAkhir': polisAkhir.toIso8601String(),
 		'polisMulai': polisMulai.toIso8601String(),
 		'regpar2Id': regpar2Id,
@@ -102,5 +103,45 @@ class Regpar2FormModel {
 		'comboRKonstruksiojk': comboRKonstruksiojk?.toJson(),
 		'rokupasiId': rokupasiId,
 		'comboROkupasi': comboROkupasi?.toJson()};
+
+  Regpar2FormModel copyWith({
+    String? regpar1Id,
+    String? objectAlamat,
+    DateTime? polisAkhir,
+    DateTime? polisMulai,
+    String? regpar2Id,
+    String? objectKecamatanId,
+    ComboMKecamatanModel? comboMKecamatan,
+    String? objectKelurahanId,
+    ComboMKelurahanModel? comboMKelurahan,
+    String? objectKotaId,
+    ComboMKotaModel? comboMKota,
+    String? objectPropinsiId,
+    ComboMPropinsiModel? comboMPropinsi,
+    String? rkonstruksiojkId,
+    ComboRKonstruksiojkModel? comboRKonstruksiojk,
+    String? rokupasiId,
+    ComboROkupasiModel? comboROkupasi,
+  }){
+    return Regpar2FormModel(
+      regpar1Id: regpar1Id ?? this.regpar1Id,
+      objectAlamat: objectAlamat ?? this.objectAlamat,
+      polisAkhir: polisAkhir ?? this.polisAkhir,
+      polisMulai: polisMulai ?? this.polisMulai,
+      regpar2Id: regpar2Id ?? this.regpar2Id,
+      objectKecamatanId: objectKecamatanId ?? this.objectKecamatanId,
+      comboMKecamatan: comboMKecamatan ?? this.comboMKecamatan,
+      objectKelurahanId: objectKelurahanId ?? this.objectKelurahanId,
+      comboMKelurahan: comboMKelurahan ?? this.comboMKelurahan,
+      objectKotaId: objectKotaId ?? this.objectKotaId,
+      comboMKota: comboMKota ?? this.comboMKota,
+      objectPropinsiId: objectPropinsiId ?? this.objectPropinsiId,
+      comboMPropinsi: comboMPropinsi ?? this.comboMPropinsi,
+      rkonstruksiojkId: rkonstruksiojkId ?? this.rkonstruksiojkId,
+      comboRKonstruksiojk: comboRKonstruksiojk ?? this.comboRKonstruksiojk,
+      rokupasiId: rokupasiId ?? this.rokupasiId,
+      comboROkupasi: comboROkupasi ?? this.comboROkupasi,
+    );
+  }
 
 }

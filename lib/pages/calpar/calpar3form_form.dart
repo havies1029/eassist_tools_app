@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:eassist_tools_app/common/constants.dart';
 import 'package:eassist_tools_app/widgets/form_error.dart';
 import 'package:eassist_tools_app/blocs/calpar/calpar3form_bloc.dart';
 import 'package:eassist_tools_app/models/calpar/calpar3form_model.dart';
@@ -10,8 +9,6 @@ import 'package:eassist_tools_app/models/combobox/combomjnscoverpar_model.dart';
 import 'package:eassist_tools_app/widgets/combobox/combomjnscoverpar_widget.dart';
 import 'package:eassist_tools_app/models/combobox/combomwilayah_model.dart';
 import 'package:eassist_tools_app/widgets/combobox/combomwilayah_widget.dart';
-import 'package:intl/intl.dart';
-import 'package:eassist_tools_app/common/thousand_separator_input_formatter.dart';
 import 'package:string_validator/string_validator.dart';
 import 'package:eassist_tools_app/widgets/checkbox_widget.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -32,18 +29,16 @@ class Calpar3FormFormPageFormState extends State<Calpar3FormFormPage> {
 	final _formKey = GlobalKey<FormState>();
 	final List<String> errors = [];
 	var fieldIsEqController = TextEditingController();
+	var fieldIsFlexasController = TextEditingController();
+	var fieldIsOtherController = TextEditingController();
+	var fieldIsRsmdccController = TextEditingController();
+	var fieldIsTsfwdController = TextEditingController();
 	ComboMKabZonaGempaModel? fieldComboMKabZonaGempa;
 	final comboMKabZonaGempaKey = GlobalKey<DropdownSearchState<ComboMKabZonaGempaModel>>();
 	ComboMJnscoverParModel? fieldComboMJnscoverPar;
 	final comboMJnscoverParKey = GlobalKey<DropdownSearchState<ComboMJnscoverParModel>>();
 	ComboMWilayahModel? fieldComboMWilayah;
 	final comboMWilayahKey = GlobalKey<DropdownSearchState<ComboMWilayahModel>>();
-	var fieldRateEqvetController = TextEditingController();
-	var fieldRateOtherController = TextEditingController();
-	var fieldRateParController = TextEditingController();
-	var fieldRateRsmdccController = TextEditingController();
-	var fieldRateTotalController = TextEditingController();
-	var fieldRateTsfwdController = TextEditingController();
 
 	@override
 	void initState() {
@@ -69,7 +64,7 @@ class Calpar3FormFormPageFormState extends State<Calpar3FormFormPage> {
 									children: [
 										const SizedBox(height: 10),
 										Text(
-											"${widget.viewMode == "tambah" ? "Tambah" : "Ubah"} Perhitungan Tarif",
+											"${widget.viewMode == "tambah" ? "Tambah" : "Ubah"} CalPar #3",
 											style: const TextStyle(
 												fontSize: 20.0,
 												color: Color(0xffff6101),
@@ -79,17 +74,15 @@ class Calpar3FormFormPageFormState extends State<Calpar3FormFormPage> {
 												decoration: TextDecoration.underline,
 											),
 										),
-										const SizedBox(height: 25),
+										const SizedBox(height: 25),                    
+										buildFieldMjnscoverparId(),										
 										buildFieldIsEq(),
+										buildFieldIsFlexas(),
+										buildFieldIsOther(),
+										buildFieldIsRsmdcc(),
+										buildFieldIsTsfwd(),
 										buildFieldKab2zonagempaId(),
-										buildFieldMjnscoverparId(),
 										buildFieldMwilayahId(),
-										buildFieldRateEqvet(),
-										buildFieldRateOther(),
-										buildFieldRatePar(),
-										buildFieldRateRsmdcc(),
-										buildFieldRateTotal(),
-										buildFieldRateTsfwd(),
 										const SizedBox(height: 25),
 										FormError(
 											errors: errors,
@@ -141,12 +134,10 @@ class Calpar3FormFormPageFormState extends State<Calpar3FormFormPage> {
 					if (state.isLoaded) {
 						if (state.record != null){
 							fieldIsEqController.text = state.record!.isEq.toString();
-							fieldRateEqvetController.text = NumberFormat("#,###").format(state.record!.rateEqvet);
-							fieldRateOtherController.text = NumberFormat("#,###").format(state.record!.rateOther);
-							fieldRateParController.text = NumberFormat("#,###").format(state.record!.ratePar);
-							fieldRateRsmdccController.text = NumberFormat("#,###").format(state.record!.rateRsmdcc);
-							fieldRateTotalController.text = NumberFormat("#,###").format(state.record!.rateTotal);
-							fieldRateTsfwdController.text = NumberFormat("#,###").format(state.record!.rateTsfwd);
+							fieldIsFlexasController.text = state.record!.isFlexas.toString();
+							fieldIsOtherController.text = state.record!.isOther.toString();
+							fieldIsRsmdccController.text = state.record!.isRsmdcc.toString();
+							fieldIsTsfwdController.text = state.record!.isTsfwd.toString();
 						}
 						fieldComboMKabZonaGempa = state.comboMKabZonaGempa;
 						fieldComboMJnscoverPar = state.comboMJnscoverPar;
@@ -163,13 +154,65 @@ class Calpar3FormFormPageFormState extends State<Calpar3FormFormPage> {
 	}
 
 	Widget buildFieldIsEq(){
-		return CheckboxWidget(
+		return CheckboxWidget(      
 			leftLabel: "",
 			rightLabel: "isEq",
 			initialValue: toBoolean(fieldIsEqController.text),
 			callback: (value) {
 				setState(() {
 					fieldIsEqController.text = value.toString();
+				});
+			}
+		);
+	}
+
+	Widget buildFieldIsFlexas(){
+		return CheckboxWidget(
+			leftLabel: "",
+			rightLabel: "isFlexas",
+			initialValue: toBoolean(fieldIsFlexasController.text),
+			callback: (value) {
+				setState(() {
+					fieldIsFlexasController.text = value.toString();
+				});
+			}
+		);
+	}
+
+	Widget buildFieldIsOther(){
+		return CheckboxWidget(
+			leftLabel: "",
+			rightLabel: "isOther",
+			initialValue: toBoolean(fieldIsOtherController.text),
+			callback: (value) {
+				setState(() {
+					fieldIsOtherController.text = value.toString();
+				});
+			}
+		);
+	}
+
+	Widget buildFieldIsRsmdcc(){
+		return CheckboxWidget(
+			leftLabel: "",
+			rightLabel: "isRsmdcc",
+			initialValue: toBoolean(fieldIsRsmdccController.text),
+			callback: (value) {
+				setState(() {
+					fieldIsRsmdccController.text = value.toString();
+				});
+			}
+		);
+	}
+
+	Widget buildFieldIsTsfwd(){
+		return CheckboxWidget(
+			leftLabel: "",
+			rightLabel: "isTsfwd",
+			initialValue: toBoolean(fieldIsTsfwdController.text),
+			callback: (value) {
+				setState(() {
+					fieldIsTsfwdController.text = value.toString();
 				});
 			}
 		);
@@ -253,155 +296,6 @@ class Calpar3FormFormPageFormState extends State<Calpar3FormFormPage> {
 		);
 	}
 
-	Widget buildFieldRateEqvet(){
-		return TextFormField(
-			keyboardType: TextInputType.number,
-			inputFormatters: [ThousandsSeparatorInputFormatter()],
-			controller: fieldRateEqvetController,
-			decoration: const InputDecoration(
-				labelText: "rateEqvet",
-				floatingLabelBehavior: FloatingLabelBehavior.always,
-			),
-			onChanged: (value) {
-				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
-				}
-			},
-			validator: (value) {
-				if (value == null || value.isEmpty) {
-					addError(error: kStringNullError);
-					return "";
-				}
-				return null;
-			},
-			textAlign: TextAlign.right,
-		);
-	}
-
-	Widget buildFieldRateOther(){
-		return TextFormField(
-			keyboardType: TextInputType.number,
-			inputFormatters: [ThousandsSeparatorInputFormatter()],
-			controller: fieldRateOtherController,
-			decoration: const InputDecoration(
-				labelText: "rateOther",
-				floatingLabelBehavior: FloatingLabelBehavior.always,
-			),
-			onChanged: (value) {
-				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
-				}
-			},
-			validator: (value) {
-				if (value == null || value.isEmpty) {
-					addError(error: kStringNullError);
-					return "";
-				}
-				return null;
-			},
-			textAlign: TextAlign.right,
-		);
-	}
-
-	Widget buildFieldRatePar(){
-		return TextFormField(
-			keyboardType: TextInputType.number,
-			inputFormatters: [ThousandsSeparatorInputFormatter()],
-			controller: fieldRateParController,
-			decoration: const InputDecoration(
-				labelText: "ratePar",
-				floatingLabelBehavior: FloatingLabelBehavior.always,
-			),
-			onChanged: (value) {
-				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
-				}
-			},
-			validator: (value) {
-				if (value == null || value.isEmpty) {
-					addError(error: kStringNullError);
-					return "";
-				}
-				return null;
-			},
-			textAlign: TextAlign.right,
-		);
-	}
-
-	Widget buildFieldRateRsmdcc(){
-		return TextFormField(
-			keyboardType: TextInputType.number,
-			inputFormatters: [ThousandsSeparatorInputFormatter()],
-			controller: fieldRateRsmdccController,
-			decoration: const InputDecoration(
-				labelText: "rateRsmdcc",
-				floatingLabelBehavior: FloatingLabelBehavior.always,
-			),
-			onChanged: (value) {
-				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
-				}
-			},
-			validator: (value) {
-				if (value == null || value.isEmpty) {
-					addError(error: kStringNullError);
-					return "";
-				}
-				return null;
-			},
-			textAlign: TextAlign.right,
-		);
-	}
-
-	Widget buildFieldRateTotal(){
-		return TextFormField(
-			keyboardType: TextInputType.number,
-			inputFormatters: [ThousandsSeparatorInputFormatter()],
-			controller: fieldRateTotalController,
-			decoration: const InputDecoration(
-				labelText: "rateTotal",
-				floatingLabelBehavior: FloatingLabelBehavior.always,
-			),
-			onChanged: (value) {
-				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
-				}
-			},
-			validator: (value) {
-				if (value == null || value.isEmpty) {
-					addError(error: kStringNullError);
-					return "";
-				}
-				return null;
-			},
-			textAlign: TextAlign.right,
-		);
-	}
-
-	Widget buildFieldRateTsfwd(){
-		return TextFormField(
-			keyboardType: TextInputType.number,
-			inputFormatters: [ThousandsSeparatorInputFormatter()],
-			controller: fieldRateTsfwdController,
-			decoration: const InputDecoration(
-				labelText: "rateTsfwd",
-				floatingLabelBehavior: FloatingLabelBehavior.always,
-			),
-			onChanged: (value) {
-				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
-				}
-			},
-			validator: (value) {
-				if (value == null || value.isEmpty) {
-					addError(error: kStringNullError);
-					return "";
-				}
-				return null;
-			},
-			textAlign: TextAlign.right,
-		);
-	}
 
 	void _dismissDialog() {
 		Navigator.pop(context);
@@ -412,17 +306,10 @@ class Calpar3FormFormPageFormState extends State<Calpar3FormFormPage> {
 			_formKey.currentState!.save();
 			Calpar3FormModel record = Calpar3FormModel(
         calpar1Id: widget.recordId,
-				calpar3Id: '',
-				isEq: toBoolean(fieldIsEqController.text),
+				calpar3Id: '',				
 				kab2zonagempaId: fieldComboMKabZonaGempa?.mkabzonagempaId,
 				mjnscoverparId: fieldComboMJnscoverPar?.mjnscoverparId,
 				mwilayahId: fieldComboMWilayah?.mwilayahId,
-				rateEqvet: double.parse(fieldRateEqvetController.text.replaceAll(',', '')),
-				rateOther: double.parse(fieldRateOtherController.text.replaceAll(',', '')),
-				ratePar: double.parse(fieldRateParController.text.replaceAll(',', '')),
-				rateRsmdcc: double.parse(fieldRateRsmdccController.text.replaceAll(',', '')),
-				rateTotal: double.parse(fieldRateTotalController.text.replaceAll(',', '')),
-				rateTsfwd: double.parse(fieldRateTsfwdController.text.replaceAll(',', '')),
 			);
 			if (widget.viewMode == "tambah") {
 				calpar3FormBloc.add(Calpar3FormTambahEvent(record: record));

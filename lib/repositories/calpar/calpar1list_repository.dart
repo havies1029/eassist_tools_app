@@ -1,5 +1,6 @@
 import 'package:eassist_tools_app/apis/calpar/calpar1list_api.dart';
 import 'package:eassist_tools_app/models/calpar/calpar1list_model.dart';
+import 'package:eassist_tools_app/models/responseAPI/returndataapi_model.dart';
 
 class Calpar1ListRepository {
 
@@ -7,4 +8,9 @@ class Calpar1ListRepository {
 		Calpar1ListAPI api = Calpar1ListAPI();
 		return await api.getCalpar1ListAPI(searchText, hal);
 	}
+
+  Future<ReturnDataAPI> calpar2Regpar(String calpar1Id) async {
+    Calpar1ListAPI api = Calpar1ListAPI();
+    return await api.calpar2RegparAPI(calpar1Id);
+  }
 }

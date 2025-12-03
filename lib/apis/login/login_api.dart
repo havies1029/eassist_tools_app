@@ -80,7 +80,7 @@ class LoginApi {
     }
   }
 
-  Future<User> getUserByTokenAPI(String token) async {
+  Future<User?> getUserByTokenAPI(String token) async {
     String urlGetUserEndPoint = "${AppData.prefixEndPoint}/api/login/getuser";
 
     var uri = AppData.uriHtpp(AppData.httpAuthority, urlGetUserEndPoint);
@@ -113,10 +113,14 @@ class LoginApi {
             custType: info[0],);
         return user;
       } else {
-        throw Exception("User not found or invalid token");
+        debugPrint("User not found or invalid token");
+        return null;
+        //throw Exception("User not found or invalid token");
       }
     } else {
-      throw Exception("Failed to load data getUserByTokenAPI: ${response.statusCode}");
+      debugPrint("Failed to load data getUserByTokenAPI: ${response.statusCode}");
+      return null;
+      //throw Exception("Failed to load data getUserByTokenAPI: ${response.statusCode}");
     }
   }
 }

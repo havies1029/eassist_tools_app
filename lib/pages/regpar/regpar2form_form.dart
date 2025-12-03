@@ -17,7 +17,6 @@ import 'package:eassist_tools_app/widgets/combobox/comborkonstruksiojk_widget.da
 import 'package:eassist_tools_app/models/combobox/comborokupasi_model.dart';
 import 'package:eassist_tools_app/widgets/combobox/comborokupasi_widget.dart';
 import 'package:intl/intl.dart';
-import 'package:eassist_tools_app/common/thousand_separator_input_formatter.dart';
 import 'package:date_field/date_field.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
@@ -36,7 +35,6 @@ class Regpar2FormFormPageFormState extends State<Regpar2FormFormPage> {
 	late Regpar2FormBloc regpar2FormBloc;
 	final _formKey = GlobalKey<FormState>();
 	final List<String> errors = [];
-	var fieldCoverLamaController = TextEditingController();
 	var fieldObjectAlamatController = TextEditingController();
 	ComboMKecamatanModel? fieldComboMKecamatan;
 	final comboMKecamatanKey = GlobalKey<DropdownSearchState<ComboMKecamatanModel>>();
@@ -88,17 +86,15 @@ class Regpar2FormFormPageFormState extends State<Regpar2FormFormPage> {
 											),
 										),
 										const SizedBox(height: 25),
-										buildFieldCoverLama(),
-										buildFieldObjectAlamat(),
+										buildFieldPolisMulai(),
+										buildFieldPolisAkhir(),
+										buildFieldObjectPropinsiId(),
+										buildFieldObjectKotaId(),
 										buildFieldObjectKecamatanId(),
 										buildFieldObjectKelurahanId(),
-										buildFieldObjectKotaId(),
-										buildFieldObjectPropinsiId(),
-										buildFieldPolisAkhir(),
-										buildFieldPolisMulai(),
-										buildFieldRegpar1Id(),
-										buildFieldRkonstruksiojkId(),
+										buildFieldObjectAlamat(),
 										buildFieldRokupasiId(),
+										buildFieldRkonstruksiojkId(),
 										const SizedBox(height: 25),
 										FormError(
 											errors: errors,
@@ -149,7 +145,6 @@ class Regpar2FormFormPageFormState extends State<Regpar2FormFormPage> {
 				listener: (context, state) {
 					if (state.isLoaded) {
 						if (state.record != null){
-							fieldCoverLamaController.text = state.record!.coverLama.toString();
 							fieldObjectAlamatController.text = state.record!.objectAlamat;
 							fieldPolisAkhirController.text = state.record!.polisAkhir.toIso8601String();
 							fieldPolisMulaiController.text = state.record!.polisMulai.toIso8601String();
@@ -171,31 +166,6 @@ class Regpar2FormFormPageFormState extends State<Regpar2FormFormPage> {
 		}
 	}
 
-	Widget buildFieldCoverLama(){
-		return TextFormField(
-			keyboardType: TextInputType.number,
-			inputFormatters: [ThousandsSeparatorInputFormatter()],
-			controller: fieldCoverLamaController,
-			decoration: const InputDecoration(
-				labelText: "coverLama",
-				floatingLabelBehavior: FloatingLabelBehavior.always,
-			),
-			onChanged: (value) {
-				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
-				}
-			},
-			validator: (value) {
-				if (value == null || value.isEmpty) {
-					addError(error: kStringNullError);
-					return "";
-				}
-				return null;
-			},
-			textAlign: TextAlign.right,
-		);
-	}
-
 	Widget buildFieldObjectAlamat(){
 		return TextFormField(
 			keyboardType: TextInputType.multiline,
@@ -208,7 +178,8 @@ class Regpar2FormFormPageFormState extends State<Regpar2FormFormPage> {
 			),
 			onChanged: (value) {
 				if (value.isNotEmpty) {
-				removeError(error: kStringNullError);
+				  removeError(error: kStringNullError);
+          regpar2FormBloc.add(FieldObjectAlamatChangedEvent(objectAlamat: value));
 				}
 			},
 			validator: (value) {
@@ -232,6 +203,7 @@ class Regpar2FormFormPageFormState extends State<Regpar2FormFormPage> {
 					removeError(
 						error: "Field ComboMKecamatan tidak boleh kosong.");
 					regpar2FormBloc.add(ComboMKecamatanChangedEvent(comboMKecamatan: value));
+          comboMKelurahanKey.currentState?.changeSelectedItem(null);
 				}
 			},
 			onSaveCallback: (value) {
@@ -286,6 +258,8 @@ class Regpar2FormFormPageFormState extends State<Regpar2FormFormPage> {
 					removeError(
 						error: "Field ComboMKota tidak boleh kosong.");
 					regpar2FormBloc.add(ComboMKotaChangedEvent(comboMKota: value));
+          comboMKecamatanKey.currentState?.changeSelectedItem(null);
+          comboMKelurahanKey.currentState?.changeSelectedItem(null);
 				}
 			},
 			onSaveCallback: (value) {
@@ -312,6 +286,9 @@ class Regpar2FormFormPageFormState extends State<Regpar2FormFormPage> {
 					removeError(
 						error: "Field ComboMPropinsi tidak boleh kosong.");
 					regpar2FormBloc.add(ComboMPropinsiChangedEvent(comboMPropinsi: value));
+          comboMKotaKey.currentState?.changeSelectedItem(null);
+          comboMKecamatanKey.currentState?.changeSelectedItem(null);
+          comboMKelurahanKey.currentState?.changeSelectedItem(null);
 				}
 			},
 			onSaveCallback: (value) {
@@ -339,8 +316,9 @@ class Regpar2FormFormPageFormState extends State<Regpar2FormFormPage> {
 			),
 			onChanged: (value) {
 				if (value != null) {
-				removeError(error: kStringNullError);
+				  removeError(error: kStringNullError);
 					fieldPolisAkhirController.text = value.toIso8601String();
+          regpar2FormBloc.add(FieldPolisAkhirChangedEvent(polisAkhir: value));
 				}
 			},
 			validator: (value) {
@@ -364,8 +342,10 @@ class Regpar2FormFormPageFormState extends State<Regpar2FormFormPage> {
 			),
 			onChanged: (value) {
 				if (value != null) {
-				removeError(error: kStringNullError);
-					fieldPolisMulaiController.text = value.toIso8601String();
+          removeError(error: kStringNullError);
+          fieldPolisMulaiController.text = value.toIso8601String();
+
+          regpar2FormBloc.add(FieldPolisMulaiChangedEvent(polisMulai: value));
 				}
 			},
 			validator: (value) {
@@ -375,11 +355,6 @@ class Regpar2FormFormPageFormState extends State<Regpar2FormFormPage> {
 				}
 				return null;
 			},
-		);
-	}
-
-	Widget buildFieldRegpar1Id(){
-		return TextFormField(
 		);
 	}
 
@@ -443,7 +418,7 @@ class Regpar2FormFormPageFormState extends State<Regpar2FormFormPage> {
 		if (_formKey.currentState!.validate()) {
 			_formKey.currentState!.save();
 			Regpar2FormModel record = Regpar2FormModel(
-				coverLama: int.parse(fieldCoverLamaController.text),
+        regpar1Id: widget.recordId,
 				objectAlamat: fieldObjectAlamatController.text,
 				objectKecamatanId: fieldComboMKecamatan?.mkecamatanId,
 				objectKelurahanId: fieldComboMKelurahan?.mkelurahanId,

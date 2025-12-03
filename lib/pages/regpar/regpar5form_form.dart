@@ -76,7 +76,6 @@ class Regpar5FormFormPageFormState extends State<Regpar5FormFormPage> {
 										buildFieldPremiRsmdcc(),
 										buildFieldPremiTotal(),
 										buildFieldPremiTsfwd(),
-										buildFieldRegpar1Id(),
 										const SizedBox(height: 25),
 										FormError(
 											errors: errors,
@@ -373,11 +372,6 @@ class Regpar5FormFormPageFormState extends State<Regpar5FormFormPage> {
 		);
 	}
 
-	Widget buildFieldRegpar1Id(){
-		return TextFormField(
-		);
-	}
-
 	void _dismissDialog() {
 		Navigator.pop(context);
 	}
@@ -386,6 +380,7 @@ class Regpar5FormFormPageFormState extends State<Regpar5FormFormPage> {
 		if (_formKey.currentState!.validate()) {
 			_formKey.currentState!.save();
 			Regpar5FormModel record = Regpar5FormModel(
+        regpar1Id: widget.recordId,
 				diskonNilai: double.parse(fieldDiskonNilaiController.text.replaceAll(',', '')),
 				diskonPersen: double.parse(fieldDiskonPersenController.text.replaceAll(',', '')),
 				premiEqvet: double.parse(fieldPremiEqvetController.text.replaceAll(',', '')),

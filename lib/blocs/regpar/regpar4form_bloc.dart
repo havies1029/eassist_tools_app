@@ -50,7 +50,8 @@ class Regpar4FormBloc extends Bloc<Regpar4FormEvents, Regpar4FormState> {
 		Regpar4FormLihatEvent event, Emitter<Regpar4FormState> emit) async {
 		emit(state.copyWith(isLoading: true, isLoaded: false));
 		Regpar4FormModel record = await repository.regpar4FormLihat(event.recordId);
-		emit(state.copyWith(isLoading: false, isLoaded: true, record: record));
+		emit(state.copyWith(isLoading: false, isLoaded: true, record: record,
+      	comboRMatauang: record.comboRMatauang));
 	}
 
 	Future<void> onComboRMatauangChanged(

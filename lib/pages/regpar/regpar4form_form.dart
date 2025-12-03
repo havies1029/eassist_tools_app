@@ -69,7 +69,6 @@ class Regpar4FormFormPageFormState extends State<Regpar4FormFormPage> {
 										),
 										const SizedBox(height: 25),
 										buildFieldCurrId(),
-										buildFieldRegpar1Id(),
 										buildFieldSiBuilding(),
 										buildFieldSiContent(),
 										buildFieldSiMachinery(),
@@ -166,11 +165,6 @@ class Regpar4FormFormPageFormState extends State<Regpar4FormFormPage> {
 						error: "Field ComboRMatauang tidak boleh kosong.");
 				}
 			},
-		);
-	}
-
-	Widget buildFieldRegpar1Id(){
-		return TextFormField(
 		);
 	}
 
@@ -307,8 +301,8 @@ class Regpar4FormFormPageFormState extends State<Regpar4FormFormPage> {
 		if (_formKey.currentState!.validate()) {
 			_formKey.currentState!.save();
 			Regpar4FormModel record = Regpar4FormModel(
+        regpar1Id: widget.recordId,
 				currId: fieldComboRMatauang?.rmatauangKode,
-				regpar4Id: '',
 				siBuilding: double.parse(fieldSiBuildingController.text.replaceAll(',', '')),
 				siContent: double.parse(fieldSiContentController.text.replaceAll(',', '')),
 				siMachinery: double.parse(fieldSiMachineryController.text.replaceAll(',', '')),
@@ -317,9 +311,8 @@ class Regpar4FormFormPageFormState extends State<Regpar4FormFormPage> {
 			);
 			if (widget.viewMode == "tambah") {
 				regpar4FormBloc.add(Regpar4FormTambahEvent(record: record));
-			} else if (widget.viewMode == "ubah") {
-				record.regpar4Id = regpar4FormBloc.state.record!.regpar4Id;
-				regpar4FormBloc.add(Regpar4FormUbahEvent(record: record));
+			} else if (widget.viewMode == "ubah") {				
+        regpar4FormBloc.add(Regpar4FormUbahEvent(record: record));
 			}
 			_dismissDialog();
 		}

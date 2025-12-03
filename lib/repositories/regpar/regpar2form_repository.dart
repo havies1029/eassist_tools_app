@@ -15,7 +15,7 @@ class Regpar2FormRepository {
 	Future<bool> regpar2FormHapus(String regpar2Id) async {
 		return await api.regpar2FormHapusAPI(regpar2Id);
 	}
-	Future<Regpar2FormModel> regpar2FormLihat(String regpar2Id) async {
-		return await api.regpar2FormLihatAPI(regpar2Id);
+	Future<Regpar2FormModel> regpar2FormLihat(String regpar1Id) async {
+		return await api.regpar2FormLihatAPI(regpar1Id);
 	}
 }

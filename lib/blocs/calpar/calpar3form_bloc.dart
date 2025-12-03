@@ -54,7 +54,10 @@ class Calpar3FormBloc extends Bloc<Calpar3FormEvents, Calpar3FormState> {
 		Calpar3FormLihatEvent event, Emitter<Calpar3FormState> emit) async {
 		emit(state.copyWith(isLoading: true, isLoaded: false));
 		Calpar3FormModel record = await repository.calpar3FormLihat(event.recordId);
-		emit(state.copyWith(isLoading: false, isLoaded: true, record: record));
+		emit(state.copyWith(isLoading: false, isLoaded: true, record: record,
+      comboMJnscoverPar: record.comboMJnscoverPar,
+      comboMWilayah: record.comboMWilayah,
+      comboMKabZonaGempa: record.comboMKabZonaGempa));
 	}
 
 	Future<void> onComboMJnscoverParChanged(
@@ -63,9 +66,16 @@ class Calpar3FormBloc extends Bloc<Calpar3FormEvents, Calpar3FormState> {
 		emit(state.copyWith(isLoading: true, isLoaded: false));
 
 		ComboMJnscoverParModel comboMJnscoverPar = event.comboMJnscoverPar;
+    var record = state.record;
+    record?.isEq = comboMJnscoverPar.isEq;
+    record?.isFlexas = comboMJnscoverPar.isFlexas; 
+    record?.isOther = comboMJnscoverPar.isOther;
+    record?.isRsmdcc = comboMJnscoverPar.isRsmdcc;
+    record?.isTsfwd = comboMJnscoverPar.isTsfwd;    
 		emit(state.copyWith(
 			isLoading: false,
 			isLoaded: true,
+      record: record,
 			comboMJnscoverPar: comboMJnscoverPar));
 	}
 

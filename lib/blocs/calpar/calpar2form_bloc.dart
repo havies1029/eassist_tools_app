@@ -50,7 +50,7 @@ class Calpar2FormBloc extends Bloc<Calpar2FormEvents, Calpar2FormState> {
 		Calpar2FormLihatEvent event, Emitter<Calpar2FormState> emit) async {
 		emit(state.copyWith(isLoading: true, isLoaded: false));
 		Calpar2FormModel record = await repository.calpar2FormLihat(event.recordId);
-		emit(state.copyWith(isLoading: false, isLoaded: true, record: record));
+		emit(state.copyWith(isLoading: false, isLoaded: true, record: record, comboRMatauang: record.comboRMatauang));
 	}
 
 	Future<void> onComboRMatauangChanged(

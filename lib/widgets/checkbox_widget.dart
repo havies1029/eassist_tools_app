@@ -34,7 +34,7 @@ class CheckboxWidgetState extends State<CheckboxWidget> {
           widget.leftLabel,
           style: const TextStyle(fontSize: 15.0),
         ),
-        Checkbox(
+        Checkbox(          
           value: _checkbox,
           onChanged: (value) {
             widget.callback(value!);
