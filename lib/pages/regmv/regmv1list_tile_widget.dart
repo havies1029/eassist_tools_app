@@ -4,6 +4,7 @@ import 'package:eassist_tools_app/blocs/regmv/regmv_upload_foto_mobil_bloc.dart'
 import 'package:eassist_tools_app/blocs/regmv/regmv_upload_stnk_bloc.dart';
 import 'package:eassist_tools_app/pages/regmv/regmv2form_form.dart';
 import 'package:eassist_tools_app/pages/regmv/regmv3form_form.dart';
+import 'package:eassist_tools_app/pages/regmv/regmv4cari_list_widget.dart';
 import 'package:eassist_tools_app/pages/regmv/regmv4form_form.dart';
 import 'package:eassist_tools_app/pages/regmv/regmv5form_form.dart';
 import 'package:eassist_tools_app/pages/regmv/regmv6form_form.dart';
@@ -147,6 +148,22 @@ class Regmv1ListTileWidget extends StatelessWidget {
 						Row(
 							mainAxisAlignment: MainAxisAlignment.spaceAround,
 							children: [
+                SizedBox(
+									width: MediaQuery.of(context).size.width * 0.25,
+									height: 80,
+									child: Padding(
+										padding: const EdgeInsets.only(top: 30.0),
+										child: ElevatedButton(
+											onPressed: () {
+												showDialogRegMv4ViewFotoData(context, regmv1Id);
+											},
+											child: const Text(
+												'View Foto STNK',
+												style: TextStyle(fontSize: 13.0),
+											),
+										),
+									),
+								),							
 								SizedBox(
 									width: MediaQuery.of(context).size.width * 0.25,
 									height: 100,
@@ -308,5 +325,39 @@ class Regmv1ListTileWidget extends StatelessWidget {
 			},
 			useSafeArea: true);
   }
+
+  void showDialogRegMv4ViewFotoData(BuildContext context, String recordId) {
+		FocusScope.of(context).requestFocus(FocusNode());
+		showDialog(
+			context: context,
+			barrierDismissible: true,
+			builder: (BuildContext context) {
+				return AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      backgroundColor: Colors.white,   // <-- membuat dialog tidak transparan
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text("Pilih Regmv4"),
+          IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ],
+      ),
+      content: SizedBox(
+        width: double.maxFinite,
+        height: 400,                    // ⬅ agar dialog punya tinggi tetap
+        child: Regmv4CariListWidget(
+          regmv1Id: recordId,
+        ),
+      ),
+    );
+			},
+			useSafeArea: true);
+  }
+
 
 }

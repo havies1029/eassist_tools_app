@@ -51,6 +51,7 @@ import 'package:eassist_tools_app/blocs/regmv/regmv1crud_bloc.dart';
 import 'package:eassist_tools_app/blocs/regmv/regmv1list_bloc.dart';
 import 'package:eassist_tools_app/blocs/regmv/regmv2form_bloc.dart';
 import 'package:eassist_tools_app/blocs/regmv/regmv3form_bloc.dart';
+import 'package:eassist_tools_app/blocs/regmv/regmv4cari_bloc.dart';
 import 'package:eassist_tools_app/blocs/regmv/regmv4form_bloc.dart';
 import 'package:eassist_tools_app/blocs/regmv/regmv5form_bloc.dart';
 import 'package:eassist_tools_app/blocs/regmv/regmv6form_bloc.dart';
@@ -324,6 +325,7 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => Regpar5FormBloc( repository: Regpar5FormRepository())),
         BlocProvider(create: (context) => Regother1ListBloc()),
         BlocProvider(create: (context) => Regother1CrudBloc(repository: Regother1CrudRepository())),
+        BlocProvider(create: (context) => Regmv4CariBloc()),
 
       ],
       child: MaterialApp(
