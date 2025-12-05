@@ -1,6 +1,9 @@
+// ignore_for_file: avoid_web_libraries_in_flutter, deprecated_member_use
+
 import 'dart:convert';
 import 'dart:html' as html;
-import 'dart:js' as js;
+import 'dart:js' as dart_js;
+import 'package:js/js_util.dart' as js_util;
 
 import 'package:flutter/material.dart';
 import 'web_view_registry.dart'; // ⬅️ Ini wajib: conditional wrapper untuk platformViewRegistry
@@ -38,11 +41,12 @@ class _GoogleSignInWebState extends State<GoogleSignInWeb> {
     if (_isGoogleSDKReady()) {
       debugPrint("✅ Google SDK siap. Menjalankan initialize...");
 
-      js.context.callMethod('google.accounts.id.initialize', [
-        js.JsObject.jsify({
+      dart_js.context.callMethod('google.accounts.id.initialize', [
+        dart_js.JsObject.jsify({
           'client_id':
               '217496566954-tiqmna993j1a943i9d86chpas0ipktle.apps.googleusercontent.com',
-          'callback': js.allowInterop((response) {
+          // ignore: undefined_function
+          'callback': js_util.allowInterop((response) {
             final idToken = response['credential'];
             final user = _decodeJwt(idToken);
             debugPrint("✅ Google Sign-In berhasil, token diterima.");
@@ -51,16 +55,16 @@ class _GoogleSignInWebState extends State<GoogleSignInWeb> {
         })
       ]);
 
-      js.context.callMethod('google.accounts.id.renderButton', [
+      dart_js.context.callMethod('google.accounts.id.renderButton', [
         _element,
-        js.JsObject.jsify({
+        dart_js.JsObject.jsify({
           'theme': 'outline',
           'size': 'large',
           'width': 300,
         }),
       ]);
 
-      js.context.callMethod('google.accounts.id.prompt');
+      dart_js.context.callMethod('google.accounts.id.prompt');
     } else {
       debugPrint("⏳ Google SDK belum siap, retry dalam 500ms...");
       Future.delayed(const Duration(milliseconds: 500), _tryInitGoogleSignIn);
@@ -68,9 +72,9 @@ class _GoogleSignInWebState extends State<GoogleSignInWeb> {
   }
 
   bool _isGoogleSDKReady() {
-    return js.context.hasProperty('google') &&
-        js.context['google'].hasProperty('accounts') &&
-        js.context['google']['accounts'].hasProperty('id');
+    return dart_js.context.hasProperty('google') &&
+        dart_js.context['google'].hasProperty('accounts') &&
+        dart_js.context['google']['accounts'].hasProperty('id');
   }
 
   Map<String, dynamic> _decodeJwt(String token) {
