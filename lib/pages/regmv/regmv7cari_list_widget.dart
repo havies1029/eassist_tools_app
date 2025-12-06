@@ -1,21 +1,21 @@
-import 'package:eassist_tools_app/blocs/regmv/regmv4form_bloc.dart';
+import 'package:eassist_tools_app/blocs/regmv/regmv7form_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/common/constants.dart';
-import 'package:eassist_tools_app/blocs/regmv/regmv4cari_bloc.dart';
-import 'package:eassist_tools_app/pages/regmv/regmv4cari_tile_widget.dart';
-import 'package:eassist_tools_app/models/regmv/regmv4cari_model.dart';
+import 'package:eassist_tools_app/blocs/regmv/regmv7cari_bloc.dart';
+import 'package:eassist_tools_app/pages/regmv/regmv7cari_tile_widget.dart';
+import 'package:eassist_tools_app/models/regmv/regmv7cari_model.dart';
 
-class Regmv4CariListWidget extends StatefulWidget {
+class Regmv7CariListWidget extends StatefulWidget {
 	final String regmv1Id;
-	const Regmv4CariListWidget({super.key, required this.regmv1Id});
+	const Regmv7CariListWidget({super.key, required this.regmv1Id});
 
 	@override
-	Regmv4CariListWidgetState createState() => Regmv4CariListWidgetState();
+	Regmv7CariListWidgetState createState() => Regmv7CariListWidgetState();
 }
 
-class Regmv4CariListWidgetState extends State<Regmv4CariListWidget> {
-	late Regmv4CariBloc regmv4CariBloc;
+class Regmv7CariListWidgetState extends State<Regmv7CariListWidget> {
+	late Regmv7CariBloc regmv7CariBloc;
 	final ScrollController _scrollController = ScrollController();
 
 	@override
@@ -37,14 +37,14 @@ class Regmv4CariListWidgetState extends State<Regmv4CariListWidget> {
 
 	@override
 	Widget build(BuildContext context) {
-		regmv4CariBloc = BlocProvider.of<Regmv4CariBloc>(context);
-		return BlocListener<Regmv4FormBloc, Regmv4FormState>(
-        listener: (context, state) {
-          if (state.isSaved) {
-            refreshData();
-          }
-        },
-        child: BlocConsumer<Regmv4CariBloc, Regmv4CariState>(
+		regmv7CariBloc = BlocProvider.of<Regmv7CariBloc>(context);
+		return BlocListener<Regmv7FormBloc, Regmv7FormState>(
+          listener: (context, state) {
+            if (state.isSaved) {
+              refreshData();
+            }
+          },
+          child: BlocConsumer<Regmv7CariBloc, Regmv7CariState>(
             builder: (context, state) {
           if (state.status == ListStatus.success) {
           
@@ -60,9 +60,9 @@ class Regmv4CariListWidgetState extends State<Regmv4CariListWidget> {
                   borderRadius: BorderRadius.circular(15.0)),
                 child: Column(
                   children: <Widget>[
-                    Regmv4CariTileWidget(
-                      caption: state.items[index].caption,
-                      regmv4Id: state.items[index].regmv4Id,
+                    Regmv7CariTileWidget(
+                      accNama: state.items[index].accNama,
+                      regmv7Id: state.items[index].regmv7Id,
                     )
                   ],
                 ),
@@ -100,13 +100,13 @@ class Regmv4CariListWidgetState extends State<Regmv4CariListWidget> {
 		if (!_scrollController.hasClients) return;
 		if (_scrollController.position.pixels ==
 				_scrollController.position.maxScrollExtent) {
-			regmv4CariBloc.add(FetchRegmv4CariEvent());
+			regmv7CariBloc.add(FetchRegmv7CariEvent());
 		}
 	}
 
-	void refreshData() {
-		regmv4CariBloc.add(
-			RefreshRegmv4CariEvent(regmv1Id: widget.regmv1Id));
+  void refreshData() {
+		regmv7CariBloc.add(
+			RefreshRegmv7CariEvent(regmv1Id: widget.regmv1Id));
 	}
 
 }

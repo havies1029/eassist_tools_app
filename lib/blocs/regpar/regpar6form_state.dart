@@ -17,6 +17,9 @@ class Regpar6FormState extends Equatable {
 		this.hasFailure = false,
 });
 
+
+  const Regpar6FormState.reset() : this();
+
 	Regpar6FormState copyWith({
 		Regpar6FormModel? record,
 		bool? isLoading,

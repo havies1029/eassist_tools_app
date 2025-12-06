@@ -1,6 +1,6 @@
-import 'package:eassist_tools_app/blocs/regmv/regmv4form_bloc.dart';
-import 'package:eassist_tools_app/blocs/regmv/regmv_download_foto_stnk_bloc.dart';
-import 'package:eassist_tools_app/blocs/regmv/regmv_download_foto_stnk_event.dart';
+import 'package:eassist_tools_app/blocs/regpar/regpar6form_bloc.dart';
+import 'package:eassist_tools_app/blocs/regpar/regpar_download_foto_object_bloc.dart';
+import 'package:eassist_tools_app/blocs/regpar/regpar_download_foto_object_event.dart';
 import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:flutter/material.dart';
 import 'package:eassist_tools_app/widgets/my_colors.dart';
@@ -8,21 +8,23 @@ import 'package:eassist_tools_app/widgets/my_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class Regmv4CariTileWidget extends StatefulWidget {
-  final String caption;
-  final String regmv4Id;
+class Regpar6CariTileWidget extends StatefulWidget {
+  final String regpar1Id;
+  final String fotoCaption;
+  final String regpar6Id;
 
-  const Regmv4CariTileWidget({
+  const Regpar6CariTileWidget({
     super.key,
-    required this.caption,
-    required this.regmv4Id,
+    required this.regpar1Id,
+    required this.fotoCaption,
+    required this.regpar6Id,
   });
 
   @override
-  State<Regmv4CariTileWidget> createState() => _Regmv4CariTileWidgetState();
+  State<Regpar6CariTileWidget> createState() => _Regpar6CariTileWidgetState();
 }
 
-class _Regmv4CariTileWidgetState extends State<Regmv4CariTileWidget> {
+class _Regpar6CariTileWidgetState extends State<Regpar6CariTileWidget> {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -40,40 +42,26 @@ class _Regmv4CariTileWidgetState extends State<Regmv4CariTileWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "caption",
+              "fotoCaption",
               style: MyText.bodyLarge(context)!.copyWith(
                 color: MyColors.grey_40,
               ),
             ),
             const SizedBox(height: 5),
             Text(
-              widget.caption,
-              style: MyText.bodyLarge(context)!.copyWith(
-                color: MyColors.grey_80,
-              ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              "regmv4Id",
-              style: MyText.bodyLarge(context)!.copyWith(
-                color: MyColors.grey_40,
-              ),
-            ),
-            const SizedBox(height: 5),
-            Text(
-              widget.regmv4Id,
+              widget.fotoCaption,
               style: MyText.bodyLarge(context)!.copyWith(
                 color: MyColors.grey_80,
               ),
             ),
             const SizedBox(height: 10),
 
-            // FOTO
+            /// FOTO NETWORK
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: CachedNetworkImage(
                 imageUrl:
-                    "${AppData.apiDomain}api/regmv/regmv4cari/stnk/getfoto/${widget.regmv4Id}",
+                    "${AppData.apiDomain}api/regpar/regpar6cari/fotoobject/getfoto/${widget.regpar6Id}",
                 httpHeaders: {
                   "Authorization": "Bearer ${AppData.userToken}",
                 },
@@ -87,7 +75,8 @@ class _Regmv4CariTileWidgetState extends State<Regmv4CariTileWidget> {
 
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
+              children: [      
+                
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.25,
                   height: 80,
@@ -95,8 +84,8 @@ class _Regmv4CariTileWidgetState extends State<Regmv4CariTileWidget> {
                     padding: const EdgeInsets.only(top: 30.0),
                     child: ElevatedButton(
                       onPressed: () {
-                        context.read<Regmv4FormBloc>().add(
-                										  Regmv4FormHapusEvent(recordId: widget.regmv4Id));
+                        context.read<Regpar6FormBloc>().add(
+                						Regpar6FormHapusEvent(recordId: widget.regpar6Id));
                       },
                       child: const Text(
                         'Hapus',
@@ -112,8 +101,8 @@ class _Regmv4CariTileWidgetState extends State<Regmv4CariTileWidget> {
                     padding: const EdgeInsets.only(top: 30.0),
                     child: ElevatedButton(
                       onPressed: () {
-                        context.read<RegmvDownloadFotoStnkBloc>().add(
-                                      DownloadFileEvent(regmv4Id: widget.regmv4Id));
+                        context.read<RegparDownloadFotoObjectBloc>().add(
+                          DownloadFileEvent(regpar6Id: widget.regpar6Id));
                       },
                       child: const Text(
                         'Download',

@@ -25,10 +25,3 @@ class UploadFotoAccSubmitted extends RegmvUploadFotoAccEvent {
   List<Object?> get props => [regmv1Id, caption];
 }
 
-class CekIsFotoAccUploaded extends RegmvUploadFotoAccEvent {
-  final String mrekanId;
-  const CekIsFotoAccUploaded(this.mrekanId);
-
-  @override
-  List<Object?> get props => [mrekanId];
-}

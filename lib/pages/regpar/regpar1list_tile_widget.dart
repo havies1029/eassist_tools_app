@@ -1,8 +1,10 @@
 import 'package:eassist_tools_app/blocs/regpar/regpar5form_bloc.dart';
+import 'package:eassist_tools_app/blocs/regpar/regpar6cari_bloc.dart';
 import 'package:eassist_tools_app/pages/regpar/regpar2form_form.dart';
 import 'package:eassist_tools_app/pages/regpar/regpar3form_form.dart';
 import 'package:eassist_tools_app/pages/regpar/regpar4form_form.dart';
 import 'package:eassist_tools_app/pages/regpar/regpar5form_form.dart';
+import 'package:eassist_tools_app/pages/regpar/regpar6cari_list_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/widgets/my_colors.dart';
@@ -117,6 +119,29 @@ class Regpar1ListTileWidget extends StatelessWidget {
 						),
 
             Container(height: 10),
+            Row(
+							mainAxisAlignment: MainAxisAlignment.spaceAround,
+							children: [
+                SizedBox(
+									width: MediaQuery.of(context).size.width * 0.25,
+									height: 80,
+									child: Padding(
+										padding: const EdgeInsets.only(top: 30.0),
+										child: ElevatedButton(
+											onPressed: () {
+                        showDialogRegPar6ViewFotoData(context, regpar1Id);
+											},
+											child: const Text(
+												'View Foto',
+												style: TextStyle(fontSize: 13.0),
+											),
+										),
+									),
+								),			
+                
+													
+							],
+						),
 						Row(
 							mainAxisAlignment: MainAxisAlignment.spaceAround,
 							children: [
@@ -204,6 +229,40 @@ class Regpar1ListTileWidget extends StatelessWidget {
 			barrierDismissible: false,
 			builder: (BuildContext context) {
 				return Regpar5FormFormPage(viewMode: viewMode, recordId: recordId);
+			},
+			useSafeArea: true);
+  }
+
+  void showDialogRegPar6ViewFotoData(BuildContext context, String recordId) {
+		FocusScope.of(context).requestFocus(FocusNode());
+    context.read<Regpar6CariBloc>().add(Regpar6CariResetEvent());
+		showDialog(
+			context: context,
+			barrierDismissible: false,
+			builder: (BuildContext context) {
+				return AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      backgroundColor: Colors.white,   // <-- membuat dialog tidak transparan
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text("Daftar Foto Object"),
+          IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ],
+      ),
+      content: SizedBox(
+        width: double.maxFinite,
+        height: 400,                    // ⬅ agar dialog punya tinggi tetap
+        child: Regpar6CariListWidget(
+          regpar1Id: recordId,
+        ),
+      ),
+    );
 			},
 			useSafeArea: true);
   }
