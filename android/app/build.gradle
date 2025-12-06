@@ -31,9 +31,10 @@ android {
 
     signingConfigs {
         debug {
-            storeFile file("../keystore/debug.keystore")
+            // Use the standard Android debug keystore so builds work without a local keystore file.
+            storeFile file("${System.properties['user.home']}/.android/debug.keystore")
             storePassword "android"
-            keyAlias "androiddebugkey"
+            keyAlias "AndroidDebugKey"
             keyPassword "android"
         }
     }
