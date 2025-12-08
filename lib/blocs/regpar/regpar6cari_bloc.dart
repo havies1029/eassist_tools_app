@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/common/constants.dart';
-import 'package:eassist_tools_app/widgets/list_extension.dart';
 import 'package:eassist_tools_app/models/regpar/regpar6cari_model.dart';
 import 'package:eassist_tools_app/repositories/regpar/regpar6cari_repository.dart';
 

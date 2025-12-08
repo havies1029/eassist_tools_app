@@ -43,6 +43,9 @@ import 'package:eassist_tools_app/blocs/login/emailverification_bloc.dart';
 import 'package:eassist_tools_app/blocs/login/login_bloc.dart';
 import 'package:eassist_tools_app/blocs/networkconnection/network_bloc.dart';
 import 'package:eassist_tools_app/blocs/onboardmenu/onboardmenucari_bloc.dart';
+import 'package:eassist_tools_app/blocs/payment/dnrekapcobcari_bloc.dart';
+import 'package:eassist_tools_app/blocs/payment/dnsppacari_bloc.dart';
+import 'package:eassist_tools_app/blocs/payment/dnsppamvcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/profile/profile_download_foto_bloc.dart';
 import 'package:eassist_tools_app/blocs/profile/profile_upload_foto_bloc.dart';
 import 'package:eassist_tools_app/blocs/profile/profile_upload_ktp_bloc.dart';
@@ -350,6 +353,9 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => Regpar6FormBloc(repository: Regpar6FormRepository())),
         BlocProvider(create: (context) => Regother1ListBloc()),
         BlocProvider(create: (context) => Regother1CrudBloc(repository: Regother1CrudRepository())),
+        BlocProvider(create: (context) => DnrekapcobCariBloc()),
+        BlocProvider(create:  (context) => DnsppaCariBloc()),
+        BlocProvider(create:  (context) => DnsppamvCariBloc()),
 
 
       ],

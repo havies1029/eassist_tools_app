@@ -22,6 +22,7 @@ import 'package:eassist_tools_app/pages/gen_status_aset/statusasetcari_main.dart
 import 'package:eassist_tools_app/pages/gen_trslog/trslogcari_main.dart';
 import 'package:eassist_tools_app/pages/heropage/fixed_nambar_overlay.dart';
 import 'package:eassist_tools_app/pages/klaim/klaim1list_main.dart';
+import 'package:eassist_tools_app/pages/payment/dnrekapcobcari_list.dart';
 import 'package:eassist_tools_app/pages/regmv/regmv1list_main.dart';
 import 'package:eassist_tools_app/pages/regother/regother1list_main.dart';
 import 'package:eassist_tools_app/pages/regpar/regpar1list_main.dart';
@@ -194,6 +195,16 @@ class _HeroPageState extends State<HeroPage> {
                                     );
                                   },
                                   child: Text("Registrasi Other"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => DnrekapcobCariPage()),
+                                    );
+                                  },
+                                  child: Text("Payment : Premi Outstanding"),
                                 ),
                                 TextButton(
                                   onPressed: () {

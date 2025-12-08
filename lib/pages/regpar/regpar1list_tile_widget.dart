@@ -138,8 +138,7 @@ class Regpar1ListTileWidget extends StatelessWidget {
 										),
 									),
 								),			
-                
-													
+                													
 							],
 						),
 						Row(

@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/common/constants.dart';
 import 'package:eassist_tools_app/blocs/regmv/regmv5cari_bloc.dart';
 import 'package:eassist_tools_app/pages/regmv/regmv5cari_tile_widget.dart';
-import 'package:eassist_tools_app/models/regmv/regmv5cari_model.dart';
 
 class Regmv5CariListWidget extends StatefulWidget {
 	final String regmv1Id;
