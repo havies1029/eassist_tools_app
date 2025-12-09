@@ -1,3 +1,4 @@
+import 'package:eassist_tools_app/apis/payment/paymentmethodcari_api.dart';
 import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
 import 'package:eassist_tools_app/blocs/calpar/calpar1crud_bloc.dart';
 import 'package:eassist_tools_app/blocs/calpar/calpar1list_bloc.dart';
@@ -46,6 +47,7 @@ import 'package:eassist_tools_app/blocs/onboardmenu/onboardmenucari_bloc.dart';
 import 'package:eassist_tools_app/blocs/payment/dnrekapcobcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/payment/dnsppacari_bloc.dart';
 import 'package:eassist_tools_app/blocs/payment/dnsppamvcari_bloc.dart';
+import 'package:eassist_tools_app/blocs/payment/paymentmethodcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/profile/profile_download_foto_bloc.dart';
 import 'package:eassist_tools_app/blocs/profile/profile_upload_foto_bloc.dart';
 import 'package:eassist_tools_app/blocs/profile/profile_upload_ktp_bloc.dart';
@@ -110,6 +112,7 @@ import 'package:eassist_tools_app/repositories/gen_sppamv/sppamvcrud_repository.
 import 'package:eassist_tools_app/repositories/gen_sppapar/sppaparcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/login/change_password_repository.dart';
 import 'package:eassist_tools_app/repositories/login/emailverification_repository.dart';
+import 'package:eassist_tools_app/repositories/payment/paymentmethodcari_repository.dart' show PaymentMethodCariRepository;
 import 'package:eassist_tools_app/repositories/profile/profile_ktp_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/userfoto_repository.dart';
 import 'package:eassist_tools_app/repositories/regmv/regmv1crud_repository.dart';
@@ -354,8 +357,9 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => Regother1ListBloc()),
         BlocProvider(create: (context) => Regother1CrudBloc(repository: Regother1CrudRepository())),
         BlocProvider(create: (context) => DnrekapcobCariBloc()),
-        BlocProvider(create:  (context) => DnsppaCariBloc()),
-        BlocProvider(create:  (context) => DnsppamvCariBloc()),
+        BlocProvider(create: (context) => DnsppaCariBloc()),
+        BlocProvider(create: (context) => DnsppamvCariBloc()),
+        BlocProvider(create: (context) => PaymentMethodCariBloc(repository: PaymentMethodCariRepository(api: PaymentMethodCariAPI()))),
 
 
       ],

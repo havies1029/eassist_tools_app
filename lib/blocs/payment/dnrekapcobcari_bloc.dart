@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/common/constants.dart';
 import 'package:eassist_tools_app/widgets/list_extension.dart';
@@ -12,7 +13,8 @@ class DnrekapcobCariBloc extends Bloc<DnrekapcobCariEvents, DnrekapcobCariState>
 	DnrekapcobCariBloc() : super(const DnrekapcobCariState()) {
 		on<FetchDnrekapcobCariEvent>(onFetchDnrekapcobCari);
 		on<RefreshDnrekapcobCariEvent>(onRefreshDnrekapcobCari);
-	}
+    on<ToggleSelectItemEvent>(onToggleSelectItem);
+  }
 
 Future<void> onRefreshDnrekapcobCari(
 		RefreshDnrekapcobCariEvent event, Emitter<DnrekapcobCariState> emit) async {
@@ -46,12 +48,28 @@ Future<void> onFetchDnrekapcobCari(
 				index)
 			.toList();
 
-		return emit(state.copyWith(
-			items: result,
-			hasReachedMax: false,
-			status: ListStatus.success,
-			));
+			return emit(state.copyWith(
+				items: result,
+				hasReachedMax: false,
+				status: ListStatus.success,
+				));
 		}
-
 	}
+
+  void onToggleSelectItem(
+      ToggleSelectItemEvent event, Emitter<DnrekapcobCariState> emit) {
+
+    final selectedIds = Set<String>.from(state.selectedIds);
+    debugPrint('Toggling selection for cobId: ${event.cobId}');
+    debugPrint('Current selectedIds before toggle: $selectedIds');
+    if (selectedIds.contains(event.cobId)) {
+      selectedIds.remove(event.cobId);
+    } else {
+      selectedIds.add(event.cobId);
+    }
+    emit(state.copyWith(selectedIds: selectedIds));
+    debugPrint('Updated selectedIds after toggle: ${state.selectedIds}');
+  }
+
 }
+

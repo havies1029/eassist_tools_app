@@ -10,16 +10,16 @@ abstract class DnsppaCariEvents extends Equatable {
 class FetchDnsppaCariEvent extends DnsppaCariEvents {}
 
 class RefreshDnsppaCariEvent extends DnsppaCariEvents {
-  final String cobId;
+  final String listcobId;
   final String currId;
   final String searchText;
   const RefreshDnsppaCariEvent(
     {
-      this.cobId = "",
+      this.listcobId = "",
       this.currId = "",
       this.searchText = "",
     });
   @override
-  List<Object> get props => [cobId, currId, searchText];
+  List<Object> get props => [listcobId, currId, searchText];
 }
 

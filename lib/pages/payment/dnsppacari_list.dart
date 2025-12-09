@@ -5,9 +5,9 @@ import 'package:eassist_tools_app/blocs/payment/dnsppacari_bloc.dart';
 import 'package:eassist_tools_app/pages/payment/dnsppacari_list_widget.dart';
 
 class DnsppaCariPage extends StatefulWidget {
-  final String cobId;
+  final String listcobId;
   final String currId;
-	const DnsppaCariPage({super.key, required this.cobId, required this.currId});
+	const DnsppaCariPage({super.key, required this.listcobId, required this.currId});
 
 	@override
 	DnsppaCariPageState createState() => DnsppaCariPageState();
@@ -45,7 +45,7 @@ class DnsppaCariPageState extends State<DnsppaCariPage> {
 	void refreshData() {
 		dnsppaCariBloc.add(
 			RefreshDnsppaCariEvent(
-        cobId: widget.cobId,
+        listcobId: widget.listcobId,
         currId: widget.currId,
       ));
 	}
@@ -56,7 +56,7 @@ class DnsppaCariPageState extends State<DnsppaCariPage> {
       onPressed: () {
         dnsppaCariBloc.add(
           RefreshDnsppaCariEvent(
-            cobId: widget.cobId,
+            listcobId: widget.listcobId,
             currId: widget.currId,
             searchText: _searchController.text,
           ));

@@ -11,3 +11,11 @@ class FetchDnrekapcobCariEvent extends DnrekapcobCariEvents {}
 
 class RefreshDnrekapcobCariEvent extends DnrekapcobCariEvents {}
 
+class ToggleSelectItemEvent extends DnrekapcobCariEvents {
+  final String cobId;
+  const ToggleSelectItemEvent(this.cobId);
+  @override
+  List<Object> get props => [cobId];
+}
+
+

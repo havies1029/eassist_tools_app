@@ -1,7 +1,7 @@
 part of 'dnsppacari_bloc.dart';
 
 class DnsppaCariState extends Equatable {
-  final String cobId;
+  final String listcobId;
   final String currId;
   final String searchText;
   final int hal;
@@ -10,7 +10,7 @@ class DnsppaCariState extends Equatable {
 	final bool hasReachedMax;
 	const DnsppaCariState(
 		{
-      this.cobId = "",
+      this.listcobId = "",
       this.currId = "",
       this.searchText = "",
       this.hal = 1,
@@ -26,7 +26,7 @@ class DnsppaCariState extends Equatable {
 
 	DnsppaCariState copyWith(
 		{
-      String? cobId,
+      String? listcobId,
       String? currId,
       String? searchText,
       int? hal,
@@ -35,7 +35,7 @@ class DnsppaCariState extends Equatable {
 		ListStatus? status,
 		}) {
 		return DnsppaCariState(
-      cobId: cobId ?? this.cobId,
+      listcobId: listcobId ?? this.listcobId,
       currId: currId ?? this.currId,
       searchText: searchText ?? this.searchText,
       hal: hal ?? this.hal, 
@@ -46,5 +46,5 @@ class DnsppaCariState extends Equatable {
 	}
 
 	@override
-	List<Object> get props => [cobId, currId, searchText, hal, status, items, hasReachedMax];
+	List<Object> get props => [listcobId, currId, searchText, hal, status, items, hasReachedMax];
 }

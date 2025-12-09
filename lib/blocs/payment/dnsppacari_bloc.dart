@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,7 +20,7 @@ Future<void> onRefreshDnsppaCari(
 	emit(const DnsppaCariState());
 
   emit(state.copyWith(
-    cobId: event.cobId,
+    listcobId: event.listcobId,
     currId: event.currId,
     searchText: event.searchText,
     hal: 0,
@@ -35,7 +34,7 @@ Future<void> onFetchDnsppaCari(
 
 	DnsppaCariRepository repo = DnsppaCariRepository();
 	if (state.status == ListStatus.initial) {
-		List<DnsppaCariModel> items = await repo.getDnsppaCari(state.cobId, state.currId, state.searchText, state.hal);
+		List<DnsppaCariModel> items = await repo.getDnsppaCari(state.listcobId, state.currId, state.searchText, state.hal);
 		return emit(state.copyWith(
 			items: items,
 			hasReachedMax: false,
@@ -43,7 +42,7 @@ Future<void> onFetchDnsppaCari(
       hal: 1
 			));
 	}
-	List<DnsppaCariModel> items = await repo.getDnsppaCari(state.cobId, state.currId, state.searchText, state.hal + 1);
+	List<DnsppaCariModel> items = await repo.getDnsppaCari(state.listcobId, state.currId, state.searchText, state.hal + 1);
 	if (items.isEmpty) {
 		return emit(state.copyWith(hasReachedMax: true));
 	} else {

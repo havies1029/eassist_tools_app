@@ -1,8 +1,12 @@
+import 'package:eassist_tools_app/pages/payment/dnsppacari_list.dart';
+import 'package:eassist_tools_app/pages/payment/paymentmethodcari_list.dart';
+import 'package:eassist_tools_app/widgets/floatingmenumaster_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/widgets/listpage_filter_bar_ui.dart';
 import 'package:eassist_tools_app/blocs/payment/dnrekapcobcari_bloc.dart';
 import 'package:eassist_tools_app/pages/payment/dnrekapcobcari_list_widget.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 class DnrekapcobCariPage extends StatefulWidget {
   const DnrekapcobCariPage({super.key});
@@ -30,10 +34,26 @@ class DnrekapcobCariPageState extends State<DnrekapcobCariPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("DN Rekap COB"),
-        elevation: 2,
+        elevation: 2,        
       ),
-
-      body: Column(
+      floatingActionButton: SpeedDial(
+          icon: Icons.menu,
+          activeIcon: Icons.close,
+          backgroundColor: Colors.blue,
+          children: [
+            SpeedDialChild(
+              child: Icon(Icons.add),
+              label: 'View Outstanding Polis',
+              onTap: () => onViewListOutstandingPolis(),
+            ),
+            SpeedDialChild(
+              child: Icon(Icons.payment),
+              label: 'Edit Data',
+              onTap: () => onViewPaymentMethods(),
+            ),            
+          ],
+        ),
+				body: Column(
         children: [
           ListPageFilterBarUIWidget(
             searchController: _searchController,
@@ -45,6 +65,20 @@ class DnrekapcobCariPageState extends State<DnrekapcobCariPage> {
       ),
     );
   }
+
+  void onViewListOutstandingPolis() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => DnsppaCariPage(listcobId: dnrekapcobCariBloc.state.selectedIds.join(";"), currId: '001')),
+    ); // Implement your tambah data logic here
+  }
+
+  void onViewPaymentMethods() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => PaymentMethodsCariListPage()),
+    ); // Implement your ta    
+  }    
 
   void refreshData() {
     dnrekapcobCariBloc.add(RefreshDnrekapcobCariEvent());

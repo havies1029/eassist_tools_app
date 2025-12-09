@@ -3,8 +3,8 @@ import 'package:eassist_tools_app/models/payment/dnsppacari_model.dart';
 
 class DnsppaCariRepository {
 
-	Future<List<DnsppaCariModel>> getDnsppaCari(String cobId, String currId, String searchText, int hal) async {
+	Future<List<DnsppaCariModel>> getDnsppaCari(String listcobId, String currId, String searchText, int hal) async {
 		DnsppaCariAPI api = DnsppaCariAPI();
-		return await api.getDnsppaCariAPI(cobId, currId, searchText, hal);
+		return await api.getDnsppaCariAPI(listcobId, currId, searchText, hal);
 	}
 }

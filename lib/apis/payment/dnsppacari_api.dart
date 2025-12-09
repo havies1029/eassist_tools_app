@@ -4,9 +4,9 @@ import 'package:http/http.dart' as http;
 import 'package:eassist_tools_app/models/payment/dnsppacari_model.dart';
 
 class DnsppaCariAPI{
-	Future<List<DnsppaCariModel>> getDnsppaCariAPI(String cobId, String currId, String searchText, int hal) async {
+	Future<List<DnsppaCariModel>> getDnsppaCariAPI(String listcobId, String currId, String searchText, int hal) async {
 		String urlGetListEndPoint = "${AppData.prefixEndPoint}/api/payment/dnsppacari/getlist";
-    Map<String, String> queryParams = {"cobId": cobId, "currId": currId, "searchText": searchText, "hal": hal.toString()};
+    Map<String, String> queryParams = {"listcobId": listcobId, "currId": currId, "searchText": searchText, "hal": hal.toString()};
 		var uri = AppData.uriHtpp(AppData.httpAuthority, urlGetListEndPoint, queryParams);
 		final http.Response response = await http.get(uri, headers: <String, String>{
 			'Content-Type': 'application/json; odata=verbos',
