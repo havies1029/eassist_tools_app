@@ -62,7 +62,7 @@ class DnrekapcobCariListWidgetState extends State<DnrekapcobCariListWidget> {
 								dnrekapcobId: state.items[index].dnrekapcobId,
 								polisAmount: state.items[index].polisAmount,
 								polisCount: state.items[index].polisCount,
-                tsi: state.items[index].tsi
+                tsi: state.items[index].tsi,
                 isChecked: state.selectedIds.contains(state.items[index].cobId),
                 onChecked: (_) {
                   context.read<DnrekapcobCariBloc>().add(
