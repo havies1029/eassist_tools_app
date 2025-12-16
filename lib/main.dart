@@ -1,4 +1,4 @@
-import 'package:eassist_tools_app/apis/payment/paymentmethodcari_api.dart';
+import 'package:eassist_tools_app/apis/payment/paymentdn_api.dart';
 import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
 import 'package:eassist_tools_app/blocs/calpar/calpar1crud_bloc.dart';
 import 'package:eassist_tools_app/blocs/calpar/calpar1list_bloc.dart';
@@ -44,9 +44,14 @@ import 'package:eassist_tools_app/blocs/login/emailverification_bloc.dart';
 import 'package:eassist_tools_app/blocs/login/login_bloc.dart';
 import 'package:eassist_tools_app/blocs/networkconnection/network_bloc.dart';
 import 'package:eassist_tools_app/blocs/onboardmenu/onboardmenucari_bloc.dart';
+import 'package:eassist_tools_app/blocs/payment/dnrekap2inv_bloc.dart';
 import 'package:eassist_tools_app/blocs/payment/dnrekapcobcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/payment/dnsppacari_bloc.dart';
 import 'package:eassist_tools_app/blocs/payment/dnsppamvcari_bloc.dart';
+import 'package:eassist_tools_app/blocs/payment/invbayarvaform_bloc.dart';
+import 'package:eassist_tools_app/blocs/payment/pay1crud_bloc.dart';
+import 'package:eassist_tools_app/blocs/payment/pay1list_bloc.dart';
+import 'package:eassist_tools_app/blocs/payment/pay2cari_bloc.dart';
 import 'package:eassist_tools_app/blocs/payment/paymentmethodcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/profile/profile_download_foto_bloc.dart';
 import 'package:eassist_tools_app/blocs/profile/profile_upload_foto_bloc.dart';
@@ -112,7 +117,9 @@ import 'package:eassist_tools_app/repositories/gen_sppamv/sppamvcrud_repository.
 import 'package:eassist_tools_app/repositories/gen_sppapar/sppaparcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/login/change_password_repository.dart';
 import 'package:eassist_tools_app/repositories/login/emailverification_repository.dart';
-import 'package:eassist_tools_app/repositories/payment/paymentmethodcari_repository.dart' show PaymentMethodCariRepository;
+import 'package:eassist_tools_app/repositories/payment/invbayarvaform_repository.dart';
+import 'package:eassist_tools_app/repositories/payment/pay1crud_repository.dart';
+import 'package:eassist_tools_app/repositories/payment/paymentdn_repository.dart' show PaymentMethodCariRepository, PaymentDnRepository;
 import 'package:eassist_tools_app/repositories/profile/profile_ktp_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/userfoto_repository.dart';
 import 'package:eassist_tools_app/repositories/regmv/regmv1crud_repository.dart';
@@ -359,8 +366,12 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => DnrekapcobCariBloc()),
         BlocProvider(create: (context) => DnsppaCariBloc()),
         BlocProvider(create: (context) => DnsppamvCariBloc()),
-        BlocProvider(create: (context) => PaymentMethodCariBloc(repository: PaymentMethodCariRepository(api: PaymentMethodCariAPI()))),
-
+        BlocProvider(create: (context) => PaymentMethodCariBloc(repository: PaymentDnRepository(api: PaymentDnAPI()))),
+        BlocProvider(create: (context) => DnRekap2invBloc()),
+        BlocProvider(create: (context) => InvbayarvaFormBloc(repository: InvbayarvaFormRepository())),
+        BlocProvider(create:  (context) => Pay1ListBloc()),
+        BlocProvider(create: (context) => Pay1CrudBloc(repository: Pay1CrudRepository())),
+        BlocProvider(create: (context) => Pay2CariBloc()),
 
       ],
       child: MaterialApp(

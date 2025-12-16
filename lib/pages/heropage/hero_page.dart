@@ -23,7 +23,8 @@ import 'package:eassist_tools_app/pages/gen_trslog/trslogcari_main.dart';
 import 'package:eassist_tools_app/pages/heropage/fixed_nambar_overlay.dart';
 import 'package:eassist_tools_app/pages/klaim/klaim1list_main.dart';
 import 'package:eassist_tools_app/pages/payment/dnrekapcobcari_list.dart';
-import 'package:eassist_tools_app/pages/payment/paymentmethodcari_list.dart';
+import 'package:eassist_tools_app/pages/payment/pay1list_main.dart';
+import 'package:eassist_tools_app/pages/payment/rinciansoa_page.dart';
 import 'package:eassist_tools_app/pages/regmv/regmv1list_main.dart';
 import 'package:eassist_tools_app/pages/regother/regother1list_main.dart';
 import 'package:eassist_tools_app/pages/regpar/regpar1list_main.dart';
@@ -205,7 +206,27 @@ class _HeroPageState extends State<HeroPage> {
                                           builder: (context) => DnrekapcobCariPage()),
                                     );
                                   },
-                                  child: Text("Payment : Premi Outstanding"),
+                                  child: Text("Payment : Ringkasan Outstanding"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => RincianSoaPage()),
+                                    );
+                                  },
+                                  child: Text("Payment : Rincian Outstanding"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Pay1ListMainPage()),
+                                    );
+                                  },
+                                  child: Text("List Payment"),
                                 ),
                                 TextButton(
                                   onPressed: () {
