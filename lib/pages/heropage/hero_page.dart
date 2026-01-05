@@ -105,24 +105,47 @@ class _HeroPageState extends State<HeroPage> {
                           onPressed: () {
                             context
                                 .read<AuthenticationBloc>()
-                                .add(RequireRegisterClient());
+                                .add(RequireRegisterClient(requiredFrom: 'hero_page'));
                           },
                           child: Text("Register Client",
                               style: TextStyle(color: Colors.white))),
                       BlocBuilder<AuthenticationBloc, AuthenticationState>(
                           builder: (context, state) {
                         if (state is AuthenticationAuthenticated) {
-                          if (state.user.custType == "C") {
+                          if (state.user.userType == "C") {
                             return Text(
                                 'Nama : ${state.user.nama ?? "???"}');
                           }
                         }
                         return Container();
                       }),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    Calmv1ListMainPage()),
+                          );
+                          
+                        },
+                        child: Text("Simulasi MV"),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    Calpar1ListMainPage()),
+                          );
+                        },
+                        child: Text("Simulasi PAR"),
+                      ),
                       BlocBuilder<AuthenticationBloc, AuthenticationState>(
                           builder: (context, state) {
                         if (state is AuthenticationAuthenticated) {
-                          if (state.user.custType == "C") {
+                          if (state.user.userType == "C") {
                             return TextButton(
                               onPressed: () {
                                 Navigator.push(
@@ -141,20 +164,10 @@ class _HeroPageState extends State<HeroPage> {
                       BlocBuilder<AuthenticationBloc, AuthenticationState>(
                           builder: (context, state) {
                         if (state is AuthenticationAuthenticated) {
-                          if (state.user.custType == "C") {
+                          if (state.user.userType == "C") {
                             return Column(
                               children: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              Calmv1ListMainPage()),
-                                    );
-                                  },
-                                  child: Text("Simulasi MV"),
-                                ),
+                                
                                 TextButton(
                                   onPressed: () {
                                     Navigator.push(
@@ -166,17 +179,7 @@ class _HeroPageState extends State<HeroPage> {
                                   },
                                   child: Text("Registrasi MV"),
                                 ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              Calpar1ListMainPage()),
-                                    );
-                                  },
-                                  child: Text("Simulasi PAR"),
-                                ),
+                                
                                 TextButton(
                                   onPressed: () {
                                     Navigator.push(

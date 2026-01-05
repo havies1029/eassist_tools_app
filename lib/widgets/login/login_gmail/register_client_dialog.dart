@@ -8,7 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RegisterClientDialog extends BaseDialog {
-  const RegisterClientDialog({super.key});
+  final String requestFrom;
+  const RegisterClientDialog({super.key, required this.requestFrom});
 
   @override
   State<RegisterClientDialog> createState() => _RegisterClientDialogState();
@@ -144,7 +145,7 @@ class _RegisterClientDialogState extends BaseDialogState<RegisterClientDialog> {
       );
 
       context.read<RegUserBloc>().add(
-        RegUserTambahEvent(record: record)
+        RegUserTambahEvent(record: record, requestFrom: widget.requestFrom)
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

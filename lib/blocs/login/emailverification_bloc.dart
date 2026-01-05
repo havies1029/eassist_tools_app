@@ -48,7 +48,7 @@ class EmailVerificationBloc
           username: event.record.email,
           email: event.record.email,
           token: token.token,
-          custType: 'U',
+          userType: 'U',
         );
 
         AppData.user = user;
@@ -58,7 +58,7 @@ class EmailVerificationBloc
           userRepository.persistToken(userToken: token.token!);
         }
 
-        authenticationBloc.add(UserAuthenticated(user: user));
+        authenticationBloc.add(UserAuthenticated(user: user, authenticatedFrom: "email_verification"));
       } else if (infoData[0] == '2') {
         event.record.requestId = infoData[1];
         authenticationBloc
@@ -123,7 +123,7 @@ class EmailVerificationBloc
         userRepository.persistToken(userToken: token.token!);
       }
 
-      authenticationBloc.add(UserAuthenticated(user: user));
+      authenticationBloc.add(UserAuthenticated(user: user, authenticatedFrom: "email_verification"));
     } else {
       List<String> errors = [];
       errors.add(returnData.data);

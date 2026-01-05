@@ -1,5 +1,7 @@
+import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_calmv/calmv1list_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_calmv/calmv3form_bloc.dart';
+import 'package:eassist_tools_app/models/user/user_model.dart';
 import 'package:eassist_tools_app/pages/gen_calmv/calmv2form_form.dart';
 import 'package:eassist_tools_app/pages/gen_calmv/calmv3form_form.dart';
 import 'package:intl/intl.dart';
@@ -194,8 +196,24 @@ class Calmv1ListTileWidget extends StatelessWidget {
 										padding: const EdgeInsets.only(top: 30.0),
 										child: ElevatedButton(
 											onPressed: () {
-												context.read<Calmv1ListBloc>().add(
-												CalMv2RegMvEvent(calmv1Id: calmv1Id));
+
+                        if (context.read<AuthenticationBloc>().state is AuthenticationAuthenticated) {
+                          User user = (context.read<AuthenticationBloc>().state as AuthenticationAuthenticated).user; 
+                          if (user.userType == "C"){
+                            context.read<Calmv1ListBloc>().add(
+                            CalMv2RegMvEvent(calmv1Id: calmv1Id));
+                          }
+                          else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Only Client user can perform this action.'),
+                              ),
+                            );
+                            context
+                                .read<AuthenticationBloc>()
+                                .add(RequireRegisterClient(requiredFrom: 'calmv1list_tile_widget'));
+                          }
+                        }
 											},
 											child: const Text(
 												'Cal MV to Reg MV',

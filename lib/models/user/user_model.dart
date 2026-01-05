@@ -17,7 +17,7 @@ class User {
   String? userCabang;
   bool hasDownline;
   Uint8List? foto;
-  String custType;
+  String userType;
 
   User({
     this.id,
@@ -34,7 +34,7 @@ class User {
     this.userCabang,
     this.hasDownline = false,
     this.foto,
-    this.custType = '',
+    this.userType = '',
   });
 
   factory User.fromDatabaseJson(Map<String, dynamic> data) => User(
@@ -52,7 +52,7 @@ class User {
         hasDownline: toBoolean(data['hasDownline'].toString(), false),
         foto: data['foto'] ?? '',
         token: data['token'],
-        custType: data['custType'] ?? '',
+        userType: data['userType'] ?? '',
       );
 
   Map<String, dynamic> toDatabaseJson() => {
@@ -70,6 +70,6 @@ class User {
         "hasDownline": hasDownline ? 1 : 0,
         "token": token,
         "foto": foto,
-        "custType": custType,
+        "userType": userType,
       };
 }

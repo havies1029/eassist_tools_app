@@ -355,10 +355,12 @@ class LoginUserDialogState extends BaseDialogState<LoginUserDialog> {
     if (email.isEmpty) {
       setState(() => _emailError = 'Email tidak boleh kosong');
       hasError = true;
-    } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
+    } 
+    /*else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
       setState(() => _emailError = 'Format email tidak valid');
       hasError = true;
     }
+    */
 
     if (!hasError) {
       EmailVerificationModel record = EmailVerificationModel(

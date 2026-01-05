@@ -40,7 +40,7 @@ class DnrekapcobCariPageState extends State<DnrekapcobCariPage> {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Proses pembayaran berhasil. Silakan lanjutkan ke metode pembayaran.')),
             );
-            onViewPaymentMethods();
+            onViewPaymentMethods(state.curr, state.totalBayar);
           } 
           else if (state.paymentStatus == "30"){
             refreshData();
@@ -119,10 +119,10 @@ class DnrekapcobCariPageState extends State<DnrekapcobCariPage> {
     ); // Implement your tambah data logic here
   }
 
-  void onViewPaymentMethods() {
+  void onViewPaymentMethods(String curr, double totalBayar) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => PaymentMethodsCariListPage()),
+      MaterialPageRoute(builder: (context) => PaymentMethodsCariListPage(curr: curr, totalBayar: totalBayar)),
     ); // Implement your ta    
   }    
 

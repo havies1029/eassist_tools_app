@@ -1,4 +1,8 @@
 import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
+import 'package:eassist_tools_app/common/app_data.dart';
+import 'package:eassist_tools_app/models/authentication/auth_model.dart';
+import 'package:eassist_tools_app/models/user/user_model.dart';
+import 'package:eassist_tools_app/repositories/user/user_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/models/responseAPI/returndataapi_model.dart';
@@ -17,14 +21,14 @@ class RegUserBloc extends Bloc<RegUserEvents, RegUserState> {
     on<RegUserUbahEvent>(onUbahRegUser);
     on<RegUserHapusEvent>(onHapusRegUser);
     on<RegUserLihatEvent>(onLihatRegUser);
-    on<ValidasiPinHPEvent>(onValidasiPinHP);
+    on<ValidasiPinHPEvent>(onValidasiPinHP);    
   }
 
   Future<void> onTambahRegUser(
       RegUserTambahEvent event, Emitter<RegUserState> emit) async {
     ReturnDataAPI returnData;
     bool hasFailure = true;
-    emit(state.copyWith(isSaving: true, isSaved: false));
+    emit(state.copyWith(isSaving: true, isSaved: false, requestFrom: event.requestFrom));
     returnData = await repository.regUserTambah(event.record);
     final String dataString = returnData.data.toString();
     List<String> info = dataString.split(';');
@@ -42,10 +46,8 @@ class RegUserBloc extends Bloc<RegUserEvents, RegUserState> {
         hasFailure: hasFailure));
 
     if (!hasFailure) {
-      if (info[1] == '0') {
         authenticationBloc
             .add(RequirePinHPVerification(hpno: event.record.telepon));
-      }
     }
   }
 
@@ -75,7 +77,7 @@ class RegUserBloc extends Bloc<RegUserEvents, RegUserState> {
   Future<void> onValidasiPinHP(
       ValidasiPinHPEvent event, Emitter<RegUserState> emit) async {
     emit(state.copyWith(isSaving: true, isSaved: false));
-    ReturnDataAPI returnData = await repository.validasiPinHP(event.record);
+    ReturnDataAPI returnData = await repository.validasiPinHP(event.record, state.requestFrom);
     bool hasFailure = !returnData.success;
     List<String> errors = [];
     if (hasFailure) {
@@ -91,6 +93,28 @@ class RegUserBloc extends Bloc<RegUserEvents, RegUserState> {
 
     if (!hasFailure) {
       authenticationBloc.add(PhonePinVerified());
+
+      String tokeninfo = returnData.data;
+      List<String> info = tokeninfo.split(";");
+      String username = info[8];
+      Token token = Token.split(username, tokeninfo);
+      User user = User(
+          id: 0,
+          token: token.token,
+          username: username,
+          nama: info[2],
+          email: info[5],
+          userCabang: info[1],
+          userType: "C",);
+
+      AppData.user = user;
+      AppData.userToken = user.token!;
+
+      UserRepository userRepository = UserRepository();
+      userRepository.persistToken(userToken: user.token ?? "");
+      
+      authenticationBloc.add(UserRoleChanged(user: user, authenticatedFrom: state.requestFrom));
+
     }
   }
 }

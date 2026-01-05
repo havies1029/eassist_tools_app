@@ -316,10 +316,11 @@ class LoginClientDialogState extends BaseDialogState<LoginClientDialog> {
     if (email.isEmpty) {
       setState(() => _emailError = 'Email tidak boleh kosong');
       hasError = true;
-    } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
+    } 
+    /*else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
       setState(() => _emailError = 'Format email tidak valid');
       hasError = true;
-    }
+    }*/
 
     if (password.isEmpty) {
       setState(() => _passwordError = 'Password tidak boleh kosong');

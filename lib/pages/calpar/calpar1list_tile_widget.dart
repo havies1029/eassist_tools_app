@@ -1,5 +1,7 @@
+import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
 import 'package:eassist_tools_app/blocs/calpar/calpar1list_bloc.dart';
 import 'package:eassist_tools_app/blocs/calpar/calpar4form_bloc.dart';
+import 'package:eassist_tools_app/models/user/user_model.dart';
 import 'package:eassist_tools_app/pages/calpar/calpar2form_form.dart';
 import 'package:eassist_tools_app/pages/calpar/calpar3form_form.dart';
 import 'package:eassist_tools_app/pages/calpar/calpar4form_form.dart';
@@ -158,8 +160,25 @@ class Calpar1ListTileWidget extends StatelessWidget {
 										padding: const EdgeInsets.only(top: 30.0),
 										child: ElevatedButton(
 											onPressed: () {
-												context.read<Calpar1ListBloc>().add(
-												  CalPar2RegParEvent(calpar1Id: calpar1Id));
+												
+                        if (context.read<AuthenticationBloc>().state is AuthenticationAuthenticated) {
+                          User user = (context.read<AuthenticationBloc>().state as AuthenticationAuthenticated).user; 
+                          if (user.userType == "C"){
+                            context.read<Calpar1ListBloc>().add(
+												      CalPar2RegParEvent(calpar1Id: calpar1Id));
+                          }
+                          else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Only Client user can perform this action.'),
+                              ),
+                            );
+                            context
+                                .read<AuthenticationBloc>()
+                                .add(RequireRegisterClient(requiredFrom: 'calmv1list_tile_widget'));
+                          }
+                        }
+
 											},
 											child: const Text(
 												'CalPar to RegPar',

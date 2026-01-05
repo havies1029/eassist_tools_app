@@ -73,13 +73,13 @@ class CustomPopupsLoginUser {
   }
 
   // Popup untuk Register Client
-  static Future<void> showRegisterClientDialog(BuildContext context) async {
+  static Future<void> showRegisterClientDialog(BuildContext context, String requestFrom) async {
     debugPrint("showRegisterClientDialog called");
     showDialog(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return const RegisterClientDialog();
+        return RegisterClientDialog(requestFrom: requestFrom,);
       },
     );
   }

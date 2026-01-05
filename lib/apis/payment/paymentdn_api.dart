@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:eassist_tools_app/common/app_data.dart';
-import 'package:eassist_tools_app/models/payment/dnheadercob_model.dart';
 import 'package:eassist_tools_app/models/payment/invoicestatus_model.dart';
 import 'package:eassist_tools_app/models/payment/paymentmethodcategory_model.dart';
+import 'package:eassist_tools_app/models/payment/rinciansoa_model.dart';
 import 'package:http/http.dart' as http;
 
 class PaymentDnAPI{
@@ -115,7 +115,7 @@ class PaymentDnAPI{
 		}
 	}
 
-  Future<List<DnHeaderCobModel>> getRincianSOACustomer(String searchText) async {
+  Future<RincianSOAModel> getRincianSOACustomer(String searchText) async {
 		String urlGetListEndPoint = "${AppData.prefixEndPoint}/api/payment/rinciansoa";
     
     Map<String, String> queryParams = {'searchText': searchText};
@@ -127,14 +127,13 @@ class PaymentDnAPI{
 		});
 
 		if (response.statusCode == 200) {
-			final List<dynamic> jsonData = json.decode(response.body);
+      final Map<String, dynamic> jsonData =
+          json.decode(response.body) as Map<String, dynamic>;
 
-      return jsonData
-          .map((e) => DnHeaderCobModel.fromJson(e))
-          .toList();
-		} else {
-			throw Exception("Failed to load data");
-		}
+      return RincianSOAModel.fromJson(jsonData);
+    } else {
+      throw Exception("Failed to load data");
+    }
 	}
 
   Future<bool> forcePaymentViaVaAPI(String invoiceId) async {

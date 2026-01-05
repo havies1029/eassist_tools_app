@@ -69,6 +69,7 @@ flutter:
     - assets/images/
     - assets/images/month/
     - assets/icons/
+    - assets/bank_logo/
     - assets/images/jps-image.png
     - assets/images/bsi-image.png
     - assets/images/vector-1.png

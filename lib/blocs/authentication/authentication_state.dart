@@ -61,6 +61,13 @@ class AuthenticationRequirePinHPVerification extends AuthenticationState {
 
 class AuthenticationForgotPassword extends AuthenticationState {}
 
-class AuthenticationRequireRegisterClient extends AuthenticationState {}
+class AuthenticationRequireRegisterClient extends AuthenticationState {
+  final String requiredFrom;
+  AuthenticationRequireRegisterClient({required this.requiredFrom});
+  @override
+  List<Object> get props => [requiredFrom];
+}
 
 class AuthenticationPhonePinVerified extends AuthenticationState {}
+
+class AuthenticationUserRoleChanged extends AuthenticationState {}

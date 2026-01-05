@@ -97,9 +97,9 @@ class RegUserAPI {
 		}
 	}
 
-  Future<ReturnDataAPI> validasiPinHP(RegUserModel record) async {
+  Future<ReturnDataAPI> validasiPinHP(RegUserModel record, String requestFrom) async {
     String endpoint = "${AppData.prefixEndPoint}/api/reguser/validasipin";
-    Map<String, String> queryParams = {"modul_id": "validasiPinHP"};
+    Map<String, String> queryParams = {"requiredFrom": "", "modul_id": "validasiPinHP"};
     var uri = AppData.uriHtpp(AppData.httpAuthority, endpoint, queryParams);
 
     final http.Response response = await http.post(uri,

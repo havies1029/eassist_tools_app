@@ -35,7 +35,7 @@ class AuthenticationBloc
     });
     on<UserAuthenticated>(_onUserAuthenticated);
     on<RequireRegisterClient>((event, emit) {
-      emit(AuthenticationRequireRegisterClient());
+      emit(AuthenticationRequireRegisterClient(requiredFrom: event.requiredFrom));
     });
     on<RequirePinHPVerification>((event, emit) {
       emit(AuthenticationRequirePinHPVerification(hpno: event.hpno));
@@ -46,6 +46,11 @@ class AuthenticationBloc
     on<GoogleUserAuthenticated>((event, emit) {
       debugPrint("_onLoggedIn dari Form Login Google");
       emit(AuthenticationGoogleUserAuthenticated(user: event.user));
+    });
+    on<UserRoleChanged>((event, emit) {
+      emit(AuthenticationUserRoleChanged());
+      emit(AuthenticationAuthenticated(
+          user: event.user, authenticatedFrom: event.authenticatedFrom));
     });
   }
 
@@ -115,6 +120,6 @@ class AuthenticationBloc
     //emit(AuthenticationUserAuthenticated(user: event.user));
 
     emit(AuthenticationAuthenticated(
-        user: event.user, authenticatedFrom: "login_user"));
+        user: event.user, authenticatedFrom: event.authenticatedFrom));
   }
 }

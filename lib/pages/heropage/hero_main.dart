@@ -1,4 +1,5 @@
 import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
+import 'package:eassist_tools_app/blocs/reguser/reguser_bloc.dart';
 import 'package:eassist_tools_app/pages/heropage/hero_page.dart';
 import 'package:eassist_tools_app/widgets/login/login_gmail/popup_dialog_login.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +45,7 @@ class HeroMainState extends State<HeroMain> {
               CustomPopupsLoginUser.showForgotPasswordDialog(context);
             } else if (state is AuthenticationRequireRegisterClient) {
               debugPrint("AuthenticationRequireRegisterClient");
-              CustomPopupsLoginUser.showRegisterClientDialog(context);
+              CustomPopupsLoginUser.showRegisterClientDialog(context, state.requiredFrom);
             } else if (state is AuthenticationRequirePinHPVerification) {
               debugPrint("AuthenticationRequirePinVerification");
               Navigator.of(context).pop();
@@ -59,11 +60,14 @@ class HeroMainState extends State<HeroMain> {
               debugPrint("AuthenticationPhonePinVerified");
               Navigator.of(context).pop();
 
-              debugPrint("Log out user");
-              // force login user
-              BlocProvider.of<AuthenticationBloc>(context).add(
-                LoggedOut(),
-              );
+              String requestFrom = context.read<RegUserBloc>().state.requestFrom;
+              if (requestFrom == "hero_page") {
+                debugPrint("Log out user");
+                // force login user
+                BlocProvider.of<AuthenticationBloc>(context).add(
+                  LoggedOut(),
+                );
+              }
             } else if (state is AuthenticationGoogleUserAuthenticated) {
               debugPrint("AuthenticationGoogleUserAuthenticated");
               Navigator.of(context).pop();
@@ -75,7 +79,7 @@ class HeroMainState extends State<HeroMain> {
               debugPrint("AuthenticationPostCheckHasToken");
             } else if (state is AuthenticationAuthenticated) {
               debugPrint("AuthenticationAuthenticated");
-              if ((state.authenticatedFrom == "login_user") || (state.authenticatedFrom == "login_client")) {
+              if ((state.authenticatedFrom == "login_user") || (state.authenticatedFrom == "login_client") || (state.authenticatedFrom == "email_verification")) {
                 Navigator.of(context).pop();
               }              
             }
@@ -105,7 +109,15 @@ class HeroMainState extends State<HeroMain> {
             textTheme: ButtonTextTheme.primary,
           ),
         ),
-        home: const HeroPage(),
+        home: BlocConsumer<AuthenticationBloc, AuthenticationState>(
+          builder: (context, state) {
+            return const HeroPage();
+          },
+          listener: (context, state) {},
+          buildWhen: (previous, current) {
+            return current is AuthenticationUserRoleChanged;
+          },
+        ),
       ),
     );
   }

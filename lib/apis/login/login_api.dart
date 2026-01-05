@@ -67,7 +67,7 @@ class LoginApi {
             nama: info[2],
             email: info[5],
             userCabang: info[1],
-            custType: "C",);
+            userType: "C",);
         return user;
       } on Exception {
         //debugPrint("Error : ${e.toString()}");
@@ -101,7 +101,7 @@ class LoginApi {
             username: info[1],
             nama: info[1],
             email: info[2],
-            custType: info[0],);
+            userType: info[0],);
         return user;
       } else if (info[0] == "C") {
         User user = User(
@@ -110,7 +110,7 @@ class LoginApi {
             username: info[1],
             nama: info[2],
             email: info[3],
-            custType: info[0],);
+            userType: info[0],);
         return user;
       } else {
         debugPrint("User not found or invalid token");
