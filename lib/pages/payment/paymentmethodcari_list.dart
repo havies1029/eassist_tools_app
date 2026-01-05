@@ -56,33 +56,35 @@ class _PaymentMethodsCariListPageState extends State<PaymentMethodsCariListPage>
                         ),
                       ),
                     ),
-                    ListView.builder(
-                      itemCount: list.length,
-                      itemBuilder: (context, index) {
-                        final cat = list[index];
-                    
-                        return ExpansionTile(
-                          title: Text(cat.categoryName),
-                          children: cat.items.map((item) {
-                            return RadioListTile<String>(
-                              title: Row(
-                                children: [
-                                  buildBankLogo(item.iconId, item.iconUrl),                              
-                                  SizedBox(width: 12),
-                                  Text(item.title),
-                                ],
-                              ),
-                              value: item.methodId,
-                              groupValue: state.selectedMethodId,
-                              onChanged: (value) {
-                                context
-                                    .read<PaymentMethodCariBloc>()
-                                    .add(PaymentSelectMethodEvent(value!));
-                              },
-                            );
-                          }).toList(),
-                        );
-                      },
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: list.length,
+                        itemBuilder: (context, index) {
+                          final cat = list[index];
+                      
+                          return ExpansionTile(
+                            title: Text(cat.categoryName),
+                            children: cat.items.map((item) {
+                              return RadioListTile<String>(
+                                title: Row(
+                                  children: [
+                                    buildBankLogo(item.iconId, item.iconUrl),                              
+                                    SizedBox(width: 12),
+                                    Text(item.title),
+                                  ],
+                                ),
+                                value: item.methodId,
+                                groupValue: state.selectedMethodId,
+                                onChanged: (value) {
+                                  context
+                                      .read<PaymentMethodCariBloc>()
+                                      .add(PaymentSelectMethodEvent(value!));
+                                },
+                              );
+                            }).toList(),
+                          );
+                        },
+                      ),
                     ),
                   ],
                 );
