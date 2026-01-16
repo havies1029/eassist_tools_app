@@ -39,6 +39,11 @@ import 'package:eassist_tools_app/blocs/gen_status_aset/statusasetcari_bloc.dart
 import 'package:eassist_tools_app/blocs/gen_trslog/trslogcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaim/klaim1list_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaim/klaim2list_bloc.dart';
+import 'package:eassist_tools_app/blocs/klaimrasio/klaimrasiocobcari_bloc.dart';
+import 'package:eassist_tools_app/blocs/klaimrinci/groupcobcari_bloc.dart';
+import 'package:eassist_tools_app/blocs/klaimrinci/mstatusrincicari_bloc.dart';
+import 'package:eassist_tools_app/blocs/klaimringkas/klaimringkascari_bloc.dart';
+import 'package:eassist_tools_app/blocs/klaimringkas/mstatusringkascari_bloc.dart';
 import 'package:eassist_tools_app/blocs/login/change_password_bloc.dart';
 import 'package:eassist_tools_app/blocs/login/emailverification_bloc.dart';
 import 'package:eassist_tools_app/blocs/login/login_bloc.dart';
@@ -369,9 +374,14 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => PaymentMethodCariBloc(repository: PaymentDnRepository(api: PaymentDnAPI()))),
         BlocProvider(create: (context) => DnRekap2invBloc()),
         BlocProvider(create: (context) => InvbayarvaFormBloc(repository: InvbayarvaFormRepository())),
-        BlocProvider(create:  (context) => Pay1ListBloc()),
+        BlocProvider(create: (context) => Pay1ListBloc()),
         BlocProvider(create: (context) => Pay1CrudBloc(repository: Pay1CrudRepository())),
         BlocProvider(create: (context) => Pay2CariBloc()),
+        BlocProvider(create: (context) => MstatusringkasCariBloc()),
+        BlocProvider(create: (context) => KlaimringkasCariBloc()),
+        BlocProvider(create: (context) => MstatusrinciCariBloc()),
+        BlocProvider(create: (context) => GroupcobCariBloc()),
+        BlocProvider(create: (context) => KlaimrasiocobCariBloc()),
 
       ],
       child: MaterialApp(

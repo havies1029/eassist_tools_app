@@ -22,6 +22,9 @@ import 'package:eassist_tools_app/pages/gen_status_aset/statusasetcari_main.dart
 import 'package:eassist_tools_app/pages/gen_trslog/trslogcari_main.dart';
 import 'package:eassist_tools_app/pages/heropage/fixed_nambar_overlay.dart';
 import 'package:eassist_tools_app/pages/klaim/klaim1list_main.dart';
+import 'package:eassist_tools_app/pages/klaimrasio/klaimrasiocari_main.dart';
+import 'package:eassist_tools_app/pages/klaimrinci/klaimrincicari_main.dart';
+import 'package:eassist_tools_app/pages/klaimringkas/klaimringkascari_main.dart';
 import 'package:eassist_tools_app/pages/payment/dnrekapcobcari_list.dart';
 import 'package:eassist_tools_app/pages/payment/pay1list_main.dart';
 import 'package:eassist_tools_app/pages/payment/rinciansoa_page.dart';
@@ -69,8 +72,7 @@ class _HeroPageState extends State<HeroPage> {
               Positioned.fill(
                 child: isMobile
                     ? Container(
-                        color: const Color(0xFF79AB43), // hijau full-screen
-                      )
+                        color: Colors.white) // hijau full-screen
                     : Image.asset(
                         'assets/images/bg-home.jpg',
                         fit: BoxFit.cover,
@@ -168,6 +170,42 @@ class _HeroPageState extends State<HeroPage> {
                             return Column(
                               children: [
                                 
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              KlaimringkascariMainPage()),
+                                    );
+                                  },
+                                  child: Text("Ringkasan Claim"),
+                                ),
+
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              KlaimRinciCariMainPage()),
+                                    );
+                                  },
+                                  child: Text("Rincian Claim"),
+                                ),
+
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              KlaimRasioCariMainPage()),
+                                    );
+                                  },
+                                  child: Text("Klaim Rasio"),
+                                ),
+
                                 TextButton(
                                   onPressed: () {
                                     Navigator.push(
