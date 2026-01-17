@@ -7,8 +7,6 @@ class AsetParCariTileWidget extends StatelessWidget {
 	final String alamat;
 	final String asetParId;
 	final String curr;
-	final String klausulaBank;
-	final String mrekanId;
 	final int nomor;
 	final String polisNo;
 	final double premi;
@@ -20,8 +18,6 @@ class AsetParCariTileWidget extends StatelessWidget {
 		required this.alamat, 
 		required this.asetParId, 
 		required this.curr, 
-		required this.klausulaBank, 
-		required this.mrekanId, 
 		required this.nomor, 
 		required this.polisNo, 
 		required this.premi, 
@@ -72,24 +68,6 @@ class AsetParCariTileWidget extends StatelessWidget {
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
 						
-						Text("klausulaBank",
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_40)),
-						Container(height: 5),
-						Text(
-							klausulaBank,
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_80)),
-						Container(height: 10),
-						Text("mrekanId",
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_40)),
-						Container(height: 5),
-						Text(
-							mrekanId,
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_80)),
-						Container(height: 10),						
 						Text("nomor",
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_40)),

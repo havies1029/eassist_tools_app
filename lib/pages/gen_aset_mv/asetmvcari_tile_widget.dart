@@ -14,7 +14,7 @@ class AsetMvCariTileWidget extends StatelessWidget {
 	final double premi;
 	final double sumInsured;
 	final int tahun;
-	final String tipe;
+	final String modelMv;
 
 	const AsetMvCariTileWidget(
 		{super.key,
@@ -28,7 +28,7 @@ class AsetMvCariTileWidget extends StatelessWidget {
 		required this.premi, 
 		required this.sumInsured, 
 		required this.tahun, 
-		required this.tipe});
+		required this.modelMv});
 
 	@override
 	Widget build(BuildContext context) {
@@ -136,12 +136,12 @@ class AsetMvCariTileWidget extends StatelessWidget {
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
-						Text("tipe",
+						Text("modelMv",
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_40)),
 						Container(height: 5),
 						Text(
-							tipe,
+							modelMv,
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),

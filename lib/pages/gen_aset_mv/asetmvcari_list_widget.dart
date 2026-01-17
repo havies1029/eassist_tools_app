@@ -65,7 +65,7 @@ class AsetMvCariListWidgetState extends State<AsetMvCariListWidget> {
 								premi: state.items[index].premi,
 								sumInsured: state.items[index].sumInsured,
 								tahun: state.items[index].tahun,
-								tipe: state.items[index].tipe,
+								modelMv: state.items[index].modelMv,
 							)
 						],
 					),

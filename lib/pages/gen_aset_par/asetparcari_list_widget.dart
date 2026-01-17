@@ -58,8 +58,6 @@ class AsetParCariListWidgetState extends State<AsetParCariListWidget> {
 								alamat: state.items[index].alamat,
 								asetParId: state.items[index].asetParId,
 								curr: state.items[index].curr,
-								klausulaBank: state.items[index].klausulaBank,
-								mrekanId: state.items[index].mrekanId,
 								nomor: state.items[index].nomor,
 								polisNo: state.items[index].polisNo,
 								premi: state.items[index].premi,
