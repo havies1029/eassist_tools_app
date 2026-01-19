@@ -8,11 +8,12 @@ class AsetHealthCariModel {
 	String polisNo;
 	String posisi;
 	String status;
+  String filePolisId;
 
 	AsetHealthCariModel({required this.asethealthId, required this.dob, 
 		required this.jnskel, required this.nama, 
 		required this.nomor, required this.polisNo, 
-		required this.posisi, required this.status});
+		required this.posisi, required this.status, required this.filePolisId});
 
 	factory AsetHealthCariModel.fromJson(Map<String, dynamic> data) {
 		return AsetHealthCariModel(
@@ -23,7 +24,8 @@ class AsetHealthCariModel {
 			nomor: int.tryParse(data['nomor'].toString())??0,
 			polisNo: data['polisNo']??'',
 			posisi: data['posisi']??'',
-			status: data['status']??''
+			status: data['status']??'',
+      filePolisId: data['filePolisId']??'',
 		);
 
 	}
@@ -36,6 +38,8 @@ class AsetHealthCariModel {
 		'nomor': nomor.toString(),
 		'polisNo': polisNo,
 		'posisi': posisi,
-		'status': status};
+		'status': status,
+    'filePolisId': filePolisId,
+    };
 
 }

@@ -11,6 +11,8 @@ class AsetParCariModel {
 	double sumInsured;
 	int nomor;
 	String status;
+  String filePolisParId;
+  String filePolisEqId;
 
 	AsetParCariModel({required this.asetParId, 
     required this.tertanggung,
@@ -20,7 +22,8 @@ class AsetParCariModel {
 		required this.curr, 		
 		required this.nomor, 
 		required this.polisNo, required this.premi, 
-		required this.status, required this.sumInsured});
+		required this.status, required this.sumInsured, 
+    required this.filePolisParId, required this.filePolisEqId});
 
 	factory AsetParCariModel.fromJson(Map<String, dynamic> data) {
 		return AsetParCariModel(
@@ -34,7 +37,9 @@ class AsetParCariModel {
 			polisNo: data['polisNo']??'',
 			premi: double.tryParse(data['premi'].toString())??0,
 			status: data['status']??'',
-			sumInsured: double.tryParse(data['sumInsured'].toString())??0
+			sumInsured: double.tryParse(data['sumInsured'].toString())??0,
+      filePolisParId: data['filePolisParId']??'',
+      filePolisEqId: data['filePolisEqId']??'',
 		);
 
 	}
@@ -51,6 +56,9 @@ class AsetParCariModel {
 		'polisNo': polisNo,
 		'premi': premi,
 		'status': status,
-		'sumInsured': sumInsured};
+		'sumInsured': sumInsured,
+    'filePolisParId': filePolisParId,
+    'filePolisEqId': filePolisEqId,
+    };
 
 }

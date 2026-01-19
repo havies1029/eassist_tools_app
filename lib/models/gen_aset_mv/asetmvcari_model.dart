@@ -15,6 +15,7 @@ class AsetMvCariModel {
 	String modelMv;
 	int nomor;
 	String status;
+  String filePolisId;
 
 	AsetMvCariModel({required this.asetMvId, required this.tertanggung, 
     required this.periodeMulai, required this.periodeAkhir, 
@@ -23,7 +24,7 @@ class AsetMvCariModel {
 		required this.noPolisi, required this.nomor, 
 		required this.polisNo, required this.premi, 
 		required this.sumInsured, required this.tahun, 
-		required this.modelMv, required this.status});
+		required this.modelMv, required this.status, required this.filePolisId});
 
 	factory AsetMvCariModel.fromJson(Map<String, dynamic> data) {
 		return AsetMvCariModel(
@@ -41,7 +42,8 @@ class AsetMvCariModel {
 			sumInsured: double.tryParse(data['sumInsured'].toString())??0,
 			tahun: int.tryParse(data['tahun'].toString())??0,
 			modelMv: data['modelMv']??'',
-      status: data['status']??''
+      status: data['status']??'',
+      filePolisId: data['filePolisId']??'',
 		);
 
 	}
@@ -61,7 +63,8 @@ class AsetMvCariModel {
 		'sumInsured': sumInsured.toString(),
 		'tahun': tahun.toString(),
 		'modelMv': modelMv,
-    'status': status
+    'status': status,
+    'filePolisId': filePolisId,
     };
 
 }

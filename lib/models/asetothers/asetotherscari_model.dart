@@ -8,11 +8,12 @@ class AsetothersCariModel {
 	double premi;
 	String status;
 	double sumInsured;
+  String filePolisId;
 
 	AsetothersCariModel({required this.asetOthersId, required this.curr, 
 		required this.nomor, required this.objectDesc, 
 		required this.polisNo, required this.premi, 
-		required this.status, required this.sumInsured});
+		required this.status, required this.sumInsured, required this.filePolisId});
 
 	factory AsetothersCariModel.fromJson(Map<String, dynamic> data) {
 		return AsetothersCariModel(
@@ -23,7 +24,8 @@ class AsetothersCariModel {
 			polisNo: data['polisNo']??'',
 			premi: double.tryParse(data['premi'].toString())??0,
 			status: data['status']??'',
-			sumInsured: double.tryParse(data['sumInsured'].toString())??0
+			sumInsured: double.tryParse(data['sumInsured'].toString())??0,
+      filePolisId: data['filePolisId']??'',
 		);
 
 	}
@@ -36,6 +38,8 @@ class AsetothersCariModel {
 		'polisNo': polisNo,
 		'premi': premi.toString(),
 		'status': status,
-		'sumInsured': sumInsured.toString()};
+		'sumInsured': sumInsured.toString(),
+    'filePolisId': filePolisId,
+    };
 
 }
