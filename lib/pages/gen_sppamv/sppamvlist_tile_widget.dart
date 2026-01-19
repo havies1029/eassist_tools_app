@@ -1,3 +1,6 @@
+import 'package:eassist_tools_app/blocs/gen_sppamv/sppa_download_polis_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:eassist_tools_app/widgets/my_colors.dart';
@@ -22,6 +25,7 @@ class SppamvListTileWidget extends StatelessWidget {
 	final int thnBuat;
 	final String warnaDesc;
 	final String wilayahNama;
+  final String ePolisId;
 
 	const SppamvListTileWidget(
 		{super.key,
@@ -42,7 +46,8 @@ class SppamvListTileWidget extends StatelessWidget {
 		required this.sppa1Id, 
 		required this.thnBuat, 
 		required this.warnaDesc, 
-		required this.wilayahNama});
+		required this.wilayahNama,
+    required this.ePolisId});
 
 	@override
 	Widget build(BuildContext context) {
@@ -213,6 +218,16 @@ class SppamvListTileWidget extends StatelessWidget {
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
+            if (ePolisId.isNotEmpty)
+              ElevatedButton(
+                onPressed: () {
+                  context.read<SppaDownloadPolisBloc>().add(DownloadFileEvent(ePolisId: ePolisId, cob: 'MV'));
+                },
+                child: const Text(
+                  'Download e-Polis',
+                  style: TextStyle(fontSize: 13.0),
+                ),
+              ),						
 				]),
 			)
 		);

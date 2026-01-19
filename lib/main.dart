@@ -31,6 +31,7 @@ import 'package:eassist_tools_app/blocs/gen_profile/mrekanpiclist_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_promo/promo1cari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_promo/promo2cari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_review/reviewcari_bloc.dart';
+import 'package:eassist_tools_app/blocs/gen_sppamv/sppa_download_polis_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_sppamv/sppamvcrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_sppamv/sppamvlist_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_sppapar/sppaparcrud_bloc.dart';
@@ -118,13 +119,14 @@ import 'package:eassist_tools_app/repositories/gen_profile/mrekancontactcrud_rep
 import 'package:eassist_tools_app/repositories/gen_profile/mrekangeneralcmpcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/gen_profile/mrekangeneralidvcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/gen_profile/mrekanpiccrud_repository.dart';
+import 'package:eassist_tools_app/repositories/gen_sppamv/download_polis_repository.dart';
 import 'package:eassist_tools_app/repositories/gen_sppamv/sppamvcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/gen_sppapar/sppaparcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/login/change_password_repository.dart';
 import 'package:eassist_tools_app/repositories/login/emailverification_repository.dart';
 import 'package:eassist_tools_app/repositories/payment/invbayarvaform_repository.dart';
 import 'package:eassist_tools_app/repositories/payment/pay1crud_repository.dart';
-import 'package:eassist_tools_app/repositories/payment/paymentdn_repository.dart' show PaymentMethodCariRepository, PaymentDnRepository;
+import 'package:eassist_tools_app/repositories/payment/paymentdn_repository.dart' show PaymentDnRepository;
 import 'package:eassist_tools_app/repositories/profile/profile_ktp_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/userfoto_repository.dart';
 import 'package:eassist_tools_app/repositories/regmv/regmv1crud_repository.dart';
@@ -382,6 +384,7 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => MstatusrinciCariBloc()),
         BlocProvider(create: (context) => GroupcobCariBloc()),
         BlocProvider(create: (context) => KlaimrasiocobCariBloc()),
+        BlocProvider(create:  (context) => SppaDownloadPolisBloc(repository: DownloadPolisRepository())),
 
       ],
       child: MaterialApp(

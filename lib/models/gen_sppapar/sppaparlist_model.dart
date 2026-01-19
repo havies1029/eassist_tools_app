@@ -18,6 +18,8 @@ class SppaparListModel {
 	String okupasiDesc;
 	String curr;
 	String wilayahNama;
+  String ePolisParId;
+  String ePolisEqId;
 
 	SppaparListModel({
 		required this.insuredAlamat1, required this.insuredAlamat2, 
@@ -28,7 +30,8 @@ class SppaparListModel {
 		required this.tsi, required this.kabupaten, 
     required this.kelasNama, required this.kODEPOSNO, 
 		required this.kriteria, required this.okupasiDesc, 
-		required this.curr, required this.wilayahNama});
+		required this.curr, required this.wilayahNama,
+    required this.ePolisParId, required this.ePolisEqId,});
 
 	factory SppaparListModel.fromJson(Map<String, dynamic> data) {
 		return SppaparListModel(			
@@ -49,7 +52,9 @@ class SppaparListModel {
 			kriteria: data['kriteria']??'',
 			okupasiDesc: data['okupasiDesc']??'',
 			curr: data['curr']??'',
-			wilayahNama: data['wilayahNama']??''
+			wilayahNama: data['wilayahNama']??'',
+      ePolisParId: data['ePolisParId']??'',
+      ePolisEqId: data['ePolisEqId']??'',
 		);
 
 	}
@@ -74,6 +79,9 @@ class SppaparListModel {
 		'kriteria': kriteria,
 		'okupasiDesc': okupasiDesc,
 		'curr': curr,
-		'wilayahNama': wilayahNama};
+		'wilayahNama': wilayahNama,
+    'ePolisParId': ePolisParId,
+    'ePolisEqId': ePolisEqId,
+    };
 
 }

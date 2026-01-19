@@ -1,3 +1,4 @@
+import 'package:eassist_tools_app/blocs/gen_sppamv/sppa_download_polis_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/widgets/listpage_filter_bar_ui.dart';
@@ -6,6 +7,7 @@ import 'package:eassist_tools_app/blocs/gen_sppapar/sppaparlist_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_sppapar/sppaparcrud_bloc.dart';
 import 'package:eassist_tools_app/pages/gen_sppapar/sppaparcrud_form.dart';
 import 'package:eassist_tools_app/pages/gen_sppapar/sppaparlist_list_widget.dart';
+import 'package:open_filex/open_filex.dart';
 
 class SppaparListPage extends StatefulWidget {
 	const SppaparListPage({super.key});
@@ -51,6 +53,24 @@ class SppaparListPageState extends State<SppaparListPage> {
 				}, listenWhen: (previous, current) {
 					return previous.isSaved != current.isSaved;
 				}),
+        BlocListener<SppaDownloadPolisBloc, SppaDownloadPolisState>(
+          listener: (context, state)  {
+            if (state is DownloadSuccess) {
+
+              OpenFilex.open(state.filePath);
+
+            } else if (state is DownloadFailure) {
+              final message = state.message;
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Download failed: $message')),
+              );
+            }
+          },
+          listenWhen: (previous, current) {
+            return current is DownloadSuccess && current.cob == 'PAR';
+          }
+          
+        ),
 			],
 			child: Scaffold(
 				floatingActionButton: FloatingMenuMasterWidget(

@@ -1,3 +1,5 @@
+import 'package:eassist_tools_app/blocs/gen_sppamv/sppa_download_polis_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:eassist_tools_app/widgets/my_colors.dart';
@@ -22,6 +24,8 @@ class SppaparListTileWidget extends StatelessWidget {
 	final String sppa1Id;		
 	final double tsi;
 	final String wilayahNama;
+  final String ePolisParId;
+  final String ePolisEqId;
 
 	const SppaparListTileWidget(
 		{super.key,
@@ -42,7 +46,9 @@ class SppaparListTileWidget extends StatelessWidget {
 		required this.sppaTgl, 
 		required this.sppa1Id, 
 		required this.tsi, 
-		required this.wilayahNama});
+		required this.wilayahNama,
+    required this.ePolisParId,
+    required this.ePolisEqId,});
 
 	@override
 	Widget build(BuildContext context) {
@@ -229,6 +235,26 @@ class SppaparListTileWidget extends StatelessWidget {
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
+            if (ePolisParId.isNotEmpty)
+              ElevatedButton(
+                onPressed: () {
+                  context.read<SppaDownloadPolisBloc>().add(DownloadFileEvent(ePolisId: ePolisParId, cob: 'PAR'));
+                },
+                child: const Text(
+                  'Download e-Polis (Par)',
+                  style: TextStyle(fontSize: 13.0),
+                ),
+              ),						
+            if (ePolisEqId.isNotEmpty)
+              ElevatedButton(
+                onPressed: () {
+                  context.read<SppaDownloadPolisBloc>().add(DownloadFileEvent(ePolisId: ePolisEqId, cob: 'PAR'));
+                },
+                child: const Text(
+                  'Download e-Polis (Eq)',
+                  style: TextStyle(fontSize: 13.0),
+                ),
+              ),						
 				]),
 			)
 		);

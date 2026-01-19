@@ -99,6 +99,7 @@ class SppamvListListWidgetState extends State<SppamvListListWidget> {
 												thnBuat: state.items[index].thnBuat,
 												warnaDesc: state.items[index].warnaDesc,
 												wilayahNama: state.items[index].wilayahNama,
+                        ePolisId: state.items[index].ePolisId
 											)),
 							],
 						),

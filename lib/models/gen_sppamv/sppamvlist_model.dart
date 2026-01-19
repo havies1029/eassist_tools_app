@@ -18,6 +18,7 @@ class SppamvListModel {
 	String nmTipe;
 	String warnaDesc;
 	String wilayahNama;
+  String ePolisId;
 
 	SppamvListModel({	required this.harga, required this.insuredNama, 
 		required this.mesinNo, required this.periodeAkhir, 
@@ -27,7 +28,8 @@ class SppamvListModel {
 		required this.sppa1Id, required this.thnBuat, 
 		required this.coverName, required this.grupNama, 
 		required this.nmMerk, required this.nmTipe, 
-		required this.warnaDesc, required this.wilayahNama});
+		required this.warnaDesc, required this.wilayahNama,
+    this.ePolisId = ''});
 
 	factory SppamvListModel.fromJson(Map<String, dynamic> data) {
 		return SppamvListModel(
@@ -48,7 +50,8 @@ class SppamvListModel {
 			nmTipe: data['nmTipe']??'',
 			curr: data['curr']??'',
 			warnaDesc: data['warnaDesc']??'',
-			wilayahNama: data['wilayahNama']??''
+			wilayahNama: data['wilayahNama']??'',
+      ePolisId: data['ePolisId']??''
 		);
 
 	}
@@ -71,6 +74,7 @@ class SppamvListModel {
 		'nmTipe': nmTipe,
 		'rMATAUANGNAMA': curr,
 		'warnaDesc': warnaDesc,
-		'wilayahNama': wilayahNama};
-
+		'wilayahNama': wilayahNama,
+    'ePolisId': ePolisId
+  };
 }

@@ -99,6 +99,8 @@ class SppaparListListWidgetState extends State<SppaparListListWidget> {
 												sppa1Id: state.items[index].sppa1Id,
 												tsi: state.items[index].tsi,
 												wilayahNama: state.items[index].wilayahNama,
+                        ePolisParId: state.items[index].ePolisParId,
+                        ePolisEqId: state.items[index].ePolisEqId,
 											)),
 							],
 						),
