@@ -33,6 +33,7 @@ import 'package:eassist_tools_app/pages/regendors/regendorslist_main.dart';
 import 'package:eassist_tools_app/pages/regmv/regmv1list_main.dart';
 import 'package:eassist_tools_app/pages/regother/regother1list_main.dart';
 import 'package:eassist_tools_app/pages/regpar/regpar1list_main.dart';
+import 'package:eassist_tools_app/pages/regrenewal/regrenewcari_main.dart';
 import 'package:eassist_tools_app/widgets/section/carousel_section.dart';
 import 'package:eassist_tools_app/widgets/section/client_section.dart';
 import 'package:eassist_tools_app/widgets/section/feature_section.dart';
@@ -383,6 +384,18 @@ class _HeroPageState extends State<HeroPage> {
                                     );
                                   },
                                   child: Text("List Endorsement"),
+                                ),
+
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const RegRenewCariMainPage()),
+                                    );
+                                  },
+                                  child: Text("List Renewal"),
                                 ),
                                 
                                 TextButton(

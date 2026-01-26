@@ -1,5 +1,6 @@
 import 'package:eassist_tools_app/blocs/gen_sppamv/sppa_download_polis_bloc.dart';
 import 'package:eassist_tools_app/pages/regendors/regendors1form_main.dart';
+import 'package:eassist_tools_app/pages/regrenewal/regrenew1form_main.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -245,6 +246,19 @@ class SppamvListTileWidget extends StatelessWidget {
                   ),
                 ],
               ),						
+              Container(height: 10,),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => RegRenew1FormMainPage(sppa1Id: sppa1Id)),
+                    );
+                },
+                child: const Text(
+                  'Reg Renewal',
+                  style: TextStyle(fontSize: 13.0),
+                ),
+              ),
 				]),
 			)
 		);
