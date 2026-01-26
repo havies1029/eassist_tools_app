@@ -9,7 +9,7 @@ class RegRenew1FormMainPage extends StatelessWidget {
 	Widget build(BuildContext context) {
 		return Scaffold(
 				appBar: AppBar(
-					title: Text('Tambah Endorsement'),
+					title: Text('Tambah Renewal'),
 				),
 				body: Regrenew1FormFormPage(sppa1Id: sppa1Id),);
 	}

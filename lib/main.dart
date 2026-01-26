@@ -96,6 +96,8 @@ import 'package:eassist_tools_app/blocs/regpar/regpar6cari_bloc.dart';
 import 'package:eassist_tools_app/blocs/regpar/regpar6form_bloc.dart';
 import 'package:eassist_tools_app/blocs/regpar/regpar_download_foto_object_bloc.dart';
 import 'package:eassist_tools_app/blocs/regpar/regpar_upload_foto_object_bloc.dart';
+import 'package:eassist_tools_app/blocs/regreaktif/regreaktif1_bloc.dart';
+import 'package:eassist_tools_app/blocs/regreaktif/regreaktifcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/regrenewal/regrenew1form_bloc.dart';
 import 'package:eassist_tools_app/blocs/regrenewal/regrenewcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/reguser/reguser_bloc.dart';
@@ -159,6 +161,7 @@ import 'package:eassist_tools_app/repositories/regpar/regpar5form_repository.dar
 import 'package:eassist_tools_app/repositories/regpar/regpar6form_repository.dart';
 import 'package:eassist_tools_app/repositories/regpar/regpar_download_fotoobject_repository.dart';
 import 'package:eassist_tools_app/repositories/regpar/regpar_upload_fotoobject_repository.dart';
+import 'package:eassist_tools_app/repositories/regreaktif/regreaktif1_repository.dart';
 import 'package:eassist_tools_app/repositories/regrenewal/regrenew1form_repository.dart';
 import 'package:eassist_tools_app/repositories/reguser/reguser_repository.dart';
 import 'package:eassist_tools_app/repositories/simulbon/simulboncrud_repository.dart';
@@ -399,7 +402,9 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => RegendorsCariBloc()),
         BlocProvider(create: (context) => Regendors1FormBloc(repository: Regendors1FormRepository())),  
         BlocProvider(create: (context) => RegrenewCariBloc()),
-        BlocProvider(create: (context) => Regrenew1FormBloc(repository: Regrenew1FormRepository()))
+        BlocProvider(create: (context) => Regrenew1FormBloc(repository: Regrenew1FormRepository())),
+        BlocProvider(create:  (context) => RegreaktifCariBloc()),
+        BlocProvider(create: (context) => Regreaktif1Bloc(repository: Regreaktif1Repository())),
 
       ],
       child: MaterialApp(

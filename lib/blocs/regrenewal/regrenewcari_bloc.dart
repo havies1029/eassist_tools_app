@@ -17,7 +17,7 @@ class RegrenewCariBloc extends Bloc<RegrenewCariEvents, RegrenewCariState> {
 Future<void> onRefreshRegrenewCari(
 		RefreshRegrenewCariEvent event, Emitter<RegrenewCariState> emit) async {
 	emit(const RegrenewCariState());
-
+  emit(state.copyWith(searchText: event.searchText));
 	add(FetchRegrenewCariEvent());
 }
 
