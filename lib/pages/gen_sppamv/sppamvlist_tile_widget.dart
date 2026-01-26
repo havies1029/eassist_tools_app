@@ -1,4 +1,5 @@
 import 'package:eassist_tools_app/blocs/gen_sppamv/sppa_download_polis_bloc.dart';
+import 'package:eassist_tools_app/pages/regendors/regendors1form_main.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -217,15 +218,32 @@ class SppamvListTileWidget extends StatelessWidget {
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
-            if (ePolisId.isNotEmpty)
-              ElevatedButton(
-                onPressed: () {
-                  context.read<SppaDownloadPolisBloc>().add(DownloadFileEvent(ePolisId: ePolisId, cob: 'MV'));
-                },
-                child: const Text(
-                  'Download e-Polis',
-                  style: TextStyle(fontSize: 13.0),
-                ),
+            
+              Row(
+                children: [
+                  if (ePolisId.isNotEmpty)
+                    ElevatedButton(
+                      onPressed: () {
+                        context.read<SppaDownloadPolisBloc>().add(DownloadFileEvent(ePolisId: ePolisId, cob: 'MV'));
+                      },
+                      child: const Text(
+                        'Download e-Polis',
+                        style: TextStyle(fontSize: 13.0),
+                      ),
+                    ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => RegEndors1FormMainPage(sppa1Id: sppa1Id)),
+                        );
+                    },
+                    child: const Text(
+                      'Reg Endorsement',
+                      style: TextStyle(fontSize: 13.0),
+                    ),
+                  ),
+                ],
               ),						
 				]),
 			)

@@ -1,3 +1,4 @@
+import 'package:eassist_tools_app/pages/gen_endors/endors1crud_main.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:eassist_tools_app/widgets/my_colors.dart';
@@ -113,6 +114,18 @@ class AsetParCariTileWidget extends StatelessWidget {
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          Endors1CrudMainPage(sppa1Id: asetParId)),
+                );
+              },
+              child: Text("Tambah Endorsement",
+                style: MyText.bodyLarge(context)!
+                  .copyWith(color: MyColors.primary))),
 				]),
 			)
 		);

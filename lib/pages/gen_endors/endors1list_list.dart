@@ -99,13 +99,13 @@ class Endors1ListPageState extends State<Endors1ListPage> {
 		));
 	}
 
-	void showDialogViewData(BuildContext context, String viewMode, String recordId) {
+	void showDialogViewData(BuildContext context, String viewMode, String sppa1Id) {
 		FocusScope.of(context).requestFocus(FocusNode());
 		showDialog(
 			context: context,
 			barrierDismissible: false,
 			builder: (BuildContext context) {
-				return Endors1CrudFormPage(viewMode: viewMode, recordId: recordId);
+				return Endors1CrudFormPage(sppa1Id: sppa1Id);
 			},
 			useSafeArea: true)
 		.then((value) {

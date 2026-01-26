@@ -12,6 +12,7 @@ import 'package:eassist_tools_app/pages/gen_aset_ringkasan/asetringkasancari_mai
 import 'package:eassist_tools_app/pages/gen_berita/berita_main.dart';
 import 'package:eassist_tools_app/pages/gen_calmv/calmv1list_main.dart';
 import 'package:eassist_tools_app/pages/gen_cob_app/cobcari_main.dart';
+import 'package:eassist_tools_app/pages/gen_endors/endors1list_main.dart';
 import 'package:eassist_tools_app/pages/gen_profile/mrekanpiclist_main.dart';
 import 'package:eassist_tools_app/pages/gen_profile/test_profile_page.dart';
 import 'package:eassist_tools_app/pages/gen_promo/promo1cari_main.dart';
@@ -28,6 +29,7 @@ import 'package:eassist_tools_app/pages/klaimringkas/klaimringkascari_main.dart'
 import 'package:eassist_tools_app/pages/payment/dnrekapcobcari_list.dart';
 import 'package:eassist_tools_app/pages/payment/pay1list_main.dart';
 import 'package:eassist_tools_app/pages/payment/rinciansoa_page.dart';
+import 'package:eassist_tools_app/pages/regendors/regendorslist_main.dart';
 import 'package:eassist_tools_app/pages/regmv/regmv1list_main.dart';
 import 'package:eassist_tools_app/pages/regother/regother1list_main.dart';
 import 'package:eassist_tools_app/pages/regpar/regpar1list_main.dart';
@@ -169,6 +171,18 @@ class _HeroPageState extends State<HeroPage> {
                           if (state.user.userType == "C") {
                             return Column(
                               children: [
+
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              RegEndorsListMainPage()),
+                                    );
+                                  },
+                                  child: Text("Registrasi Endorsement"),
+                                ),
                                 
                                 TextButton(
                                   onPressed: () {
@@ -359,6 +373,18 @@ class _HeroPageState extends State<HeroPage> {
                                   },
                                   child: Text("List Aset Kesehatan"),
                                 ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const Endors1ListMainPage()),
+                                    );
+                                  },
+                                  child: Text("List Endorsement"),
+                                ),
+                                
                                 TextButton(
                                   onPressed: () {
                                     Navigator.push(

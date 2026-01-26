@@ -22,6 +22,8 @@ import 'package:eassist_tools_app/blocs/gen_calmv/calmv1list_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_calmv/calmv2form_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_calmv/calmv3form_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_cob_app/cobcari_bloc.dart';
+import 'package:eassist_tools_app/blocs/gen_endors/endors1crud_bloc.dart';
+import 'package:eassist_tools_app/blocs/gen_endors/endors1list_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekan1crud_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekancontactcrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/gen_profile/mrekangeneralcmpcrud_bloc.dart';
@@ -63,6 +65,8 @@ import 'package:eassist_tools_app/blocs/profile/profile_download_foto_bloc.dart'
 import 'package:eassist_tools_app/blocs/profile/profile_upload_foto_bloc.dart';
 import 'package:eassist_tools_app/blocs/profile/profile_upload_ktp_bloc.dart';
 import 'package:eassist_tools_app/blocs/progressindicator/progressindicator_bloc.dart';
+import 'package:eassist_tools_app/blocs/regendors/regendors1form_bloc.dart';
+import 'package:eassist_tools_app/blocs/regendors/regendorscari_bloc.dart';
 import 'package:eassist_tools_app/blocs/regmv/regmv1crud_bloc.dart';
 import 'package:eassist_tools_app/blocs/regmv/regmv1list_bloc.dart';
 import 'package:eassist_tools_app/blocs/regmv/regmv2form_bloc.dart';
@@ -114,6 +118,7 @@ import 'package:eassist_tools_app/repositories/chatting/guestscrud_repository.da
 import 'package:eassist_tools_app/repositories/gen_calmv/calmv1crud_repository.dart';
 import 'package:eassist_tools_app/repositories/gen_calmv/calmv2form_repository.dart';
 import 'package:eassist_tools_app/repositories/gen_calmv/calmv3form_repository.dart';
+import 'package:eassist_tools_app/repositories/gen_endors/endors1crud_repository.dart';
 import 'package:eassist_tools_app/repositories/gen_profile/mrekan1crud_repository.dart';
 import 'package:eassist_tools_app/repositories/gen_profile/mrekancontactcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/gen_profile/mrekangeneralcmpcrud_repository.dart';
@@ -129,6 +134,7 @@ import 'package:eassist_tools_app/repositories/payment/pay1crud_repository.dart'
 import 'package:eassist_tools_app/repositories/payment/paymentdn_repository.dart' show PaymentDnRepository;
 import 'package:eassist_tools_app/repositories/profile/profile_ktp_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/userfoto_repository.dart';
+import 'package:eassist_tools_app/repositories/regendors/regendors1form_repository.dart';
 import 'package:eassist_tools_app/repositories/regmv/regmv1crud_repository.dart';
 import 'package:eassist_tools_app/repositories/regmv/regmv2form_repository.dart';
 import 'package:eassist_tools_app/repositories/regmv/regmv3form_repository.dart';
@@ -385,6 +391,10 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => GroupcobCariBloc()),
         BlocProvider(create: (context) => KlaimrasiocobCariBloc()),
         BlocProvider(create:  (context) => SppaDownloadPolisBloc(repository: DownloadPolisRepository())),
+        BlocProvider(create:  (context) => Endors1ListBloc()),
+        BlocProvider(create: (context) => Endors1CrudBloc(repository: Endors1CrudRepository())),
+        BlocProvider(create: (context) => RegendorsCariBloc()),
+        BlocProvider(create: (context) => Regendors1FormBloc(repository: Regendors1FormRepository())),  
 
       ],
       child: MaterialApp(
