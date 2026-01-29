@@ -1,4 +1,6 @@
 import 'package:eassist_tools_app/pages/regendors/regendors2cari_main.dart';
+import 'package:eassist_tools_app/pages/regreaktif/regreaktif2cari_main.dart';
+import 'package:eassist_tools_app/pages/regrenewal/regrenewal2cari_main.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:eassist_tools_app/widgets/my_colors.dart';
@@ -102,27 +104,38 @@ class AsettrackCariTileWidget extends StatelessWidget {
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
-            SizedBox(
-                width: MediaQuery.of(context).size.width * 0.5,
-                height: 60,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 30.0),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                Regendors2CariMainPage(regendors1Id: prosesId)),
-                      );
-                    },
-                    child: const Text(
-                      'Tracking Progress',
-                      style: TextStyle(fontSize: 13.0),
-                    ),
-                  ),
-                ),
-              ),
+						if (prosesSource == "E" || prosesSource == "R" || prosesSource == "A")
+							SizedBox(
+								width: MediaQuery.of(context).size.width * 0.5,
+								height: 60,
+								child: Padding(
+								padding: const EdgeInsets.only(top: 30.0),
+								child: ElevatedButton(
+									onPressed: () {
+									Navigator.push(
+										context,
+										MaterialPageRoute(
+											builder: (context) {
+											if (prosesSource == "E"){
+												return Regendors2CariMainPage(regendors1Id: prosesId);
+											}
+											else if (prosesSource == "R"){
+												return Regrenewal2CariMainPage(regrenew1Id: prosesId);
+											}
+											else if (prosesSource == "A"){
+												return Regreaktif2CariMainPage(regreaktif1Id: prosesId);
+											}
+											return Container();
+											}),
+									);
+									},
+									child: const Text(
+									'Tracking Progress',
+									style: TextStyle(fontSize: 13.0),
+									),
+								),
+								),
+							),
 				]),
 			)
 		);
