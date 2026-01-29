@@ -1,6 +1,7 @@
 import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
 import 'package:eassist_tools_app/pages/about_jps/action_about_section.dart';
 import 'package:eassist_tools_app/pages/aset/aset_main.dart';
+import 'package:eassist_tools_app/pages/asettracking/asettrackcari_main.dart';
 import 'package:eassist_tools_app/pages/calpar/calpar1list_main.dart';
 import 'package:eassist_tools_app/pages/find_insurance/find_section_insurance.dart';
 import 'package:eassist_tools_app/pages/find_insurance/floating_buttons_insurance.dart';
@@ -352,6 +353,17 @@ class _HeroPageState extends State<HeroPage> {
                                     );
                                   },
                                   child: Text("List Aset MV"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const AsettrackCariMainPage()),
+                                    );
+                                  },
+                                  child: Text("Tacking Aset MV"),
                                 ),
                                 TextButton(
                                   onPressed: () {

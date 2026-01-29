@@ -1,4 +1,5 @@
 import 'package:eassist_tools_app/apis/payment/paymentdn_api.dart';
+import 'package:eassist_tools_app/blocs/asettracking/asettrackcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
 import 'package:eassist_tools_app/blocs/calpar/calpar1crud_bloc.dart';
 import 'package:eassist_tools_app/blocs/calpar/calpar1list_bloc.dart';
@@ -66,6 +67,7 @@ import 'package:eassist_tools_app/blocs/profile/profile_upload_foto_bloc.dart';
 import 'package:eassist_tools_app/blocs/profile/profile_upload_ktp_bloc.dart';
 import 'package:eassist_tools_app/blocs/progressindicator/progressindicator_bloc.dart';
 import 'package:eassist_tools_app/blocs/regendors/regendors1form_bloc.dart';
+import 'package:eassist_tools_app/blocs/regendors/regendors2cari_bloc.dart';
 import 'package:eassist_tools_app/blocs/regendors/regendorscari_bloc.dart';
 import 'package:eassist_tools_app/blocs/regmv/regmv1crud_bloc.dart';
 import 'package:eassist_tools_app/blocs/regmv/regmv1list_bloc.dart';
@@ -405,6 +407,8 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => Regrenew1FormBloc(repository: Regrenew1FormRepository())),
         BlocProvider(create:  (context) => RegreaktifCariBloc()),
         BlocProvider(create: (context) => Regreaktif1Bloc(repository: Regreaktif1Repository())),
+        BlocProvider(create: (context) => AsettrackCariBloc()),
+        BlocProvider(create: (context) =>Regendors2CariBloc()),
 
       ],
       child: MaterialApp(

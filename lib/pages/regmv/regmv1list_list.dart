@@ -1,3 +1,7 @@
+import 'package:eassist_tools_app/blocs/payment/dnrekap2inv_bloc.dart';
+import 'package:eassist_tools_app/pages/payment/invbayarvaform_form.dart';
+import 'package:eassist_tools_app/pages/payment/paymentmethodcari_list.dart';
+import 'package:eassist_tools_app/pages/payment/paymentsuccess_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/widgets/listpage_filter_bar_ui.dart';
@@ -51,6 +55,48 @@ class Regmv1ListPageState extends State<Regmv1ListPage> {
 				}, listenWhen: (previous, current) {
 					return previous.isSaved != current.isSaved;
 				}),
+        BlocListener<DnRekap2invBloc, DnRekap2invState>(
+          listener: (context, state) {
+            if (state.isProcessed){
+              if (state.paymentStatus == "20"){
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Proses pembayaran berhasil. Silakan lanjutkan ke metode pembayaran.')),
+                );
+                onViewPaymentMethods(state.curr, state.totalBayar);
+              } 
+              else if (state.paymentStatus == "30"){
+                refreshData();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Silakan lakukan pembayaran.')),
+                );          
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => InvbayarvaFormFormPage(viewMode: "ubah", recordId: state.invoiceId)),
+                );
+              }
+              else if (state.paymentStatus == "40"){
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Proses pembayaran Berhasil.')),
+                );           
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => PaymentsuccessFormPage()),
+                );           
+              }
+              else if (state.paymentStatus == "91"){
+                refreshData();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Proses pembayaran gagal. Silakan coba lagi.')),
+                );                      
+              }
+            }
+          },
+          listenWhen: (previous, current) {
+            return previous.isProcessed != current.isProcessed ||
+                   previous.hasFailure != current.hasFailure;
+          }),
 			],
 			child: Scaffold(
 				floatingActionButton: FloatingMenuMasterWidget(
@@ -112,5 +158,12 @@ class Regmv1ListPageState extends State<Regmv1ListPage> {
 			regmv1ListBloc.add(CloseDialogRegmv1ListEvent());
 		});
 	}
+
+  void onViewPaymentMethods(String curr, double totalBayar) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => PaymentMethodsCariListPage(curr: curr, totalBayar: totalBayar)),
+    ); // Implement your ta    
+  }    
 
 }

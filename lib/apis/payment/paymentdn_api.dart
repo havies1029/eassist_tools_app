@@ -154,4 +154,48 @@ class PaymentDnAPI{
 		}
 	}
 
+  Future<List<InvoiceStatusModel>> regMv2InvAPI(String regmv1Id) async {
+		String lihatEndpoint = "${AppData.prefixEndPoint}/api/payment/regmvtosppa";
+		Map<String, String> queryParams = {'regmv1Id': regmv1Id, 'modulId': 'RegMv2InvAPI'};
+		var uri = AppData.uriHtpp(AppData.httpAuthority, lihatEndpoint, queryParams);
+		final http.Response response =
+			await http.get(uri, headers: <String, String>{
+			'Content-Type': 'application/json; odata=verbos',
+			'Accept': 'application/json; odata=verbos',
+			'Authorization': 'Bearer ${AppData.userToken}'
+		});
+
+		if (response.statusCode == 200) {
+      final List<dynamic> jsonData = json.decode(response.body);
+
+      return jsonData
+          .map((e) => InvoiceStatusModel.fromJson(e))
+          .toList();
+		} else {
+			return throw Exception("Failed to load data");
+		}
+	}
+
+  Future<List<InvoiceStatusModel>> regPar2InvAPI(String regpar1Id) async {
+		String lihatEndpoint = "${AppData.prefixEndPoint}/api/payment/regpartosppa";
+		Map<String, String> queryParams = {'regpar1Id': regpar1Id, 'modulId': 'RegPar2InvAPI'};
+		var uri = AppData.uriHtpp(AppData.httpAuthority, lihatEndpoint, queryParams);
+		final http.Response response =
+			await http.get(uri, headers: <String, String>{
+			'Content-Type': 'application/json; odata=verbos',
+			'Accept': 'application/json; odata=verbos',
+			'Authorization': 'Bearer ${AppData.userToken}'
+		});
+
+		if (response.statusCode == 200) {
+      final List<dynamic> jsonData = json.decode(response.body);
+
+      return jsonData
+          .map((e) => InvoiceStatusModel.fromJson(e))
+          .toList();
+		} else {
+			return throw Exception("Failed to load data");
+		}
+	}
+
 }

@@ -35,4 +35,14 @@ class PaymentDnRepository {
   Future<bool> forcePaymentViaVa(String invoiceId) async {
     return await api.forcePaymentViaVaAPI(invoiceId);
   }
+
+  Future<List<InvoiceStatusModel>> regMv2Inv(String regmv1Id) async {
+    return await api.regMv2InvAPI(regmv1Id);
+  }
+
+  Future<List<InvoiceStatusModel>> regPar2Inv(String regpar1Id) async {
+    return await api.regPar2InvAPI(regpar1Id);
+  }
+
+  
 }
