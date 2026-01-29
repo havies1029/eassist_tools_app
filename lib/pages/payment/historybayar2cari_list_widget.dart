@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/common/constants.dart';
-import 'package:eassist_tools_app/blocs/payment/historybayarcari_bloc.dart';
-import 'package:eassist_tools_app/pages/payment/historybayarcari_tile_widget.dart';
-import 'package:eassist_tools_app/models/payment/historybayarcari_model.dart';
+import 'package:eassist_tools_app/blocs/payment/historybayar2cari_bloc.dart';
+import 'package:eassist_tools_app/pages/payment/historybayar2cari_tile_widget.dart';
+import 'package:eassist_tools_app/models/payment/historybayar2cari_model.dart';
 
-class HistorybayarCariListWidget extends StatefulWidget {
-	const HistorybayarCariListWidget({super.key});
+class Historybayar2CariListWidget extends StatefulWidget {
+	final String searchText;
+	const Historybayar2CariListWidget({super.key, required this.searchText});
 
 	@override
-	HistorybayarCariListWidgetState createState() => HistorybayarCariListWidgetState();
+	Historybayar2CariListWidgetState createState() => Historybayar2CariListWidgetState();
 }
 
-class HistorybayarCariListWidgetState extends State<HistorybayarCariListWidget> {
-	late HistorybayarCariBloc historybayarCariBloc;
-	List<HistorybayarCariModel> historybayarCari = [];
+class Historybayar2CariListWidgetState extends State<Historybayar2CariListWidget> {
+	late Historybayar2CariBloc historybayar2CariBloc;
+	List<Historybayar2CariModel> historybayar2Cari = [];
 	final ScrollController _scrollController = ScrollController();
 
 	@override
@@ -33,12 +34,12 @@ class HistorybayarCariListWidgetState extends State<HistorybayarCariListWidget> 
 
 	@override
 	Widget build(BuildContext context) {
-		historybayarCariBloc = BlocProvider.of<HistorybayarCariBloc>(context);
-		return BlocConsumer<HistorybayarCariBloc, HistorybayarCariState>(
+		historybayar2CariBloc = BlocProvider.of<Historybayar2CariBloc>(context);
+		return BlocConsumer<Historybayar2CariBloc, Historybayar2CariState>(
 			builder: (context, state) {
 		if (state.status == ListStatus.success) {
 			if (!state.hasReachedMax) {
-				historybayarCari.addAll(state.items);
+				historybayar2Cari.addAll(state.items);
 			}
 
 		return state.items.isNotEmpty
@@ -54,13 +55,12 @@ class HistorybayarCariListWidgetState extends State<HistorybayarCariListWidget> 
 							borderRadius: BorderRadius.circular(15.0)),
 						child: Column(
 							children: <Widget>[
-								HistorybayarCariTileWidget(
-									invTgl: state.items[index].invTgl,
-									inv1Id: state.items[index].inv1Id,
-									jmlPolis: state.items[index].jmlPolis,
-									nomor: state.items[index].nomor,
-									status: state.items[index].status,
-									totalBayar: state.items[index].totalBayar,
+								Historybayar2CariTileWidget(
+									curr: state.items[index].curr,
+									dn1Id: state.items[index].dn1Id,
+									nilaiBayar: state.items[index].nilaiBayar,
+									polisNo: state.items[index].polisNo,
+									sppa1Id: state.items[index].sppa1Id,
 								)
 							],
 						),
@@ -98,7 +98,7 @@ class HistorybayarCariListWidgetState extends State<HistorybayarCariListWidget> 
 		if (!_scrollController.hasClients) return;
 		if (_scrollController.position.pixels ==
 				_scrollController.position.maxScrollExtent) {
-			historybayarCariBloc.add(FetchHistorybayarCariEvent());
+			historybayar2CariBloc.add(FetchHistorybayar2CariEvent());
 		}
 	}
 

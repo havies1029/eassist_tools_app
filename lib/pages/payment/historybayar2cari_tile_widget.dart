@@ -1,26 +1,22 @@
-
-import 'package:eassist_tools_app/pages/payment/historybayar2cari_main.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:eassist_tools_app/widgets/my_colors.dart';
 import 'package:eassist_tools_app/widgets/my_text.dart';
 
-class HistorybayarCariTileWidget extends StatelessWidget {
-	final DateTime invTgl;
-	final String inv1Id;
-	final int jmlPolis;
-	final int nomor;
-	final String status;
-	final double totalBayar;
+class Historybayar2CariTileWidget extends StatelessWidget {
+	final String curr;
+	final String dn1Id;
+	final double nilaiBayar;
+	final String polisNo;
+	final String sppa1Id;
 
-	const HistorybayarCariTileWidget(
+	const Historybayar2CariTileWidget(
 		{super.key,
-		required this.invTgl, 
-		required this.inv1Id, 
-		required this.jmlPolis, 
-		required this.nomor, 
-		required this.status, 
-		required this.totalBayar});
+		required this.curr, 
+		required this.dn1Id, 
+		required this.nilaiBayar, 
+		required this.polisNo, 
+		required this.sppa1Id});
 
 	@override
 	Widget build(BuildContext context) {
@@ -38,84 +34,51 @@ class HistorybayarCariTileWidget extends StatelessWidget {
 				child: Column(
 					crossAxisAlignment: CrossAxisAlignment.start,
 					children: [
-						Text("invTgl",
+						Text("curr",
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_40)),
 						Container(height: 5),
 						Text(
-							DateFormat("dd/MM/yyyy").format(invTgl),
+							curr,
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
-						Text("inv1Id",
+						Text("dn1Id",
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_40)),
 						Container(height: 5),
 						Text(
-							inv1Id,
+							dn1Id,
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
-						Text("jmlPolis",
+						Text("nilaiBayar",
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_40)),
 						Container(height: 5),
 						Text(
-							NumberFormat("#,###").format(jmlPolis),
+							NumberFormat("#,###").format(nilaiBayar),
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
-						Text("nomor",
+						Text("polisNo",
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_40)),
 						Container(height: 5),
 						Text(
-							NumberFormat("#,###").format(nomor),
+							polisNo,
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
-						Text("status",
+						Text("sppa1Id",
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_40)),
 						Container(height: 5),
 						Text(
-							status,
+							sppa1Id,
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
-						Text("totalBayar",
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_40)),
-						Container(height: 5),
-						Text(
-							NumberFormat("#,###").format(totalBayar),
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_80)),
-						Container(height: 10),
-            SizedBox(
-								width: MediaQuery.of(context).size.width * 0.5,
-								height: 60,
-								child: Padding(
-								padding: const EdgeInsets.only(top: 30.0),
-								child: ElevatedButton(
-									onPressed: () {
-									Navigator.push(
-										context,
-										MaterialPageRoute(
-											builder: (context) {
-											
-												return Historybayar2CariMainPage(inv1Id: inv1Id);
-											
-											}),
-									);
-									},
-									child: const Text(
-									'Detail Invoice',
-									style: TextStyle(fontSize: 13.0),
-									),
-								),
-								),
-							),
 				]),
 			)
 		);

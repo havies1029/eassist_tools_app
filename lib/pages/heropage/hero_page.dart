@@ -28,6 +28,7 @@ import 'package:eassist_tools_app/pages/klaimrasio/klaimrasiocari_main.dart';
 import 'package:eassist_tools_app/pages/klaimrinci/klaimrincicari_main.dart';
 import 'package:eassist_tools_app/pages/klaimringkas/klaimringkascari_main.dart';
 import 'package:eassist_tools_app/pages/payment/dnrekapcobcari_list.dart';
+import 'package:eassist_tools_app/pages/payment/historybayarcari_main.dart';
 import 'package:eassist_tools_app/pages/payment/pay1list_main.dart';
 import 'package:eassist_tools_app/pages/payment/rinciansoa_page.dart';
 import 'package:eassist_tools_app/pages/regendors/regendorslist_main.dart';
@@ -285,6 +286,16 @@ class _HeroPageState extends State<HeroPage> {
                                     );
                                   },
                                   child: Text("List Payment"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => HistorybayarCariMainPage()),
+                                    );
+                                  },
+                                  child: Text("Riwayat Pembayaran"),
                                 ),
                                 TextButton(
                                   onPressed: () {

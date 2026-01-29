@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/widgets/listpage_filter_bar_ui.dart';
-import 'package:eassist_tools_app/blocs/payment/historybayarcari_bloc.dart';
-import 'package:eassist_tools_app/pages/payment/historybayarcari_list_widget.dart';
+import 'package:eassist_tools_app/blocs/payment/historybayar2cari_bloc.dart';
+import 'package:eassist_tools_app/pages/payment/historybayar2cari_list_widget.dart';
 
-class HistorybayarCariPage extends StatefulWidget {
-	const HistorybayarCariPage({super.key});
+class Historybayar2CariPage extends StatefulWidget {
+  final String inv1Id;
+  const Historybayar2CariPage({super.key, required this.inv1Id}); 
 
 	@override
-	HistorybayarCariPageState createState() => HistorybayarCariPageState();
+	Historybayar2CariPageState createState() => Historybayar2CariPageState();
 }
 
-class HistorybayarCariPageState extends State<HistorybayarCariPage> {
-	late HistorybayarCariBloc historybayarCariBloc;
+class Historybayar2CariPageState extends State<Historybayar2CariPage> {
+	late Historybayar2CariBloc historybayar2CariBloc;
 	final TextEditingController _searchController = TextEditingController();
 	@override
 	void initState() {
@@ -24,7 +25,7 @@ class HistorybayarCariPageState extends State<HistorybayarCariPage> {
 
 	@override
 	Widget build(BuildContext context) {
-		historybayarCariBloc = BlocProvider.of<HistorybayarCariBloc>(context);
+		historybayar2CariBloc = BlocProvider.of<Historybayar2CariBloc>(context);
 		return Center(
 			child: Column(
 				mainAxisAlignment: MainAxisAlignment.start,
@@ -39,8 +40,8 @@ class HistorybayarCariPageState extends State<HistorybayarCariPage> {
 		);
 	}
 	void refreshData() {
-		historybayarCariBloc.add(
-			RefreshHistorybayarCariEvent(statusId: '10001', searchText: _searchController.text));
+		historybayar2CariBloc.add(
+			RefreshHistorybayar2CariEvent(inv1Id: widget.inv1Id));
 	}
 
 	IconButton buildSearchButton() {
@@ -50,8 +51,8 @@ class HistorybayarCariPageState extends State<HistorybayarCariPage> {
 				size: 35.0,
 			),
 			onPressed: () {
-			historybayarCariBloc.add(RefreshHistorybayarCariEvent(statusId: '10001',
-				searchText: _searchController.text));
+			historybayar2CariBloc.add(RefreshHistorybayar2CariEvent(
+        inv1Id: widget.inv1Id));
 			});
 	}
 
@@ -59,7 +60,7 @@ class HistorybayarCariPageState extends State<HistorybayarCariPage> {
 		return Expanded(
 			child: Column(
 				mainAxisAlignment: MainAxisAlignment.start,
-				children: <Widget>[HistorybayarCariListWidget()],
+				children: <Widget>[Historybayar2CariListWidget(searchText: _searchController.text)],
 		));
 	}
 

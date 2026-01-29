@@ -57,6 +57,8 @@ import 'package:eassist_tools_app/blocs/payment/dnrekap2inv_bloc.dart';
 import 'package:eassist_tools_app/blocs/payment/dnrekapcobcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/payment/dnsppacari_bloc.dart';
 import 'package:eassist_tools_app/blocs/payment/dnsppamvcari_bloc.dart';
+import 'package:eassist_tools_app/blocs/payment/historybayar2cari_bloc.dart';
+import 'package:eassist_tools_app/blocs/payment/historybayarcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/payment/invbayarvaform_bloc.dart';
 import 'package:eassist_tools_app/blocs/payment/pay1crud_bloc.dart';
 import 'package:eassist_tools_app/blocs/payment/pay1list_bloc.dart';
@@ -413,6 +415,8 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) =>Regendors2CariBloc()),
         BlocProvider(create:  (context) => Regrenewal2CariBloc()),
         BlocProvider(create:  (context) => Regreaktif2CariBloc()),
+        BlocProvider(create: (context) => HistorybayarCariBloc()),
+        BlocProvider(create:  (context) => Historybayar2CariBloc()), 
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

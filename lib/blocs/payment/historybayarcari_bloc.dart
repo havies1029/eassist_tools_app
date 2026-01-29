@@ -17,7 +17,10 @@ class HistorybayarCariBloc extends Bloc<HistorybayarCariEvents, HistorybayarCari
 Future<void> onRefreshHistorybayarCari(
 		RefreshHistorybayarCariEvent event, Emitter<HistorybayarCariState> emit) async {
 	emit(const HistorybayarCariState());
-
+  emit(state.copyWith(
+    statusId: event.statusId,
+    searchText: event.searchText,
+  ));
 	add(FetchHistorybayarCariEvent());
 }
 
