@@ -61,6 +61,7 @@ class HistorybayarCariListWidgetState extends State<HistorybayarCariListWidget> 
 									nomor: state.items[index].nomor,
 									status: state.items[index].status,
 									totalBayar: state.items[index].totalBayar,
+                  stsInvId: state.items[index].stsInvId
 								)
 							],
 						),

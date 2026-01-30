@@ -1,5 +1,7 @@
 
+import 'package:eassist_tools_app/blocs/payment/dnrekap2inv_bloc.dart';
 import 'package:eassist_tools_app/pages/payment/historybayar2cari_main.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:eassist_tools_app/widgets/my_colors.dart';
@@ -12,6 +14,7 @@ class HistorybayarCariTileWidget extends StatelessWidget {
 	final int nomor;
 	final String status;
 	final double totalBayar;
+  final String stsInvId;
 
 	const HistorybayarCariTileWidget(
 		{super.key,
@@ -20,7 +23,9 @@ class HistorybayarCariTileWidget extends StatelessWidget {
 		required this.jmlPolis, 
 		required this.nomor, 
 		required this.status, 
-		required this.totalBayar});
+		required this.totalBayar,
+    required this.stsInvId
+    });
 
 	@override
 	Widget build(BuildContext context) {
@@ -83,6 +88,15 @@ class HistorybayarCariTileWidget extends StatelessWidget {
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
+            Text("stsInvId",
+							style: MyText.bodyLarge(context)!
+								.copyWith(color: MyColors.grey_40)),
+						Container(height: 5),
+						Text(
+							stsInvId,
+							style: MyText.bodyLarge(context)!
+								.copyWith(color: MyColors.grey_80)),
+						Container(height: 10),
 						Text("totalBayar",
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_40)),
@@ -116,6 +130,28 @@ class HistorybayarCariTileWidget extends StatelessWidget {
 								),
 								),
 							),
+              Container(height: 10),
+              if (stsInvId == "10002")
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  height: 60,
+                  child: Padding(
+                  padding: const EdgeInsets.only(top: 30.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      context.read<DnRekap2invBloc>().add(
+                        CheckInvoiceStatusEvent(
+                          invoiceId: inv1Id,
+                        ),
+                      );
+                    },
+                    child: const Text(
+                    'Lanjutkan Pembayaran',
+                    style: TextStyle(fontSize: 13.0),
+                    ),
+                  ),
+                  ),
+                ),
 				]),
 			)
 		);

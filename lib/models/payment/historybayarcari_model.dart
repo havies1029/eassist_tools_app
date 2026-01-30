@@ -6,10 +6,11 @@ class HistorybayarCariModel {
 	int nomor;
 	String status;
 	double totalBayar;
+  String stsInvId;
 
 	HistorybayarCariModel({required this.invTgl, required this.inv1Id, 
 		required this.jmlPolis, required this.nomor, 
-		required this.status, required this.totalBayar});
+		required this.status, required this.totalBayar, required this.stsInvId});
 
 	factory HistorybayarCariModel.fromJson(Map<String, dynamic> data) {
 		return HistorybayarCariModel(
@@ -18,7 +19,8 @@ class HistorybayarCariModel {
 			jmlPolis: int.tryParse(data['jmlPolis'].toString())??0,
 			nomor: int.tryParse(data['nomor'].toString())??0,
 			status: data['status']??'',
-			totalBayar: double.tryParse(data['totalBayar'].toString())??0
+			totalBayar: double.tryParse(data['totalBayar'].toString())??0,
+      stsInvId: data['stsInvId']??''
 		);
 
 	}
@@ -29,6 +31,8 @@ class HistorybayarCariModel {
 		'jmlPolis': jmlPolis.toString(),
 		'nomor': nomor.toString(),
 		'status': status,
-		'totalBayar': totalBayar.toString()};
+		'totalBayar': totalBayar.toString(),
+    'stsInvId': stsInvId
+    };
 
 }
