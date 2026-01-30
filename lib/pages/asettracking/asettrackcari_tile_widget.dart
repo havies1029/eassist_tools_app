@@ -1,12 +1,18 @@
+import 'dart:convert';
+
+import 'package:eassist_tools_app/blocs/asettracking/asettrackcari_bloc.dart';
+import 'package:eassist_tools_app/models/asettracking/asettrackcari_model.dart';
 import 'package:eassist_tools_app/pages/regendors/regendors2cari_main.dart';
 import 'package:eassist_tools_app/pages/regreaktif/regreaktif2cari_main.dart';
 import 'package:eassist_tools_app/pages/regrenewal/regrenewal2cari_main.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:eassist_tools_app/widgets/my_colors.dart';
 import 'package:eassist_tools_app/widgets/my_text.dart';
 
 class AsettrackCariTileWidget extends StatelessWidget {
+	final bool isSelected;
 	final int nomor;
 	final String polisiNo;
 	final String prosesId;
@@ -23,13 +29,19 @@ class AsettrackCariTileWidget extends StatelessWidget {
 		required this.prosesRemarks, 
 		required this.prosesSource, 
 		required this.sppa1Id, 
-		required this.sppa2mvId});
+		required this.sppa2mvId,
+		required this.isSelected,
+		});
 
 	@override
 	Widget build(BuildContext context) {
 		return Card(
 			shape: RoundedRectangleBorder(
 				borderRadius: BorderRadius.circular(15),
+				side: BorderSide(
+				color: isSelected ? Colors.blue : Colors.transparent,
+				width: 2,
+        ),
 			),
 			color: Colors.white,
 			margin: const EdgeInsets.symmetric(horizontal: 10),
@@ -131,6 +143,24 @@ class AsettrackCariTileWidget extends StatelessWidget {
 									},
 									child: const Text(
 									'Tracking Progress',
+									style: TextStyle(fontSize: 13.0),
+									),
+								),
+								),
+							),
+              SizedBox(
+								width: MediaQuery.of(context).size.width * 0.5,
+								height: 60,
+								child: Padding(
+								padding: const EdgeInsets.only(top: 30.0),
+								child: ElevatedButton(
+									onPressed: () {
+										AsettrackCariModel? selectedAsettrackCari = 
+											context.read<AsettrackCariBloc>().state.selectedAsettrackCari;
+										debugPrint('Selected AsettrackCari: ${jsonEncode(selectedAsettrackCari?.toJson())}');
+									},
+									child: const Text(
+									'debugPrint Selected',
 									style: TextStyle(fontSize: 13.0),
 									),
 								),
