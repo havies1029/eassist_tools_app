@@ -417,6 +417,7 @@ class App extends StatelessWidget {
         BlocProvider(create:  (context) => Regreaktif2CariBloc()),
         BlocProvider(create: (context) => HistorybayarCariBloc()),
         BlocProvider(create:  (context) => Historybayar2CariBloc()), 
+        
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

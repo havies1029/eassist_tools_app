@@ -152,6 +152,23 @@ class HistorybayarCariTileWidget extends StatelessWidget {
                   ),
                   ),
                 ),
+                Container(height: 10),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  height: 60,
+                  child: Padding(
+                  padding: const EdgeInsets.only(top: 30.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      
+                    },
+                    child: const Text(
+                    'Download Invoice',
+                    style: TextStyle(fontSize: 13.0),
+                    ),
+                  ),
+                  ),
+                ),
 				]),
 			)
 		);
