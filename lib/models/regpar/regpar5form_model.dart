@@ -18,6 +18,7 @@ class Regpar5FormModel {
 	double rateOther;
   double rateTotal;
   double biayaPolis;
+  double tsi;
 
 	Regpar5FormModel({required this.diskonNilai, required this.diskonPersen, 
 		required this.premiEqvet, required this.premiNet, 
@@ -30,7 +31,8 @@ class Regpar5FormModel {
     this.rateEqvet = 0,
     this.rateOther = 0,
     this.rateTotal = 0,
-    this.biayaPolis = 0,});
+    this.biayaPolis = 0,
+    this.tsi = 0,});
 
 	factory Regpar5FormModel.fromJson(Map<String, dynamic> data) {
 		return Regpar5FormModel(
@@ -52,6 +54,7 @@ class Regpar5FormModel {
       rateOther: double.tryParse(data['rateOther'].toString())??0,
       rateTotal: double.tryParse(data['rateTotal'].toString())??0,
       biayaPolis: double.tryParse(data['biayaPolis'].toString())??0,
+      tsi: double.tryParse(data['tsi'].toString())??0,
 		);
 
 	}
@@ -75,6 +78,7 @@ class Regpar5FormModel {
     'rateOther': rateOther.toString(),
     'rateTotal': rateTotal.toString(),
     'biayaPolis': biayaPolis.toString(),
+    'tsi': tsi.toString(),
     };
 
 }

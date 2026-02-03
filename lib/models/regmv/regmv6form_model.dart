@@ -16,6 +16,7 @@ class Regmv6FormModel {
 	double ratePad;
 	double ratePap;
   double biayaPolis;
+  double tsi;
 
 	Regmv6FormModel({required this.diskonPersen, required this.premiAdd, 
 		required this.premiCasco, required this.premiDiskon, 
@@ -29,7 +30,8 @@ class Regmv6FormModel {
     this.rateTerrorism = 0,
     this.ratePad = 0,
     this.ratePap = 0,
-    this.biayaPolis = 0,});
+    this.biayaPolis = 0,
+    this.tsi = 0,});
 
 	factory Regmv6FormModel.fromJson(Map<String, dynamic> data) {
 		return Regmv6FormModel(
@@ -49,6 +51,7 @@ class Regmv6FormModel {
       ratePad: double.tryParse(data['ratePad'].toString())??0,
       ratePap: double.tryParse(data['ratePap'].toString())??0,
       biayaPolis: double.tryParse(data['biayaPolis'].toString())??0,
+      tsi: double.tryParse(data['tsi'].toString())??0,
 		);
 
 	}
@@ -70,6 +73,7 @@ class Regmv6FormModel {
     'ratePad': ratePad.toString(),
     'ratePap': ratePap.toString(),
     'biayaPolis': biayaPolis.toString(),
+    'tsi': tsi.toString(),
     };
 
 }
