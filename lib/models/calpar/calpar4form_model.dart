@@ -19,6 +19,7 @@ class Calpar4FormModel {
 	double rateEqvet;
 	double rateOther;
   double rateTotal;
+  double biayaPolis;
 
 	Calpar4FormModel({required this.calpar1Id, required this.calpar4Id, required this.discNilai, 
 		required this.discPersen, required this.premiBi, 
@@ -31,7 +32,8 @@ class Calpar4FormModel {
     this.rateTsfwd = 0,
     this.rateEqvet = 0,
     this.rateOther = 0,
-    this.rateTotal = 0});
+    this.rateTotal = 0,
+    this.biayaPolis = 0,});
 
 	factory Calpar4FormModel.fromJson(Map<String, dynamic> data) {
 		return Calpar4FormModel(
@@ -52,7 +54,8 @@ class Calpar4FormModel {
       rateTsfwd: double.tryParse(data['rateTsfwd'].toString())??0,
       rateEqvet: double.tryParse(data['rateEqvet'].toString())??0,
       rateOther: double.tryParse(data['rateOther'].toString())??0,
-      rateTotal: double.tryParse(data['rateTotal'].toString())??0
+      rateTotal: double.tryParse(data['rateTotal'].toString())??0,
+      biayaPolis: double.tryParse(data['biayaPolis'].toString())??0,
 		);
 
 	}
@@ -75,6 +78,7 @@ class Calpar4FormModel {
     'rateTsfwd': rateTsfwd.toString(),
     'rateEqvet': rateEqvet.toString(),
     'rateOther': rateOther.toString(),
-    'rateTotal': rateTotal.toString()
+    'rateTotal': rateTotal.toString(),
+    'biayaPolis': biayaPolis.toString(),
     };
 }

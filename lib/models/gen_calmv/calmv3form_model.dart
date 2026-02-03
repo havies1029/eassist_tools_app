@@ -15,6 +15,7 @@ class Calmv3FormModel {
 	double rateTerrorism;
 	double ratePad;
 	double ratePap;
+  double biayaPolis;
 
 	Calmv3FormModel({required this.calmv3Id, required this.diskonPersen, 
 		required this.premiAdd, required this.premiCasco, 
@@ -27,7 +28,8 @@ class Calmv3FormModel {
     this.rateEq = 0,
     this.rateTerrorism = 0,
     this.ratePad = 0,
-    this.ratePap = 0});
+    this.ratePap = 0,
+    this.biayaPolis = 0,});
 
 	factory Calmv3FormModel.fromJson(Map<String, dynamic> data) {
 		return Calmv3FormModel(
@@ -45,7 +47,8 @@ class Calmv3FormModel {
       rateEq: double.tryParse(data['rateEq'].toString())??0,
       rateTerrorism: double.tryParse(data['rateTerrorism'].toString())??0,
       ratePad: double.tryParse(data['ratePad'].toString())??0,
-      ratePap: double.tryParse(data['ratePap'].toString())??0
+      ratePap: double.tryParse(data['ratePap'].toString())??0,
+      biayaPolis: double.tryParse(data['biayaPolis'].toString())??0,
 		);
 
 	}
@@ -65,7 +68,8 @@ class Calmv3FormModel {
     'rateEq': rateEq.toString(),
     'rateTerrorism': rateTerrorism.toString(),
     'ratePad': ratePad.toString(),
-    'ratePap': ratePap.toString()
+    'ratePap': ratePap.toString(),
+    'biayaPolis': biayaPolis.toString(),
     };
 
 }
