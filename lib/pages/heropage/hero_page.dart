@@ -3,6 +3,7 @@ import 'package:eassist_tools_app/pages/about_jps/action_about_section.dart';
 import 'package:eassist_tools_app/pages/aset/aset_main.dart';
 import 'package:eassist_tools_app/pages/asettracking/asettrackcari_main.dart';
 import 'package:eassist_tools_app/pages/calpar/calpar1list_main.dart';
+import 'package:eassist_tools_app/pages/cobklaim/mcobklaimcari_main.dart';
 import 'package:eassist_tools_app/pages/find_insurance/find_section_insurance.dart';
 import 'package:eassist_tools_app/pages/find_insurance/floating_buttons_insurance.dart';
 import 'package:eassist_tools_app/pages/gen_aset_dashboard/asetdashboardcari_main.dart';
@@ -32,6 +33,7 @@ import 'package:eassist_tools_app/pages/payment/historybayarcari_main.dart';
 import 'package:eassist_tools_app/pages/payment/pay1list_main.dart';
 import 'package:eassist_tools_app/pages/payment/rinciansoa_page.dart';
 import 'package:eassist_tools_app/pages/regendors/regendorslist_main.dart';
+import 'package:eassist_tools_app/pages/regklaim/regklaim1list_main.dart';
 import 'package:eassist_tools_app/pages/regmv/regmv1list_main.dart';
 import 'package:eassist_tools_app/pages/regother/regother1list_main.dart';
 import 'package:eassist_tools_app/pages/regpar/regpar1list_main.dart';
@@ -222,6 +224,30 @@ class _HeroPageState extends State<HeroPage> {
                                     );
                                   },
                                   child: Text("Klaim Rasio"),
+                                ),
+
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              McobklaimCariMainPage()),
+                                    );
+                                  },
+                                  child: Text("List COB Klaim"),
+                                ),
+
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              Regklaim1ListMainPage()),
+                                    );
+                                  },
+                                  child: Text("Register Klaim Baru"),
                                 ),
 
                                 TextButton(

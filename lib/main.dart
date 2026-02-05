@@ -7,6 +7,7 @@ import 'package:eassist_tools_app/blocs/calpar/calpar2form_bloc.dart';
 import 'package:eassist_tools_app/blocs/calpar/calpar3form_bloc.dart';
 import 'package:eassist_tools_app/blocs/calpar/calpar4form_bloc.dart';
 import 'package:eassist_tools_app/blocs/chatting/guestscrud_bloc.dart';
+import 'package:eassist_tools_app/blocs/cobklaim/mcobklaimcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gallery/galleryeventcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gallery/gallerymembercari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gallery/gallerytestimonycari_bloc.dart';
@@ -71,6 +72,8 @@ import 'package:eassist_tools_app/blocs/progressindicator/progressindicator_bloc
 import 'package:eassist_tools_app/blocs/regendors/regendors1form_bloc.dart';
 import 'package:eassist_tools_app/blocs/regendors/regendors2cari_bloc.dart';
 import 'package:eassist_tools_app/blocs/regendors/regendorscari_bloc.dart';
+import 'package:eassist_tools_app/blocs/regklaim/regklaim1crud_bloc.dart';
+import 'package:eassist_tools_app/blocs/regklaim/regklaim1list_bloc.dart';
 import 'package:eassist_tools_app/blocs/regmv/regmv1crud_bloc.dart';
 import 'package:eassist_tools_app/blocs/regmv/regmv1list_bloc.dart';
 import 'package:eassist_tools_app/blocs/regmv/regmv2form_bloc.dart';
@@ -145,6 +148,7 @@ import 'package:eassist_tools_app/repositories/payment/paymentdn_repository.dart
 import 'package:eassist_tools_app/repositories/profile/profile_ktp_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/userfoto_repository.dart';
 import 'package:eassist_tools_app/repositories/regendors/regendors1form_repository.dart';
+import 'package:eassist_tools_app/repositories/regklaim/regklaim1crud_repository.dart';
 import 'package:eassist_tools_app/repositories/regmv/regmv1crud_repository.dart';
 import 'package:eassist_tools_app/repositories/regmv/regmv2form_repository.dart';
 import 'package:eassist_tools_app/repositories/regmv/regmv3form_repository.dart';
@@ -417,6 +421,9 @@ class App extends StatelessWidget {
         BlocProvider(create:  (context) => Regreaktif2CariBloc()),
         BlocProvider(create: (context) => HistorybayarCariBloc()),
         BlocProvider(create:  (context) => Historybayar2CariBloc()), 
+        BlocProvider(create:  (context) => Regklaim1ListBloc()),
+        BlocProvider(create:  (context) => Regklaim1CrudBloc(repository: Regklaim1CrudRepository())),
+        BlocProvider(create:  (context) => McobklaimCariBloc()),
         
       ],
       child: MaterialApp(
