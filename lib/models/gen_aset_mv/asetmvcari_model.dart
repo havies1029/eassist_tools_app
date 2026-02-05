@@ -19,6 +19,8 @@ class AsetMvCariModel {
 	String prosesId;
 	String prosesRemarks;
 	String prosesSource;
+  bool isReaktif;
+  bool isRenewal;
 
 	AsetMvCariModel({required this.asetMvId, required this.tertanggung, 
     required this.periodeMulai, required this.periodeAkhir, 
@@ -28,7 +30,8 @@ class AsetMvCariModel {
 		required this.polisNo, required this.premi, 
 		required this.sumInsured, required this.tahun, 
 		required this.modelMv, required this.status, required this.filePolisId, 
-    required this.prosesId, required this.prosesRemarks, required this.prosesSource});
+    required this.prosesId, required this.prosesRemarks, required this.prosesSource,
+    this.isReaktif = false, this.isRenewal = false});
 
 	factory AsetMvCariModel.fromJson(Map<String, dynamic> data) {
 		return AsetMvCariModel(
@@ -51,6 +54,8 @@ class AsetMvCariModel {
       prosesId: data['prosesId']??'',
       prosesRemarks: data['prosesRemarks']??'',
       prosesSource: data['prosesSource']??'',
+      isReaktif: data['isReaktif']??false,
+      isRenewal: data['isRenewal']??false
 		);
 
 	}
@@ -75,6 +80,8 @@ class AsetMvCariModel {
     'prosesId': prosesId,
     'prosesRemarks': prosesRemarks,
     'prosesSource': prosesSource,
+    'isReaktif': isReaktif,
+    'isRenewal': isRenewal
     };
 
 }

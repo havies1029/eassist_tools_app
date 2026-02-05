@@ -15,6 +15,8 @@ class AsethullCariModel {
 	String prosesId;
 	String prosesRemarks;
 	String prosesSource;
+  bool isReaktif;
+  bool isRenewal;
 
 	AsethullCariModel({required this.asetHullId, 
     required this.tertanggung,
@@ -24,7 +26,8 @@ class AsethullCariModel {
 		required this.namaKapal, required this.polisNo, 
 		required this.premi, required this.status, 
 		required this.tsi, required this.nomor, required this.filePolisId, 
-    required this.prosesId, required this.prosesRemarks, required this.prosesSource});
+    required this.prosesId, required this.prosesRemarks, required this.prosesSource,
+    this.isReaktif = false, this.isRenewal = false});
 
 	factory AsethullCariModel.fromJson(Map<String, dynamic> data) {
 		return AsethullCariModel(
@@ -43,6 +46,8 @@ class AsethullCariModel {
       prosesId: data['prosesId']??'',
       prosesRemarks: data['prosesRemarks']??'',
       prosesSource: data['prosesSource']??'',
+      isReaktif: data['isReaktif']??false,
+      isRenewal: data['isRenewal']??false
 		);
 
 	}
@@ -63,6 +68,8 @@ class AsethullCariModel {
     'prosesId': prosesId,
     'prosesRemarks': prosesRemarks,
     'prosesSource': prosesSource,
+    'isReaktif': isReaktif,
+    'isRenewal': isRenewal
     };
 
 }
