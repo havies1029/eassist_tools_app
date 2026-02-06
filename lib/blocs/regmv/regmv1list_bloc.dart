@@ -81,5 +81,4 @@ class Regmv1ListBloc extends Bloc<Regmv1ListEvents, Regmv1ListState> {
 		emit(state.copyWith(viewMode: ""));
 		emit(state.copyWith(viewMode: "ubah", recordId: event.recordId));
 	}
-
 }

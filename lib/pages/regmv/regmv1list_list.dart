@@ -43,7 +43,7 @@ class Regmv1ListPageState extends State<Regmv1ListPage> {
 							showDialogViewData(context, state.viewMode, "");
 						} else if (state.viewMode == "ubah") {
 							showDialogViewData(context, state.viewMode, state.recordId);
-						}
+						}            
 				}, listenWhen: (previous, current) {
 					return previous.viewMode != current.viewMode;
 				}),

@@ -7,7 +7,6 @@ import 'package:eassist_tools_app/blocs/calpar/calpar2form_bloc.dart';
 import 'package:eassist_tools_app/blocs/calpar/calpar3form_bloc.dart';
 import 'package:eassist_tools_app/blocs/calpar/calpar4form_bloc.dart';
 import 'package:eassist_tools_app/blocs/chatting/guestscrud_bloc.dart';
-import 'package:eassist_tools_app/blocs/cobklaim/mcobklaimcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gallery/galleryeventcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gallery/gallerymembercari_bloc.dart';
 import 'package:eassist_tools_app/blocs/gallery/gallerytestimonycari_bloc.dart';
@@ -72,8 +71,11 @@ import 'package:eassist_tools_app/blocs/progressindicator/progressindicator_bloc
 import 'package:eassist_tools_app/blocs/regendors/regendors1form_bloc.dart';
 import 'package:eassist_tools_app/blocs/regendors/regendors2cari_bloc.dart';
 import 'package:eassist_tools_app/blocs/regendors/regendorscari_bloc.dart';
+import 'package:eassist_tools_app/blocs/regklaim/cobklaimcari_bloc.dart';
+import 'package:eassist_tools_app/blocs/regklaim/polissourcecari_bloc.dart';
 import 'package:eassist_tools_app/blocs/regklaim/regklaim1crud_bloc.dart';
 import 'package:eassist_tools_app/blocs/regklaim/regklaim1list_bloc.dart';
+import 'package:eassist_tools_app/blocs/regklaim/sppapoliscari_bloc.dart';
 import 'package:eassist_tools_app/blocs/regmv/regmv1crud_bloc.dart';
 import 'package:eassist_tools_app/blocs/regmv/regmv1list_bloc.dart';
 import 'package:eassist_tools_app/blocs/regmv/regmv2form_bloc.dart';
@@ -93,6 +95,7 @@ import 'package:eassist_tools_app/blocs/regmv/regmv_upload_foto_mobil_bloc.dart'
 import 'package:eassist_tools_app/blocs/regmv/regmv_upload_stnk_bloc.dart';
 import 'package:eassist_tools_app/blocs/regother/regother1crud_bloc.dart';
 import 'package:eassist_tools_app/blocs/regother/regother1list_bloc.dart';
+import 'package:eassist_tools_app/blocs/regother/regother3cari_bloc.dart';
 import 'package:eassist_tools_app/blocs/regpar/regpar1crud_bloc.dart';
 import 'package:eassist_tools_app/blocs/regpar/regpar1list_bloc.dart';
 import 'package:eassist_tools_app/blocs/regpar/regpar2form_bloc.dart';
@@ -423,7 +426,10 @@ class App extends StatelessWidget {
         BlocProvider(create:  (context) => Historybayar2CariBloc()), 
         BlocProvider(create:  (context) => Regklaim1ListBloc()),
         BlocProvider(create:  (context) => Regklaim1CrudBloc(repository: Regklaim1CrudRepository())),
-        BlocProvider(create:  (context) => McobklaimCariBloc()),
+        BlocProvider(create:  (context) => CobklaimcariBloc()),
+        BlocProvider(create:  (context) => SppapoliscariBloc()),
+        BlocProvider(create:  (context) => PolissourcecariBloc()),
+        BlocProvider(create: (context) => Regother3cariBloc()),
         
       ],
       child: MaterialApp(

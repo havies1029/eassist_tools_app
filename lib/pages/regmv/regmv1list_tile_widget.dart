@@ -1,4 +1,5 @@
 import 'package:eassist_tools_app/blocs/payment/dnrekap2inv_bloc.dart';
+import 'package:eassist_tools_app/blocs/regmv/regmv1crud_bloc.dart';
 import 'package:eassist_tools_app/blocs/regmv/regmv6form_bloc.dart';
 import 'package:eassist_tools_app/blocs/regmv/regmv7cari_bloc.dart';
 import 'package:eassist_tools_app/blocs/regmv/regmv_upload_foto_acc_bloc.dart';
@@ -311,6 +312,31 @@ class Regmv1ListTileWidget extends StatelessWidget {
 											},
 											child: const Text(
 												'Lanjut Pembayaran',
+												style: TextStyle(fontSize: 13.0),
+											),
+										),
+									),
+								),	
+                
+							],
+						),
+
+            Container(height: 10),
+						Row(
+							mainAxisAlignment: MainAxisAlignment.spaceAround,
+							children: [								
+								SizedBox(
+									width: MediaQuery.of(context).size.width * 0.25,
+									height: 80,
+									child: Padding(
+										padding: const EdgeInsets.only(top: 30.0),
+										child: ElevatedButton(
+											onPressed: () {
+												context.read<Regmv1CrudBloc>().add(
+												Regmv1CrudHapusEvent(recordId: regmv1Id));
+											},
+											child: const Text(
+												'Batal RegMV',
 												style: TextStyle(fontSize: 13.0),
 											),
 										),

@@ -7,8 +7,11 @@ class Regklaim1ListMainPage extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) {
 		return Scaffold(
+      appBar: AppBar(
+        title: const Text('Regklaim1 List'),
+      ),
 			backgroundColor: Colors.grey[100],
-			body: const Regklaim1ListPage(),
+			body: const Regklaim1ListPage()
 		);
 	}
 }

@@ -1,23 +1,22 @@
-import 'package:eassist_tools_app/pages/regother/regother3cari_main.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:eassist_tools_app/widgets/my_colors.dart';
 import 'package:eassist_tools_app/widgets/my_text.dart';
 
-class Regother1ListTileWidget extends StatelessWidget {
+class CobklaimcariTileWidget extends StatelessWidget {
+	final String cobIcon;
 	final String cobNama;
-	final String regother1Id;
-	final String remark;
-	final String rmatauangNama;
-	final double tsi;
+	final bool isAktif;
+	final String mcobklaim1Id;
+	final int noUrut;
 
-	const Regother1ListTileWidget(
+	const CobklaimcariTileWidget(
 		{super.key,
+		required this.cobIcon, 
 		required this.cobNama, 
-		required this.regother1Id, 
-		required this.remark, 
-		required this.rmatauangNama, 
-		required this.tsi});
+		required this.isAktif, 
+		required this.mcobklaim1Id, 
+		required this.noUrut});
 
 	@override
 	Widget build(BuildContext context) {
@@ -35,6 +34,15 @@ class Regother1ListTileWidget extends StatelessWidget {
 				child: Column(
 					crossAxisAlignment: CrossAxisAlignment.start,
 					children: [
+						Text("cobIcon",
+							style: MyText.bodyLarge(context)!
+								.copyWith(color: MyColors.grey_40)),
+						Container(height: 5),
+						Text(
+							cobIcon,
+							style: MyText.bodyLarge(context)!
+								.copyWith(color: MyColors.grey_80)),
+						Container(height: 10),
 						Text("cobNama",
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_40)),
@@ -44,57 +52,33 @@ class Regother1ListTileWidget extends StatelessWidget {
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
-						Text("regother1Id",
+						Text("isAktif",
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_40)),
 						Container(height: 5),
 						Text(
-							regother1Id,
+							isAktif.toString(),
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
-						Text("remark",
+						Text("mcobklaim1Id",
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_40)),
 						Container(height: 5),
 						Text(
-							remark,
+							mcobklaim1Id,
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
-						Text("rmatauangNama",
+						Text("noUrut",
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_40)),
 						Container(height: 5),
 						Text(
-							rmatauangNama,
+							NumberFormat("#,###").format(noUrut),
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
-						Text("tsi",
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_40)),
-						Container(height: 5),
-						Text(
-							NumberFormat("#,###").format(tsi),
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_80)),
-						Container(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          Regother3cariListMainPage(regother1Id: regother1Id)),
-                );
-              },
-              child: const Text(
-                'Lacak Status',
-                style: TextStyle(fontSize: 13.0),
-              ),
-            ),
-
 				]),
 			)
 		);

@@ -9,13 +9,15 @@ class Regklaim1ListModel {
 	String polisNo;
 	DateTime regTgl;
 	String regklaim1Id;
+	String sppa1Id;
 	String insuranceName;
 
 	Regklaim1ListModel({required this.insuredNama, required this.isPolisJps, 
 		required this.minsuranceId, required this.mrekan1Id, 
 		required this.polisAkhir, required this.polisMulai, 
 		required this.polisNo, required this.regTgl, 
-		required this.regklaim1Id, required this.insuranceName});
+		required this.regklaim1Id, required this.sppa1Id, 
+		required this.insuranceName});
 
 	factory Regklaim1ListModel.fromJson(Map<String, dynamic> data) {
 		return Regklaim1ListModel(
@@ -28,6 +30,7 @@ class Regklaim1ListModel {
 			polisNo: data['polisNo']??'',
 			regTgl: DateTime.tryParse(data['regTgl'].toString())??DateTime.now(),
 			regklaim1Id: data['regklaim1Id']??'',
+			sppa1Id: data['sppa1Id']??'',
 			insuranceName: data['insuranceName']??''
 		);
 
@@ -43,6 +46,7 @@ class Regklaim1ListModel {
 		'polisNo': polisNo,
 		'regTgl': regTgl.toIso8601String(),
 		'regklaim1Id': regklaim1Id,
+		'sppa1Id': sppa1Id,
 		'insuranceName': insuranceName};
 
 }

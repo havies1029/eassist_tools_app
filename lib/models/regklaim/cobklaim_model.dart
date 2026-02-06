@@ -1,17 +1,17 @@
 
-class McobklaimCariModel {
+class CobklaimModel {
 	String cobIcon;
 	String cobNama;
 	bool isAktif;
 	String mcobklaim1Id;
 	int noUrut;
 
-	McobklaimCariModel({required this.cobIcon, required this.cobNama, 
+	CobklaimModel({required this.cobIcon, required this.cobNama, 
 		required this.isAktif, required this.mcobklaim1Id, 
 		required this.noUrut});
 
-	factory McobklaimCariModel.fromJson(Map<String, dynamic> data) {
-		return McobklaimCariModel(
+	factory CobklaimModel.fromJson(Map<String, dynamic> data) {
+		return CobklaimModel(
 			cobIcon: data['cobIcon']??'',
 			cobNama: data['cobNama']??'',
 			isAktif: data['isAktif']??'',

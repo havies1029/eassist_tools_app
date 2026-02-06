@@ -1,27 +1,27 @@
-part of 'mcobklaimcari_bloc.dart';
+part of 'cobklaimcari_bloc.dart';
 
-class McobklaimCariState extends Equatable {
+class CobklaimcariState extends Equatable {
 
 	final ListStatus status;
-	final List<McobklaimCariModel> items;
+	final List<CobklaimcariModel> items;
 	final bool hasReachedMax;
-	const McobklaimCariState(
+	const CobklaimcariState(
 		{this.status = ListStatus.initial,
-		this.items = const <McobklaimCariModel>[],
+		this.items = const <CobklaimcariModel>[],
 		this.hasReachedMax = false,
 		});
 
-	const McobklaimCariState.success(List<McobklaimCariModel> items)
+	const CobklaimcariState.success(List<CobklaimcariModel> items)
 			: this(status: ListStatus.success, items: items);
 
-	const McobklaimCariState.failure() : this(status: ListStatus.failure);
+	const CobklaimcariState.failure() : this(status: ListStatus.failure);
 
-	McobklaimCariState copyWith(
-		{List<McobklaimCariModel>? items,
+	CobklaimcariState copyWith(
+		{List<CobklaimcariModel>? items,
 		bool? hasReachedMax,
 		ListStatus? status,
 		}){
-		return McobklaimCariState(
+		return CobklaimcariState(
 			items: items ?? this.items,
 			hasReachedMax: hasReachedMax ?? this.hasReachedMax,
 			status: status ?? this.status,

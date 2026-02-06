@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/common/constants.dart';
-import 'package:eassist_tools_app/blocs/cobklaim/mcobklaimcari_bloc.dart';
-import 'package:eassist_tools_app/pages/cobklaim/mcobklaimcari_tile_widget.dart';
-import 'package:eassist_tools_app/models/cobklaim/mcobklaimcari_model.dart';
+import 'package:eassist_tools_app/blocs/regother/regother3cari_bloc.dart';
+import 'package:eassist_tools_app/pages/regother/regother3cari_tile_widget.dart';
+import 'package:eassist_tools_app/models/regother/regother3cari_model.dart';
 
-class McobklaimCariListWidget extends StatefulWidget {
+class Regother3cariListWidget extends StatefulWidget {
 	final String searchText;
-	const McobklaimCariListWidget({super.key, required this.searchText});
+	const Regother3cariListWidget({super.key, required this.searchText});
 
 	@override
-	McobklaimCariListWidgetState createState() => McobklaimCariListWidgetState();
+	Regother3cariListWidgetState createState() => Regother3cariListWidgetState();
 }
 
-class McobklaimCariListWidgetState extends State<McobklaimCariListWidget> {
-	late McobklaimCariBloc mcobklaimCariBloc;
-	List<McobklaimCariModel> mcobklaimCari = [];
+class Regother3cariListWidgetState extends State<Regother3cariListWidget> {
+	late Regother3cariBloc regother3cariBloc;
+	List<Regother3cariModel> regother3cari = [];
 	final ScrollController _scrollController = ScrollController();
 
 	@override
@@ -34,12 +34,12 @@ class McobklaimCariListWidgetState extends State<McobklaimCariListWidget> {
 
 	@override
 	Widget build(BuildContext context) {
-		mcobklaimCariBloc = BlocProvider.of<McobklaimCariBloc>(context);
-		return BlocConsumer<McobklaimCariBloc, McobklaimCariState>(
+		regother3cariBloc = BlocProvider.of<Regother3cariBloc>(context);
+		return BlocConsumer<Regother3cariBloc, Regother3cariState>(
 			builder: (context, state) {
 		if (state.status == ListStatus.success) {
 			if (!state.hasReachedMax) {
-				mcobklaimCari.addAll(state.items);
+				regother3cari.addAll(state.items);
 			}
 
 		return state.items.isNotEmpty
@@ -55,12 +55,11 @@ class McobklaimCariListWidgetState extends State<McobklaimCariListWidget> {
 							borderRadius: BorderRadius.circular(15.0)),
 						child: Column(
 							children: <Widget>[
-								McobklaimCariTileWidget(
-									cobIcon: state.items[index].cobIcon,
-									cobNama: state.items[index].cobNama,
-									isAktif: state.items[index].isAktif,
-									mcobklaim1Id: state.items[index].mcobklaim1Id,
-									noUrut: state.items[index].noUrut,
+								Regother3cariTileWidget(
+									regother3Id: state.items[index].regother3Id,
+									remarks: state.items[index].remarks,
+									tglStatus: state.items[index].tglStatus,
+                  progressNama: state.items[index].progressNama,
 								)
 							],
 						),
@@ -98,7 +97,7 @@ class McobklaimCariListWidgetState extends State<McobklaimCariListWidget> {
 		if (!_scrollController.hasClients) return;
 		if (_scrollController.position.pixels ==
 				_scrollController.position.maxScrollExtent) {
-			mcobklaimCariBloc.add(FetchMcobklaimCariEvent());
+			regother3cariBloc.add(FetchRegother3cariEvent());
 		}
 	}
 

@@ -1,4 +1,5 @@
 import 'package:eassist_tools_app/blocs/payment/dnrekap2inv_bloc.dart';
+import 'package:eassist_tools_app/blocs/regpar/regpar1crud_bloc.dart';
 import 'package:eassist_tools_app/blocs/regpar/regpar5form_bloc.dart';
 import 'package:eassist_tools_app/blocs/regpar/regpar6cari_bloc.dart';
 import 'package:eassist_tools_app/pages/regpar/regpar2form_form.dart';
@@ -198,6 +199,30 @@ class Regpar1ListTileWidget extends StatelessWidget {
 											},
 											child: const Text(
 												'Lanjut Pembayaran',
+												style: TextStyle(fontSize: 13.0),
+											),
+										),
+									),
+								),	
+                
+							],
+						),
+            			Container(height: 10),
+						Row(
+							mainAxisAlignment: MainAxisAlignment.spaceAround,
+							children: [								
+								SizedBox(
+									width: MediaQuery.of(context).size.width * 0.25,
+									height: 80,
+									child: Padding(
+										padding: const EdgeInsets.only(top: 30.0),
+										child: ElevatedButton(
+											onPressed: () {
+												context.read<Regpar1CrudBloc>().add(
+												Regpar1CrudHapusEvent(recordId: regpar1Id));
+											},
+											child: const Text(
+												'Batal Reg PAR',
 												style: TextStyle(fontSize: 13.0),
 											),
 										),

@@ -8,8 +8,6 @@ import 'package:intl/intl.dart';
 import 'package:date_field/date_field.dart';
 import 'package:string_validator/string_validator.dart';
 import 'package:eassist_tools_app/widgets/checkbox_widget.dart';
-import 'package:dropdown_search/dropdown_search.dart';
-
 
 class Regklaim1CrudFormPage extends StatefulWidget {
 	final String viewMode;
@@ -45,82 +43,81 @@ class Regklaim1CrudFormPageFormState extends State<Regklaim1CrudFormPage> {
 		regklaim1CrudBloc = BlocProvider.of<Regklaim1CrudBloc>(context);
 		return BlocConsumer<Regklaim1CrudBloc, Regklaim1CrudState>(
 			builder: (context, state) {
-				return Dialog(
-					shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-					child: SingleChildScrollView(
-						child: Padding(
-							padding: const EdgeInsets.all(8.0),
-							child: Form(
-								key: _formKey,
-								child: Column(
-									children: [
-										const SizedBox(height: 10),
-										Text(
-											"${widget.viewMode == "tambah" ? "Tambah" : "Ubah"} Registrasi Klaim",
-											style: const TextStyle(
-												fontSize: 20.0,
-												color: Color(0xffff6101),
-												fontWeight: FontWeight.w600,
-												fontFamily: 'Hind',
-												fontStyle: FontStyle.italic,
-												decoration: TextDecoration.underline,
+				return SingleChildScrollView(
+					child: Padding(
+						padding: const EdgeInsets.all(8.0),
+						child: Form(
+							key: _formKey,
+							child: Column(
+								children: [
+									const SizedBox(height: 10),
+									Text(
+										"${widget.viewMode == "tambah" ? "Tambah" : "Ubah"} Registrasi Klaim",
+										style: const TextStyle(
+											fontSize: 20.0,
+											color: Color(0xffff6101),
+											fontWeight: FontWeight.w600,
+											fontFamily: 'Hind',
+											fontStyle: FontStyle.italic,
+											decoration: TextDecoration.underline,
+										),
+									),
+									const SizedBox(height: 25),
+									buildFieldInsuredNama(),
+									buildFieldIsPolisJps(),
+									buildFieldMinsuranceId(),
+									buildFieldMrekan1Id(),
+									buildFieldPolisAkhir(),
+									buildFieldPolisMulai(),
+									buildFieldPolisNo(),
+									buildFieldRegTgl(),
+									buildFieldSppa1Id(),
+									const SizedBox(height: 25),
+									FormError(
+										errors: errors,
+										key: null,
+									),
+									Row(
+										mainAxisAlignment: MainAxisAlignment.spaceAround,
+										children: [
+											SizedBox(
+												width: MediaQuery.of(context).size.width * 0.3,
+												height: 60,
+												child: Padding(
+													padding: const EdgeInsets.only(top: 30.0),
+													child: ElevatedButton(
+														onPressed: () {
+															_dismissDialog();
+														},
+														child: const Text(
+															'Close',
+															style: TextStyle(fontSize: 13.0),
+														),
+													),
+												),
 											),
-										),
-										const SizedBox(height: 25),
-										buildFieldInsuredNama(),
-										buildFieldIsPolisJps(),
-										buildFieldMinsuranceId(),
-										buildFieldMrekan1Id(),
-										buildFieldPolisAkhir(),
-										buildFieldPolisMulai(),
-										buildFieldPolisNo(),
-										buildFieldRegTgl(),
-										const SizedBox(height: 25),
-										FormError(
-											errors: errors,
-											key: null,
-										),
-										Row(
-											mainAxisAlignment: MainAxisAlignment.spaceAround,
-											children: [
-												SizedBox(
-													width: MediaQuery.of(context).size.width * 0.3,
-													height: 60,
-													child: Padding(
-														padding: const EdgeInsets.only(top: 30.0),
-														child: ElevatedButton(
-															onPressed: () {
-																_dismissDialog();
-															},
-															child: const Text(
-																'Close',
-																style: TextStyle(fontSize: 13.0),
-															),
+											SizedBox(
+												width: MediaQuery.of(context).size.width * 0.3,
+												height: 60,
+												child: Padding(
+													padding: const EdgeInsets.only(top: 30.0),
+													child: ElevatedButton(
+														onPressed: () {
+															onSaveForm();
+														},
+														child: const Text(
+															'Save',
+															style: TextStyle(fontSize: 13.0),
 														),
 													),
 												),
-												SizedBox(
-													width: MediaQuery.of(context).size.width * 0.3,
-													height: 60,
-													child: Padding(
-														padding: const EdgeInsets.only(top: 30.0),
-														child: ElevatedButton(
-															onPressed: () {
-																onSaveForm();
-															},
-															child: const Text(
-																'Save',
-																style: TextStyle(fontSize: 13.0),
-															),
-														),
-													),
-												),
-											],
-										),
-									],
-								)),
-						),
-					));
+											),
+										],
+									),
+								],
+							)),
+					),
+				);
 				},
 				listener: (context, state) {
 					if (state.isLoaded) {
@@ -285,6 +282,11 @@ class Regklaim1CrudFormPageFormState extends State<Regklaim1CrudFormPage> {
 				}
 				return null;
 			},
+		);
+	}
+
+	Widget buildFieldSppa1Id(){
+		return TextFormField(
 		);
 	}
 

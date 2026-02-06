@@ -17,7 +17,8 @@ class Regmv1ListState extends Equatable {
 		this.hal = 0,
 		this.viewMode = "",
 		this.searchText = "",
-		this.recordId = ""});
+		this.recordId = ""
+  });
 
 	Regmv1ListState copyWith(
 		{List<Regmv1ListModel>? items,
@@ -26,7 +27,8 @@ class Regmv1ListState extends Equatable {
 		int? hal,
 		String? viewMode,
 		String? searchText,
-		String? recordId}) {
+		String? recordId,
+  }){
 		return Regmv1ListState(
 			items: items ?? this.items,
 			hasReachedMax: hasReachedMax ?? this.hasReachedMax,
@@ -34,8 +36,9 @@ class Regmv1ListState extends Equatable {
 			hal: hal ?? this.hal,
 			viewMode: viewMode ?? this.viewMode,
 			searchText: searchText ?? this.searchText,
-			recordId: recordId ?? this.recordId);
-	}
+			recordId: recordId ?? this.recordId,
+	);
+  }
 
 	@override
 	List<Object> get props => [status, items, hasReachedMax, hal, viewMode, recordId, searchText];

@@ -24,4 +24,5 @@ class Regmv1ListAPI{
 			throw Exception("Failed to load data");
 		}
 	}
+
 }

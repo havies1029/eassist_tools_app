@@ -3,20 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:eassist_tools_app/widgets/my_colors.dart';
 import 'package:eassist_tools_app/widgets/my_text.dart';
 
-class McobklaimCariTileWidget extends StatelessWidget {
-	final String cobIcon;
-	final String cobNama;
-	final bool isAktif;
-	final String mcobklaim1Id;
-	final int noUrut;
+class Regother3cariTileWidget extends StatelessWidget {
+	final String progressNama;
+	final String regother3Id;
+	final String remarks;
+	final DateTime tglStatus;
 
-	const McobklaimCariTileWidget(
+	const Regother3cariTileWidget(
 		{super.key,
-		required this.cobIcon, 
-		required this.cobNama, 
-		required this.isAktif, 
-		required this.mcobklaim1Id, 
-		required this.noUrut});
+		required this.progressNama,
+		required this.regother3Id, 
+		required this.remarks, 
+		required this.tglStatus});
 
 	@override
 	Widget build(BuildContext context) {
@@ -34,48 +32,39 @@ class McobklaimCariTileWidget extends StatelessWidget {
 				child: Column(
 					crossAxisAlignment: CrossAxisAlignment.start,
 					children: [
-						Text("cobIcon",
+						Text("progressNama",
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_40)),
 						Container(height: 5),
 						Text(
-							cobIcon,
+							progressNama,
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
-						Text("cobNama",
+						Text("regother3Id",
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_40)),
 						Container(height: 5),
 						Text(
-							cobNama,
+							regother3Id,
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
-						Text("isAktif",
+						Text("remarks",
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_40)),
 						Container(height: 5),
 						Text(
-							isAktif.toString(),
+							remarks,
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
-						Text("mcobklaim1Id",
+						Text("tglStatus",
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_40)),
 						Container(height: 5),
 						Text(
-							mcobklaim1Id,
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_80)),
-						Container(height: 10),
-						Text("noUrut",
-							style: MyText.bodyLarge(context)!
-								.copyWith(color: MyColors.grey_40)),
-						Container(height: 5),
-						Text(
-							NumberFormat("#,###").format(noUrut),
+							DateFormat("dd/MM/yyyy").format(tglStatus),
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
