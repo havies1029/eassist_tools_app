@@ -110,7 +110,7 @@ class _HeroPageState extends State<HeroPage> {
                             context.read<AuthenticationBloc>().add(LoggedOut());
                           },
                           child: Text("Logout",
-                              style: TextStyle(color: Colors.white))),
+                              style: TextStyle(color: Colors.black))),
                       TextButton(
                           onPressed: () {
                             context
@@ -118,7 +118,7 @@ class _HeroPageState extends State<HeroPage> {
                                 .add(RequireRegisterClient(requiredFrom: 'hero_page'));
                           },
                           child: Text("Register Client",
-                              style: TextStyle(color: Colors.white))),
+                              style: TextStyle(color: Colors.black))),
                       BlocBuilder<AuthenticationBloc, AuthenticationState>(
                           builder: (context, state) {
                         if (state is AuthenticationAuthenticated) {
@@ -235,20 +235,9 @@ class _HeroPageState extends State<HeroPage> {
                                               CobklaimcariMainPage()),
                                     );
                                   },
-                                  child: Text("List COB Klaim"),
+                                  child: Text("Registrasi Klaim Baru"),
                                 ),
 
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              PolissourcecariMainPage()),
-                                    );
-                                  },
-                                  child: Text("Register Klaim Baru"),
-                                ),
 
                                 TextButton(
                                   onPressed: () {

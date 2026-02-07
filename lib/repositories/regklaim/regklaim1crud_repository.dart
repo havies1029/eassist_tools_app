@@ -9,6 +9,11 @@ class Regklaim1CrudRepository {
 	Future<ReturnDataAPI> regklaim1CrudTambah(Regklaim1CrudModel record) async {
 		return await api.regklaim1CrudTambahAPI(record);
 	}
+
+  Future<ReturnDataAPI> regklaim1Tambah4PolisJps(String sppa1Id) async {
+    return await api.regklaim1Tambah4PolisJpsAPI(sppa1Id);
+  }
+
 	Future<bool> regklaim1CrudUbah(Regklaim1CrudModel record) async {
 		return await api.regklaim1CrudUbahAPI(record);
 	}

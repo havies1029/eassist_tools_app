@@ -1,3 +1,4 @@
+import 'package:eassist_tools_app/models/combobox/combominsurance_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/models/responseAPI/returndataapi_model.dart';
@@ -14,6 +15,8 @@ class Regklaim1CrudBloc extends Bloc<Regklaim1CrudEvents, Regklaim1CrudState> {
 		on<Regklaim1CrudTambahEvent>(onTambahRegklaim1Crud);
 		on<Regklaim1CrudHapusEvent>(onHapusRegklaim1Crud);
 		on<Regklaim1CrudLihatEvent>(onLihatRegklaim1Crud);
+    on<Regklaim1Tambah4PolisJpsEvent>(onTambah4PolisJps);
+		on<ComboMInsuranceChangedEvent>(onComboMInsuranceChanged);
 	}
 
 	Future<void> onTambahRegklaim1Crud(
@@ -49,6 +52,26 @@ class Regklaim1CrudBloc extends Bloc<Regklaim1CrudEvents, Regklaim1CrudState> {
 		emit(state.copyWith(isLoading: true, isLoaded: false));
 		Regklaim1CrudModel record = await repository.regklaim1CrudLihat(event.recordId);
 		emit(state.copyWith(isLoading: false, isLoaded: true, record: record));
+	}
+
+  Future<void> onTambah4PolisJps(
+    Regklaim1Tambah4PolisJpsEvent event, Emitter<Regklaim1CrudState> emit) async {
+		emit(state.copyWith(isSaving: true, isSaved: false));
+    ReturnDataAPI returnData = await repository.regklaim1Tambah4PolisJps(event.sppa1Id);
+    bool hasFailure = !returnData.success;
+    emit(state.copyWith(isSaving: false, isSaved: true, hasFailure: hasFailure));
+  }
+
+  Future<void> onComboMInsuranceChanged(
+			ComboMInsuranceChangedEvent event, Emitter<Regklaim1CrudState> emit) async {
+
+		emit(state.copyWith(isLoading: true, isLoaded: false));
+
+		ComboMInsuranceModel comboMInsurance = event.comboMInsurance;
+		emit(state.copyWith(
+			isLoading: false,
+			isLoaded: true,
+			comboMInsurance: comboMInsurance));
 	}
 
 }

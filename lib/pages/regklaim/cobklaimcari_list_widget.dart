@@ -1,9 +1,9 @@
-import 'package:eassist_tools_app/pages/regklaim/sppapoliscari_main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/common/constants.dart';
 import 'package:eassist_tools_app/blocs/regklaim/cobklaimcari_bloc.dart';
 import 'package:eassist_tools_app/pages/regklaim/cobklaimcari_tile_widget.dart';
+import 'package:eassist_tools_app/pages/regklaim/polissourcecari_main.dart';
 import 'package:eassist_tools_app/models/regklaim/cobklaimcari_model.dart';
 
 class CobklaimcariListWidget extends StatefulWidget {
@@ -56,7 +56,7 @@ class CobklaimcariListWidgetState extends State<CobklaimcariListWidget> {
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) => SppapoliscariMainPage(cobKlaimId: item.mcobklaim1Id, cobKlaimNama: item.cobNama),
+                    builder: (_) => PolissourcecariMainPage(cobKlaimId: item.mcobklaim1Id, cobKlaimNama: item.cobNama),
                   ),
                 );
               },

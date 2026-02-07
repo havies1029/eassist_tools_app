@@ -1,5 +1,5 @@
 import 'package:eassist_tools_app/pages/regklaim/regklaim1crud_form.dart';
-import 'package:eassist_tools_app/pages/regklaim/regklaim1list_list.dart';
+import 'package:eassist_tools_app/pages/regklaim/sppapoliscari_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/common/constants.dart';
@@ -7,7 +7,9 @@ import 'package:eassist_tools_app/blocs/regklaim/polissourcecari_bloc.dart';
 import 'package:eassist_tools_app/models/regklaim/polissourcecari_model.dart';
 
 class PolissourcecariListWidget extends StatefulWidget {
-  const PolissourcecariListWidget({super.key});
+  final String cobKlaimId;  
+  final String cobKlaimNama;
+  const PolissourcecariListWidget({super.key, required this.cobKlaimId, required this.cobKlaimNama});
 
   @override
   PolissourcecariListWidgetState createState() =>
@@ -133,14 +135,14 @@ class PolissourcecariListWidgetState extends State<PolissourcecariListWidget> {
     // ✅ mapping id -> page
     switch (id) {
       case '10': // contoh: Polis JPS
-        return const Regklaim1ListPage(); 
+        return SppapoliscariPage(cobKlaimId: widget.cobKlaimId, cobKlaimNama: widget.cobKlaimNama); 
 
       case '20': // contoh: Bukan Polis JPS
-        return const Regklaim1CrudFormPage(viewMode: "tambah", recordId: "" ); 
+        return const Regklaim1CrudFormPage(); 
         // return const RegklaimNonJpsListPage();
 
       default:
-        return const Regklaim1ListPage();
+        return const Regklaim1CrudFormPage();
     }
   }
 }

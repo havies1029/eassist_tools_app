@@ -4,7 +4,9 @@ import 'package:eassist_tools_app/blocs/regklaim/polissourcecari_bloc.dart';
 import 'package:eassist_tools_app/pages/regklaim/polissourcecari_list_widget.dart';
 
 class PolissourcecariPage extends StatefulWidget {
-	const PolissourcecariPage({super.key});
+  final String cobKlaimId;  
+  final String cobKlaimNama;
+	const PolissourcecariPage({super.key, required this.cobKlaimId, required this.cobKlaimNama});
 
 	@override
 	PolissourcecariPageState createState() => PolissourcecariPageState();
@@ -24,13 +26,7 @@ class PolissourcecariPageState extends State<PolissourcecariPage> {
 	Widget build(BuildContext context) {
 		polissourcecariBloc = BlocProvider.of<PolissourcecariBloc>(context);
 		return Center(
-			child: Column(
-				mainAxisAlignment: MainAxisAlignment.start,
-				children: [					
-					buildList()
-				],
-
-			),
+			child: buildList(),
 		);
 	}
 	void refreshData() {
@@ -39,11 +35,7 @@ class PolissourcecariPageState extends State<PolissourcecariPage> {
 	}
 
 	Widget buildList() {
-		return Expanded(
-			child: Column(
-				mainAxisAlignment: MainAxisAlignment.start,
-				children: <Widget>[PolissourcecariListWidget()],
-		));
+		return PolissourcecariListWidget(cobKlaimId: widget.cobKlaimId, cobKlaimNama: widget.cobKlaimNama);
 	}
 
 }

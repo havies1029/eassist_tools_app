@@ -8,6 +8,8 @@ class Regklaim1CrudState extends Equatable {
 	final bool isSaving;
 	final bool isSaved;
 	final bool hasFailure;
+	final ComboMInsuranceModel? comboMInsurance;
+
 	const Regklaim1CrudState(
 		{this.record,
 		this.isLoading = false,
@@ -15,6 +17,8 @@ class Regklaim1CrudState extends Equatable {
 		this.isSaving = false,
 		this.isSaved = false,
 		this.hasFailure = false,
+		this.comboMInsurance,
+
 });
 
 	Regklaim1CrudState copyWith({
@@ -24,6 +28,7 @@ class Regklaim1CrudState extends Equatable {
 		bool? isSaving,
 		bool? isSaved,
 		bool? hasFailure,
+		ComboMInsuranceModel? comboMInsurance,
 	}){
 		return Regklaim1CrudState(
 			record: record ?? this.record,
@@ -32,6 +37,7 @@ class Regklaim1CrudState extends Equatable {
 			isSaving: isSaving ?? this.isSaving,
 			isSaved: isSaved ?? this.isSaved,
 			hasFailure: hasFailure ?? this.hasFailure,
+			comboMInsurance: comboMInsurance?? this.comboMInsurance,
 		);
 	}
 

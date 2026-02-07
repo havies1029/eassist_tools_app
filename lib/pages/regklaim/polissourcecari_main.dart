@@ -1,17 +1,19 @@
+import 'package:eassist_tools_app/pages/regklaim/polissourcecari_list.dart';
 import 'package:flutter/material.dart';
-import 'package:eassist_tools_app/pages/regklaim/polissourcecari_list_widget.dart';
 
 class PolissourcecariMainPage extends StatelessWidget {
-	const PolissourcecariMainPage({super.key});
+  final String cobKlaimId;  
+  final String cobKlaimNama;
+	const PolissourcecariMainPage({super.key, required this.cobKlaimId, required this.cobKlaimNama});
 
 	@override
 	Widget build(BuildContext context) {
 		return Scaffold(
       appBar: AppBar(
-        title: const Text('Polissourcecari List'),
+        title: const Text('Registrasi Klaim'),
       ),
 			backgroundColor: Colors.grey[100],
-			body: const PolissourcecariListWidget()
+			body: PolissourcecariPage(cobKlaimId: cobKlaimId, cobKlaimNama: cobKlaimNama)
 		);
 	}
 }

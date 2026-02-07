@@ -28,6 +28,26 @@ class Regklaim1CrudAPI {
 		}
 		return returnData;
 	}
+
+	Future<ReturnDataAPI> regklaim1Tambah4PolisJpsAPI(String sppa1Id) async {
+		String lihatEndpoint = "${AppData.prefixEndPoint}/api/regklaim/regklaim1crud/create4polisjps";
+		Map<String, String> queryParams = {'sppa1Id': sppa1Id, 'modul_id': 'regklaim1Tambah4PolisJpsAPI'};
+		var uri = AppData.uriHtpp(AppData.httpAuthority, lihatEndpoint, queryParams);
+		final http.Response response =
+			await http.get(uri, headers: <String, String>{
+			'Content-Type': 'application/json; odata=verbos',
+			'Accept': 'application/json; odata=verbos',
+			'Authorization': 'Bearer ${AppData.userToken}'
+		});
+
+		if (response.statusCode == 200) {
+			var returnData = ReturnDataAPI.fromDatabaseJson(jsonDecode(response.body));
+			return returnData;
+		} else {
+			return throw Exception("Failed to load data");
+		}
+	}
+
 	Future<bool> regklaim1CrudUbahAPI(Regklaim1CrudModel record) async {
 		String ubahEndpoint =
 			"${AppData.prefixEndPoint}/api/regklaim/regklaim1crud/update";

@@ -1,3 +1,4 @@
+import 'package:eassist_tools_app/pages/regklaim/sppaheader_main.dart';
 import 'package:flutter/material.dart';
 import 'package:eassist_tools_app/widgets/my_colors.dart';
 import 'package:eassist_tools_app/widgets/my_text.dart';
@@ -45,8 +46,22 @@ class SppapoliscariTileWidget extends StatelessWidget {
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),
-				]),
-			)
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SppaHeaderMainPage(sppa1Id: sppaId),
+                  ),
+                );
+              },
+              child: Text('View Detail',
+                style: MyText.bodyLarge(context)!
+                  .copyWith(color: MyColors.primaryLight, decoration: TextDecoration.underline)),
+            ),
+					],
+				),
+			),
 		);
 	}
 }

@@ -1,14 +1,15 @@
 import 'dart:convert';
 import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:http/http.dart' as http;
-import 'package:eassist_tools_app/models/regklaim/regklaim1list_model.dart';
+import 'package:eassist_tools_app/models/combobox/combominsurance_model.dart';
 
-class Regklaim1ListAPI{
-	Future<List<Regklaim1ListModel>> getRegklaim1ListAPI(String searchText, int hal) async {
-		String urlGetListEndPoint = "${AppData.prefixEndPoint}/api/regklaim/regklaim1list/getlist";
+class ComboMInsuranceAPI {
 
-		Map<String, String> queryParams = {"searchText": searchText, "hal": hal.toString()};
-		var uri = AppData.uriHtpp(AppData.httpAuthority, urlGetListEndPoint, queryParams);
+	Future<List<ComboMInsuranceModel>> getComboMInsuranceAPI(String filter) async {
+		String urlGetComboEndPoint = "${AppData.prefixEndPoint}/api/minsurancecombobox/getlist";
+
+		Map<String, String> queryParams = {"filter": filter};
+		var uri = AppData.uriHtpp(AppData.httpAuthority, urlGetComboEndPoint, queryParams);
 		final http.Response response = await http.get(uri, headers: <String, String>{
 			'Content-Type': 'application/json; odata=verbos',
 			'Accept': 'application/json; odata=verbos',
@@ -18,7 +19,7 @@ class Regklaim1ListAPI{
 		if (response.statusCode == 200) {
 			final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
 			return parsed
-				.map<Regklaim1ListModel>((json) => Regklaim1ListModel.fromJson(json))
+				.map<ComboMInsuranceModel>((json) => ComboMInsuranceModel.fromJson(json))
 				.toList();
 		} else {
 			throw Exception("Failed to load data");
