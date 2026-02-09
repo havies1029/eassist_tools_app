@@ -1,5 +1,6 @@
 
 import 'package:eassist_tools_app/blocs/payment/dnrekap2inv_bloc.dart';
+import 'package:eassist_tools_app/blocs/payment/historybayarcari_bloc.dart';
 import 'package:eassist_tools_app/pages/payment/historybayar2cari_main.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -160,7 +161,11 @@ class HistorybayarCariTileWidget extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 30.0),
                   child: ElevatedButton(
                     onPressed: () {
-                      
+                      context.read<HistorybayarCariBloc>().add(
+                        DownloadInvoiceEvent(
+                          noInv: '260200019',
+                        ),
+                      );
                     },
                     child: const Text(
                     'Download Invoice',

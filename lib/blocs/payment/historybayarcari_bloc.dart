@@ -1,3 +1,4 @@
+import 'package:eassist_tools_app/repositories/payment/invoice_download_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/common/constants.dart';
@@ -12,6 +13,7 @@ class HistorybayarCariBloc extends Bloc<HistorybayarCariEvents, HistorybayarCari
 	HistorybayarCariBloc() : super(const HistorybayarCariState()) {
 		on<FetchHistorybayarCariEvent>(onFetchHistorybayarCari);
 		on<RefreshHistorybayarCariEvent>(onRefreshHistorybayarCari);
+    on<DownloadInvoiceEvent>(onDownloadInvoice);
 	}
 
 Future<void> onRefreshHistorybayarCari(
@@ -57,4 +59,17 @@ Future<void> onFetchHistorybayarCari(
 		}
 
 	}
+
+  Future<void> onDownloadInvoice(
+      DownloadInvoiceEvent event, Emitter<HistorybayarCariState> emit) async {
+    emit(state.copyWith(isDownloading: true, downloadPath: ''));
+    try {
+      InvoiceDownloadRepository repo = InvoiceDownloadRepository();
+      String path = await repo.downloadInvoice(event.noInv);
+      emit(state.copyWith(isDownloading: false, downloadPath: path));
+    } catch (e) {
+      emit(state.copyWith(isDownloading: false, downloadPath: ''));
+    }
+  }
+
 }

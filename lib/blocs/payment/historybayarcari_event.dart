@@ -17,3 +17,9 @@ class RefreshHistorybayarCariEvent extends HistorybayarCariEvents {
   List<Object> get props => [statusId, searchText];
 }
 
+class DownloadInvoiceEvent extends HistorybayarCariEvents {
+  final String noInv;
+  const DownloadInvoiceEvent({required this.noInv});
+  @override
+  List<Object> get props => [noInv];
+}
