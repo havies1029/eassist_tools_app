@@ -30,6 +30,8 @@ class Regklaim1CrudBloc extends Bloc<Regklaim1CrudEvents, Regklaim1CrudState> {
 		emit(state.copyWith(
 			isSaving: false,
 			isSaved: true,
+      viewMode: hasFailure ? "tambah" : "ubah",
+      regklaim1Id: hasFailure ? null : returnData.data,
 			hasFailure: hasFailure));
 	}
 

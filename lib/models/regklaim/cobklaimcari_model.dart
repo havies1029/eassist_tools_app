@@ -1,31 +1,35 @@
 
-class CobklaimcariModel {
-	String cobIcon;
-	String cobNama;
-	bool isAktif;
-	String mcobklaim1Id;
-	int noUrut;
+import 'package:eassist_tools_app/models/combobox/combominsurance_model.dart';
 
-	CobklaimcariModel({required this.cobIcon, required this.cobNama, 
-		required this.isAktif, required this.mcobklaim1Id, 
-		required this.noUrut});
+class CobklaimcariModel {
+	String cobNama;
+	String mcobklaim1Id;
+  String mcobDefaultId;
+	ComboMInsuranceModel? comboMInsurance;
+
+	CobklaimcariModel({required this.cobNama, 
+		required this.mcobklaim1Id,
+    required this.mcobDefaultId,
+    this.comboMInsurance});
+
+
 
 	factory CobklaimcariModel.fromJson(Map<String, dynamic> data) {
 		return CobklaimcariModel(
-			cobIcon: data['cobIcon']??'',
 			cobNama: data['cobNama']??'',
-			isAktif: data['isAktif']??'',
 			mcobklaim1Id: data['mcobklaim1Id']??'',
-			noUrut: int.tryParse(data['noUrut'].toString())??0
+      mcobDefaultId: data['mcobDefaultId']??'',
+      comboMInsurance: data['comboMInsurance'] != null ? ComboMInsuranceModel.fromJson(data['comboMInsurance']) : null
 		);
 
 	}
 
 	Map<String, dynamic> toJson() =>
-		{'cobIcon': cobIcon,
+		{
 		'cobNama': cobNama,
-		'isAktif': isAktif,
 		'mcobklaim1Id': mcobklaim1Id,
-		'noUrut': noUrut.toString()};
+    'mcobDefaultId': mcobDefaultId,
+    'comboMInsurance': comboMInsurance?.toJson()
+		};
 
 }

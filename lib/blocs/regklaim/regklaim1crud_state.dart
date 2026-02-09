@@ -9,6 +9,8 @@ class Regklaim1CrudState extends Equatable {
 	final bool isSaved;
 	final bool hasFailure;
 	final ComboMInsuranceModel? comboMInsurance;
+  final String regklaim1Id;
+  final String viewMode;
 
 	const Regklaim1CrudState(
 		{this.record,
@@ -18,7 +20,8 @@ class Regklaim1CrudState extends Equatable {
 		this.isSaved = false,
 		this.hasFailure = false,
 		this.comboMInsurance,
-
+    this.regklaim1Id = "",
+    this.viewMode = 'tambah',
 });
 
 	Regklaim1CrudState copyWith({
@@ -29,6 +32,8 @@ class Regklaim1CrudState extends Equatable {
 		bool? isSaved,
 		bool? hasFailure,
 		ComboMInsuranceModel? comboMInsurance,
+    String? regklaim1Id,
+    String? viewMode,
 	}){
 		return Regklaim1CrudState(
 			record: record ?? this.record,
@@ -38,9 +43,11 @@ class Regklaim1CrudState extends Equatable {
 			isSaved: isSaved ?? this.isSaved,
 			hasFailure: hasFailure ?? this.hasFailure,
 			comboMInsurance: comboMInsurance?? this.comboMInsurance,
+      regklaim1Id: regklaim1Id ?? this.regklaim1Id,
+      viewMode: viewMode ?? this.viewMode,
 		);
 	}
 
 	@override
-	List<Object> get props => [isLoading, isLoaded, isSaving, isSaved, hasFailure];
+	List<Object> get props => [isLoading, isLoaded, isSaving, isSaved, hasFailure, regklaim1Id, viewMode];
 }

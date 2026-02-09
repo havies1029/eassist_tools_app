@@ -12,6 +12,7 @@ class CobklaimcariBloc extends Bloc<CobklaimcariEvents, CobklaimcariState> {
 	CobklaimcariBloc() : super(const CobklaimcariState()) {
 		on<FetchCobklaimcariEvent>(onFetchCobklaimcari);
 		on<RefreshCobklaimcariEvent>(onRefreshCobklaimcari);
+    on<CobklaimcariItemSelectedEvent>(onCobklaimcariItemSelected);
 	}
 
 Future<void> onRefreshCobklaimcari(
@@ -54,4 +55,9 @@ Future<void> onFetchCobklaimcari(
 		}
 
 	}
+
+  Future<void> onCobklaimcariItemSelected(
+    CobklaimcariItemSelectedEvent event, Emitter<CobklaimcariState> emit) async {
+    emit(state.copyWith(selectedItem: event.selectedItem));
+  }
 }

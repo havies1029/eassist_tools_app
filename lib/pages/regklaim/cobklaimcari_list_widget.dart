@@ -54,6 +54,9 @@ class CobklaimcariListWidgetState extends State<CobklaimcariListWidget> {
             return InkWell(
               borderRadius: BorderRadius.circular(15.0),
               onTap: () {
+
+                context.read<CobklaimcariBloc>().add(CobklaimcariItemSelectedEvent(selectedItem: item));
+
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (_) => PolissourcecariMainPage(cobKlaimId: item.mcobklaim1Id, cobKlaimNama: item.cobNama),
@@ -68,11 +71,8 @@ class CobklaimcariListWidgetState extends State<CobklaimcariListWidget> {
                 child: Column(
                   children: <Widget>[
                     CobklaimcariTileWidget(
-                      cobIcon: state.items[index].cobIcon,
                       cobNama: state.items[index].cobNama,
-                      isAktif: state.items[index].isAktif,
                       mcobklaim1Id: state.items[index].mcobklaim1Id,
-                      noUrut: state.items[index].noUrut,
                     )
                   ],
                 ),

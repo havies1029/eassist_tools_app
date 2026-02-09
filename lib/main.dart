@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:eassist_tools_app/apis/payment/paymentdn_api.dart';
 import 'package:eassist_tools_app/blocs/asettracking/asettrackcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/authentication/authentication_bloc.dart';
@@ -71,6 +72,7 @@ import 'package:eassist_tools_app/blocs/progressindicator/progressindicator_bloc
 import 'package:eassist_tools_app/blocs/regendors/regendors1form_bloc.dart';
 import 'package:eassist_tools_app/blocs/regendors/regendors2cari_bloc.dart';
 import 'package:eassist_tools_app/blocs/regendors/regendorscari_bloc.dart';
+import 'package:eassist_tools_app/blocs/regklaim/attach_bloc.dart';
 import 'package:eassist_tools_app/blocs/regklaim/cobklaimcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/regklaim/polissourcecari_bloc.dart';
 import 'package:eassist_tools_app/blocs/regklaim/regklaim1crud_bloc.dart';
@@ -151,8 +153,10 @@ import 'package:eassist_tools_app/repositories/payment/paymentdn_repository.dart
 import 'package:eassist_tools_app/repositories/profile/profile_ktp_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/userfoto_repository.dart';
 import 'package:eassist_tools_app/repositories/regendors/regendors1form_repository.dart';
+import 'package:eassist_tools_app/repositories/regklaim/picker_repository.dart';
 import 'package:eassist_tools_app/repositories/regklaim/regklaim1crud_repository.dart';
 import 'package:eassist_tools_app/repositories/regklaim/sppaheader_repository.dart';
+import 'package:eassist_tools_app/repositories/regklaim/upload_repository.dart';
 import 'package:eassist_tools_app/repositories/regmv/regmv1crud_repository.dart';
 import 'package:eassist_tools_app/repositories/regmv/regmv2form_repository.dart';
 import 'package:eassist_tools_app/repositories/regmv/regmv3form_repository.dart';
@@ -431,6 +435,7 @@ class App extends StatelessWidget {
         BlocProvider(create:  (context) => PolissourcecariBloc()),
         BlocProvider(create: (context) => Regother3cariBloc()),
         BlocProvider(create: (context) => SppaHeaderBloc(repository: SppaHeaderRepository())),
+        BlocProvider(create: (context) => AttachBloc(pickerRepo: PickerRepositoryImpl(), uploadRepo: UploadRepositoryImpl(Dio()))),
         
       ],
       child: MaterialApp(
