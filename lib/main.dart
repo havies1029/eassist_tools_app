@@ -73,6 +73,10 @@ import 'package:eassist_tools_app/blocs/perbaruiklaimmv/klaimmvklaimcrud_bloc.da
 import 'package:eassist_tools_app/blocs/perbaruiklaimmv/klaimmvpoliscrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/perbaruiklaimmv/klaimmvstatuscari_bloc.dart';
 import 'package:eassist_tools_app/blocs/perbaruiklaimmv/klaimmvstatuscrud_bloc.dart';
+import 'package:eassist_tools_app/blocs/perbaruiklaimpar/klaim5parcrud_bloc.dart';
+import 'package:eassist_tools_app/blocs/perbaruiklaimpar/klaim5parlist_bloc.dart';
+import 'package:eassist_tools_app/blocs/perbaruiklaimpar/klaimparaccordion_bloc.dart';
+import 'package:eassist_tools_app/blocs/perbaruiklaimpar/klaimparklaimcrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/profile/profile_download_foto_bloc.dart';
 import 'package:eassist_tools_app/blocs/profile/profile_upload_foto_bloc.dart';
 import 'package:eassist_tools_app/blocs/profile/profile_upload_ktp_bloc.dart';
@@ -163,6 +167,8 @@ import 'package:eassist_tools_app/repositories/perbaruiklaimmv/klaimmvdoccrud_re
 import 'package:eassist_tools_app/repositories/perbaruiklaimmv/klaimmvklaimcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/perbaruiklaimmv/klaimmvpoliscrud_repository.dart';
 import 'package:eassist_tools_app/repositories/perbaruiklaimmv/klaimmvstatuscrud_repository.dart';
+import 'package:eassist_tools_app/repositories/perbaruiklaimpar/klaim5parcrud_repository.dart';
+import 'package:eassist_tools_app/repositories/perbaruiklaimpar/klaimparklaimcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/profile_ktp_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/userfoto_repository.dart';
 import 'package:eassist_tools_app/repositories/regendors/regendors1form_repository.dart';
@@ -457,7 +463,10 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => KlaimmvaccordionBloc()),
         BlocProvider(create: (context) => Klaim5cariBloc()),
         BlocProvider(create: (context) => KlaimmvstatuscariBloc()),
-
+        BlocProvider(create: (context) => KlaimparklaimcrudBloc(repository: KlaimparklaimcrudRepository())),
+        BlocProvider(create: (context) => Klaim5parListBloc()),
+        BlocProvider(create: (context) => Klaim5parCrudBloc(repository: Klaim5parCrudRepository())),
+        BlocProvider(create: (context) => KlaimparaccordionBloc()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -1,3 +1,4 @@
+import 'package:eassist_tools_app/models/klaimrinci/klaimdetailcari_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eassist_tools_app/common/constants.dart';
@@ -13,6 +14,7 @@ class GroupcobCariBloc extends Bloc<GroupcobCariEvents, GroupcobCariState> {
 		on<RefreshGroupcobCariEvent>(onRefreshGroupcobCari);
     on<SelectDetailEvent>(onSelectDetail);
     on<UnselectDetailEvent>(onUnselectDetail);
+    on<SelectKlaimRecordEvent>(onSelectKlaimRecord);
 	}
 
 Future<void> onRefreshGroupcobCari(
@@ -49,6 +51,10 @@ Future<void> onFetchGroupcobCari(
   void onUnselectDetail(UnselectDetailEvent event, Emitter<GroupcobCariState> emit) {
     final updatedSelectedIds = List<String>.from(state.selectedIds)..remove(event.klaim1Id);
     emit(state.copyWith(selectedIds: updatedSelectedIds));
+  }
+
+  void onSelectKlaimRecord(SelectKlaimRecordEvent event, Emitter<GroupcobCariState> emit) {
+    emit(state.copyWith(selectedKlaimRecord: event.klaimRecord));
   }
 
 }

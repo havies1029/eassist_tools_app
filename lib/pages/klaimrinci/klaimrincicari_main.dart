@@ -3,6 +3,7 @@ import 'package:eassist_tools_app/blocs/klaimrinci/mstatusrincicari_bloc.dart';
 import 'package:eassist_tools_app/pages/klaimrinci/groupcobcari_list.dart';
 import 'package:eassist_tools_app/pages/klaimrinci/mstatusrincicari_list.dart';
 import 'package:eassist_tools_app/pages/perbaruiklaimmv/perbaruiklaimmv_page.dart';
+import 'package:eassist_tools_app/pages/perbaruiklaimpar/perbaruiklaimpar_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -25,15 +26,22 @@ class KlaimRinciCariMainPageState extends State<KlaimRinciCariMainPage> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.orange,
         onPressed: () {
-          final selectedIds = context.read<GroupcobCariBloc>().state.selectedIds;
-
-          if (selectedIds.isNotEmpty) {
-            final String klaim1Id = selectedIds.first;
+          final selectedKlaimRecord = context.read<GroupcobCariBloc>().state.selectedKlaimRecord;
+          if (selectedKlaimRecord != null) {
+            final String cobId = selectedKlaimRecord.cobId;           
 
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) {
-                return PerbaruiKlaimMvPage(klaim1Id: klaim1Id); // Sesuaikan parameter sesuai kebutuhan
+                if (cobId == "10002") {
+                  return PerbaruiKlaimMvPage(klaim1Id: selectedKlaimRecord.klaim1Id); // Sesuaikan parameter sesuai kebutuhan
+                }
+                else if (cobId == "10001") {
+                  return PerbaruiKlaimParPage(klaim1Id: selectedKlaimRecord.klaim1Id); // Sesuaikan parameter sesuai kebutuhan
+                }
+                else {
+                  return PerbaruiKlaimMvPage(klaim1Id: selectedKlaimRecord.klaim1Id); // Sesuaikan parameter sesuai kebutuhan
+                }
               }),
             );
 

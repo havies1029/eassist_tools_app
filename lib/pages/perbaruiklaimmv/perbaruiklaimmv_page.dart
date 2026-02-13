@@ -28,7 +28,7 @@ class PerbaruiKlaimMvPageState extends State<PerbaruiKlaimMvPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Kendaraan')),
+      appBar: AppBar(title: const Text('Perbarui Klaim MV')),
       body: BlocConsumer<KlaimmvaccordionBloc, KlaimmvaccordionState>(
         builder: (context, acc) {
           return Column(
@@ -144,12 +144,6 @@ class PerbaruiKlaimMvPageState extends State<PerbaruiKlaimMvPage> {
                 break;
               case 1:
                 klaimmvklaimcrudBloc.add(KlaimmvklaimAutoSaveEvent());
-                break;
-              case 2:
-                //context.read<KlaimmvdoccrudBloc>().add(KlaimmvDocAutoSaveEvent());
-                break;
-              case 3:
-                //context.read<KlaimmvstatuscrudBloc>().add(KlaimmvStatusAutoSaveEvent());
                 break;
               case 4:
                 klaimmvbengkelcrudBloc.add(KlaimmvbengkelAutoSaveEvent());
