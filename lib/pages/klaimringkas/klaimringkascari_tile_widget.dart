@@ -79,6 +79,7 @@ class KlaimringkasCariTileWidget extends StatelessWidget {
 							style: MyText.bodyLarge(context)!
 								.copyWith(color: MyColors.grey_80)),
 						Container(height: 10),						
+            
 				]),
 			)
 		);

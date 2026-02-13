@@ -264,6 +264,7 @@ class Calmv1CrudFormPageFormState extends State<Calmv1CrudFormPage> {
 
 	Widget buildFieldMmvjnscoverId(){
 		return buildFieldComboMMvjnscover(
+      enabled: true,
 			comboKey: comboMMvjnscoverKey,
 			labelText: 'mmvjnscoverId',
 			initItem: fieldComboMMvjnscover,

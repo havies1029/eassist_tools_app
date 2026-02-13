@@ -5,6 +5,7 @@ import 'package:eassist_tools_app/repositories/combobox/combommvjnscover_reposit
 
 DropdownSearch<ComboMMvjnscoverModel> buildFieldComboMMvjnscover({
 	required String labelText,
+  required bool enabled,
 	GlobalKey<DropdownSearchState<ComboMMvjnscoverModel>>? comboKey,
 	ComboMMvjnscoverModel? initItem,
 	Function(ComboMMvjnscoverModel?)? onChangedCallback,
@@ -13,6 +14,7 @@ DropdownSearch<ComboMMvjnscoverModel> buildFieldComboMMvjnscover({
 	}) {
 	return DropdownSearch<ComboMMvjnscoverModel>(
 		key: comboKey,
+    enabled: enabled,  
 		selectedItem: initItem,
 		decoratorProps: DropDownDecoratorProps(
 			decoration: InputDecoration(

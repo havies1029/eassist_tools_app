@@ -104,6 +104,14 @@ class Regklaim1CrudFormPageState extends State<Regklaim1CrudFormPage> {
 										regklaim1Id: regklaim1Id,
                     viewMode: state.viewMode,
 									),
+                  ElevatedButton(
+                    onPressed: () {
+                      regklaim1formBloc.add(RegklaimToKlaimEvent(regklaim1Id: regklaim1Id));
+                      _dismissDialog();                      
+                    },
+                    child: Text('Lapor Klaim'),
+                  )
+
 								],
 							)),
 					),

@@ -2,6 +2,7 @@ import 'package:eassist_tools_app/blocs/klaimrinci/groupcobcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaimrinci/mstatusrincicari_bloc.dart';
 import 'package:eassist_tools_app/pages/klaimrinci/groupcobcari_list.dart';
 import 'package:eassist_tools_app/pages/klaimrinci/mstatusrincicari_list.dart';
+import 'package:eassist_tools_app/pages/perbaruiklaimmv/perbaruiklaimmv_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,6 +22,26 @@ class KlaimRinciCariMainPageState extends State<KlaimRinciCariMainPage> {
         title: const Text("Klaim Rincian"),
       ),
 			backgroundColor: Colors.grey[100],
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.orange,
+        onPressed: () {
+          final selectedIds = context.read<GroupcobCariBloc>().state.selectedIds;
+
+          if (selectedIds.isNotEmpty) {
+            final String klaim1Id = selectedIds.first;
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) {
+                return PerbaruiKlaimMvPage(klaim1Id: klaim1Id); // Sesuaikan parameter sesuai kebutuhan
+              }),
+            );
+
+          }
+
+        },
+        child: const Icon(Icons.add),
+      ),
 			body: MultiBlocListener(
         listeners: [
           BlocListener<MstatusrinciCariBloc, MstatusrinciCariState>(

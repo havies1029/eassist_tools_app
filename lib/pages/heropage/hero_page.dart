@@ -33,7 +33,6 @@ import 'package:eassist_tools_app/pages/payment/pay1list_main.dart';
 import 'package:eassist_tools_app/pages/payment/rinciansoa_page.dart';
 import 'package:eassist_tools_app/pages/regendors/regendorslist_main.dart';
 import 'package:eassist_tools_app/pages/regklaim/cobklaimcari_main.dart';
-import 'package:eassist_tools_app/pages/regklaim/polissourcecari_main.dart';
 import 'package:eassist_tools_app/pages/regmv/regmv1list_main.dart';
 import 'package:eassist_tools_app/pages/regother/regother1list_main.dart';
 import 'package:eassist_tools_app/pages/regpar/regpar1list_main.dart';
