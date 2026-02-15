@@ -68,13 +68,10 @@ import 'package:eassist_tools_app/blocs/payment/paymentmethodcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/perbaruiklaimmv/klaim5cari_bloc.dart';
 import 'package:eassist_tools_app/blocs/perbaruiklaimmv/klaimmvaccordion_bloc.dart';
 import 'package:eassist_tools_app/blocs/perbaruiklaimmv/klaimmvbengkelcrud_bloc.dart';
-import 'package:eassist_tools_app/blocs/perbaruiklaimmv/klaimmvdoccrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/perbaruiklaimmv/klaimmvklaimcrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/perbaruiklaimmv/klaimmvpoliscrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/perbaruiklaimmv/klaimmvstatuscari_bloc.dart';
 import 'package:eassist_tools_app/blocs/perbaruiklaimmv/klaimmvstatuscrud_bloc.dart';
-import 'package:eassist_tools_app/blocs/perbaruiklaimpar/klaim5parcrud_bloc.dart';
-import 'package:eassist_tools_app/blocs/perbaruiklaimpar/klaim5parlist_bloc.dart';
 import 'package:eassist_tools_app/blocs/perbaruiklaimpar/klaimparaccordion_bloc.dart';
 import 'package:eassist_tools_app/blocs/perbaruiklaimpar/klaimparklaimcrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/profile/profile_download_foto_bloc.dart';
@@ -163,11 +160,9 @@ import 'package:eassist_tools_app/repositories/payment/invbayarvaform_repository
 import 'package:eassist_tools_app/repositories/payment/pay1crud_repository.dart';
 import 'package:eassist_tools_app/repositories/payment/paymentdn_repository.dart' show PaymentDnRepository;
 import 'package:eassist_tools_app/repositories/perbaruiklaimmv/klaimmvbengkelcrud_repository.dart';
-import 'package:eassist_tools_app/repositories/perbaruiklaimmv/klaimmvdoccrud_repository.dart';
 import 'package:eassist_tools_app/repositories/perbaruiklaimmv/klaimmvklaimcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/perbaruiklaimmv/klaimmvpoliscrud_repository.dart';
 import 'package:eassist_tools_app/repositories/perbaruiklaimmv/klaimmvstatuscrud_repository.dart';
-import 'package:eassist_tools_app/repositories/perbaruiklaimpar/klaim5parcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/perbaruiklaimpar/klaimparklaimcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/profile_ktp_repository.dart';
 import 'package:eassist_tools_app/repositories/profile/userfoto_repository.dart';
@@ -457,15 +452,12 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => AttachBloc(pickerRepo: PickerRepositoryImpl(), uploadRepo: UploadRepositoryImpl(Dio()))),
         BlocProvider(create: (context) => KlaimmvklaimcrudBloc(repository: KlaimmvklaimcrudRepository())),
         BlocProvider(create: (context) => KlaimmvpoliscrudBloc(repository: KlaimmvpoliscrudRepository())),
-        BlocProvider(create: (context) => KlaimmvdoccrudBloc(repository: KlaimmvdoccrudRepository())),
         BlocProvider(create: (context) => KlaimmvbengkelcrudBloc(repository: KlaimmvbengkelcrudRepository())),
         BlocProvider(create: (context) => KlaimmvstatuscrudBloc(repository: KlaimmvstatuscrudRepository())),
         BlocProvider(create: (context) => KlaimmvaccordionBloc()),
         BlocProvider(create: (context) => Klaim5cariBloc()),
         BlocProvider(create: (context) => KlaimmvstatuscariBloc()),
         BlocProvider(create: (context) => KlaimparklaimcrudBloc(repository: KlaimparklaimcrudRepository())),
-        BlocProvider(create: (context) => Klaim5parListBloc()),
-        BlocProvider(create: (context) => Klaim5parCrudBloc(repository: Klaim5parCrudRepository())),
         BlocProvider(create: (context) => KlaimparaccordionBloc()),
       ],
       child: MaterialApp(

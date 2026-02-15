@@ -1,4 +1,4 @@
-import 'package:eassist_tools_app/blocs/perbaruiklaimpar/klaim5parlist_bloc.dart';
+import 'package:eassist_tools_app/blocs/perbaruiklaimmv/klaim5cari_bloc.dart';
 import 'package:eassist_tools_app/blocs/perbaruiklaimpar/klaimparaccordion_bloc.dart';
 import 'package:eassist_tools_app/blocs/perbaruiklaimpar/klaimparklaimcrud_bloc.dart';
 import 'package:eassist_tools_app/pages/perbaruiklaimmv/klaim5cari_list.dart';
@@ -8,9 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PerbaruiKlaimParPage extends StatefulWidget {
-
+  final String cobGroupId;
+  final String cobGroupNama;
   final String klaim1Id;
-	const PerbaruiKlaimParPage({super.key, required this.klaim1Id});
+	const PerbaruiKlaimParPage({super.key, required this.klaim1Id, required this.cobGroupId, required this.cobGroupNama});
 
 	@override
 	PerbaruiKlaimParPageState createState() => PerbaruiKlaimParPageState();
@@ -21,8 +22,9 @@ class PerbaruiKlaimParPageState extends State<PerbaruiKlaimParPage> {
 
   @override
   Widget build(BuildContext context) {
+    var klaimparklaimcrudBloc = BlocProvider.of<KlaimparklaimcrudBloc>(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Perbarui Klaim PAR')),
+      appBar: AppBar(title: Text(widget.cobGroupNama)),
       body: BlocConsumer<KlaimparaccordionBloc, KlaimparaccordionState>(
         builder: (context, acc) {
           return Column(
@@ -31,7 +33,7 @@ class PerbaruiKlaimParPageState extends State<PerbaruiKlaimParPage> {
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: BlocBuilder<KlaimparklaimcrudBloc, KlaimparklaimcrudState>(
-                    builder: (_, klaim) => BlocBuilder<Klaim5parListBloc, Klaim5parListState>(
+                    builder: (_, klaim) => BlocBuilder<Klaim5cariBloc, Klaim5cariState>(
                           builder: (_, dok) {
                             final done = [
                               klaim.isComplete,
@@ -60,15 +62,15 @@ class PerbaruiKlaimParPageState extends State<PerbaruiKlaimParPage> {
                       
                       Klaimparaccordioncard(
                         title: 'Data Klaim',
-                        isOpen: acc.openedIndex == 1,
-                        onTap: () => context.read<KlaimparaccordionBloc>().add(KlaimparaccordionToggleEvent(index: 1)),
-                        child: KlaimparklaimcrudFormPage(recordId:  widget.klaim1Id, viewMode: "ubah"),
+                        isOpen: acc.openedIndex == 0,
+                        onTap: () => context.read<KlaimparaccordionBloc>().add(KlaimparaccordionToggleEvent(index: 0)),
+                        child: KlaimparklaimcrudFormPage(recordId:  widget.klaim1Id, viewMode: "ubah", cobGroupId: widget.cobGroupId),
                       ),
                       
                       Klaimparaccordioncard(
                         title: 'Dokumen Klaim',
-                        isOpen: acc.openedIndex == 2,
-                        onTap: () => context.read<KlaimparaccordionBloc>().add(KlaimparaccordionToggleEvent(index: 2)),
+                        isOpen: acc.openedIndex == 1,
+                        onTap: () => context.read<KlaimparaccordionBloc>().add(KlaimparaccordionToggleEvent(index: 1)),
                         child: Klaim5cariPage(klaim1Id: widget.klaim1Id),
                       ),
                                             
@@ -85,9 +87,13 @@ class PerbaruiKlaimParPageState extends State<PerbaruiKlaimParPage> {
                   height: 52,
                   child: ElevatedButton(
                     onPressed: () {
-                      // TODO: dispatch submit final (bisa bloc khusus submit)
+                      switch(acc.openedIndex) {
+                        case 0:
+                          klaimparklaimcrudBloc.add(KlaimparklaimcrudAutoSaveEvent());
+                          break;              
+                      }
                     },
-                    child: const Text('Selesai'),
+                    child: const Text('Perbarui Klaim'),
                   ),
                 ),
               ),
@@ -97,7 +103,6 @@ class PerbaruiKlaimParPageState extends State<PerbaruiKlaimParPage> {
           if (state.previousIndex != null &&
             state.previousIndex != state.openedIndex) {
 
-              var klaimparklaimcrudBloc = BlocProvider.of<KlaimparklaimcrudBloc>(context);
             FocusManager.instance.primaryFocus?.unfocus();
             await Future.delayed(const Duration(milliseconds: 50));
 

@@ -28,19 +28,20 @@ class KlaimRinciCariMainPageState extends State<KlaimRinciCariMainPage> {
         onPressed: () {
           final selectedKlaimRecord = context.read<GroupcobCariBloc>().state.selectedKlaimRecord;
           if (selectedKlaimRecord != null) {
-            final String cobId = selectedKlaimRecord.cobId;           
+            final String cobId = selectedKlaimRecord.cobId;    
+            final String cobNama = selectedKlaimRecord.cobNama;       
 
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) {
                 if (cobId == "10002") {
-                  return PerbaruiKlaimMvPage(klaim1Id: selectedKlaimRecord.klaim1Id); // Sesuaikan parameter sesuai kebutuhan
+                  return PerbaruiKlaimMvPage( klaim1Id: selectedKlaimRecord.klaim1Id, cobGroupNama: cobNama); // Sesuaikan parameter sesuai kebutuhan
                 }
                 else if (cobId == "10001") {
-                  return PerbaruiKlaimParPage(klaim1Id: selectedKlaimRecord.klaim1Id); // Sesuaikan parameter sesuai kebutuhan
+                  return PerbaruiKlaimParPage(klaim1Id: selectedKlaimRecord.klaim1Id, cobGroupNama: cobNama, cobGroupId: cobId); // Sesuaikan parameter sesuai kebutuhan
                 }
                 else {
-                  return PerbaruiKlaimMvPage(klaim1Id: selectedKlaimRecord.klaim1Id); // Sesuaikan parameter sesuai kebutuhan
+                  return PerbaruiKlaimParPage(klaim1Id: selectedKlaimRecord.klaim1Id, cobGroupNama: cobNama, cobGroupId: cobId); // Sesuaikan parameter sesuai kebutuhan
                 }
               }),
             );

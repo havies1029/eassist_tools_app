@@ -33,6 +33,7 @@ class Klaim5UploadFileApi {
         data: FormData.fromMap({
           'klaim5Id': item.klaim5Id,
           'mjenisdocId': item.mjenisdocId,
+          'jenisDocLain': item.jenisDocLain,
           'file': await MultipartFile.fromFile(
             file.path,
             filename: p.basename(file.path),

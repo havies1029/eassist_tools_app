@@ -14,13 +14,18 @@ class KlaimparklaimcrudModel {
 	String picTelp;
 	String? mjenisrugiId;
 	ComboMJenisrugiModel? comboMJenisrugi;
+  String cobId;
+  String cobNama;
 
 	KlaimparklaimcrudModel({required this.dol, this.isPolisJps = false, 
 		required this.keterangan, required this.klaim1Id, 
 		required this.laporAsuransi, required this.laporJps, 
 		required this.penyebab, required this.picEmail, 
 		required this.picJabatan, required this.picNama, 
-		required this.picTelp, this.mjenisrugiId, this.comboMJenisrugi});
+		required this.picTelp, this.mjenisrugiId, this.comboMJenisrugi,
+    required this.cobId,
+    required this.cobNama,
+  });
 
 	factory KlaimparklaimcrudModel.fromJson(Map<String, dynamic> data) {
 		ComboMJenisrugiModel? comboMJenisrugi;
@@ -41,7 +46,9 @@ class KlaimparklaimcrudModel {
 			picNama: data['picNama']??'',
 			picTelp: data['picTelp']??'',
 			mjenisrugiId: data['mjenisrugiId']??'',
-			comboMJenisrugi: comboMJenisrugi
+			comboMJenisrugi: comboMJenisrugi,
+      cobId: data['cobId']??'',
+      cobNama: data['cobNama']??'',
 		);
 
 	}
@@ -59,7 +66,10 @@ class KlaimparklaimcrudModel {
 		'picNama': picNama,
 		'picTelp': picTelp,
 		'mjenisrugiId': mjenisrugiId,
-		'comboMJenisrugi': comboMJenisrugi?.toJson()};
+		'comboMJenisrugi': comboMJenisrugi?.toJson(),
+    'cobId': cobId,
+    'cobNama': cobNama,
+    };
 
   KlaimparklaimcrudModel copyWith({
     DateTime? dol,
@@ -75,6 +85,8 @@ class KlaimparklaimcrudModel {
     String? picTelp,
     String? mjenisrugiId,
     ComboMJenisrugiModel? comboMJenisrugi,
+    String? cobId,
+    String? cobNama,
   }) {
     return KlaimparklaimcrudModel(
       dol: dol ?? this.dol,
@@ -90,6 +102,8 @@ class KlaimparklaimcrudModel {
       picTelp: picTelp ?? this.picTelp,
       mjenisrugiId: mjenisrugiId ?? this.mjenisrugiId,
       comboMJenisrugi: comboMJenisrugi ?? this.comboMJenisrugi,
+      cobId: cobId ?? this.cobId,
+      cobNama: cobNama ?? this.cobNama,
     );
   }
 }

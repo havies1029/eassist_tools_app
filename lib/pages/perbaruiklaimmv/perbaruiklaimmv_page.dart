@@ -1,6 +1,6 @@
+import 'package:eassist_tools_app/blocs/perbaruiklaimmv/klaim5cari_bloc.dart';
 import 'package:eassist_tools_app/blocs/perbaruiklaimmv/klaimmvaccordion_bloc.dart';
 import 'package:eassist_tools_app/blocs/perbaruiklaimmv/klaimmvbengkelcrud_bloc.dart';
-import 'package:eassist_tools_app/blocs/perbaruiklaimmv/klaimmvdoccrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/perbaruiklaimmv/klaimmvklaimcrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/perbaruiklaimmv/klaimmvpoliscrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/perbaruiklaimmv/klaimmvstatuscrud_bloc.dart';
@@ -14,9 +14,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PerbaruiKlaimMvPage extends StatefulWidget {
-
+  final String cobGroupNama;
   final String klaim1Id;
-	const PerbaruiKlaimMvPage({super.key, required this.klaim1Id});
+	const PerbaruiKlaimMvPage({super.key, required this.klaim1Id, required this.cobGroupNama});
 
 	@override
 	PerbaruiKlaimMvPageState createState() => PerbaruiKlaimMvPageState();
@@ -27,8 +27,11 @@ class PerbaruiKlaimMvPageState extends State<PerbaruiKlaimMvPage> {
 
   @override
   Widget build(BuildContext context) {
+    var klaimmvpoliscrudBloc = BlocProvider.of<KlaimmvpoliscrudBloc>(context);
+    var klaimmvklaimcrudBloc = BlocProvider.of<KlaimmvklaimcrudBloc>(context);
+    var klaimmvbengkelcrudBloc = BlocProvider.of<KlaimmvbengkelcrudBloc>(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Perbarui Klaim MV')),
+      appBar: AppBar(title: Text(widget.cobGroupNama)),
       body: BlocConsumer<KlaimmvaccordionBloc, KlaimmvaccordionState>(
         builder: (context, acc) {
           return Column(
@@ -38,7 +41,7 @@ class PerbaruiKlaimMvPageState extends State<PerbaruiKlaimMvPage> {
                 padding: const EdgeInsets.all(16),
                 child: BlocBuilder<KlaimmvpoliscrudBloc, KlaimmvpoliscrudState>(
                   builder: (_, polis) => BlocBuilder<KlaimmvklaimcrudBloc, KlaimmvklaimcrudState>(
-                    builder: (_, klaim) => BlocBuilder<KlaimmvdoccrudBloc, KlaimmvdoccrudState>(
+                    builder: (_, klaim) => BlocBuilder<Klaim5cariBloc, Klaim5cariState>(
                       builder: (_, dok) => BlocBuilder<KlaimmvstatuscrudBloc, KlaimmvstatuscrudState>(
                         builder: (_, st) => BlocBuilder<KlaimmvbengkelcrudBloc, KlaimmvbengkelcrudState>(
                           builder: (_, beng) {
@@ -120,9 +123,19 @@ class PerbaruiKlaimMvPageState extends State<PerbaruiKlaimMvPage> {
                   height: 52,
                   child: ElevatedButton(
                     onPressed: () {
-                      // TODO: dispatch submit final (bisa bloc khusus submit)
+                      switch(acc.openedIndex) {
+                        case 0:
+                          klaimmvpoliscrudBloc.add(KlaimmvPolisAutoSaveEvent());
+                          break;
+                        case 1:
+                          klaimmvklaimcrudBloc.add(KlaimmvklaimAutoSaveEvent());
+                          break;
+                        case 4:
+                          klaimmvbengkelcrudBloc.add(KlaimmvbengkelAutoSaveEvent());
+                          break;
+                      }
                     },
-                    child: const Text('Selesai'),
+                    child: const Text('Perbarui Klaim'),
                   ),
                 ),
               ),
@@ -131,10 +144,7 @@ class PerbaruiKlaimMvPageState extends State<PerbaruiKlaimMvPage> {
         }, listener: (BuildContext context, KlaimmvaccordionState state) async { 
           if (state.previousIndex != null &&
             state.previousIndex != state.openedIndex) {
-
-            var klaimmvpoliscrudBloc = BlocProvider.of<KlaimmvpoliscrudBloc>(context);
-            var klaimmvklaimcrudBloc = BlocProvider.of<KlaimmvklaimcrudBloc>(context);
-            var klaimmvbengkelcrudBloc = BlocProvider.of<KlaimmvbengkelcrudBloc>(context);
+            
             FocusManager.instance.primaryFocus?.unfocus();
             await Future.delayed(const Duration(milliseconds: 50));
 

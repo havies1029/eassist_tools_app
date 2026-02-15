@@ -95,7 +95,7 @@ class Klaim5cariTileWidget extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          jenisNama,
+                          jenisNama.isNotEmpty ? jenisNama : jenisDocLain,
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 14.5,
@@ -137,7 +137,9 @@ class Klaim5cariTileWidget extends StatelessWidget {
                     children: [
                       Expanded(
                         child: _DocButton(
-                          label: 'Ambil File',
+                          label: hasFile
+                            ? 'Ganti File'
+                            : 'Ambil File',
                           icon: Icons.insert_drive_file_outlined,
                           bg: const Color(0xFF4A4A4A),
                           fg: Colors.white,

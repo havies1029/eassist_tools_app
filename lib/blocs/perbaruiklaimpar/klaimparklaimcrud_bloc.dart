@@ -72,10 +72,17 @@ class KlaimparklaimcrudBloc extends Bloc<KlaimparklaimcrudEvents, Klaimparklaimc
 		emit(state.copyWith(isLoading: true, isLoaded: false));
 
 		ComboMJenisrugiModel comboMJenisrugi = event.comboMJenisrugi;
+
+    KlaimparklaimcrudModel? record = state.record;
+    if (record != null) {
+      record = record.copyWith(mjenisrugiId: comboMJenisrugi.mjenisrugiId);
+    }
 		emit(state.copyWith(
 			isLoading: false,
 			isLoaded: true,
-			comboMJenisrugi: comboMJenisrugi));
+			comboMJenisrugi: comboMJenisrugi,
+			record: record,
+      isDirty: true,));
 	}
 
   Future<void> onFieldDolChanged(

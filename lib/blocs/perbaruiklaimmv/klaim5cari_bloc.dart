@@ -41,68 +41,125 @@ Future<void> onFetchKlaim5cari(
 	  }
   }
 
-  Future<void> onKlaim5LocalFileSet(Klaim5LocalFileSetEvent event, Emitter<Klaim5cariState> emit) async {
-    final idx = state.items.indexWhere((x) => x.mjenisdocId == event.mjenisdocId);
+  Future<void> onKlaim5LocalFileSet(
+    Klaim5LocalFileSetEvent event, Emitter<Klaim5cariState> emit) async {
+    // cari existing item
+    final idx = state.items.indexWhere((x) =>
+        ((x.mjenisdocId == event.mjenisdocId) && x.jenisDocLain.isEmpty) ||
+        ((x.jenisDocLain == event.jenisDocLain) && x.mjenisdocId.isEmpty));
+
+    // copy list dulu
+    final newItems = List<Klaim5cariModel>.from(state.items);
+
+    if (idx >= 0) {
+      // ==== UPDATE ITEM YANG SUDAH ADA ====
+      final oldItem = state.items[idx];
+
+      final newItem = oldItem.copyWith(
+        localPath: event.localPath,
+        fileName: event.fileName,
+        mimeType: event.mimeType,
+        fileSizeBytes: event.fileSizeBytes,
+        uploadProgress: 0.0,
+        uploadStatus: 'idle',
+        clearError: true,
+      );
+
+      newItems[idx] = newItem;
+    }
+    else {
+      // ==== INSERT ITEM BARU (IDX TIDAK KETEMU) ====
+
+      final newItem = Klaim5cariModel(
+        klaim1Id: event.klaim1Id,
+        jenisDocLain: event.jenisDocLain,            
+        klaim5Id: '',    
+        mjenisdocId: '', 
+        jenisNama: '',                  
+        fileUrl: '',
+        fileName: event.fileName,
+        mimeType: event.mimeType ?? '',
+        fileSizeBytes: event.fileSizeBytes,
+        uploadedAt: null,
+        localPath: event.localPath,
+        uploadProgress: 0.0,
+        uploadStatus: 'idle',
+        errorMessage: null,
+      );
+
+      // mau insert di awal atau akhir?
+      // - kalau mau item baru muncul paling bawah dekat form: add()
+      // - kalau mau muncul paling atas: insert(0, ...)
+      newItems.add(newItem);
+    }
+
+  emit(state.copyWith(items: newItems));
+}
+
+  Future<void> onKlaim5DeleteRequested(
+    Klaim5DeleteRequestedEvent event, Emitter<Klaim5cariState> emit) async {
+    final idx = state.items.indexWhere((x) =>
+        ((x.mjenisdocId == event.mjenisdocId) && x.jenisDocLain.isEmpty) ||
+        ((x.jenisDocLain == event.jenisDocLain) && x.mjenisdocId.isEmpty));
     if (idx < 0) return;
 
     final oldItem = state.items[idx];
 
-    final newItem = oldItem.copyWith(
-      localPath: event.localPath,
-      fileName: event.fileName,
-      mimeType: event.mimeType,
-      fileSizeBytes: event.fileSizeBytes,
-      uploadProgress: 0.0,
-      uploadStatus: 'idle',
-      clearError: true,
-    );
-
+    // snapshot list
     final newItems = List<Klaim5cariModel>.from(state.items);
-    newItems[idx] = newItem;
 
-    emit(state.copyWith(items: newItems));
-  }
+    // tentukan aksi: clear atau remove
+    final bool shouldClear = oldItem.mjenisdocId.isNotEmpty;
 
-  Future<void> onKlaim5DeleteRequested(Klaim5DeleteRequestedEvent event, Emitter<Klaim5cariState> emit) async {
-    final idx = state.items.indexWhere((x) => x.mjenisdocId == event.mjenisdocId);
-    if (idx < 0) return;
+    if (shouldClear) {
+      // 1A) CLEAR (seperti sekarang)
+      final clearedItem = oldItem.copyWith(
+        localPath: '',
+        fileName: '',
+        mimeType: '',
+        fileSizeBytes: 0,
+        uploadProgress: 0.0,
+        uploadStatus: 'deleted',
+        clearError: true,
+      );
 
-    // 1) Clear lokal dulu (optimistic) + status deleting
+      newItems[idx] = clearedItem;
+      emit(state.copyWith(items: newItems));
+    } else {
+      // 1B) REMOVE dari list
+      newItems.removeAt(idx);
+      emit(state.copyWith(items: newItems));
+    }
 
-    final oldItem = state.items[idx];
+    // 2) Hapus di server jika klaim1Id ada
+    if (oldItem.klaim1Id.isNotEmpty) {
+      final repository = KlaimmvdoccrudRepository();
+      final success = await repository.klaimmvdoccrudHapus(oldItem.klaim1Id, oldItem.mjenisdocId, oldItem.jenisDocLain);
 
-    final newItem = oldItem.copyWith(
-      localPath: '',
-      fileName: '',
-      mimeType: '',
-      fileSizeBytes: 0,
-      uploadProgress: 0.0,
-      uploadStatus: 'deleted',
-      clearError: true,
-    );
+      if (!success) {
+        // revert kalau gagal
+        final revertItems = List<Klaim5cariModel>.from(state.items);
 
-    final newItems = List<Klaim5cariModel>.from(state.items);
-    newItems[idx] = newItem;
-
-    emit(state.copyWith(items: newItems));
-
-    // 2) Hapus di server jika klaim5Id != ''
-    if (oldItem.klaim5Id.isNotEmpty) {
-      KlaimmvdoccrudRepository repository = KlaimmvdoccrudRepository();
-      if (event.mjenisdocId.isNotEmpty) {
-        final success = await repository.klaimmvdoccrudHapus(oldItem.klaim5Id);
-        if (!success) {
-          // jika gagal, kembalikan item lama
-          final revertItems = List<Klaim5cariModel>.from(state.items);
-          revertItems[idx] = oldItem;
-          emit(state.copyWith(items: revertItems));
+        if (shouldClear) {
+          // state.items saat ini sudah versi "cleared", jadi balikin oldItem di idx
+          if (idx < revertItems.length) {
+            revertItems[idx] = oldItem;
+          }
+        } else {
+          // state.items saat ini sudah versi "removed", insert balik di index semula
+          revertItems.insert(idx, oldItem);
         }
+
+        emit(state.copyWith(items: revertItems));
       }
     }
   }
 
+
   Future<void> onKlaim5UploadRequested(Klaim5UploadRequestedEvent event, Emitter<Klaim5cariState> emit) async {
-    final idx = state.items.indexWhere((x) => x.mjenisdocId == event.mjenisdocId);
+    final idx = state.items.indexWhere((x) =>
+        ((x.mjenisdocId == event.mjenisdocId) && x.jenisDocLain.isEmpty) ||
+        ((x.jenisDocLain == event.jenisDocLain) && x.mjenisdocId.isEmpty));
     if (idx < 0) return;
 
     final item = state.items[idx];

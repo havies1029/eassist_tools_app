@@ -24,11 +24,7 @@ class Klaim5cariPageState extends State<Klaim5cariPage> {
 	@override
 	Widget build(BuildContext context) {
 		klaim5cariBloc = BlocProvider.of<Klaim5cariBloc>(context);
-		return Column(
-		  children: [
-		    buildList(),
-		  ],
-		);
+		return buildList();
 	}
 	void refreshData() {
 		klaim5cariBloc.add(
@@ -36,7 +32,7 @@ class Klaim5cariPageState extends State<Klaim5cariPage> {
 	}
 	
 	Widget buildList() {
-		return Klaim5cariListWidget();
+		return Klaim5cariListWidget(klaim1Id: widget.klaim1Id);
 	}
 
 }

@@ -40,10 +40,11 @@ class KlaimparklaimcrudLihatEvent extends KlaimparklaimcrudEvents {
 }
 
 class ComboMJenisrugiChangedEvent extends KlaimparklaimcrudEvents{
-	final ComboMJenisrugiModel comboMJenisrugi;
-	const ComboMJenisrugiChangedEvent({required this.comboMJenisrugi});
+  final ComboMJenisrugiModel comboMJenisrugi;
+  const ComboMJenisrugiChangedEvent({required this.comboMJenisrugi});
 
-	@override	List<Object> get props => [comboMJenisrugi];
+  @override	
+  List<Object> get props => [comboMJenisrugi];
 }
 
 class FieldDolChangedEvent extends KlaimparklaimcrudEvents{

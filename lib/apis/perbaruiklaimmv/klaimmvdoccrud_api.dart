@@ -54,10 +54,12 @@ class KlaimmvdoccrudAPI {
 		}
 		return returnData.success;
 	}
-	Future<bool> klaimmvdoccrudHapusAPI(String klaim5Id) async {
+	Future<bool> klaimmvdoccrudHapusAPI(String klaim1Id, String mjenisdocId, String jenisDocLain) async {
 		String hapusEndpoint = "${AppData.prefixEndPoint}/api/perbaruiklaimmv/klaimmvdoccrud/delete";
 		Map<String, String> queryParams = {
-			'klaim5Id': klaim5Id,
+			'klaim1Id': klaim1Id,
+			'mjenisdocId': mjenisdocId,
+			'jenisDocLain': jenisDocLain,
 			'modul_id': 'klaimmvdoccrudHapusAPI'};
 		var uri = AppData.uriHtpp(AppData.httpAuthority, hapusEndpoint, queryParams);
 		final http.Response response =

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:eassist_tools_app/models/perbaruiklaimmv/klaim5cari_model.dart';
+import 'package:eassist_tools_app/pages/perbaruiklaimmv/klaim5tambahfile_widget.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,7 +14,8 @@ import 'package:open_filex/open_filex.dart';
 import 'package:pdfx/pdfx.dart';
 
 class Klaim5cariListWidget extends StatefulWidget {
-	const Klaim5cariListWidget({super.key});
+  final String klaim1Id;
+	const Klaim5cariListWidget({super.key, required this.klaim1Id});
 
 	@override
 	Klaim5cariListWidgetState createState() => Klaim5cariListWidgetState();
@@ -46,30 +48,48 @@ class Klaim5cariListWidgetState extends State<Klaim5cariListWidget> {
 		  if (state.status == ListStatus.success) {
 
       return state.items.isNotEmpty
-        ? ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          padding: EdgeInsets.zero,
-          controller: _scrollController,
-          itemCount: state.items.length,
-          itemBuilder: (_, index) => Container(
-            margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-            padding: const EdgeInsets.all(0.2),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15.0)),
-            child: Klaim5cariTileWidget(
-              jenisDocLain: state.items[index].jenisDocLain,
-              klaim5Id: state.items[index].klaim5Id,
-              mjenisdocId: state.items[index].mjenisdocId,
-              jenisNama: state.items[index].jenisNama,
-              fileUrl: state.items[index].fileUrl,
-              localPath: state.items[index].localPath,
-              onPickFile: () => _pickFile(state.items[index]),
-              onPickPhoto: () => _pickPhoto(state.items[index]),
-              onDelete: () => _deleteFile(state.items[index]),
-              onPreview: () => _preview(state.items[index]),
+        ? Column(
+          children: [
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              padding: EdgeInsets.zero,
+              controller: _scrollController,
+              itemCount: state.items.length,
+              itemBuilder: (_, index) => Container(
+                margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+                padding: const EdgeInsets.all(0.2),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15.0)),
+                child: Klaim5cariTileWidget(
+                  jenisDocLain: state.items[index].jenisDocLain,
+                  klaim5Id: state.items[index].klaim5Id,
+                  mjenisdocId: state.items[index].mjenisdocId,
+                  jenisNama: state.items[index].jenisNama,
+                  fileUrl: state.items[index].fileUrl,
+                  localPath: state.items[index].localPath,
+                  onPickFile: () => _pickFile(state.items[index]),
+                  onPickPhoto: () => _pickPhoto(state.items[index]),
+                  onDelete: () => _deleteFile(state.items[index]),
+                  onPreview: () => _preview(state.items[index]),
+                ),
+              )),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(4, 2, 4, 12),
+              child: Klaim5TambahDokumenForm(
+                onPickFileDokLain: (judul) async {
+                  await pickNewFileDokLain(widget.klaim1Id, judul);
+                  return true;
+                },
+                onPickPhoto: (judul) async {
+                  // TODO: panggil camera
+                  // final judul = _judulCtrl.text.trim();
+                  return true;
+                },
+              ),
             ),
-          ))
+          ],
+        )
         : const Center(
           child: Padding(
             padding: EdgeInsets.only(top: 80.0),
@@ -227,7 +247,9 @@ Future<void> _pickFile(Klaim5cariModel it) async {
   final mime = lookupMimeType(path);
   bloc.add(
     Klaim5LocalFileSetEvent(
+      klaim1Id: it.klaim1Id,
       mjenisdocId: it.mjenisdocId,
+      klaim5Id: it.klaim5Id,
       localPath: path,
       fileName: file.name,
       mimeType: mime,
@@ -236,7 +258,46 @@ Future<void> _pickFile(Klaim5cariModel it) async {
   );
 
   bloc.add(
-    Klaim5UploadRequestedEvent(mjenisdocId: it.mjenisdocId),
+    Klaim5UploadRequestedEvent(mjenisdocId: it.mjenisdocId, klaim5Id: it.klaim5Id, jenisDocLain: ''),
+  );
+}
+
+Future<void> pickNewFileDokLain(String klaim1Id, String jenisDocLain) async {
+  final bloc = context.read<Klaim5cariBloc>();
+  final result = await FilePicker.platform.pickFiles(
+    allowMultiple: false,
+    type: FileType.custom,
+    allowedExtensions: [
+      'jpg', 'jpeg', 'png',
+      'pdf',
+      'doc', 'docx',
+      'xls', 'xlsx',
+      'txt'
+    ],
+  );
+
+  if (result == null || result.files.isEmpty) return;
+
+  final file = result.files.first;
+  final path = file.path;
+  if (path == null) return;
+
+  final mime = lookupMimeType(path);
+  bloc.add(
+    Klaim5LocalFileSetEvent(
+      klaim1Id: klaim1Id,
+      mjenisdocId: '',
+      klaim5Id: '',
+      localPath: path,
+      fileName: file.name,
+      mimeType: mime,
+      fileSizeBytes: file.size,
+      jenisDocLain: jenisDocLain,
+    ),
+  );
+
+  bloc.add(
+    Klaim5UploadRequestedEvent(mjenisdocId: '', klaim5Id: '', jenisDocLain: jenisDocLain),
   );
 }
 
@@ -257,7 +318,9 @@ Future<void> _pickPhoto(Klaim5cariModel it) async {
 
   bloc.add(
     Klaim5LocalFileSetEvent(
+      klaim1Id: it.klaim1Id,
       mjenisdocId: it.mjenisdocId,
+      klaim5Id: it.klaim5Id,
       localPath: path,
       fileName: path.split('/').last,
       mimeType: mime,
@@ -266,7 +329,7 @@ Future<void> _pickPhoto(Klaim5cariModel it) async {
   );
 
   bloc.add(
-    Klaim5UploadRequestedEvent(mjenisdocId: it.mjenisdocId),
+    Klaim5UploadRequestedEvent(mjenisdocId: it.mjenisdocId, klaim5Id: it.klaim5Id, jenisDocLain: ''),
   );
 }
 
@@ -296,7 +359,7 @@ Future<void> _deleteFile(Klaim5cariModel it) async {
   if (confirm != true) return;
 
   bloc.add(
-    Klaim5DeleteRequestedEvent(mjenisdocId: it.mjenisdocId),
+    Klaim5DeleteRequestedEvent(mjenisdocId: it.mjenisdocId, klaim1Id: it.klaim1Id, jenisDocLain: it.jenisDocLain),
   );
 }
 
