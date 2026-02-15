@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:eassist_tools_app/common/app_data.dart';
 import 'package:flutter/material.dart';
 import 'package:pdfx/pdfx.dart';
 
@@ -219,19 +220,26 @@ class _Thumb extends StatelessWidget {
 
     final hasLocal = localPath != null && localPath!.isNotEmpty;
     final hasUrl = fileUrl != null && fileUrl!.isNotEmpty;
-
+    //debugPrint("fileUrl: $fileUrl");
     if (isImage && hasLocal) {
       child = Image.file(File(localPath!), fit: BoxFit.cover);
     } else if (isPdf && hasLocal) {
       child = _PdfThumbImage(path: localPath!, width: w, height: h);
     } else if (isImage && hasUrl) {
-      child = Image.network(
-        fileUrl!,
+      child = Image(
+        image: NetworkImage(
+          fileUrl!,
+          headers: {
+            'Authorization': 'Bearer ${AppData.userToken}',
+          },
+        ),
         fit: BoxFit.cover,
         errorBuilder: (_, __, ___) => _FileIconPlaceholder(isPdf: isPdf, isImage: isImage),
-        loadingBuilder: (ctx, wdg, progress) {
-          if (progress == null) return wdg;
-          return const Center(child: SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)));
+        loadingBuilder: (ctx, child, progress) {
+          if (progress == null) return child;
+          return const Center(
+            child: SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)),
+          );
         },
       );
     } else {

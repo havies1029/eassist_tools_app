@@ -67,7 +67,10 @@ class Klaim5cariListWidgetState extends State<Klaim5cariListWidget> {
                   mjenisdocId: state.items[index].mjenisdocId,
                   jenisNama: state.items[index].jenisNama,
                   fileUrl: state.items[index].fileUrl,
+                  fileName: state.items[index].fileName,
                   localPath: state.items[index].localPath,
+                  mime: state.items[index].mimeType,
+                  fileSizeBytes: state.items[index].fileSizeBytes,
                   onPickFile: () => _pickFile(state.items[index]),
                   onPickPhoto: () => _pickPhoto(state.items[index]),
                   onDelete: () => _deleteFile(state.items[index]),
@@ -368,7 +371,7 @@ Future<void> _preview(Klaim5cariModel it) async {
   // ignore: unnecessary_null_comparison
   if (it.fileUrl == null && it.localPath == null) return;
 
-  final path = it.localPath ?? it.fileUrl;
+  final path = it.localPath ?? it.fileUrl ?? '';
 
   final mime = lookupMimeType(path);
 

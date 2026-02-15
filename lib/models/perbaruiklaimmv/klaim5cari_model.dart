@@ -1,3 +1,4 @@
+import 'package:eassist_tools_app/common/app_data.dart';
 
 class Klaim5cariModel {
   String klaim1Id;
@@ -5,9 +6,9 @@ class Klaim5cariModel {
 	String klaim5Id;
 	String mjenisdocId;
 	String jenisNama;
-  String fileUrl;
-  String fileName;
-  String mimeType;
+  String? fileUrl;
+  String? fileName;
+  String? mimeType;
   int? fileSizeBytes;
   DateTime? uploadedAt;
   // ===== local UI fields (optional, JANGAN dikirim ke server) =====
@@ -19,9 +20,9 @@ class Klaim5cariModel {
 	Klaim5cariModel({required this.jenisDocLain, required this.klaim1Id, required this.klaim5Id, 
 		required this.mjenisdocId, 
 		required this.jenisNama,
-    this.fileUrl = '',
-    this.fileName = '',
-    this.mimeType = '',
+    this.fileUrl,
+    this.fileName,
+    this.mimeType,
     this.fileSizeBytes,
     this.uploadedAt,
     this.localPath,
@@ -31,17 +32,25 @@ class Klaim5cariModel {
   });
 
 	factory Klaim5cariModel.fromJson(Map<String, dynamic> data) {
+  
+
 		return Klaim5cariModel(
 			jenisDocLain: data['jenisDocLain']??'',
 			klaim1Id: data['klaim1Id']??'',
 			klaim5Id: data['klaim5Id']??'', 
 			mjenisdocId: data['mjenisdocId']??'',
 			jenisNama: data['jenisNama']??'',
-      fileUrl: data['fileUrl']??'',
-      fileName: data['fileName']??'',
-      mimeType: data['mimeType']??'',      
-      fileSizeBytes: data['fileSizeBytes'] is int ? data['fileSizeBytes'] : int.tryParse('${data['fileSizeBytes']}'),
-      uploadedAt: data['uploadedAt'] != null ? DateTime.tryParse('${data['uploadedAt']}') : null,
+      fileUrl: data['fileUrl'] == null
+        ? null
+        : '${AppData.apiDomain}${data['fileUrl'].toString()}',      
+      fileName: data['fileName']?.toString(),
+      mimeType: data['mimeType']?.toString(),
+      fileSizeBytes: data['fileSizeBytes'] is int
+          ? data['fileSizeBytes'] as int
+          : int.tryParse('${data['fileSizeBytes']}'),
+      uploadedAt: data['uploadedAt'] != null
+          ? DateTime.tryParse('${data['uploadedAt']}')
+          : null,
 		);
 
 	}
