@@ -109,7 +109,7 @@ class KlaimnilaicrudFormPageFormState extends State<KlaimnilaicrudFormPage> {
                                 setState(() => _nilaiSuka = v);
                                 // remove error rating kalau sebelumnya belum pilih
                                 removeError(error: kStringNullError);
-                              },
+                              }, max: 5,
                             ),
                             const SizedBox(height: 8),
                             Row(
@@ -271,7 +271,8 @@ class _StarRating extends StatelessWidget {
     required this.onChanged,
     this.size = 44,
     required this.activeColor,
-    required this.inactiveColor,
+    required this.inactiveColor, 
+    required this.max,
   });
 
   @override

@@ -44,6 +44,7 @@ import 'package:eassist_tools_app/blocs/gen_status_aset/statusasetcari_bloc.dart
 import 'package:eassist_tools_app/blocs/gen_trslog/trslogcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaim/klaim1list_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaim/klaim2list_bloc.dart';
+import 'package:eassist_tools_app/blocs/klaimbatal/klaimbatalcrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaimlacak/klaimnilaicrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaimlacak/klaimprogresscari_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaimrasio/klaimrasiocobcari_bloc.dart';
@@ -156,6 +157,7 @@ import 'package:eassist_tools_app/repositories/gen_profile/mrekanpiccrud_reposit
 import 'package:eassist_tools_app/repositories/gen_sppamv/download_polis_repository.dart';
 import 'package:eassist_tools_app/repositories/gen_sppamv/sppamvcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/gen_sppapar/sppaparcrud_repository.dart';
+import 'package:eassist_tools_app/repositories/klaimbatal/klaimbatalcrud_repository.dart';
 import 'package:eassist_tools_app/repositories/klaimlacak/klaimnilaicrud_repository.dart';
 import 'package:eassist_tools_app/repositories/login/change_password_repository.dart';
 import 'package:eassist_tools_app/repositories/login/emailverification_repository.dart';
@@ -464,6 +466,7 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => KlaimparaccordionBloc()),
         BlocProvider(create: (context) => KlaimprogresscariBloc()),
         BlocProvider(create: (context) => KlaimnilaicrudBloc(repository: KlaimnilaicrudRepository())),
+        BlocProvider(create: (context) => KlaimbatalcrudBloc(repository: KlaimbatalcrudRepository())),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

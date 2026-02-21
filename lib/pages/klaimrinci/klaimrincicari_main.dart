@@ -1,5 +1,6 @@
 import 'package:eassist_tools_app/blocs/klaimrinci/groupcobcari_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaimrinci/mstatusrincicari_bloc.dart';
+import 'package:eassist_tools_app/pages/klaimbatal/klaimbatalcrud_form.dart';
 import 'package:eassist_tools_app/pages/klaimlacak/klaimprogresscari_main.dart';
 import 'package:eassist_tools_app/pages/klaimrinci/groupcobcari_list.dart';
 import 'package:eassist_tools_app/pages/klaimrinci/mstatusrincicari_list.dart';
@@ -72,7 +73,22 @@ class KlaimRinciCariMainPageState extends State<KlaimRinciCariMainPage> {
                 );
               }
             },
-          ),            
+          ), 
+          SpeedDialChild(
+            child: Icon(Icons.refresh),
+            label: 'Pembatalan Klaim',
+            onTap: () {
+              final selectedKlaimRecord = context.read<GroupcobCariBloc>().state.selectedKlaimRecord;
+              if (selectedKlaimRecord != null) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return KlaimbatalcrudFormPage(klaim1Id: selectedKlaimRecord.klaim1Id); 
+                  }),
+                );
+              }
+            },
+          ),
         ],
       ),
 
@@ -97,7 +113,7 @@ class KlaimRinciCariMainPageState extends State<KlaimRinciCariMainPage> {
         
           children: [
             SizedBox(
-              height: 152, // tinggi bar tombol (silakan adjust)
+              height: 152, 
               child: MstatusrinciCariPage(), // ini yg ListView horizontal
             ),
   

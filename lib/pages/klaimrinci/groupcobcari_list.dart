@@ -1,3 +1,4 @@
+import 'package:eassist_tools_app/blocs/klaimbatal/klaimbatalcrud_bloc.dart';
 import 'package:eassist_tools_app/blocs/klaimrinci/mstatusrincicari_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,7 +30,13 @@ class GroupcobCariPageState extends State<GroupcobCariPage> {
 		groupcobCariBloc = BlocProvider.of<GroupcobCariBloc>(context);
     mstatusrinciCariBloc = BlocProvider.of<MstatusrinciCariBloc>(context);
     selectedStatusId = mstatusrinciCariBloc.state.selectedStatusId;
-		return GroupcobCariListWidget();
+		return BlocListener<KlaimbatalcrudBloc, KlaimbatalcrudState>(
+      listener: (context, state) {
+        if (state.isSaved) {
+          refreshData();
+        }
+      },
+      child: GroupcobCariListWidget());
 	}
 	void refreshData() {
 		groupcobCariBloc.add(
