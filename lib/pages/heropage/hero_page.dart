@@ -27,6 +27,9 @@ import 'package:eassist_tools_app/pages/klaim/klaim1list_main.dart';
 import 'package:eassist_tools_app/pages/klaimrasio/klaimrasiocari_main.dart';
 import 'package:eassist_tools_app/pages/klaimrinci/klaimrincicari_main.dart';
 import 'package:eassist_tools_app/pages/klaimringkas/klaimringkascari_main.dart';
+import 'package:eassist_tools_app/pages/notifevent/notifeventcari_list.dart';
+import 'package:eassist_tools_app/pages/notiflog/logtrscari_list.dart';
+import 'package:eassist_tools_app/pages/notiflog/logtrscaritopx_list.dart';
 import 'package:eassist_tools_app/pages/payment/dnrekapcobcari_list.dart';
 import 'package:eassist_tools_app/pages/payment/historybayarcari_main.dart';
 import 'package:eassist_tools_app/pages/payment/pay1list_main.dart';
@@ -176,6 +179,42 @@ class _HeroPageState extends State<HeroPage> {
                           if (state.user.userType == "C") {
                             return Column(
                               children: [
+
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              NotifeventcariPage()),
+                                    );
+                                  },
+                                  child: Text("Notifikasi Event"),
+                                ),
+
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              LogtrscariPage()),
+                                    );
+                                  },
+                                  child: Text("Notifikasi Log Transaksi"),
+                                ),
+
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              LogtrscaritopxPage()),
+                                    );
+                                  },
+                                  child: Text("Top 5 Log Transaksi"),
+                                ),
 
                                 TextButton(
                                   onPressed: () {

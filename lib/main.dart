@@ -56,6 +56,9 @@ import 'package:eassist_tools_app/blocs/login/change_password_bloc.dart';
 import 'package:eassist_tools_app/blocs/login/emailverification_bloc.dart';
 import 'package:eassist_tools_app/blocs/login/login_bloc.dart';
 import 'package:eassist_tools_app/blocs/networkconnection/network_bloc.dart';
+import 'package:eassist_tools_app/blocs/notifevent/notifeventcari_bloc.dart';
+import 'package:eassist_tools_app/blocs/notiflog/logtrscari_bloc.dart';
+import 'package:eassist_tools_app/blocs/notiflog/logtrscaritopx_bloc.dart';
 import 'package:eassist_tools_app/blocs/onboardmenu/onboardmenucari_bloc.dart';
 import 'package:eassist_tools_app/blocs/payment/dnrekap2inv_bloc.dart';
 import 'package:eassist_tools_app/blocs/payment/dnrekapcobcari_bloc.dart';
@@ -467,6 +470,9 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => KlaimprogresscariBloc()),
         BlocProvider(create: (context) => KlaimnilaicrudBloc(repository: KlaimnilaicrudRepository())),
         BlocProvider(create: (context) => KlaimbatalcrudBloc(repository: KlaimbatalcrudRepository())),
+        BlocProvider(create: (context) => NotifeventcariBloc()),
+        BlocProvider(create: (context) => LogtrscariBloc()),
+        BlocProvider(create: (context) => LogtrscaritopxBloc()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
