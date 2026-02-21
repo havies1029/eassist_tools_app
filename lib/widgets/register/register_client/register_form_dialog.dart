@@ -1,13 +1,7 @@
 import 'package:eassist_tools_app/widgets/register/register_client/popup_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // untuk FilteringTextInputFormatter
-import '../../../repositories/user/user_repository.dart';
 import 'register_verification_dialog.dart'; // Import LoginDialog
-
-// Dummy repository (bisa diganti implementasi sungguhan)
-class dummyUserRepository extends UserRepository {
-  // Override method sesuai kebutuhan
-}
 
 class RegisterDialog extends StatefulWidget {
   const RegisterDialog({super.key});
@@ -36,9 +30,6 @@ class _RegisterDialogState extends State<RegisterDialog> with TickerProviderStat
   String? _passwordError;
   String? _confirmPasswordError;
   String? _dropdownError;
-
-  // Dummy repository
-  final _repo = dummyUserRepository();
 
   @override
   void initState() {

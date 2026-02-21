@@ -58,7 +58,7 @@ class RegUserBloc extends Bloc<RegUserEvents, RegUserState> {
     emit(
         state.copyWith(isSaving: false, isSaved: true, hasFailure: hasFailure));
   }
-
+  //test
   Future<void> onHapusRegUser(
       RegUserHapusEvent event, Emitter<RegUserState> emit) async {
     emit(state.copyWith(isSaving: true, isSaved: false));
